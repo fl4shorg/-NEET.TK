@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Cargos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome -->
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-image: url('imagens/manual skur.gif');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #000;
+            background-attachment: fixed;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        h1 {
+            margin-top: 20px;
+            color: #ffffff;
+        }
+        #searchBar {
+            width: 80%;
+            max-width: 800px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        #output {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .categoria {
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .card {
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(90deg, rgba(75,0,130,1) 0%, rgba(0,0,255,1) 100%);
+            font-weight: bold;
+        }
+        .copy-button:hover {
+            background: linear-gradient(90deg, rgba(0,0,255,1) 0%, rgba(75,0,130,1) 100%);
+        }
+        .verified-icon {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .manual-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-book manual-icon"></i> Manual de Cargos</h1>
+    <input type="text" id="searchBar" placeholder="Pesquisar cargos ou categorias...">
+
+    <div id="output"></div> <!-- Os cards serão exibidos aqui -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Função de busca
+        document.getElementById('searchBar').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const categorias = document.querySelectorAll('.categoria');
+            
+            categorias.forEach(categoria => {
+                const categoriaNome = categoria.querySelector('h2').textContent.toLowerCase();
+                let foundInCategoria = categoriaNome.includes(searchTerm);
+                const cargos = categoria.querySelectorAll('.card');
+                
+                cargos.forEach(cargo => {
+                    const cargoTitulo = cargo.querySelector('strong').textContent.toLowerCase();
+                    if (cargoTitulo.includes(searchTerm) || foundInCategoria) {
+                        cargo.style.display = 'block';
+                    } else {
+                        cargo.style.display = 'none';
+                    }
+                });
+
+                // Mostrar ou ocultar a categoria com base no resultado
+                const anyVisible = Array.from(cargos).some(cargo => cargo.style.display === 'block');
+                categoria.style.display = anyVisible || foundInCategoria ? 'block' : 'none';
+            });
+        });
+
+        // Carregar e exibir o conteúdo do arquivo JSON
+        fetch('manual skur.json')
+            .then(response => response.json())
+            .then(data => {
+                const output = document.getElementById('output');
+                output.innerHTML = ''; // Limpar o conteúdo anterior
+
+                data.categorias.forEach(categoria => {
+                    const categoriaDiv = document.createElement('div');
+                    categoriaDiv.className = 'categoria';
+                    categoriaDiv.innerHTML = `
+                        <h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gold" class="bi bi-check-circle verified-icon" viewBox="0 0 16 16">
+                                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7.247 11.14 4.682 8.63l-.94.94 3.505 3.505 6.438-6.437-.94-.939-5.497 5.497z"/>
+                            </svg>
+                            ${categoria.nome}
+                        </h2>
+                    `;
+
+                    categoria.cargos.forEach(cargo => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `<strong>${cargo.titulo}</strong><p>${cargo.descricao}</p>`;
+
+                        const copyButton = document.createElement('button');
+                        copyButton.className = 'copy-button';
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i> Copiar Cargo'; 
+                        copyButton.onclick = () => {
+                            const textToCopy = `${cargo.titulo}\n${cargo.descricao}`;
+                            navigator.clipboard.writeText(textToCopy)
+                                .then(() => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Copiado!',
+                                        text: 'O texto foi copiado para a área de transferência.',
+                                        confirmButtonText: 'OK'
+                                    });
+                                })
+                                .catch(err => {
+                                    console.error('Erro ao copiar texto:', err);
+                                });
+                        };
+
+                        card.appendChild(copyButton); 
+                        categoriaDiv.appendChild(card); 
+                    });
+
+                    output.appendChild(categoriaDiv); 
+                });
+            })
+            .catch(err => console.error('Erro ao carregar o manual:', err));
+    </script>
+</body>
+</html>

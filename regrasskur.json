@@ -1,0 +1,26 @@
+{
+  "titulo": "ㅤ㆐ ִ ׄ Ꞌ📂 ࣪ ˳ 〞︎𝐑𝐄𝐆𝐑𝐀𝐒𖡡:",
+  "regras": [
+    {"tipo": "⊠", "texto": "Link"},
+    {"tipo": "⊠", "texto": "Conteúdo +18"},
+    {"tipo": "⊠", "texto": "Ban Sem motivo"},
+    {"tipo": "⊠", "texto": "Figurinhas Com Agressão animal ou humana"},
+    {"tipo": "⊠", "texto": "Conversar"},
+    {"tipo": "⊠", "texto": "Figurinhas racistas"},
+    {"tipo": "⊠", "texto": "Nazismo"},
+    {"tipo": "⊠", "texto": "Gore"},
+    {"tipo": "⊠", "texto": "Machismo"},
+    {"tipo": "⊠", "texto": "Homofobia"},
+    {"tipo": "⊠", "texto": "Figurinhas com pornografia"},
+    {"tipo": "⊠", "texto": "Divulgação"},
+    {"tipo": "⊠", "texto": "Proibido ligar"},
+    {"tipo": "⊠", "texto": "assuntos relacionados a política e religião"},
+    {"tipo": "⊠", "texto": "Invadir pv dos membros sem autorização"},
+    {"tipo": "□", "texto": "Todas as idades"},
+    {"tipo": "□", "texto": "Floodar figurinhas"},
+    {"tipo": "□", "texto": "Shitpost"},
+    {"tipo": "□", "texto": "Imagens apenas em visu única"}
+  ],
+  "legenda":          "Legenda 𖡡",
+  "descricaoLegenda": "⊠ Proibido\n□ Permitido"
+}

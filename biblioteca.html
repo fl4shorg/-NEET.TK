@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗕𝗜𝗕𝗟𝗜𝗢𝗧𝗘𝗖𝗔</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            font-size: 24px;
+            text-align: center;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .search-container input[type="text"] {
+            padding: 15px;
+            width: 60%;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        .search-container input[type="text"]:focus {
+            border-color: #007BFF;
+        }
+        .search-container button {
+            padding: 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .book-item {
+            background-color: white;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 5px;
+            max-width: 200px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .book-item img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .book-item h3 {
+            margin-top: 15px;
+        }
+        .book-item p {
+            font-size: 14px;
+            color: #666;
+        }
+        .copy-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Biblioteca Neext
+</header>
+
+<div class="search-container">
+    <input type="text" id="searchQuery" placeholder="Pesquise por livros, mangas ou HQs...">
+    <button onclick="searchBooks()">Pesquisar</button>
+</div>
+
+<div id="bookResults" class="book-list">
+    <!-- Resultados dos livros, mangas, e HQs serão exibidos aqui -->
+</div>
+
+<script>
+    function searchBooks() {
+        const query = document.getElementById("searchQuery").value;
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&langRestrict=pt&maxResults=10`;
+
+        if (query === "") {
+            alert("Por favor, insira um termo para pesquisar.");
+            return;
+        }
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.items && data.items.length > 0) {
+                    const books = data.items;
+                    const bookResults = document.getElementById("bookResults");
+                    bookResults.innerHTML = "";
+
+                    books.forEach(book => {
+                        const volumeInfo = book.volumeInfo;
+                        const title = volumeInfo.title || "Título não disponível";
+                        const authors = volumeInfo.authors ? volumeInfo.authors.join(", ") : "Autor(es) não disponível(is)";
+                        const description = volumeInfo.description || "Descrição não disponível";
+                        const imageUrl = volumeInfo.imageLinks ? volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/128x200";
+                        const categories = volumeInfo.categories ? volumeInfo.categories.join(", ") : "Categoria não disponível";
+
+                        // Adiciona qualquer livro, manga ou HQ (sem filtragem específica)
+                        const bookItem = `
+                            <div class="book-item">
+                                <img src="${imageUrl}" alt="${title}">
+                                <h3>${title}</h3>
+                                <p><strong>Autor(es):</strong> ${authors}</p>
+                                <p><strong>Categoria:</strong> ${categories}</p>
+                                <p><strong>Descrição:</strong> ${description}</p>
+                                <button class="copy-btn" onclick="copyDescription('${description}')">Copiar Descrição</button>
+                            </div>
+                        `;
+                        bookResults.innerHTML += bookItem;
+                    });
+                } else {
+                    alert("Nenhum livro, manga ou HQ encontrado para este termo.");
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar os livros:', error);
+                alert("Ocorreu um erro ao tentar buscar os livros.");
+            });
+    }
+
+    function copyDescription(description) {
+        const textArea = document.createElement("textarea");
+        textArea.value = description;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+
+        Swal.fire({
+            title: 'Descrição Copiada!',
+            text: 'A descrição foi copiada para a área de transferência.',
+            icon: 'success',
+            confirmButtonText: 'Fechar'
+        });
+    }
+</script>
+
+</body>
+</html>

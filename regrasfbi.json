@@ -1,0 +1,27 @@
+{
+  "titulo": "ㅤ㆐ ִ ׄ Ꞌ⠁⃞𝅼🧾 ࣪ ˳ 〞︎𝐑𝐄𝐆𝐑𝐀𝐒𖡡:",
+  "regras": [
+    {"tipo": "⊠", "texto": "Link"},
+    {"tipo": "⊠", "texto": "Gore"},
+    {"tipo": "⊠", "texto": "Divulgação"},
+    {"tipo": "⊠", "texto": "Desrespeito"},
+    {"tipo": "⊠", "texto": "Conteúdo +18"},
+    {"tipo": "⊠", "texto": "Áudios estourados"},
+    {"tipo": "⊠", "texto": "Flood (Máx. 8 msgs)"},
+    {"tipo": "⊠", "texto": "Preconceito de qualquer tipo (Nazismo)"},
+    {"tipo": "⊠", "texto": "Assuntos polêmicos, como, Política e Religião"},
+    {"tipo": "⊠", "texto": "Ban sem motivo"},
+    {"tipo": "⊠", "texto": "Figurinhas com agressão animal ou humana"},
+    {"tipo": "⊠", "texto": "Figurinhas racistas"},
+    {"tipo": "⊠", "texto": "Machismo"},
+    {"tipo": "⊠", "texto": "Homofobia"},
+    {"tipo": "⊠", "texto": "Figurinhas com pornografia"},
+    {"tipo": "⊠", "texto": "Proibido ligar"},
+    {"tipo": "□", "texto": "Todas as idades"},
+    {"tipo": "□", "texto": "Zoeira/Shitpost"},
+    {"tipo": "□", "texto": "Floodar figurinhas"},
+    {"tipo": "□", "texto": "Imagens apenas em visualização única"}
+  ],
+  "legenda":          "Legenda 𖡡",
+  "descricaoLegenda": "⊠ Proibido\n□ Permitido"
+}

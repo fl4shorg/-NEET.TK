@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗗𝗢𝗠𝗢 𝗗𝗘 𝗙𝗘𝗥𝗥𝗢</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f4f7fa; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        h2, h1 { font-size: 1.5rem; color: #333; }
+        .section { margin: 15px 0; }
+        .user-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1.2rem;
+    width: 200px;
+    margin: 10px auto;
+}
+.user-box i {
+    margin-right: 10px;
+}
+        .section input, textarea { width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .button { padding: 10px 20px; background: #007BFF; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        .button:hover { background: #0056b3; }
+        ul { list-style-type: none; margin-top: 20px; }
+        li { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 8px; margin-bottom: 5px; border-radius: 4px; }
+        li button { margin-left: 10px; padding: 5px 10px; background: #e74c3c; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        li button:hover { background: #c0392b; }
+        #numberModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
+        #modalContent { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; }
+        .modal-actions { display: flex; justify-content: space-between; margin-top: 15px; }
+        @media (max-width: 600px) { .container { padding: 10px; } }
+    </style>
+</head>
+<body>
+<!-- Primeira Navbar (Sistema Domo de Ferro) -->
+<nav style="background-color: #007BFF; padding: 10px; display: flex; align-items: center;">
+    <i class="fas fa-list" style="color: #fff; margin-right: 10px;"></i>
+    <span style="color: #fff; font-size: 1.5rem;">DOMO DE FERRO</span>
+</nav>
+
+<!-- Segunda Navbar (Versão 1.0 com ícone de engrenagem) -->
+<nav style="background-color: #000; padding: 10px; display: flex; align-items: center;">
+    <i class="fas fa-cogs" style="color: #fff; margin-right: 10px;"></i>
+    <span style="color: #fff; font-size: 1.5rem;">VERSÃO 1.0</span>
+</nav>
+
+<div class="section">
+    <div class="user-box">
+        <i class="fas fa-users"></i> 
+        <span id="totalUsers">0</span>
+    </div>
+</div>
+        <div class="section">
+<button id="openModalButton" class="button"><i class="fas fa-paper-plane"></i> Enviar</button>
+        </div>
+        <div id="numberModal" class="modal">
+            <div id="modalContent">
+                <h1>Gerenciar Números</h1>
+                <form id="numberForm">
+                    <label for="numbers">Digite os números separados por vírgulas:</label>
+                    <textarea id="numbers" rows="5" placeholder="12345678,87654321,11223344"></textarea>
+                    <div class="modal-actions">
+                        <button type="button" id="submitButton" class="button">Enviar</button>
+                        <button type="button" id="closeModalButton" class="button">Fechar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="section">
+<h2><i class="fas fa-users"></i> Procurados</h2>
+            <input type="text" id="searchNumber" placeholder="Pesquisar número..." oninput="searchNumber()">
+            <ul id="numberList"></ul>
+        </div>
+    </div>
+    
+    <script>
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbxIG53Hskr69iwx5OREGTqEHYkBCIQYwZr820x2gU7AJ2Fvd2b82iOszZMU0nQ5hQ/exec";
+        let allNumbers = [];
+
+        function fetchTotalUsersAndList() {
+            fetch(scriptUrl + "?action=read")
+                .then(response => response.text())
+                .then(data => {
+                    const lines = data.split("\n");
+                    const totalText = lines[0];
+                    allNumbers = lines.slice(2).map(num => num.trim()).filter(num => num.length > 0);
+                    document.getElementById("totalUsers").textContent = totalText;
+                    updateNumberList(allNumbers);
+                })
+                .catch(error => {
+                    document.getElementById("totalUsers").textContent = "Erro ao carregar números: " + error.message;
+                });
+        }
+
+        function updateNumberList(numbers) {
+    const numberList = document.getElementById("numberList");
+    numberList.innerHTML = "";
+    numbers.forEach((number, index) => {
+        const li = document.createElement("li");
+        // Usando o ícone de telefone da Font Awesome
+        li.innerHTML = `<i class="fas fa-phone-alt"></i> +${number}`; // ícone de telefone
+        const editButton = document.createElement("button");
+        editButton.innerHTML = `<i class="fas fa-edit"></i> Editar`; // Ícone de editar
+        editButton.style.backgroundColor = "#f39c12"; // Cor de fundo para o botão de editar (dourado)
+        editButton.onclick = () => editNumber(index + 2, number);
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = `<i class="fas fa-trash"></i> Apagar`; // Ícone de apagar
+        deleteButton.style.backgroundColor = "#e74c3c"; // Cor de fundo para o botão de apagar (vermelho)
+        deleteButton.onclick = () => deleteNumber(index + 2);
+        li.appendChild(editButton);
+        li.appendChild(deleteButton);
+        numberList.appendChild(li);
+    });
+}
+        function searchNumber() {
+            const searchValue = document.getElementById("searchNumber").value.trim();
+            const result = allNumbers.filter(number => number.includes(searchValue.replace('+', '')));
+            updateNumberList(searchValue ? result : allNumbers);
+        }function editNumber(row, oldNumber) {
+    Swal.fire({
+        title: 'Editar número',
+        input: 'text',
+        inputValue: oldNumber,
+        showCancelButton: true,
+        confirmButtonText: 'Salvar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Por favor, insira um número!';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const newNumber = result.value;
+            if (newNumber && newNumber !== oldNumber) {
+                const params = new URLSearchParams({ action: "delete", row });
+                fetch(scriptUrl + "?" + params.toString(), { method: "POST" })
+                    .then(() => {
+                        const paramsCreate = new URLSearchParams({ action: "create", numbers: newNumber.replace('+', '') });
+                        return fetch(scriptUrl + "?" + paramsCreate.toString(), { method: "POST" });
+                    })
+                    .then(() => {
+                        Swal.fire("Sucesso", "Número editado com sucesso!", "success");
+                        fetchTotalUsersAndList();
+                    })
+                    .catch(error => Swal.fire("Erro", "Erro ao editar número: " + error.message, "error"));
+            }
+        }
+    });
+}
+
+
+function deleteNumber(row) {
+    Swal.fire({
+        title: "Tem certeza que deseja apagar este número?",
+        text: "Essa ação não pode ser desfeita.",
+        icon: "warning",  // Ícone de alerta para confirmação
+        showCancelButton: true,
+        confirmButtonText: "Sim, apagar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const params = new URLSearchParams({ action: "delete", row });
+            fetch(scriptUrl + "?" + params.toString(), { method: "POST" })
+                .then(() => {
+                    Swal.fire("Sucesso", "Número apagado com sucesso!", "success");
+                    fetchTotalUsersAndList();
+                })
+                .catch(error => Swal.fire("Erro", "Erro ao apagar número: " + error.message, "error"));
+        }
+    });
+}
+        
+        document.getElementById("submitButton").addEventListener("click", function() {
+    const numbersInput = document.getElementById("numbers").value;
+    const numbersArray = numbersInput.split(",").map(num => num.trim()) // Remove espaços extras
+                                      .map(num => num.replace(/[^\d]/g, "")); // Remove caracteres não numéricos (como + e -)
+    if (numbersArray.length > 0) {
+        const params = new URLSearchParams({ action: "create", numbers: numbersArray.join(",") });
+        fetch(scriptUrl + "?" + params.toString(), { method: "POST" })
+            .then(() => {
+                Swal.fire("Sucesso", "Números enviados com sucesso!", "success");
+                fetchTotalUsersAndList();
+                closeModal();
+            })
+            .catch(error => Swal.fire("Erro", "Erro ao enviar os números: " + error.message, "error"));
+    } else {
+        Swal.fire("Erro", "Por favor, insira pelo menos um número.", "error");
+    }
+});
+
+        document.getElementById("openModalButton").addEventListener("click", () => document.getElementById("numberModal").style.display = "flex");
+        document.getElementById("closeModalButton").addEventListener("click", closeModal);
+        function closeModal() { document.getElementById("numberModal").style.display = "none"; }
+
+        window.onload = fetchTotalUsersAndList;
+    </script>
+</body>
+</html>

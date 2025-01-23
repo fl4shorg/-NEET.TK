@@ -1,0 +1,471 @@
+[
+    {
+        "titulo": "ARTIGCARD 00- CARD VÁLIDO PARA TODA A NEEXT",
+        "descricao": "Essa regra determina que o card é válido em toda a Neext, eliminando a brecha para burlar as regras.",
+        "paragrafos": [
+            "Parágrafo 01: Para a aplicação da punição com o card, devem ser enviadas as provas do ocorrido, juntamente com o card de notificação e o card que aplica a punição.",
+            "Parágrafo 02: O card de notificação contém apenas as regras que precisam ser comunicadas previamente, além de registrar a recusa que ocorre na aplicação da regra.",
+            "Parágrafo 03: A notificação tem a função de avisar. Após o aviso, se a recusa persistir, deve-se aplicar o card. Por exemplo, no caso de recusa ao entrar no NYPD e NCPD, é necessário enviar a notificação; a aplicação do card deve ocorrer apenas se a recusa continuar.",
+            "Parágrafo 04: São válidos os seguintes id card: #011789 #011790 #011745 #011742 #011744 #011741 #018541 #010541 #090531 #020531 #000530 #011541 #00000 #020200"
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD 01: Apresentação do Card para Aplicação de Punição",
+        "descricao": "É obrigatório que o indivíduo apresente o card correspondente à punição, junto com a regra escrita. Caso não seja apresentado, será considerado burlamento das regras, e o indivíduo poderá recusar a punição até que a regra seja enviada.",
+        "paragrafos": [
+            "Parágrafo 01: A recusa em enviar o card com as regras acarretará uma punição de card verde.",
+            "Parágrafo 02: Se o indivíduo também se recusar a enviar a regra escrita junto com o card, isso resultará em uma punição de card amarelo."
+        ]
+    },
+    {
+
+  "titulo": "ARTIGCARD - TRANSFERÊNCIA",
+  "descricao": "A Ministra das Relações é responsável por todas as transferências. Após a permissão dos CEOs regentes dos dois grupos envolvidos na transferência, é necessária a autorização final dela para que a transferência seja realizada.",
+  "paragrafos": [
+    "Parágrafo 01: Após a permissão de todos os CEOs regentes para a transferência, é necessária a autorização final da Ministra das Relações para que a transferência seja efetivada.",
+    "Parágrafo 02: Para aprovar ou negar qualquer transferência, a Ministra das Relações deve apresentar o motivo de sua decisão, marcando os diretores e os CEOs regentes envolvidos.",
+    "Parágrafo 03: Em casos de negligência, onde a Ministra das Relações não apresenta um motivo evidente para sua decisão, os diretores estão autorizados a realizar a transferência sem sua autorização.",
+    "Parágrafo 04: Qualquer violação desta regra resultará na aplicação de um card preto para todos os envolvidos."
+ 
+    ]
+},
+{
+  "titulo": "ARTIGCARD - PROTEÇÃO AOS REPÓRTERES",
+  "descricao": "É proibido questionar ou perturbar o repórter por causa de suas notícias devido a desagrado pessoal ou por qualquer outro motivo.",
+  "paragrafos": [
+    "Parágrafo 01: Qualquer pessoa que ofender ou perturbar um repórter será considerada contra a liberdade de expressão e receberá um card preto como advertência.",
+    "Parágrafo 02: Se ocorrer alguma violação, o repórter deve publicar informações sobre o infrator, destacando a tentativa de violar a liberdade de expressão.",
+    "Parágrafo 03: Em caso de reincidência, o infrator deverá receber um card marrom como penalidade adicional."
+  ]
+},
+{
+        "titulo": "ARTIGCARD 02: Proibido Ameaçar de Sair (Kitar) do Grupo",
+        "descricao": "Essa regra proíbe ameaças de saída do grupo e impõe punições para quem realizar tal ato.",
+        "paragrafos": [
+            "Parágrafo 01: Caso seja descoberto que um membro ameaçou sair do grupo, o indivíduo que cometeu o ato infracionário receberá uma punição de card azul claro e um preto.",
+            "Parágrafo 02: Se outro membro acobertar o ato, tentando esconder a ameaça, o indivíduo que acobertou receberá uma punição de card vermelho."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD: Proibido Remover a TAG de Identificação",
+        "descricao": "Essa regra proíbe a remoção da TAG de identificação e estabelece as consequências para quem infringir essa norma.",
+        "paragrafos": [
+            "Parágrafo 01: Caso a TAG seja removida, o membro será notificado formalmente com card de notificação com a regra e será solicitado a recolocar a TAG conforme os requisitos de identificação.",
+            "Parágrafo 02: A remoção da TAG de identificação que impossibilite a correta identificação do membro resultará em uma punição de cartão amarelo.",
+            "Parágrafo 03: Caso o membro não restabeleça a TAG mesmo após a notificação, a infração resultará em um cartão vermelho."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: Apresentação de Provas para Aplicação de Punição",
+        "descricao": "É obrigatório e necessário apresentar provas antes de aplicar qualquer punição.",
+        "paragrafos": [
+            "Parágrafo 01: A não apresentação de provas será considerada burlamento da regra e uma tentativa de sumiço do ADM, o que é uma atitude inacreditável e grave.",
+            "Parágrafo 02: Caso uma regra seja aplicada sem a devida prova, seguindo o artigo 03, isso resultará em punição de cartão verde e roxo.",
+            "Parágrafo 03: A acusação não tem valor infracionário sem provas; portanto, sem provas, não há acusação. Burlar essa regra resultará em card vermelho."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: Ausência de Administradores nos Grupos",
+        "descricao": "Todo e qualquer ADM que se ausentar dos seguintes grupos: Skur: TVA, Mossad, NCPD e Kremlin; FBI: Citadel, Casa Branca, NYPD, TVA.",
+        "paragrafos": [
+            "Parágrafo 01: O ADM que se ausentar desses grupos terá um prazo de 25 horas para retornar. Caso não retorne dentro desse prazo, será considerado kitamento e receberá um cartão azul.",
+            "Parágrafo 02: Se o ADM ameaçar sua saída, ele perderá as 25 horas e não terá mais prazo para retornar, resultando em um cartão vermelho."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: Aceitação de Cargos Altos da Elite (NEEXT 11)",
+        "descricao": "Qualquer pessoa, CTO ou CEO chefe que não aceitar os cargos altos da elite (House-White, Kremlin) em seu NYPD e NCPD estará sujeita a uma pena que só poderá ser aplicada pelo Juiz Inspetor ou Presidente.",
+        "paragrafos": [
+            "Parágrafo 01: A punição correspondente para essa infração é um cartão verde.",
+            "Parágrafo 02: Antes de aplicar a punição, deve ser feito um pedido de notificação utilizando o cartão de notificação.",
+            "Parágrafo 03: Caso o indivíduo continue negando a entrada, ele deve receber um cartão verde.",
+            "Parágrafo 04: Se, mesmo assim, o ADM não for aceito, o indivíduo deve receber um card lilás."
+        ]
+    },
+{
+        "titulo": "ARTIGACARD-Regra de Retorno de Pessoas que Kitaram",
+        "descricao": "Para o retorno de pessoas que já kitaram, o Procurador Geral deve ser avisado. Em caso de violação, o Procurador Geral tem autorização para remover a pessoa que entrou de forma ilegal na Neext.",
+        "paragrafos": [
+            "Parágrafo 01: O Procurador é responsável pela entrada de administradores infratores na Neext. Caso uma pessoa não respeite essa regra, receberá um card lilás.",
+            "Parágrafo 02: Em caso de violação dessa regra, o Presidente deve resolver a situação. Apenas o Presidente tem autoridade total sobre o Procurador, e o remetente que não respeitar a função do cargo receberá um card verde."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: Regra sobre Decisões do Conselho e Aplicação de Punições",
+        "descricao": "O Conselho não pode tomar decisões que violem as regras estabelecidas ou acobertar alguém que tenha cometido infrações. Todas as decisões devem estar baseadas nas regras existentes, garantindo que as punições sejam aplicadas de forma justa e igualitária.",
+        "paragrafos": [
+            "Parágrafo 01: Caso o Conselho tome uma decisão sem base nas regras, seus membros envolvidos receberão um Card preto.",
+            "Parágrafo 02: Se o Conselho ignorar ou acobertar alguém que violou as regras, os membros que participaram dessa ação receberão um card vermelho.",
+            "Parágrafo 03: Na situação em que o Conselho não seguir as regras ao aplicar punições, os responsáveis pela decisão receberão um Card cinza.",
+            "Parágrafo 04: Se o Conselho alterar ou ignorar as regras estabelecidas, os membros envolvidos receberão um Card vermelho.",
+            "Parágrafo 05: Se a decisão sobre punições for tomada de forma arbitrária, os responsáveis receberão um Card vermelho.",
+            "Parágrafo 06: Negligenciar a responsabilidade de notificar o Procurador Geral sobre o retorno de pessoas que kitaram resultará em um Card vermelho.",
+            "Parágrafo 07: A falta de documentação e divulgação sobre a aplicação de punições levará os membros a receber um Card verde."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: Regra de Proibição de Espalhamento de Pornografia",
+        "descricao": "É estritamente proibido compartilhar pornografia (nudes) dentro da Neext. Qualquer indivíduo que vazar conteúdo pornográfico ou ameaçar alguém sobre o vazamento será banido permanentemente de todas as atividades na Neext, exceto quando houver consentimento explícito de ambas as partes envolvidas.",
+        "paragrafos": [
+            "Parágrafo 01: Se houver consentimento de ambas as partes para o compartilhamento de conteúdo, isso não resultará em banimento. No entanto, é fundamental que todas as partes estejam cientes e concordem plenamente com a troca, caso um membro ameace vazar, o membro receberá um card verde escuro",
+            "Parágrafo 02: Caso seja descoberto que um membro encobriu alguma parte que recebeu ou vazou conteúdo pornográfico sem consentimento, a pessoa será punida com banimento imediato e permanente, resultando em um card verde escuro.",
+            "Parágrafo 03: A alegação verbal não é suficiente para a aplicação da penalidade; são necessárias provas concretas para justificar o banimento. A falta de evidências pode levar a uma reconsideração da punição, podendo resultar em um Cartão Cinza."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: CRIAÇÃO DE GRUPOS NA NEEXT",
+        "descricao": "Os membros da Neext estão autorizados a criar grupos com amigos que fazem parte da comunidade, desde que solicitem autorização ao superior responsável. É obrigatório que o superior esteja presente nesse grupo.",
+        "paragrafos": [
+            "Parágrafo 01: Caso o superior não esteja presente no grupo criado, o responsável pela criação receberá um card amarelo.",
+            "Parágrafo 02: Se o grupo não for notificado ao superior dentro de 24 horas após a sua criação, o responsável pela criação receberá um card Lilás."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: OFENSAS E DESCULPAS",
+        "descricao": "Todo aquele que ofender, xingar ou brincar apenas no intuito de ofender, e não de forma amigável, deve ser responsabilizado. Essa regra se aplica apenas se a ofensa ocorrer entre pessoas que são próximas.",
+        "paragrafos": [
+            "Parágrafo 01: Se alguém se sentir ofendido, a pessoa responsável deve redigir um texto de desculpas. Essa medida visa promover a responsabilidade e a reconciliação entre os participantes. Caso a pessoa não redija o texto de desculpas, ela receberá um card lilás.",
+            "Parágrafo 02: Se alguém recusar fazer o texto de desculpas, a punição será o rebaixamento do cargo ou 24 horas de detenção. Essa medida incentiva a responsabilidade e o respeito às regras estabelecidas, resultando em um card lilás."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: MODIFICAÇÃO DA COMUNIDADE NEEXT",
+        "descricao": "O Conselho não pode modificar ou trocar a comunidade da Neext sem a devida autorização, mesmo que haja votação. Isso inclui mudanças nos nomes das comunidades, como alterar 'FBI, SKUR' para outro nome, bem como a alteração das regras estabelecidas. Essa proibição se estende à exclusão de cargos da Neext ou à alteração de regras e cargos sem o consentimento adequado.",
+        "paragrafos": [
+            "Parágrafo 01: Caso o Conselho decida modificar ou trocar o nome de uma comunidade ou apagar cargos sem a autorização necessária, os membros envolvidos receberão um Cartão Branco, resultando em banimento permanente do conselho.",
+            "Parágrafo 02: Se o Conselho alterar as regras estabelecidas sem o devido processo ou passar por cima das regras já existentes, os responsáveis por essa ação receberão um card vermelho.",
+            "Parágrafo 03: Na situação em que o Conselho realizar uma votação que vise modificar a estrutura da comunidade ou apagar cargos sem seguir os protocolos, os membros que participarem dessa votação receberão um card vermelho.",
+            "Parágrafo 04: Se um membro do Conselho ignorar a proibição de modificar a comunidade, apagar cargos ou alterar regras, ele receberá um card amarelo."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: Solicitação de Reavaliação",
+        "descricao": "Se um membro suspeitar que as regras foram burladas, ele pode solicitar uma reavaliação aos líderes do conselho antes da aplicação da regra.",
+        "paragrafos": [
+            "Parágrafo 01: Caso solicitado, o usuário deve enviar formalmente o pedido ao conselho para reavaliação.",
+            "Parágrafo 02: Caso o indivíduo não faça isso, ele será submetido ao card amarelo.",
+            "Parágrafo 03: Se o indivíduo ignorar o pedido e outra pessoa perceber a irregularidade, esta deve denunciar imediatamente.",
+            "Parágrafo 04: É considerado líderes do conselho todos os diretores neles."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: BURLAMENTO",
+        "descricao": "Todas as regras estão interligadas para evitar burlas, mas podem haver brechas. Essa regra permite a criação de novas diretrizes para lidar com a situação em questão.",
+        "paragrafos": [
+            "Parágrafo 01: É obrigatório aguardar antes de aplicar a punição nova."
+        ]
+    },
+{
+        "titulo": "ARTIGCARD: ADIAMENTO DAS REGRAS",
+        "descricao": "Caso uma regra prejudique a comunidade ou um membro, sua aplicação poderá ser adiada após votação unânime no conselho.",
+        "paragrafos": [
+            "Parágrafo 01: A aplicação da regra pode ser adiada por 24 horas, sendo obrigatória a execução após esse prazo.",
+            "Parágrafo 02: Esse adiamento visa proteger a comunidade, considerando o bem coletivo acima da rigidez das regras.",
+            "Parágrafo 03: A aplicação obrigatória baseia-se no bem da Neext, e o adiamento não é considerado 'passar a mão na cabeça.'"
+        ]
+    },
+{
+        "titulo": "ARTIGCARD - Contato com Ex-ADM",
+        "descricao": "É permitido contato com ex-ADMs, exceto se houver risco para a Neext.",
+        "paragrafos": [
+            "Parágrafo 01: Caso o ex-ADM apresente riscos à Neext, o conselho deve avaliar a situação.",
+            "Parágrafo 02: O membro pode ser mantido em afastamento indeterminado até a decisão final.",
+            "Parágrafo 03: Essa regra só deve ser aplicada se houver risco ao grupo ou à Neext."
+        ]
+    },
+{
+  "titulo": "ARTIGCARD - ACUSAÇÃO SEM PROVAS",
+  "descricao": "É proibido acusar alguém sem provas ou fundamentos. Acusações só serão aceitas quando baseadas em evidências e devidamente fundamentadas.",
+  "paragrafos": [
+    "Parágrafo 01: Todo aquele que acusar outro sem provas ou fundamentos será imediatamente punido com um card vermelho.",
+    "Parágrafo 02: Caso a pessoa que faz a acusação sem provas ocupe um cargo de alta posição, ela será penalizada com um card preto e encaminhada ao hospício para avaliação e tratamento adequado."
+  ]
+},
+{
+        "titulo": "ARTIGCARD - APOSENTADOS",
+        "descricao": "A aposentadoria é permitida para membros que cumprirem os requisitos estabelecidos.",
+        "paragrafos": [
+            "Parágrafo 01: Aposentadoria é permitida após 2 anos em cargos altos.",
+            "Parágrafo 03: Um aposentado que deseja retornar poderá fazê-lo após 1000 dias de aposentadoria.",
+            "Parágrafo 04: O retorno de aposentados requer uma notificação ao juiz ou presidente para aprovação.",
+            "Parágrafo 05: O retorno deve incluir um comunicado oficial no TVA Office ou Kremlin/White House. A TAG de aposentadoria permanece mesmo após o retorno."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - XENOFÓBIA",
+        "descricao": "Impedir a entrada de membros em qualquer grupo por motivos xenofóbicos é proibido.",
+        "paragrafos": [
+            "Parágrafo 01: Caso a entrada seja impedida, deve-se fazer uma notificação com o card.",
+            "Parágrafo 02: Se a recusa persistir, aplica-se o card marrom.",
+            "Parágrafo 03: Se houver múltiplas pessoas impedindo, todos receberão punições equivalentes."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - KITAMENTO DE 72 HORAS DE MEMBROS DA HOUSE WHITE-WHITE/KREMLIN/CITADEL/MOSSAD",
+        "descricao": "Regras sobre a permanência e retorno de membros que saem dos grupos.",
+        "paragrafos": [
+            "Parágrafo 01: Essa regra evita burlas frequentes.",
+            "Parágrafo 02: A regra de 24 horas aplica-se ao retorno antes do tempo marcado (exemplo: cargos altos 72 horas), exigindo 24 horas de observação em “prisão.”"
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - PREFERÊNCIA PESSOAL",
+        "descricao": "É proibido impedir a entrada de membros selecionados por motivos pessoais.",
+        "paragrafos": [
+            "Parágrafo 01: Impedir a entrada resultará no banimento permanente do conselho."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - Kitamento do Conselho",
+        "descricao": "Regras para membros que se ausentam ou saem do conselho.",
+        "paragrafos": [
+            "Parágrafo 01: Ao sair ou se ausentar, o membro será permanentemente banido do conselho.",
+            "Parágrafo 02: Membros excluídos do conselho não têm direito de retorno.",
+            "Parágrafo 03: Após 1 hora, o retorno imediato não será permitido."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - DESRESPEITO AO SUPERIOR",
+        "descricao": "Regra sobre a falta de respeito a superiores e as consequências disso.",
+        "paragrafos": [
+            "Parágrafo 01: Caso ocorra desrespeito, será emitida uma notificação com o card rosa solicitando um pedido de desculpas.",
+            "Parágrafo 02: O não cumprimento da solicitação de desculpas resultará na aplicação do card verde e vermelho.",
+            "Parágrafo 03: Se o indivíduo não cumprir com o estipulado no parágrafo 02, será aplicada uma penalidade adicional com o card preto correspondente."
+        ]
+    },
+    {
+        "titulo": "Artigcard - Proibição de Neonazismo e Ideologias Discriminatórias",
+        "descricao": "Apoio a ideologias discriminatórias, incluindo o neonazismo, é proibido.",
+        "paragrafos": [
+            "Parágrafo 01: Qualquer pessoa identificada como neonazista receberá o card verde escuro imediatamente.",
+            "Parágrafo 02: Deve-se verificar cuidadosamente o uso de símbolos associados ao neonazismo, confirmando que não se trate de símbolos de outras culturas, como o símbolo de Buda, devido à semelhança entre eles."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD- Discussão sobre Religião e Política",
+        "descricao": "Discussões acaloradas sobre religião e política devem ser evitadas para não causar ofensa.",
+        "paragrafos": [
+            "Parágrafo 01: Caso ocorra uma discussão sobre religião ou política, será aplicado o card de punição à pessoa responsável.",
+            "Parágrafo 02: Todos têm livre-arbítrio e liberdade de expressão para abordar esses temas, mas, se alguém se sentir ofendido, o card amarelo e rosa deverão ser aplicados.",
+            "Parágrafo 03: A liberdade de expressão é garantida, desde que não seja utilizada para ofender ou denegrir as crenças e opiniões das pessoas."
+        ]
+    },
+  {
+        "titulo": "ARTIGCARD - AMEAÇA DE KITAR PV",
+        "descricao": "É proibido ameaçar de kitar em mensagens privadas. Tudo que ocorrer fora da Neext é considerado pessoal, exceto ameaças de kitar em mensagens privadas.",
+        "paragrafos": [
+            "Parágrafo 01: Caso uma ameaça de kitar seja denunciada, deverá ser aplicado o card rosa e amarelo além do card preto no indivíduo infrator.",
+            "Parágrafo 02: Essa regra também se aplica a grupos e mensagens privadas."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - DISCUSSÃO E BRIGAS",
+        "descricao": "É proibido brigas e discussões com xingamentos.",
+        "paragrafos": [
+            "Parágrafo 01: Caso um administrador seja flagrado brigando com outro ADM, deverá ser enviado um card de notificação para cessar a briga.",
+            "Parágrafo 02: Se a briga persistir, deverá ser aplicado o card lilás.",
+            "Parágrafo 03: Caso a briga comece com xingamentos e não apenas discussões, o card lilás e rosa deve ser aplicado imediatamente."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - DESRESPEITO AO SUPERIOR",
+        "descricao": "Todo aquele que desobedecer a um superior será punido severamente.",
+        "paragrafos": [
+            "Parágrafo 01: O indivíduo poderá ser levado ao juiz, que decidirá o que ocorrerá com o indivíduo.",
+            "Parágrafo 02: Deverá ser aplicado o card roxo, verde e vermelho."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - BAN NA NEEXT",
+        "descricao": "Um administrador banido de qualquer rede da Neext não poderá participar de outras plataformas da comunidade.",
+        "paragrafos": [
+            "Parágrafo 01: O banimento valerá para toda a Neext.",
+            "Parágrafo 02: O descumprimento e a permanência do indivíduo infrator no grupo ocasionarão na aplicação do card verde no CTO correspondente daquele grupo."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - EX ADM",
+        "descricao": "Um ex-administrador não pode ficar como membro na Neext, pois ele já foi administrador.",
+        "paragrafos": [
+            "Parágrafo 01: Caso seja identificado um ex-administrador como membro, deverá ser enviado um card de notificação ao CTO daquele grupo.",
+            "Parágrafo 02: Caso a notificação não resulte na remoção do ex-administrador pelo CTO, ele receberá um card rosa.",
+            "Parágrafo 03: Caso o CTO saiba da situação e deixe de remover o ex-administrador, também receberá um card rosa."
+        ]
+    },
+    {
+        "titulo": "ARTIGCARD - INCLUSÃO A TODOS",
+        "descricao": "É proibido proibir a entrada ou fazer pouco caso de um administrador da comunidade por ele ser de outra rede, como por exemplo o skur",
+        "paragrafos": [
+            "Parágrafo 01: Caso outra pessoa implique ou zombe de um administrador de outra rede que também faça parte da Neext, resultará na aplicação de um card marrom e um card verde, roxo, rosa, vermelho e amarelo.",
+            "Parágrafo 02: Caso o administrador continue a agir dessa forma após cumprir a pena, resultará na aplicação de um card verde escuro."
+        ]
+    },
+{
+    "titulo": "ARTIGCARD - ORGANIZAÇÃO",
+    "descricao": "Todas as redes da Neext têm uma restrição: nenhum administrador pode ser administrador de outra rede sem a autorização do diretor.",
+    "paragrafos": [
+        "Parágrafo 01: Isso vale apenas para administradores. Um administrador pode ficar como membro em todas as redes da Neext, independentemente do cargo.",
+        "Parágrafo 02: É proibido impedir a entrada de outra pessoa como membro em um grupo de outra rede da Neext, resultando em um card de notificação. Caso a persistência ocorra, será aplicado um card verde."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - LINK",
+    "descricao": "É proibido enviar links no NYPD, NCPD ou em qualquer grupo da Neext, a menos que o link seja da Neext, como um link de uma apostila ou site da Neext.",
+    "paragrafos": [
+        "Parágrafo 01: Caso um link não autorizado seja identificado, deverá ser enviado um card de notificação, e o superior deverá apagá-lo.",
+        "Parágrafo 02: Se a prática continuar, o infrator deverá receber um card lilás."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - PROFISSIONALISMO",
+    "descricao": "É proibido o relacionamento entre membros da House White e Kremlin com membros da Neext, pois isso pode resultar em ameaças, como alegações de nudes.",
+    "paragrafos": [
+        "Parágrafo 01: Você, que ocupa um cargo alto, deve estar preparado para perder o cargo ou tomar ban permanente caso ignore essa regra.",
+        "Parágrafo 02: Você pode quebrar essa regra por sua conta e risco.",
+        "Parágrafo 03: Caso você não quebre essa regra e alguém invente algo, seu cargo será mantido."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - PSICÓLOGA",
+    "descricao": "É proibido ameaçar ou vazar dados dos pacientes.",
+    "paragrafos": [
+        "Parágrafo 01: Caso uma consulta seja vazada pela psicóloga, será aplicado o card verde escuro.",
+        "Parágrafo 02: Caso ocorra uma ameaça, a psicóloga também receberá o card verde escuro."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - TAG",
+    "descricao": "É proibido brincar com qualquer TAG, inclusive as de punição.",
+    "paragrafos": [
+        "Parágrafo 01: Deve ser aplicado o card azul claro em caso de quebra da regra estabelecida.",
+        "Parágrafo 02: Deve ser aplicado o card vermelho caso a infração persista."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - FALAR MAL DA NEEXT",
+    "descricao": "Faz parte da Neext todas as redes e comunidades vinculadas a ela. Qualquer menção negativa ou crítica deve ser evitada, respeitando o ambiente e os membros.",
+    "paragrafos": [
+        "Parágrafo 01: Caso alguém seja flagrado falando negativamente sobre a Neext ou qualquer uma de suas redes, será aplicada a penalidade do card azul claro juntamente com o card preto e roxo como advertência.",
+        "Parágrafo 02: Em caso de reincidência ou descumprimento das advertências, a penalidade será elevada com a aplicação do Cartão Verde Escuro como medida disciplinar definitiva.",
+        "Parágrafo 03: Esta regra também se aplica às conversas privadas. Qualquer comentário negativo sobre a Neext feito em privado está sujeito às mesmas penalidades estabelecidas nos parágrafos anteriores."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - CARD DE BURLAMENTO",
+    "descricao": "Em caso de burlamento, se alguém encontrar uma brecha nas regras, o card de burlamento deve ser enviado ao infrator, que deverá aguardar a decisão final.",
+    "paragrafos": [
+        "Parágrafo 01: Nesses casos, o dono deve ser informado sobre o ocorrido para que possa corrigir ou adicionar uma nova regra que impeça futuros burlamentos.",
+        "Parágrafo 02: Ao modificar ou adicionar uma nova regra, a punição correta será aplicada ao infrator, garantindo a justiça e a conformidade com as diretrizes estabelecidas."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - KITAMENTO DE ADMS",
+    "descricao": "Enquanto os cargos altos têm 72 horas para retornar ao grupo após um kitamento, um ADM que for kitado tem apenas 24 horas.",
+    "paragrafos": [
+        "Parágrafo 01: Após o retorno do ADM, ele também deverá aguardar 24 horas em detenção para o retorno, caso retorne antes desse prazo.",
+        "Parágrafo 02: Essa regra visa evitar o burlamento frequente de kitamentos, garantindo um processo mais justo e organizado.",
+        "Parágrafo 03: Em caso de kitamento, deve ser aplicado o card vermelho para o retorno do infrator."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - LICENÇA OU FÉRIAS/LIMITE",
+    "descricao": "Todo indivíduo ou membro da Neext que tirar férias ou licença deve sair de todos os grupos e permanecer apenas no asilo durante esse período.",
+    "paragrafos": [
+        "Parágrafo 01: Ao tirar licença ou férias, se o indivíduo continuar a participar de conversas nos grupos, ele deverá perder o direito às férias ou licença.",
+        "Parágrafo 02: O limite para solicitar férias ou licença é de duas vezes a cada mês. Caso o indivíduo tire mais de uma licença sem atestado médico ou justificativa de saúde, ele deverá receber um card verde."
+    ]
+},
+{
+      "titulo": "ARTIGCARD - ABUSO NO USO DE TAGS",
+    "descricao": "Fica proibido brincar com tags ou usar tags inexistentes.",
+    "paragrafos": [
+        "Parágrafo 01: Caso a infração seja cometida, será enviado um card de notificação ao indivíduo infrator, solicitando a retirada imediata da tag irregular.",
+        "Parágrafo 02: O não cumprimento da retirada ou a reincidência em recolocar a tag resultará na aplicação de um card vermelho.",
+        "Parágrafo 03: É proibido o uso de tags que zombem de problemas mentais, psicológicos ou doenças. O uso de outras tags, desde que não relacionadas a essas situações, será permitido."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - AMEAÇAR OU FAZER UM ADM KITAR À FORÇA",
+    "descricao": "É proibido ameaçar um ADM para que ele realize um kitamento.",
+    "paragrafos": [
+        "Parágrafo 01: Fazer um ADM kitar sob ameaças ou opressão resultará na aplicação de um card marrom ao indivíduo infrator.",
+        "Parágrafo 02: Caso um ADM denuncie a ameaça sem realizar o kitamento, será concedido o direito de transferência a ele.",
+        "Parágrafo 03: O direito de transferência é concedido mesmo sem a permissão do CTO nesses casos."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - TRANSFERÊNCIA",
+    "descricao": "Essa regra visa evitar abusos nas transferências ou falta de permissão.",
+    "paragrafos": [
+        "Parágrafo 01: Para transferir um ADM, é necessária a permissão do CTO e do CTO para o qual o ADM será transferido. A falta de permissão de um desses dois resulta na proibição da transferência.",
+        "Parágrafo 02: Em casos como a regra de ameaçar ou fazer um ADM kitar à força, não é necessária a permissão do CTO, apenas do CTO que irá receber o ADM transferido."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - ASSÉDIO",
+    "descricao": "É considerado assédio o ato de incomodar, constranger ou intimidar alguém de forma repetitiva, utilizando palavras, gestos ou qualquer tipo de comportamento que cause desconforto à vítima. Isso inclui, mas não se limita a, comentários inapropriados, toques indesejados ou pressões para que a pessoa se envolva em situações que a façam sentir-se insegura ou desconfortável.",
+    "paragrafos": [
+        "Parágrafo 01: Caso alguém dê liberdade ou permita, não é considerado assédio, desde que a interação seja consensual e respeitosa.",
+        "Parágrafo 02: Se a pessoa não deu liberdade e mesmo assim foi assediada, o infrator receberá um card verde escuro como penalidade."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - LIMITE DE IDADE DE NAMORO",
+    "descricao": "É considerado pedofilia o ato de um adulto manter um relacionamento romântico ou sexual com uma pessoa menor de idade, ou seja, alguém que não atingiu a idade legal de consentimento. Isso é uma violação das leis e direitos da criança, que deve ser protegida de situações que possam prejudicá-la emocional ou fisicamente. A pedofilia é um crime sério e pode resultar em consequências legais severas.",
+    "paragrafos": [
+        "Parágrafo 01: Caso seja descoberto que um indivíduo está em um relacionamento desse tipo, ele receberá um card verde escuro como penalidade.",
+        "Parágrafo 02: É permitido o namoro desde que não haja pedofilia, respeitando as leis sobre a idade de consentimento e garantindo que todos os relacionamentos sejam saudáveis e consensuais."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - ACOBERTAMENTO",
+    "descricao": "É proibido acobertar alguém que quebrou uma das regras ou esconder a infração sem denunciá-la.",
+    "paragrafos": [
+        "Parágrafo 01: Caso fique evidente que alguém escondeu ou acobertou uma pessoa que quebrou uma regra, essa pessoa receberá a mesma punição correspondente àquela regra.",
+        "Parágrafo 02: Esconder ou acobertar uma infração é considerado cúmplice porque implica em uma colaboração na violação das regras. Ao proteger o infrator, a pessoa não só permite que o comportamento inadequado continue, mas também prejudica a integridade do grupo. Essa cumplicidade pode criar um ambiente de impunidade, onde as regras não são respeitadas, tornando a situação ainda mais grave e dificultando a aplicação das normas estabelecidas."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - MENÇÃO A INIMIGOS",
+    "descricao": "É proibido levantar bandeira ou usar símbolos que exaltem inimigos, pois isso pode gerar divisões e conflitos dentro do grupo, comprometendo a harmonia e o respeito mútuo. A exaltação de inimigos promove a animosidade e prejudica as relações, criando um ambiente hostil que pode levar a desentendimentos e desunião entre os membros.",
+    "paragrafos": [
+        "Parágrafo 01: Caso alguém faça isso, deve ser enviado um card de notificação para alertá-lo sobre a violação das regras.",
+        "Parágrafo 02: Se a pessoa continuar a exaltar inimigos após a notificação, será aplicado um card marrom como penalidade."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - BANIR OUTRO ADM INJUSTAMENTE",
+    "descricao": "É proibido banir outro administrador por zombaria, sem provas ou autorização, pois isso configura abuso de poder e prejudica a harmonia entre os membros da administração. Tal comportamento é considerado inaceitável e está sujeito a penalidades para evitar reincidências.",
+    "paragrafos": [
+        "Parágrafo 01: Quem banir outro administrador por zombaria, sem provas ou autorização, receberá um card cinza e azul claro como advertência.",
+        "Parágrafo 02: Caso a infração ocorra novamente, será aplicado um card verde escuro como penalidade mais severa."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - O QUE ACONTECE NO PRIVADO",
+    "descricao": "Falar mal de outra pessoa fora do grupo, em conversas privadas, deve permanecer no privado e não tem validade nas regras, exceto em circunstâncias específicas.",
+    "paragrafos": [
+        "Parágrafo 01: A pessoa que falou mal não receberá punição, pois é importante separar a vida pessoal da profissional.",
+        "Parágrafo 02: Caso ocorra perseguição a um ADM e a pessoa não pare, continuando a agir de forma incessante com a intenção de prejudicar o ADM ou a Neext, será aplicado um card vermelho como penalidade.",
+        "Parágrafo 03: Desde que não prejudique a Neext, tudo que acontece no privado fica no privado.",
+        "Parágrafo 04: Apenas ameaçar de kitamento em privado ou falar mal da Neext em privado tem validade; essa regra não altera as demais."
+    ]
+},
+{
+    "titulo": "ARTIGCARD - LIMITE DE KITAMENTO",
+    "descricao": "É proibido retornar ao grupo após três kitamentos. O procurador deve recusar a entrada da pessoa que já excedeu esse limite.",
+    "paragrafos": [
+        "Parágrafo 01:Esta regra visa evitar tentativas de burlar o sistema, como sair e retornar ao grupo conforme a conveniência do indivíduo. Assim, qualquer tentativa de retorno será vetada após o terceiro kitamento.",
+     "Parágrafo 02:A validade desta regra aplica-se somente se o kitamento da pessoa foi efetivado após o tempo limite estipulado, sendo formalmente registrado como tal."
+    ]
+},
+{
+   "titulo": "ARTIGCARD - AVISO",
+    "descricao": "Nem todas as regras estão aqui, pois tentar regulamentar cada aspecto da convivência não é viável. A vida em grupo envolve nuances e situações que podem não ser previstas em regras escritas.",
+    "paragrafos": [
+        "É fundamental agir como seres humanos e seguir as regras estabelecidas, além de saber se comportar de maneira adequada.",
+        "Todos têm um entendimento básico do que é certo ou errado e devem agir de acordo com essa consciência, promovendo um ambiente de respeito e colaboração.",
+        "A ética e a moralidade pessoal são essenciais para o bom convívio e a harmonia no grupo."
+    ]
+}
+]

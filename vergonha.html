@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Plaquinha da Vergonha</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; flex-direction: column; background-color: #f4f4f4; }
+        .container { text-align: center; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px; }
+        h1 { color: #ff0000; font-size: 1.8rem; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; }
+        h1 i { margin-right: 10px; font-size: 1.8rem; }
+        .plaque { width: 100%; max-width: 350px; height: 250px; border: 5px solid; position: relative; background-color: #f9f9f9; padding: 10px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 1.5rem; background: linear-gradient(to right, #ff0000, #ff6600); border-image: linear-gradient(to right, #ff0000, #ff6600) 1; box-sizing: border-box; }
+        .plaque-text { font-size: 1.5rem; color: #333; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; }
+        .plaque-text i { margin-right: 10px; font-size: 2rem; }
+        .input-names input, .input-color input, .input-text-color input { padding: 8px; margin: 5px; width: 120px; font-size: 1rem; max-width: 100%; }
+        .btn { padding: 10px 20px; background-color: #ff0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        .btn:hover { background-color: #cc0000; }
+        .download-btn { margin-top: 20px; display: none; }
+        .input-blur { margin: 10px; }
+        footer { font-size: 0.8rem; margin-top: 10px; color: #333; }
+        .plaque-content { display: flex; justify-content: space-evenly; align-items: center; width: 100%; }
+        @media (max-width: 768px) { h1 { font-size: 1.5rem; } .plaque { max-width: 300px; height: auto; } .input-names input, .input-color input, .input-text-color input { width: 100%; } .btn { font-size: 1rem; padding: 8px 15px; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fas fa-mask"></i>Placa da Vergonha</h1>
+    
+    <div class="input-names">
+        <input type="text" id="name1" placeholder="Nome 1">
+        <input type="text" id="name2" placeholder="Nome 2">
+    </div>
+
+    <div class="input-color">
+        <label for="colorPicker">Escolha a cor do fundo:</label>
+        <input type="color" id="colorPicker" value="#ff0000">
+    </div>
+
+    <div class="input-text-color">
+        <label for="textColorPicker">Escolha a cor das letras:</label>
+        <input type="color" id="textColorPicker" value="#333333">
+    </div>
+
+    <div class="input-color">
+        <label for="iconColorPicker">Escolha a cor dos bonequinhos:</label>
+        <input type="color" id="iconColorPicker" value="#ff0000">
+    </div>
+
+    <div class="input-blur">
+        <label for="blurEffect">Ativar efeito de desfoque no fundo:</label>
+        <input type="checkbox" id="blurEffect">
+    </div>
+
+    <div class="plaque" id="plaque">
+        <div class="plaque-text" id="plaqueText">
+            <i class="fas fa-mask"></i>Placa da Vergonha
+        </div>
+        
+        <div class="plaque-content">
+            <div class="person" id="person1">
+                <i class="fas fa-user"></i>
+                <div id="name1Text">Pessoa 1</div>
+            </div>
+
+            <div class="person" id="person2">
+                <i class="fas fa-user"></i>
+                <div id="name2Text">Pessoa 2</div>
+            </div>
+        </div>
+
+        <footer>© NEEXT LTDA</footer>
+    </div>
+
+    <button class="btn" onclick="generatePlaque()">Gerar Plaquinha</button>
+
+    <!-- Botão de download que aparece após gerar a plaquinha -->
+    <a id="downloadLink" class="download-btn" download="plaquinha-da-vergonha.png">
+        <button class="btn">Baixar Imagem</button>
+    </a>
+</div>
+
+<script>
+    function generatePlaque() {
+        const name1 = document.getElementById('name1').value;
+        const name2 = document.getElementById('name2').value;
+        const plaqueText = document.getElementById('plaqueText');
+        const person1Text = document.getElementById('name1Text');
+        const person2Text = document.getElementById('name2Text');
+        const color = document.getElementById('colorPicker').value;
+        const textColor = document.getElementById('textColorPicker').value;
+        const iconColor = document.getElementById('iconColorPicker').value;
+        const blurEffect = document.getElementById('blurEffect').checked;
+
+        if (name1 && name2) {
+            plaqueText.innerHTML = `<i class="fas fa-mask"></i>Placa da Vergonha`;
+            person1Text.textContent = name1;
+            person2Text.textContent = name2;
+        } else {
+            plaqueText.innerHTML = `<i class="fas fa-mask"></i>Placa da Vergonha`;
+            person1Text.textContent = 'Pessoa 1';
+            person2Text.textContent = 'Pessoa 2';
+        }
+
+        const plaque = document.getElementById('plaque');
+        plaque.style.background = `linear-gradient(to right, ${color}, #ff6600)`;
+        plaque.style.borderImage = `linear-gradient(to right, ${color}, #ff6600) 1`;
+
+        plaqueText.style.color = textColor;
+        person1Text.style.color = textColor;
+        person2Text.style.color = textColor;
+
+        const person1Icon = document.getElementById('person1').querySelector('i');
+        const person2Icon = document.getElementById('person2').querySelector('i');
+        person1Icon.style.color = iconColor;
+        person2Icon.style.color = iconColor;
+
+        if (blurEffect) {
+            plaque.style.filter = 'blur(5px)';
+        } else {
+            plaque.style.filter = 'none';
+        }
+
+        // Gerando a imagem e preparando o link para download
+        html2canvas(document.getElementById('plaque')).then(function(canvas) {
+            const downloadLink = document.getElementById('downloadLink');
+            const imageUrl = canvas.toDataURL("image/png");
+
+            downloadLink.href = imageUrl;
+            downloadLink.style.display = 'inline'; // Exibe o link de download (corrigido para 'inline')
+        });
+    }
+</script>
+
+</body>
+</html>

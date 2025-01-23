@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗖𝗔𝗥𝗧𝗢́́𝗥𝗜𝗢 𝗡𝗘𝗘𝗫𝗧</title>
+    <link rel="icon" href="logo.jpg" type="image/jpeg"> <!-- Adiciona o favicon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet"> <!-- Importa a fonte -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif; /* Fonte padrão */
+            margin: 0;
+            padding: 0;
+            background-color: #f5f0e1; /* Cor de fundo semelhante a papel antigo */
+            color: #5b3a29; /* Cor do texto */
+            line-height: 1.6; /* Aumenta a altura da linha para melhor legibilidade */
+        }
+        .navbar {
+            background-color: #000; /* Cor preta */
+            padding: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        .navbar h1 {
+            margin: 0;
+            flex-grow: 1;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0; /* Espaço entre a navbar e a barra de pesquisa */
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-input {
+            padding: 10px 40px 10px 20px; /* Adiciona padding para o texto */
+            border: 2px solid #ccc; /* Borda padrão */
+            border-radius: 5px; /* Cantos arredondados */
+            font-size: 1em; /* Tamanho da fonte */
+            outline: none; /* Remove contorno padrão */
+            transition: border 0.3s; /* Transição suave */
+        }
+        .search-input:focus {
+            border-color: #000; /* Cor da borda quando em foco */
+        }
+        .search-button {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%); /* Centraliza verticalmente */
+            background-color: #000; /* Cor de fundo do botão */
+            border: none; /* Remove borda do botão */
+            color: white; /* Cor do texto do botão */
+            padding: 10px 15px; /* Padding do botão */
+            border-radius: 5px; /* Cantos arredondados */
+            cursor: pointer; /* Muda o cursor ao passar o mouse */
+            transition: background-color 0.3s; /* Transição suave */
+        }
+        .search-button:hover {
+            background-color: #333; /* Cor do botão ao passar o mouse */
+        }
+        .content {
+            padding: 20px;
+            border: 1px solid #ccc; /* Borda para simular um caderno */
+            background-color: #ffffff; /* Fundo branco para o conteúdo */
+            border-radius: 5px; /* Cantos arredondados */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra leve */
+            max-width: 600px; /* Largura máxima do conteúdo */
+            margin: 20px auto; /* Centraliza o conteúdo */
+            position: relative; /* Para posicionar os furos do caderno */
+            overflow: hidden; /* Para esconder os furos que estão fora do contêiner */
+        }
+        .line {
+            border-bottom: 1px dashed #ccc; /* Linhas pontilhadas como as de um caderno */
+            margin: 10px 0; /* Margem maior para separar as linhas */
+            padding: 5px 0; /* Padding para dar espaço entre o texto e a linha */
+            font-size: 1.5em; /* Tamanho da fonte maior */
+            font-family: 'Dancing Script', cursive; /* Fonte que lembra escrita à mão */
+            position: relative; /* Para adicionar furos nas linhas */
+        }
+        .line::before {
+            content: ""; /* Adiciona furos antes de cada linha */
+            position: absolute;
+            left: -15px; /* Posição dos furos à esquerda */
+            top: 50%; /* Centraliza verticalmente */
+            width: 10px; /* Largura do furo */
+            height: 10px; /* Altura do furo */
+            background-color: #ccc; /* Cor dos furos */
+            border-radius: 50%; /* Torna o furo redondo */
+            transform: translateY(-50%); /* Centraliza verticalmente */
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>CARTÓRIO NEEXT <i class="fas fa-cross"></i></h1>
+    </div>
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por nome...">
+            <button class="search-button" onclick="search()">🔍</button>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <!-- As linhas do cartório serão inseridas aqui -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let cartorioData = [];
+
+        // Função para ler o arquivo JSON e exibir os dados
+        async function fetchCartorioData() {
+            try {
+                const response = await fetch('cartorio.json');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                cartorioData = await response.json(); // Armazena os dados
+                displayData(cartorioData); // Exibe os dados
+            } catch (error) {
+                console.error('Houve um problema com a requisição:', error);
+            }
+        }
+
+        // Função para exibir os dados na página
+        function displayData(data) {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = ''; // Limpa o conteúdo atual
+            data.forEach(item => {
+                const lineDiv = document.createElement('div');
+                lineDiv.classList.add('line');
+                lineDiv.textContent = `${item.nome1} casou com ${item.nome2} dia ${item.data}`;
+                contentDiv.appendChild(lineDiv);
+            });
+        }
+
+        // Função para pesquisar os dados
+        function search() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const foundItems = cartorioData.filter(item =>
+                item.nome1.toLowerCase().includes(searchInput) || item.nome2.toLowerCase().includes(searchInput)
+            );
+
+            if (foundItems.length > 0) {
+                const message = foundItems.map(item => `${item.nome1} casou com ${item.nome2} dia ${item.data}`).join('<br>');
+                Swal.fire({
+                    title: 'Resultados da Pesquisa',
+                    html: message,
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Nenhum Resultado',
+                    text: 'Nenhuma pessoa encontrada com esse nome.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        // Chama a função para buscar os dados quando a página é carregada
+        window.onload = fetchCartorioData;
+    </script>
+</body>
+</html>

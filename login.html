@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://i.imgur.com/3gkk9dU.gif') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+.login-container {
+    background: rgba(255, 255, 255, 0.5); /* Ajuste a opacidade para 0.5 */
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+        .login-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            padding-left: 40px; /* Espaço para o ícone de usuário ou senha */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .input-group select {
+            padding-left: 40px; /* Alinhando o ícone do select */
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 18px;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #9b59b6, #ff69b4);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-container button:hover {
+            background-color: #8e44ad;
+        }
+
+        .remember-me {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 500px) {
+            .login-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .login-container h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+    <script>
+        async function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const groupSelect = document.getElementById("group");
+            const group = groupSelect.options[groupSelect.selectedIndex].value;
+            const rememberMe = document.getElementById("remember-me").checked;
+
+            if (!username || !password || !group) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Atenção',
+                    text: 'Por favor, preencha todos os campos!',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbwDUfyWsGqSJ8Q9przj7LHxw7zxuvLYd7UfgiCP4F3Fju9i7kB-LtRReQMjpDDw5-Q/exec?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&group=${encodeURIComponent(group)}`);
+                
+                if (!response.ok) {
+                    throw new Error("Erro ao conectar com o servidor.");
+                }
+
+                const result = await response.text();
+                const decodedResult = decodeURIComponent(result);
+
+                if (decodedResult.startsWith("http")) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: `Bem-vindo, ${username}!`,
+                        text: 'Login realizado com sucesso!',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = decodedResult;
+                    }, 3000);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro',
+                        text: decodedResult,
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao fazer login:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Ocorreu um erro ao fazer login. Tente novamente.',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form onsubmit="event.preventDefault(); login();">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-users"></i>
+                <select id="group" name="group" required>
+                    <option value="" disabled selected>Selecione seu grupo</option>
+                    <option value="o">o</option>
+                    <option value="abinskur">abinskur</option>
+                    <option value="abinfbi">abinfbi</option>
+                    <option value="detençãoskur">detençãoskur</option>
+                    <option value="detençãofbi">detençãofbi</option>
+                    <option value="paineldiretor">paineldiretor</option>
+                </select>
+            </div>
+            <div class="remember-me">
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Lembrar senha</label>
+            </div>
+            <button type="submit">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
+        </form>
+    </div>
+</body>
+</html>

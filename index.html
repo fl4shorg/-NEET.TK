@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content=" O Melhor tem nome">
+    <title>© 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔.</title>
+    <link rel="icon" href="imagens/logo.jpeg" type="image/jpeg"> <!-- Ícone da página -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- SweetAlert 2 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
+    <style>
+  
+    
+    
+        /* Estilos para o cursor animado */
+        .cursor {
+            display: inline-block;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Estilos para o botão do WhatsApp e Suporte */
+        .contact-button {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 200px;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .whatsapp-button {
+            background-color: #25D366;
+            margin-bottom: 5px;
+        }
+
+        .support-button {
+            background: linear-gradient(to right, #8A2BE2, #00BFFF);
+            margin-top: 0;
+        }
+
+        .icon {
+            font-size: 30px;
+            margin-right: 10px;
+        }
+
+        .support-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        /* Lista de contatos */
+        .contact-list {
+            margin-top: 20px;
+            padding-left: 0;
+        }
+
+        .contact-list li {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            margin: 5px 0;
+        }
+
+        .contact-list li img {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+.fixed-icon {
+    width: 1em; /* Define a largura proporcional ao tamanho da fonte */
+    height: 1em; /* Define a altura proporcional ao tamanho da fonte */
+    margin-right: 10px; /* Espaço entre o ícone e o texto */
+    vertical-align: middle; /* Alinha verticalmente o ícone com o texto */
+}
+.search-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-bar-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 15px 15px 15px 40px; /* Espaço extra à esquerda para o ícone */
+    font-size: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    background-color: #f9f9f9;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus {
+    border-color: #5b87ff;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(91, 135, 255, 0.5);
+    border-width: 2px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px; /* Ajusta a posição do ícone à esquerda */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+}
+
+.search-results {
+    margin-top: 10px;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search-results li {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.search-results li:hover {
+    background-color: #f1f1f1;
+}
+
+.search-results i {
+    margin-right: 12px;
+    font-size: 20px;
+    color: #5b87ff;
+    transition: transform 0.3s ease;
+}
+
+.search-results li:hover i {
+    transform: scale(1.1);
+}
+
+        /* Estilos para a linha separadora */
+        .separator {
+            border: none;
+            height: 2px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        
+        .gradient-a {
+    font-size: 24px; /* Tamanho do símbolo */
+    font-weight: bold; /* Deixar a letra mais forte */
+    background: linear-gradient(135deg, #0000ff, #800080); /* Degradê de azul para roxo */
+    -webkit-background-clip: text; /* Aplica o degradê no texto */
+    color: transparent; /* Torna o texto transparente para que o degradê apareça */
+}
+
+        /* Estilos para o iframe */
+        #iframe-container {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centraliza o iframe */
+        }
+        /* Estilo para o botão flutuante do Instagram */
+.instagram-button {
+    position: fixed;
+    bottom: 20px;  /* Distância do fundo */
+    right: 20px;   /* Distância da direita */
+    background-color: #E1306C;  /* Cor do botão do Instagram */
+    padding: 15px;
+    border-radius: 50%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 1000;  /* Para garantir que o botão fique sobre os outros elementos */
+}
+
+.instagram-button i {
+    color: white;
+    font-size: 30px;
+}
+
+/* Efeito de hover para o botão */
+.instagram-button:hover {
+    background-color: #C13584;  /* Cor de hover mais escura */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+}
+        
+
+        #contador-frame, #neext-frame {
+            width: 100%;
+            height: auto; /* Deixe a altura automática */
+            min-height: 200px; /* Altura mínima */
+            border: none;
+        }
+
+        /* Estilos para o rodapé */
+        footer {
+            background-color: #282c34;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #61dafb;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+  
+
+    <!-- Barra de Navegação Superior -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="svg/icon.svg" alt="Ícone" class="icon"> 
+            <span class="site-title">NEEXT LTDA.</span> 
+        </div>
+        <div class="menu-hamburger" onclick="toggleMenu()">
+            <img src="svg/menu-icon.svg" alt="Menu Icon" width="30" height="30">
+        </div>
+    </div>
+
+
+
+    <div class="menu" id="menu">
+<a href="painelneext.html">
+    <i class="fas fa-tachometer-alt" style="color: purple;"></i> Painel Da Neext
+        </a><a href="apostilafbi.html">
+    <i class="fas fa-folder" style="color: red;"></i> Apostila FBI
+<a href="apostilaskur.html" target="_blank">
+    <i class="fas fa-folder" style="color: pink;"></i> Apostila Skur
+</a>
+<a href="https://www.brinks2025.online/" target="_blank">
+    <i class="fas fa-globe" style="color: dodgerblue;"></i> Brinks
+</a>
+<a href="certificado.html" target="_blank">
+    <i class="fas fa-certificate" style="color: purple;"></i> Gerador de Certificado
+</a>
+<a href="rank.html" target="_blank">
+    <i class="fas fa-medal" style="color: orange;"></i> Gerador de Rank
+</a>
+<a href="relatório.html" target="_blank">
+    <i class="fas fa-file-alt" style="color: limegreen;"></i> Gerador de relatório 
+</a>
+<a href="jornal.html" target="_blank">
+    <i class="fas fa-newspaper" style="color: red;"></i> Jornal Neext
+</a>
+<a href="card.html" target="_blank">
+    <i class="fas fa-id-card" style="color: steelblue;"></i> Card generator
+</a>
+<a href="https://neext.vercel.app" target="_blank">
+    <i class="fas fa-file" style="color: indigo;"></i> Criar arquivos
+</a>
+<a href="cartorio.html" target="_blank">
+    <i class="fas fa-cross" style="color: maroon;"></i> Cartório Neext
+</a>
+<a href="avisos.html" target="_blank">
+    <i class="fas fa-exclamation-circle" style="color: tomato;"></i> Avisos 
+</a>
+<a href="neextense.html" target="_blank">
+    <i class="fas fa-clock" style="color: gray;"></i> Fuso Horário Neextense
+</a>
+        
+    </div>
+    
+    
+    
+
+    <!-- Barra Lateral -->
+    <div class="barra-lateral">
+        <a href="https://beacons.ai/skur.ofc" target="_blank">Skur</a>
+        <a href="https://beacons.ai/neextch4t" target="_blank">Fbi</a>
+        <a href="https://t.me/your_username" target="_blank">Telegram</a>
+        <a href="https://discord.com/invite/your_invite" target="_blank">Discord</a>
+    </div>
+    
+   <body>
+    <div class="search-container">
+        <div class="search-bar-container">
+            <i class="fas fa-search search-icon"></i> <!-- Ícone de pesquisa -->
+            <input type="text" id="search-bar" class="search-bar" placeholder="Pesquise...">
+        </div>
+        <ul id="search-results" class="search-results"></ul>
+    </div>
+</body>
+
+
+<script>
+const searchData = [
+    { name: "cargos skur", url: "https://neetk.onrender.com/cargos%20skur/skur", icon: "fas fa-globe" },
+    { name: "manual skur", url: "https://neetk.onrender.com/manual%20skur", icon: "fas fa-laptop" },
+    { name: "elos skur", url: "https://neetk.onrender.com/elos", icon: "fas fa-briefcase" },
+    { name: "protocolos", url: "https://neetk.onrender.com/protocolos", icon: "fas fa-cogs" },
+    { name: "cargos FBI", url: "https://neetk.onrender.com/apostilafbi", icon: "fas fa-shield-alt" },
+    { name: "manual FBI", url: "https://neetk.onrender.com/manual", icon: "fas fa-book" },
+    { name: "level", url: "https://neetk.onrender.com/site%20em%20constru%C3%A7%C3%A3o", icon: "fas fa-trophy" },
+    { name: "regras", url: "https://neetk.onrender.com/regras", icon: "fas fa-list-ul" },
+    { name: "painel FBI", url: "https://neetk.onrender.com/Painel%20Fbi", icon: "fas fa-user-shield" },
+    { name: "painel skur", url: "https://neetk.onrender.com/Painel%20Skur", icon: "fas fa-key" },
+    { name: "gerador de rank", url: "gerador-rank.html", icon: "fas fa-medal" },
+    { name: "gerador de notícias", url: "https://neetk.onrender.com/jornal", icon: "fas fa-newspaper" },
+    { name: "cartório neext", url: "https://neetk.onrender.com/cartorio", icon: "fas fa-archive" },
+    { name: "procurados", url: "https://neetk.onrender.com/neexten", icon: "fas fa-search" },
+];
+
+const searchBar = document.getElementById("search-bar");
+const searchResults = document.getElementById("search-results");
+
+searchBar.addEventListener("input", () => {
+    const query = searchBar.value.toLowerCase().trim();
+    searchResults.innerHTML = ""; // Limpa os resultados anteriores
+
+    if (query.length > 0) {
+        const filteredData = searchData.filter(item =>
+            item.name.toLowerCase().includes(query)
+        );
+
+        if (filteredData.length === 0) {
+            searchResults.innerHTML = "<li>Nenhum resultado encontrado</li>";
+        } else {
+            filteredData.forEach(item => {
+                const li = document.createElement("li");
+                li.innerHTML = `<i class="${item.icon}"></i> ${item.name}`;
+                li.addEventListener("click", () => {
+                    window.location.href = item.url; // Redireciona para a URL
+                    searchResults.innerHTML = ""; // Limpa os resultados após clicar
+                    searchBar.value = ""; // Limpa a barra de pesquisa
+                });
+                searchResults.appendChild(li);
+            });
+        }
+    }
+});
+
+// Fechar resultados ao clicar fora
+document.addEventListener("click", (event) => {
+    if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
+        searchResults.innerHTML = "";
+    }
+});
+</script>
+
+    <!-- Seção de Boas-Vindas -->
+    <div class="welcome-container">
+        <h1 class="welcome-message">
+            <img src="svg/conexao.gif" alt="Ícone Fixado" class="fixed-icon"> 
+            Bem-vindo ao nosso site!
+        </h1>
+        <div class="animated-message">
+            <span id="mensagem"></span>
+            <span class="cursor">|</span>
+        </div>
+
+        <!-- Lista de Contatos -->
+        <ul class="contact-list">
+            <li><img src="svg/ponto.svg" alt="Ponto"> WhatsApp</li>
+            <li><img src="svg/ponto.svg" alt="Ponto"> Telegram</li>
+            <li><img src="svg/ponto.svg" alt="Ponto"> Discord</li>
+            <li><img src="svg/ponto.svg" alt="Ponto"> Instagram</li>
+        </ul>
+
+        <!-- Botão do WhatsApp com ícone -->
+        <a href="https://whatsapp.com/channel/0029Vacb5xJKrWQpjjJgwi1z" class="contact-button whatsapp-button" target="_blank">
+            <i class="fab fa-whatsapp icon"></i> Canal no WhatsApp
+        </a>
+
+
+<!-- Botão de Suporte com ícone -->
+<a href="mailto:neextsupport@onmail.com" class="contact-button support-button">
+    <img src="svg/suporte.svg" alt="Ícone Suporte" class="support-icon"> Suporte
+</a>
+
+
+
+
+        <!-- Linha Separadora -->
+        <hr class="separator">
+
+        <!-- Contêiner para os iframes -->
+        <div id="iframe-container">
+            <!-- Iframe para o contador -->
+            <iframe id="contador-frame" src="contador.html"></iframe> <!-- Contador exibido diretamente -->
+            
+            <!-- Iframe para o Neext -->
+            <iframe id="neext-frame" src="neext.html"></iframe> <!-- Conteúdo do Neext exibido abaixo -->
+              <!-- Linha Separadora -->
+        <hr class="separator">      
+                        <!-- Iframe para o Neext -->
+<iframe id="neext-frame" src="carrossel.html" style="width: 100%; border: none;" onload="resizeIframe()"></iframe>
+
+<!-- Seção de História da Neext com estilo de pergaminho envelhecido -->
+<div class="historia-container">
+    <div class="historia-conteudo">
+        <h2><i class="fas fa-scroll"></i> História da NEEXT</h2>
+        <p>
+            A Neext foi fundada e criada em 01/03/2019 e segue firme até hoje. O principal objetivo da Neext é ajudar e acolher pessoas que têm dificuldade em fazer amigos ou se enturmar, independentemente de identidade, ideologia ou raça. A Neext tem como missão principal fazer com que as pessoas se sintam parte de algo e que pertençam a um lugar. Além disso, a principal missão da Neext é se tornar uma empresa e conectar pessoas de todo o mundo. 
+        </p>
+        <p>
+            No passado, a Neext quase deixou de existir após uma tentativa de golpe de estado na team Skaikru, nome que a comunidade carregava antigamente. Originalmente, a Neext surgiu de uma team de guerra chamada Team Skaikru e foi salva de um golpe de estado da team Lobos pelo Koala Havaianas. Esse momento foi crucial para a sobrevivência da Neext, sem o qual ela não existiria atualmente. Além disso, a Neext enfrentou outro golpe de estado em 2021 contra os Palhaços Os Loucos, a maior facção de trava zap na época, mas a Neext conseguiu se salvar, banindo e dizimando toda a team. Em 2023, a Neext sofreu uma guerra provocada pelos diretores do FBI, o que afetou toda a comunidade e causou milhares de kitamentos em massa. A guerra também impactou o Skur, o Discord e o Telegram, que sofreram meses de isolamento. No entanto, a Neext se uniu e conseguiu se manter forte, aguentando meses de guerra. Desde então, a Neext segue firme e forte, evoluindo continuamente.
+        </p>
+    </div>
+</div>
+
+<!-- Estilos para o estilo de pergaminho envelhecido -->
+<style>
+    /* Definindo o fundo com uma textura de pergaminho */
+    .historia-container {
+        background: url('https://www.publicdomainpictures.net/pictures/40000/velvety/old-paper-1335727104Bh3.jpg') no-repeat center center;
+        background-size: cover;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .historia-conteudo {
+        background-color: rgba(255, 255, 255, 0.9); 
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Título com fonte grossa e padrão */
+    .historia-conteudo h2 {
+        font-family: Arial, sans-serif;
+        color: #6b4f3a;
+        font-size: 2em;
+        text-align: center;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    /* Parágrafos com fonte padrão */
+    .historia-conteudo p {
+        font-family: Arial, sans-serif;
+        color: #4b2e06;
+        font-size: 1.1em;
+        line-height: 1.8;
+        text-align: justify;
+        letter-spacing: 0.5px;
+    }
+
+    /* Estilo responsivo para dispositivos móveis */
+    @media (max-width: 768px) {
+        .historia-container {
+            padding: 15px;
+        }
+
+        .historia-conteudo {
+            padding: 20px;
+        }
+
+        .historia-conteudo h2 {
+            font-size: 1.8em;
+        }
+
+        .historia-conteudo p {
+            font-size: 1em;
+        }
+    }
+</style>
+
+<!-- Link para Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+
+<iframe id="neext-frame" src="medalhass.html" style="width: 100%; border: none;" onload="resizeIframe()"></iframe>
+
+        <!-- Linha Separadora -->
+        <hr class="separator">
+
+<div class="card">
+  <div class="card-header">
+    <!-- Ícone da Font Awesome representando regras -->
+    <i class="fas fa-gavel card-icon"></i>
+    <h3 class="card-title">Regras Geral da Neext</h3>
+  </div>
+  <div class="card-body">
+    <p>Veja nossas diretrizes e regras gerais da administração Neext e fique por dentro de como seguimos e somos rígidos com as regras.</p>
+    <a href="https://neetk.onrender.com/regras" class="card-link">Veja nossas diretrizes e regras gerais</a>
+  </div>
+</div>
+<div style="background: linear-gradient(to right, #4F6DFF, #9B2FF6); color: white; padding: 20px; text-align: center; font-size: 20px; font-weight: bold; border-radius: 10px; margin: 20px 0;">
+    <i class="fas fa-users-cog" style="font-size: 30px; margin-right: 10px;"></i> <strong>Recrutamento de Novos Administradores</strong>
+    <p style="font-size: 16px; margin-top: 10px;">
+        Estamos sempre recrutando novos administradores! Caso queira entrar na administração, vá até a descrição dos grupos e acesse a seção "Quer Virar ADM" para mais informações.
+    </p>
+</div>
+</div>
+
+<!-- Link para o Font Awesome (caso não tenha incluído no seu projeto) -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<style>
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 350px;
+    background: linear-gradient(to right, #ff4b5c, #9b3f79); /* Degradê vermelho-rosa */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .card-icon {
+    font-size: 30px;
+    color: white;
+    margin-right: 15px;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .card-body {
+    font-size: 14px;
+    color: white;
+  }
+
+  .card-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .card-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsividade */
+  @media (max-width: 600px) {
+    .card {
+      width: 90%;
+      padding: 15px;
+    }
+
+    .card-icon {
+      font-size: 25px;
+    }
+
+    .card-title {
+      font-size: 16px;
+    }
+  }
+</style>
+
+        </div>
+    </div>
+    <!-- SweetAlert 2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert 2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+    // Função para alternar o menu
+    function toggleMenu() {
+        const menu = document.getElementById('menu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+
+
+
+// Lógica para esconder a extensão .html
+        window.onload = function() {
+            const links = document.querySelectorAll('a[href^="neext"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    window.location.href = link.getAttribute('href') + '.html';
+                });
+            });
+
+
+
+
+    // Exibe a notificação quando a página é carregada
+    window.onload = function() {
+        Swal.fire({
+            title: 'Atenção!',
+            text: 'Este site ainda está em atualização, mas está funcionando normalmente. Qualquer bug, nos avise no nosso Instagram.',
+            icon: 'warning', // Usando "warning" para o ícone de alerta
+            confirmButtonText: 'Ok',
+        });
+    };
+</script>
+
+<!-- Rodapé -->
+<footer style="background: #000; color: white; padding: 15px 10px; text-align: center; border-top: 2px solid #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); font-family: 'Arial', sans-serif; width: 100%; box-sizing: border-box;">
+    <div style="margin-bottom: 10px;">
+        <p style="font-size: 14px; font-weight: bold; text-transform: uppercase;">&copy; 2019 NEEXT LTDA. Todos os direitos reservados.</p>
+    </div>
+    <div style="margin-bottom: 15px;">
+        <p style="font-size: 12px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; font-weight: 500;">
+            <a href="politica.html" style="color: #fff; text-decoration: none; transition: transform 0.3s; padding: 3px 8px; border-radius: 5px;">Política de Privacidade</a> 
+            <span>|</span>
+            <a href="services.html" style="color: #fff; text-decoration: none; transition: transform 0.3s; padding: 3px 8px; border-radius: 5px;">Termos de Serviço</a> 
+            <span>|</span>
+            <a href="https://neetk.onrender.com/regraskur" style="color: #fff; text-decoration: none; transition: transform 0.3s; padding: 3px 8px; border-radius: 5px;">Regras Skur</a> 
+            <span>|</span>
+            <a href="https://neetk.onrender.com/regraneepool" style="color: #fff; text-decoration: none; transition: transform 0.3s; padding: 3px 8px; border-radius: 5px;">Regras Neepool</a>
+            <span>|</span>
+            <a href="https://neetk.onrender.com/regrasfbi" style="color: #fff; text-decoration: none; transition: transform 0.3s; padding: 3px 8px; border-radius: 5px;">Regras FBI</a>
+        </p>
+    </div>
+</footer>
+
+<!-- Adicionando CSS para melhorar a responsividade -->
+<style>
+    @media (max-width: 600px) {
+        footer {
+            padding: 10px 5px;
+        }
+
+        footer p {
+            font-size: 12px;
+        }
+
+        footer a {
+            font-size: 12px;
+            margin: 3px;
+        }
+    }
+</style>
+
+<!-- Inclua o Font Awesome para os ícones -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<style>
+    footer a:hover {
+        transform: scale(1.2);
+    }
+    
+    @media screen and (max-width: 600px) {
+        footer p {
+            font-size: 12px;
+            text-align: center;
+        }
+        footer a {
+            margin: 10px 0;
+        }
+        footer div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+<!-- Inclua o Font Awesome para os ícones -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<style>
+    footer a:hover {
+        transform: scale(1.2);
+    }
+</style>
+
+    <script src="script.js"></script>
+    <script>
+        // Lógica para o menu hambúrguer
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Animação da mensagem de boas-vindas
+        const mensagens = [
+            "Acesse nossos serviços!",
+            "Entre em contato com nossa equipe!",
+            "Veja as últimas atualizações!"
+        ];
+
+        let i = 0;
+        let textoAtual = "";
+        let mensagemElemento = document.getElementById("mensagem");
+
+        function digitarMensagem() {
+            if (i < mensagens.length) {
+                const mensagem = mensagens[i];
+                textoAtual = "";
+                let j = 0;
+
+                const interval = setInterval(() => {
+                    if (j < mensagem.length) {
+                        textoAtual += mensagem[j];
+                        mensagemElemento.textContent = textoAtual;j++;
+                    } else {
+                        clearInterval(interval);
+                        i++;
+                        setTimeout(digitarMensagem, 2000); // Espera 2 segundos antes de começar a próxima mensagem
+                    }
+                }, 100); // Velocidade de digitação
+            }
+        }
+
+        digitarMensagem(); // Inicia a animação
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regras do Grupo</title>
+    <!-- Meta tags para compartilhamento -->
+    <meta property="og:title" content="Regras do Grupo">
+    <meta property="og:description" content="ㅤ㆐ ִ ׄ Ꞌ📂 ࣪ ˳ 〞︎𝐑𝐄𝐆𝐑𝐀𝐒𖡡:
+
+.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://example.com/imagem.jpg"> <!-- substitua por uma imagem relevante -->
+    <meta property="og:url" content="https://seusite.com"> <!-- substitua pela URL do site -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: url('regras.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+            color: #fff;
+            background-attachment: scroll; /* Corrigido: Removido o 'fixed' para evitar o movimento do fundo */
+        }
+        .regras-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            color: #fff; /* Ajusta a cor do texto para branco */
+        }
+        .titulo {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff; /* Ajusta a cor do título para branco */
+        }
+        .regras {
+            list-style: none;
+            margin-bottom: 20px;
+            color: #fff; /* Ajusta a cor das regras para branco */
+            text-align: left;
+        }
+        .regra-item {
+            margin: 8px 0;
+            line-height: 1.5;
+            color: #fff; /* Ajusta a cor dos itens de regra para branco */
+        }
+        .legenda {
+            font-weight: bold;
+            color: #fff; /* Ajusta a cor da legenda para branco */
+            margin-bottom: 5px;
+        }
+        .descricao-legenda {
+            color: #fff; /* Ajusta a cor da descrição da legenda para branco */
+            white-space: pre-line;
+            text-align: center;
+        }
+        .copy-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 200px;
+        }
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 480px) {
+            .titulo {
+                font-size: 1.2em;
+            }
+            .regras-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="regras-container">
+        <div class="titulo" id="titulo"></div>
+        <ul class="regras" id="lista-regras"></ul>
+        <div class="legenda" id="legenda"></div>
+        <div class="descricao-legenda" id="descricao-legenda"></div>
+        <button class="copy-btn" onclick="copiarRegras()">Copiar Regras</button>
+    </div>
+
+    <script>
+        // Função para carregar e exibir as regras
+        async function carregarRegras() {
+            try {
+                const response = await fetch('regrasskur.json');
+                const dados = await response.json();
+
+                document.getElementById('titulo').textContent = dados.titulo;
+
+                const listaRegras = document.getElementById('lista-regras');
+                dados.regras.forEach(regra => {
+                    const item = document.createElement('li');
+                    item.classList.add('regra-item');
+                    item.textContent = `${regra.tipo} ⑇ ${regra.texto}`;
+                    listaRegras.appendChild(item);
+                });
+
+                document.getElementById('legenda').textContent = dados.legenda;
+                document.getElementById('descricao-legenda').textContent = dados.descricaoLegenda;
+            } catch (error) {
+                console.error('Erro ao carregar as regras:', error);
+            }
+        }
+
+        // Função para copiar todas as regras e mostrar uma confirmação
+        function copiarRegras() {
+            const titulo = document.getElementById('titulo').textContent;
+            const regras = Array.from(document.querySelectorAll('.regra-item')).map(item => item.textContent).join('\n');
+            const legenda = document.getElementById('legenda').textContent;
+            const descricaoLegenda = document.getElementById('descricao-legenda').textContent;
+
+            const textoCopiar = `${titulo}\n\n${regras}\n\n${legenda}\n${descricaoLegenda}`;
+            navigator.clipboard.writeText(textoCopiar).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Regras copiadas!',
+                    text: 'As regras foram copiadas para a área de transferência.',
+                    confirmButtonText: 'Ok',
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    backdrop: `
+                        rgba(0, 0, 0, 0.4)
+                        url("https://sweetalert2.github.io/images/nyan-cat.gif")
+                        left top
+                        no-repeat
+                    `
+                });
+            }).catch(err => {
+                console.error('Erro ao copiar texto:', err);
+            });
+        }
+
+        carregarRegras();
+    </script>
+</body>
+</html>

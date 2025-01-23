@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗔𝗣𝗢𝗦𝗧𝗜𝗟𝗔</title>
+    <link rel="icon" href="logo.jpg" type="image/jpeg"> <!-- Corrigido para .jpg -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        /* Fundo da página */
+        body {
+            font-family: Arial, sans-serif;
+            color: white;
+            background: url('imagens/1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative; /* Define o posicionamento relativo */
+        }
+
+        /* Overlay escuro para escurecer o fundo */
+        body::before {
+            content: '';
+            position: fixed; /* Mantém como fixed para cobrir toda a tela */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9); /* Mantém a opacidade para cobrir completamente */
+            z-index: 1; /* Fica atrás do conteúdo */
+        }
+
+        /* Título com ícone e degradê */
+        h1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #6A0DAD, #1E90FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 2; /* Fica acima do overlay */
+        }
+
+        h1 i {
+            margin-right: 10px;
+            color: #6A0DAD;
+        }
+
+        /* Contêiner dos cards */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2; /* Fica acima do overlay */
+            padding-top: 80px; /* Adiciona espaço no topo */
+        }
+
+        /* Estilo dos cards com fundo vermelho transparente */
+        .card {
+            width: 250px;
+            background-color: rgba(178, 34, 34, 0.8); /* Fundo vermelho com opacidade */
+            border: none;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s ease;
+            box-shadow: none; /* Remove qualquer sombra adicional */
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Ícones e botões */
+        .card-body i {
+            color: #ffc107;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #ffc107;
+            border: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-book"></i> Apostila Fbi</h1>
+    <div class="card-container">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-user-tie"></i>
+                <h5 class="card-title">Cargos</h5>
+                <p class="card-text">Informações sobre os cargos disponíveis.</p>
+                <a href="cargos fbi/fbi.html" class="btn btn-primary">Ver Cargos</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-book"></i>
+                <h5 class="card-title">Regras</h5>
+                <p class="card-text">Regras e políticas a serem seguidas.</p>
+                <a href="regras.html" class="btn btn-primary">Ver Regras</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-book-open"></i>
+                <h5 class="card-title">Manual</h5>
+                <p class="card-text">Manual do usuário completo.</p>
+                <a href="manual.html" class="btn btn-primary">Ver Manual</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-file-alt"></i>
+                <h5 class="card-title">Protocolos</h5>
+                <p class="card-text">Protocolos de operação e segurança.</p>
+                <a href="protocolos.html" class="btn btn-primary">Ver Protocolos</a>
+            </div>
+        </div>
+        <!-- Novo Card de Level -->
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-level-up-alt"></i>
+                <h5 class="card-title">Level</h5>
+                <p class="card-text">Progresso e conquistas dos usuários.</p>
+                <a href="site em construção.html" class="btn btn-primary">Ver Level</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

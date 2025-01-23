@@ -1,0 +1,450 @@
+{
+    "categorias": [
+        {
+            "nome": "Bundestag",
+            "cargos": [
+                {
+                    "titulo": "Presidente",
+                    "descricao": "O presidente desempenha um papel de grande importância e responsabilidade na comunidade da Neext. Na ausência do imperador, ele assume a liderança, garantindo a continuidade da ordem e a gestão adequada dos assuntos da comunidade. Em uma eventualidade trágica, como o falecimento do imperador, o presidente tem a possibilidade de sucedê-lo, assumindo a posição de imperador ou imperatriz. Essa sucessão ocorre devido à sua habilidade em liderar efetivamente e ao seu comprometimento em cuidar dos assuntos na ausência do imperador. Essa estrutura de liderança garante a estabilidade e a continuidade das atividades dentro da comunidade Neext, proporcionando uma gestão eficiente e assegurando a coesão dos membros em momentos de transição."
+                },
+                {
+                    "titulo": "Vice-Presidente",
+                    "descricao": "O vice-presidente é responsável por todas as atividades na ausência do presidente, assumindo a liderança e exercendo total autoridade nos grupos. Ele atua como uma autoridade na organização, auxiliando o presidente em suas funções e tomando decisões em conjunto com ele. Caso o presidente deixe o cargo, o vice-presidente é o próximo a assumir a presidência."
+                }
+            ]
+        },
+        {
+            "nome": "KREMLIN",
+            "cargos": [
+                {
+                    "titulo": "01-PRIMEIRO MINISTRO:",
+                    "descricao": "O Primeiro Ministro é uma figura de liderança no interior do skur, incumbida de supervisionar todas as unidades e assegurar o funcionamento eficaz da agência. Além disso, ele desempenha um papel central no controle de operações de espionagem. Nesse contexto, a falta de conhecimento sobre um ataque ao skur pode resultar na destituição desse Primeiro Ministro, Também é chefe de todos os outros ministros, tendo assim superioridade acima de todos os outros ministros fazendo com que todos tenham respeito e obediência para o primeiro-ministro."
+                },
+                {
+                    "titulo": "02-ASSISTENTE:",
+                    "descricao": "O assistente auxiliará o diretor, vice diretor e primeiro ministro em tudo que ele ordenar"
+                },
+                {
+                    "titulo": "03- Chanceler",
+                    "descricao": "O Chanceler é responsável por verificar se pessoas da lista de procurados da Neext estão em algum grupo da rede, realizando monitoramento diário. Além disso, o Chanceler tem autoridade para banir administradores que deixaram um grupo e tentaram retornar. Ele também é o único que pode cumprir ordens de banimento permanente, agindo com base no comando do imperador. Sua função é fundamental para manter a segurança e a integridade da plataforma Neext, garantindo que aqueles que representam uma ameaça sejam identificados e tomem as medidas necessárias para proteger a comunidade"
+                },
+                {
+                    "titulo": "04-PROCURADOR GERAL",
+                    "descricao": "O Procurador Geral desempenha várias funções importantes na plataforma Neext. Ele investiga os motivos dos bans impostos pelo CEO, intervém em prisões e impõe punições de acordo com as regras e leis estabelecidas. Além disso, o Procurador Geral atua como advogado, defendendo os indivíduos acusados dentro dos limites das regras. Ele também tem a responsabilidade de prender e trazer de volta aqueles que deixaram a plataforma. Para tal, é necessário contatar o Procurador Geral, que pode manter a pessoa presa por um mês antes de liberá-la novamente. Essas atribuições garantem a aplicação adequada das normas e a manutenção da ordem na comunidade Neext."
+                },
+                {
+                    "titulo": "05- Conselheiro",
+                    "descricao": "O conselheiro atua na plataforma Neext, oferecendo suporte e orientação aos administradores e CEOs. Sua principal função é aconselhar em situações de conflito, auxiliando as partes a encontrarem soluções amigáveis. O conselheiro pode interromper uma ordem do juiz, conforme o Artigo de Áurea, caso as partes não consigam resolver o conflito por conta própria. Ele é crucial na resolução de problemas e na promoção de um ambiente harmonioso na comunidade Neext, buscando um consenso e evitando litígios prolongados, enquanto aguarda a chegada do imperador, que possui a autoridade final para resolver os conflitos."
+                },
+                {
+                    "titulo": "06- Diretor da abin",
+                    "descricao": "O diretor da ABIN tem a responsabilidade de gerenciar a burocracia da organização, assegurando que todos os processos de aprovação de administradores e registros sejam realizados de forma eficiente. Ele também auxilia os secretários na organização dos registros da ABIN e se empenha em evitar a aprovação e o recrutamento de ex-administradores, conhecidos como infiltrados."
+                },
+                {
+                    "titulo": "07-Ceo regente",
+                    "descricao": "O Ceo regente é a maior liderança dentro do grupo, abaixo apenas do diretor, vice-diretor e do primeiro-ministro. Ele desempenha o papel de líder do grupo, cuidando do CEO, da supervisão e do funcionamento da equipe. Além disso, é responsável pela entrega de relatórios sobre o funcionamento do grupo. Seu objetivo é garantir que o grupo opere de maneira eficaz e eficiente, produzindo resultados de alta qualidade e contribuindo para os objetivos gerais do grupo. Isso pode exigir liderança forte, tomada de decisões rápidas e habilidades técnicas avançadas."
+                },
+                {
+                    "titulo": "08- Arquiteto",
+                    "descricao": "O \"Arquiteto\" é um papel de grande importância na comunidade Neext. Suas responsabilidades incluem aprovar e criar novos cargos, regras e levels, bem como aceitar indicações de novos cargos feitas pelos administradores e membros da comunidade. Além disso, o Arquiteto desempenha um papel essencial na organização da comunidade, sendo responsável por atualizar a lista de cargos da Neext e o manual de cargos, garantindo que todas as mudanças sejam feitas com precisão e estejam em conformidade com as normas estabelecidas. Antes da implementação, ele deve enviar as regras e cargos para aprovação final do Imperador. Essa posição exige grande atenção aos detalhes para manter tudo de acordo com as diretrizes."
+                },
+                {
+                    "titulo": "09- Ministra da economia",
+                    "descricao": "A função do ministro da economia é Coordena e supervisiona o Ministério da Fazenda em todos os grupos da rede NEEXT, sendo responsável pela seleção, capacitação e gestão dos membros deste ministério. Assegura a execução de atividades com foco na frequência, qualidade e resolução de inadimplências. Além disso, administra o Tesouro da NEEXT e atua como regulador em momentos de crise financeira."
+                },
+                {
+                    "titulo": "10- Tesoureiro Geral",
+                    "descricao": "O Tesoureiro Geral é responsável por criar e manter arquivos de contatos essenciais para a comunidade Neext. Além disso, o Tesoureiro Geral presta assistência a grupos que estão enfrentando dificuldades financeiras ou que não possuem um Ministro da Fazenda, ajudando-os a desenvolver esses arquivos. Esses arquivos têm como objetivo aumentar o número de membros nos grupos, promovendo o crescimento e a sustentabilidade da comunidade."
+                },
+                {
+                    "titulo": "11-JUÍZ INSPETOR:",
+                    "descricao": "O juiz inspetor é uma autoridade responsável por manter a ordem e prender aqueles que perturbam a sociedade. Seu trabalho envolve supervisionar e garantir que todos estejam cumprindo suas responsabilidades e trabalhando de acordo com as regras estabelecidas, O juiz inspetor desempenha um papel fundamental na aplicação da justiça e na preservação da harmonia social, O juiz inspetor tem como função julgar decidir tempo de sentença, ele envia as provas e julga o réu de acordo com oque mostra nas provas, ele também tem poder para banir um administrador para sempre dá comunidade neext dependendo da gravidade das acusações e provas, além disso,O juiz inspetor também é responsável por mandar as regras que os adms infligem para eles, notificando para que os erros não se repitam."
+                },
+                {
+                    "titulo": "12- Delegado",
+                    "descricao": "o delegado exerce um papel crucial e de grande importância na comunidade Neext. Sua principal prioridade e responsabilidade são cuidar dos administradores que se tornaram detentos após cometerem atos que os levaram a esse destino. Ele assume o controle da prisão do FBI e é encarregado de garantir que a pena dos detentos seja cumprida adequadamente, O trabalho do Delegado é essencial para manter a ordem e a segurança na comunidade Neext, assegurando que as consequências para aqueles que infringem as regras sejam aplicadas de maneira justa e consistente. Sua atuação é vital para garantir a integridade e a harmonia dentro da comunidade."
+                },
+                {
+                    "titulo": "13- Presidente do Brinks",
+                    "descricao": "O Presidente do Brinks é responsável por cuidar das alianças da Neext, representando a comunidade em cada uma delas. Ele também gerencia os embaixadores e é responsável por estabelecer novas alianças para a Neext."
+                },
+                {
+                    "titulo": "14- O Ministro da Defesa",
+                    "descricao": "o ministro da defesa é responsável pela proteção de toda a plataforma Neext, juntamente com a unidade de defesa SWAT. Sua principal função é repelir qualquer ataque e garantir a segurança de todos os usuários. O Ministro da Defesa lidera a linha de frente, implementando diversos protocolos de segurança para mitigar ameaças e prevenir danos. Ele trabalha em estreita colaboração com a equipe da SWAT para coordenar estratégias defensivas e garantir a pronta resposta a qualquer situação de perigo. Sua atuação é crucial para manter a integridade e o funcionamento seguro da plataforma Neext, Além de ser responsável pela proteção geral da plataforma Neext, o Ministro da Defesa também cuida dos grupos durante a madrugada."
+                },
+                {
+                    "titulo": "15- O Ministro da justiça",
+                    "descricao": "O Ministro da Justiça desempenha um papel fundamental na administração do sistema jurídico e na manutenção da ordem em uma sociedade. Ele é responsável por supervisionar as atividades do Tribunal Penal Neext (TPN) e do juiz inspetor, garantindo que os artigscard sejam respeitados e aplicadas de maneira justa. Suas principais responsabilidades incluem a manutenção da ordem, assegurando que as normas e regras sejam seguidas, evitando que indivíduos quebrem os artigscard ou infrinjam direitos. Como a principal autoridade em questões jurídicas, ele tem o poder de tomar decisões importantes relacionadas à legislação e à aplicação da justiça. Além disso, trabalha para garantir que todos os administradores tenham acesso igualitário à justiça, independentemente de sua origem ou status social."
+                },
+                {
+                    "titulo": "16-  Ministro das Relações",
+                    "descricao": "O ministro das relações tem uma responsabilidade crucial e de extrema importância na organização, que é garantir a efetiva utilização de todos os cargos disponíveis. Afinal, é comum que existam cargos não utilizados ou que haja uma concentração excessiva de administradores ocupando funções similares. Nesse sentido, o Ministro trabalha para alocar os cargos de forma estratégica, indicando pessoas qualificadas para ocupá-los, a fim de otimizar o desempenho e promover o sucesso da organização. Essa função é essencial para o crescimento e a prosperidade da empresa Neext."
+                },
+                {
+                    "titulo": "17- Ministro da inteligência",
+                    "descricao": "Ministro da inteligência Sua função e à espionagem de alianças da Brinks ou grupos inimigos, normalmente, essa função não faz parte das atribuições de uma figura ministerial. O trabalho de inteligência é geralmente conduzido por agências especializadas com o objetivo de obter informações e salvaguardar interesses da neext, O SKUR é o SCP são agências independente O SCP se dedica à coleta e análise de informações de inteligência para segurança de todo o skur."
+                },
+                {
+                    "titulo": "18- Ministro do interior",
+                    "descricao": "O papel do ministro do interior é crucial para garantir a eficiência e a estabilidade dentro da organização. Suas responsabilidades abrangem várias áreas-chave. Em primeiro lugar, ele é encarregado de gerenciar a distribuição de administradores (adms), assegurando que eles sejam realocados conforme necessário para atender às demandas operacionais da organização,Além disso, o ministro do interior desempenha um papel vital na preparação para situações de emergência, como guerra ou escassez de pessoal treinado. Ele seleciona e treina reservistas, garantindo que a organização tenha uma reserva de pessoal qualificado pronta para ser mobilizada quando necessário,Outra função importante do ministro do interior é supervisionar as relações com grupos aliados. Isso envolve manter canais de comunicação abertos e produtivos, em estreita colaboração com o embaixador, para fortalecer alianças estratégicas e promover interesses comuns, Por último, mas não menos importante, o ministro do interior é responsável por aplicar políticas de moderação e disciplina dentro da organização. Isso inclui a implementação de bans permanentes em grupos específicos da neext, garantindo que as medidas disciplinares sejam aplicadas de forma justa e consistente para todos os membros,Em resumo, o ministro do interior desempenha um papel multifacetado, cuidando da gestão interna, da preparação para emergências e das relações externas da organização, enquanto mantém a ordem e a coesão dentro do grupo. Suas ações são fundamentais para garantir o bom funcionamento e a segurança da entidade que ele representa."
+                },
+                {
+                    "titulo": "19- Perfilador Geral",
+                    "descricao": "O Perfilador Geral possui duas responsabilidades principais na comunidade do Quântico. Primeiro, ele é encarregado de capturar informações de ex-administradores e infiltrados, registrando-os no banco de dados e realizando verificações diárias nesses ex-administradores para garantir que não representem riscos à segurança. A segunda responsabilidade é monitorar esses registros, assegurando que pessoas removidas ou banidas não consigam retornar aos grupos, evitando problemas ou violações. Além disso, ele mantém a comunidade limpa e impede sua superlotação"
+                },
+                {
+                  
+    "titulo": "20- Tabelião",
+    "descricao": "O Tabelião é responsável por cuidar do registro dos IDs e organizar o cartório, mantendo seu funcionamento no banco de dados. Sua função principal é garantir que todas as informações estejam devidamente registradas e atualizadas, assegurando que o cartório opere de maneira eficiente e legal. Ele realiza verificações constantes para garantir a integridade dos dados, facilita o acesso e a consulta das informações pelos usuários autorizados, e garante que todos os registros estejam em conformidade. O Tabelião desempenha um papel fundamental na administração e organização do cartório, assegurando que todos os registros sejam gerenciados corretamente no banco de dados."
+},
+{
+      "titulo": "21- Reporter",
+          "descricao": "O repórter responsável pelo canal da Neext é encarregado de relatar as notícias de forma precisa e objetiva, sempre buscando trazer informações relevantes para a comunidade. Além de informar, ele também faz críticas construtivas aos membros da Neext, promovendo um ambiente de diálogo e melhorias. Seu compromisso é com a verdade, combatendo ativamente a disseminação de fake news e assegurando que a informação correta chegue a todos."
+},
+{
+  
+    "titulo": "22- Padre",
+    "descricao": "O Padre é responsável por realizar casamentos no cartório, conduzindo cerimônias e oficializando as uniões de acordo com os procedimentos legais e as tradições da comunidade. Ele assegura que todos os registros de casamento sejam devidamente documentados no banco de dados do cartório, mantendo a organização e a integridade das informações. Além disso, o Padre orienta os casais sobre os requisitos e prepara os documentos necessários, garantindo que cada casamento esteja em conformidade com as normas estabelecidas. Seu papel é fundamental para proporcionar um ambiente seguro e organizado para as uniões oficiais."
+},
+{
+                    "titulo": "23- Psicóloga Geral",
+                    "descricao": "A psicóloga desempenha um papel importante na plataforma Neext, oferecendo suporte emocional e orientação para os administradores. Ela está encarregada de identificar quaisquer problemas ou dificuldades enfrentadas pelos administradores e oferecer apoio adequado. Isso inclui ajudar a lidar com a falta de presença de administradores, dar orientação para melhorar a comunicação entre os membros e oferecer assistência a pessoas que estejam passando por momentos difíceis. A psicóloga também é responsável por conceder férias para aqueles que precisam de um tempo de descanso e recuperação. Seu objetivo é garantir o bem-estar emocional e o bom funcionamento da comunidade Neext, proporcionando suporte e orientação para todos os envolvidos."
+                },
+                {
+                    "titulo": "24- PSICÓLOGA TK",
+                    "descricao": "A Psicóloga TK trabalha junto com a Psicóloga Geral, auxiliando no suporte aos membros da Neext. Ela realiza consultas e atua como ajudante da Psicóloga Geral, contribuindo para o bem-estar da comunidade."
+                },
+                {
+                    "titulo": "25- Guardião",
+                    "descricao": "O guardião é responsável por proteger o número do proprietário do grupo, garantindo que não ocorra nenhum arquivamento indevido e impedindo que alguém o roube. Ele desempenha um papel fundamental na segurança e integridade do grupo, monitorando atividades e assegurando que somente pessoas autorizadas tenham ADM."
+                }
+            ]
+        },
+        {
+            "nome": "CAPITAL REAL",
+            "cargos": [
+                {
+                    "titulo": "01- CEO Chefe",
+                    "descricao": "O CEO chefe, como chefe geral, possui autoridade máxima na ausência do CTO, desempenhando um papel fundamental para garantir que o grupo funcione de maneira organizada e alinhada aos objetivos estabelecidos. Ele age de forma semelhante a um presidente, com a responsabilidade de supervisionar se o recrutamento, conduzido pelos oligarcas, está sendo bem-sucedido e se cada cargo está cumprindo suas funções. Além disso, ele assegura que todos os cargos  estejam operando de forma eficiente e eficaz para atingir as metas da organização."
+                },
+                {
+                    "titulo": "02- CEO Residente",
+                    "descricao": "O CEO Residente, tem a responsabilidade de manter o grupo funcionando na ausência do CEO principal, assumindo as mesmas funções e responsabilidades. Ele assegura que as operações do grupo continuem em andamento e que as metas estabelecidas sejam alcançadas. o  ceo Residente desempenha um papel crucial na continuidade do funcionamento do grupo durante períodos de ausência do ceo chefe principal"
+                },
+                {
+                    "titulo": "03- Ceo Sk",
+                    "descricao": "O Ceo sk,também conhecido como ceo Temporário, é um ceo temporário que assume metade das responsabilidades de um ceo residente. Ele tem autoridade para aprovar administradores e cuidar de todas as operações na ausência do ceo residência, no entanto, o ceo sk pode ser substituído a qualquer momento."
+                },
+                {
+                    "titulo": "04-Dirigente Residente",
+                    "descricao": "O Dirigente residente tem como função ficar atento no caso de ceos mais altos que não estão on nem trabalhando, pois se tal situação acontecer, as responsabilidades serão automaticamente passadas para o Dirigente, E ele tem direito de assumir e manter as coisas em ordem até um ceo de patente maior ficar ativo, é um cargo que é essencial para a comunidade neext, Dirigente na comunidade Neext é responsável por cuidar do grupo na ausência dos ceos. Durante esse período, o Dirigente assume o comando, toma decisões importantes e auxilia os membros e adms. Ele está disponível para responder dúvidas, oferecer suporte e garantir o bom funcionamento da comunidade. Além disso, o Dirigente tem autoridade para rebaixar adms que violarem as regras e pode tomar  o nível deles, caso levem puni para si próprio. Sua função é assegurar a continuidade das atividades e manter a ordem até que os ceos retorne ao cargo."
+                },
+                {
+                    "titulo": "05- Professor Geral",
+                    "descricao": "O professor geral é responsável pela Universidade Neext, também conhecida como Academia. Ele cuida do desenvolvimento educacional dentro da instituição, oferecendo suporte e treinamento a administradores e a outros cargos que necessitam de capacitação. Sua função é fundamental para garantir que todos os membros da neext estejam devidamente preparados e treinados."
+                },
+                {
+                    "titulo": "06- Professor Tk",
+                    "descricao": "O professor TK também atua como assistente do professor geral na Universidade Neext, colaborando em diversas atividades de treinamento. Ele auxilia na implementação de programas de treinamento, organiza as aulas e oferece suporte adicional a administradores e outros cargos que precisam de capacitação."
+                },
+                {
+                    "titulo": "07- Supervisor Geral",
+                    "descricao": "O Supervisor Geral na Neext é responsável por supervisionar os grupos e garantir que todos os cargos estejam cumprindo suas funções corretamente. Ele revisa e aprova os anúncios que devem ser enviados, Além disso, verifica se as tags estão sendo usadas de forma adequada por todos os membros,  Dessa forma, o Supervisor Geral desempenha um papel fundamental na supervisão e no bom funcionamento da Neext."
+                },
+                {
+                    "titulo": "08-Supervisor tk",
+                    "descricao": "O Supervisor TK na Neext desempenha um papel crucial de assistência e assume a supervisão na ausência do Supervisor Geral. Ele é responsável por monitorar os grupos e garantir que todos os membros estejam cumprindo suas funções corretamente. Diferentemente do Supervisor Geral, o Supervisor TK é encarregado de enviar avisos e anúncios, assegurando que a comunicação seja clara e que todos os integrantes da comunidade estejam informados. Além disso, o Supervisor TK verifica se as tags estão sendo usadas adequadamente por todos os membros, Sua presença garante que a supervisão e o apoio sejam mantidos, contribuindo para o funcionamento da Neext, mesmo na ausência do Supervisor Geral."
+                },
+                {
+                    "titulo": "09- Divulgador",
+                    "descricao": "O divulgador é o responsável por cuidar da divulgação do grupo, assegurando que ele esteja sempre ativo e atraente para novos membros. O seu objetivo principal é garantir que o grupo tenha um fluxo contínuo de novos participantes, mantendo assim a dinâmica e o crescimento do grupo."
+                },
+                {
+                    "titulo": "10- Embaixador geral",
+                    "descricao": "O embaixador geral é responsável por gerenciar as parcerias e representar a Neext em diversas iniciativas. Ele atua como um elo entre a organização e outras entidades, buscando estabelecer colaborações estratégicas que beneficiem a Neext. Além disso, o embaixador geral apoia o ministro da Brinks, representando a Neext por meio dele e contribuindo para fortalecer as relações. Sua função inclui a identificação e a negociação de novas parcerias, visando ampliar a influência e os recursos disponíveis para a Neext."
+                },
+                {
+                    "titulo": "11- Embaixador TK",
+                    "descricao": "O Embaixador tk atua como assistente do embaixador geral, colaborando na gestão de parcerias e representando a Neext em iniciativas. Ele apoia o embaixador geral na busca de colaborações estratégicas, o embaixador TK desempenha um papel importante na comunicação com parceiros e na identificação de novas oportunidades de parceria, contribuindo para o sucesso da Neext e apoiando o trabalho do ministro da Brinks por meio dessa representação."
+                },
+                {
+                    "titulo": "12- Secretário Geral",
+                    "descricao": "O secretário geral atua na ABIN, cuidando da aprovação de administradores e ajudando o diretor da ABIN em suas funções. Ele é responsável por gerenciar os processos burocráticos, assegurando que todos os registros e documentos estejam devidamente organizados. Além disso, o secretário geral facilita a comunicação entre os membros da ABIN, contribuindo para a eficiência e eficácia das operações da organização. Sua função é essencial para garantir que as aprovações sejam realizadas de forma adequada e que o suporte necessário ao diretor seja prestado de maneira eficaz."
+                },
+                {
+                    "titulo": "13- Secretário Tk",
+                    "descricao": "O secretário TK atua na ABIN, cuidando da aprovação de administradores e ajudando o secretário geral em suas funções. Ele é responsável por gerenciar processos burocráticos, assegurando que todos os registros e documentos estejam organizados. Além disso, o secretário TK facilita a comunicação entre os membros da ABIN e auxilia na execução de tarefas administrativas. Na ausência do secretário geral, ele assume suas responsabilidades, garantindo que as aprovações sejam realizadas de forma adequada e que a continuidade das operações da organização seja mantida."
+                },
+                {
+                    "titulo": "16- Ministro da fazenda",
+                    "descricao": "O Ministro da Fazenda é responsável por extrair membros através de links para o tesouro do skur, que é armazenado no depósito da plataforma Neext. Essa medida visa garantir que o rendimento do grupo não seja afetado e possa suprir eventuais perdas de membros. O Ministro da Fazenda desempenha um papel crucial na gestão financeira do grupo, cuidando dos recursos e garantindo sua preservação e crescimento. Ao utilizar o depósito da Neext como local seguro para armazenar o tesouro do skur, o grupo pode proteger seus ativos e garantir a continuidade de suas atividades, mesmo diante de mudanças na composição dos membros."
+                },
+                {
+                    "titulo": "17- Tesoureiro",
+                    "descricao": "A função do \"Tesoureiro\" é de extrema importância, pois ele atua como um auxiliar direto do Ministro da Fazenda. Seu principal papel é ajudar o Ministro da Fazenda a extrair os membros para o tesouro dos skur, que é armazenado no depósito da plataforma Neext, O Tesoureiro trabalha em estreita colaboração com o Ministro da Fazenda e oferece suporte em todas as tarefas necessárias, Isso inclui auxiliar nas operações financeiras, gerenciar os recursos do tesouro dos skur e garantir que tudo esteja em ordem, Essa função é essencial para a gestão financeira eficiente da comunidade, assegurando que os recursos sejam utilizados de forma adequada e transparente. A cooperação entre o Tesoureiro e o Ministro da Fazenda é fundamental para o sucesso e o bom funcionamento dos skur na plataforma Neext."
+                },
+                {
+                    "titulo": "18- Senador",
+                    "descricao": "O senador no Senado do Skur tem a responsabilidade de elaborar e propor novos artigcards e normas que sejam relevantes para a estrutura e funcionamento do grupo. Isso inclui a criação de regras de conduta, políticas internas e outras diretrizes necessárias para o bom funcionamento dos skur, Após a proposição, o senador deve discutir os artigscard com outros membros, buscando consenso ou ajustando as propostas conforme necessário. Além disso, o senador tem o poder de aprovar ou rejeitar artigcarsa e propostas em votação no Senado, desempenhando uma função crucial que determina quais normas serão implementadas. Durante as votações, o senador debate as implicações das propostas, defendendo seus pontos de vista e persuadindo outros membros sobre a importância de cada artigcard. É essencial que o senador colabore com outros senadores e grupos de interesse para garantir que os artigos propostos sejam coerentes com os objetivos do Senado do Skur e reflitam as necessidades dos membros. O senador também deve estar aberto a feedbacks e sugestões dos administradores, ajustando suas propostas de acordo com as discussões realizadas. Além de sua atuação legislativa, o senador representa os interesses do grupo que compõe o Senado do Skur, defendendo as necessidades e expectativas de seus membros nas discussões e votações. Em suma, o senador desempenha um papel ativo e fundamental na criação e aprovação de normas."
+                },
+                {
+                    "titulo": "19- Ceifador",
+                    "descricao": "O Ceifeiro tem sua principal função de ficar de olho em todos os grupos de administração da Skur. Sendo assim, ele vai avaliando cada grupo e observando como eles estão indo em seu desempenho atual, assim ele vai dando notas de suas avaliações."
+                },
+                {
+                  "titulo": "01- Habeas corpus",
+                    "descricao": "O Habeas Corpus é um ADM que possui a permissão de atuar no grupo, mesmo estando preso. ajudando nas atividades e no funcionamento dos grupos, enquanto busca a redução de sua pena."
+                }
+            ]
+        },
+        {
+            "nome": "CAPITAL REGIONAL",
+            "cargos": [
+                {
+                    "titulo": "01- Deputado",
+                    "descricao": "O deputado cuida de todos os cargos e administradores abaixo dele, atuando como um mini líder que auxilia e treina sua equipe. Esse cargo é de suma importância, pois o deputado é responsável por garantir que tudo ocorra conforme o esperado dentro do grupo. Ele também age com a permissão do dirigente ao alterar ou incluir novos cargos aos membros da administração, assegurando que as mudanças sejam apropriadas e alinhadas com os objetivos do grupo. O deputado tem a responsabilidade de legislar e fiscalizar as ações do grupo, dedicando-se a ouvir as necessidades e preocupações da sua administração. Ele promove um ambiente colaborativo e garante que todos estejam capacitados para desempenhar suas funções de forma eficaz. Assim, o deputado é fundamental para a organização, servindo como um guia e mentor para sua administração."
+                },
+                {
+                    "titulo": "02- Governador",
+                    "descricao": "O Governador tem o papel de identificar erros na administração e propor melhorias, como o combate ao burlamento das regras e a exclusão indevida de outros administradores. Ele é responsável por garantir que toda a administração seja ativa e eficaz, promovendo um ambiente de trabalho colaborativo. Além disso, o governador leva as reclamações da administração para o deputado, buscando soluções adequadas. Ele também propõe iniciativas voltadas para a resolução de conflitos e a inclusão social de outros administradores, assegurando que todos tenham voz e representatividade dentro do grupo."
+                },
+                {
+                    "titulo": "03- Engenheiro",
+                    "descricao": "O engenheiro geral tem a função de orientar os operários e o engenheiro assistente, sendo responsável por cuidar dos membros, fazendo com que cada membro novo adicione mais pessoas, aumentando assim o número de membros de cada grupo."
+                },
+                {
+                    "titulo": "04- Engenheiro assistente",
+                    "descricao": "O engenheiro assistente tem a responsabilidade de apoiar o engenheiro geral em suas funções e garantir que todas as operações continuem a funcionar adequadamente, mesmo na ausência do engenheiro geral. Isso inclui supervisionar as atividades dos operários, resolver problemas que possam surgir"
+                },
+                {
+                    "titulo": "05- Operário",
+                    "descricao": "Os operários ajudam os grupos e são responsáveis pelos trabalhos mais difíceis, além de orientar os membros e garantir que consigam novos membros oficiais e VIPs. Eles desempenham um papel fundamental na execução das tarefas."
+                },
+                {
+                    "titulo": "06- Ancião Guardião",
+                    "descricao": "O Ancião Guardião tem a responsabilidade de incentivar os administradores a trazerem amigos para a administração, promovendo uma rede de convites que se expande continuamente. Cada administrador deve não apenas convidar seus amigos, mas também encorajá-los a fazer o mesmo, criando um ciclo de multiplicação que se perpetua infinitamente. Essa abordagem permite que a administração cresça de forma exponencial, aumentando a participação e a diversidade de ideias dentro do grupo. Ao fomentar essa cultura de convite e inclusão, o Ancião assegura que a administração se fortaleça e se amplie"
+                },
+                {
+                    "titulo": "07- Organizador",
+                    "descricao": "O Organizador é responsável pela estruturação e pela boa gestão do grupo, assegurando que todas as atividades ocorram de maneira eficiente. Ele cuida para que o grupo seja aberto no horário correto, garantindo que todos os membros tenham acesso quando necessário. Além disso, o Organizador verifica se há cargos adequados para facilitar a organização, assegurando que os administradores estejam utilizando as TAGs corretamente, com a estrela separada. Ele também monitora se os administradores estão nos níveis apropriados e se todas as práticas estão alinhadas com os padrões estabelecidos pela Neext. Sua função é essencial para manter a ordem e a eficácia dentro do grupo."
+                },
+                {
+                    "titulo": "08- Ministro do link",
+                    "descricao": "A função do ministro do link é ir atrás de links para a fabricação e criação de arquivos de contatos para os grupos da neext, seja eles FBI ou skur,  ele trabalha junto com o ministro da fazenda que é quem fabrica os arquivos, ele tem que entregar vários links de grupos ativos de WhatsApp para o ministro da fazenda."
+                },
+                {
+                    "titulo": "09- Desembargador",
+                    "descricao": "O Desembargador é responsável por organizar os administradores para eventos ou brincadeiras, garantindo que todas as atividades sejam bem coordenadas e proporcionem engajamento entre os membros. Além disso, ele pode gerenciar operações de treinamento em massa na universidade conhecida como Academia, onde os participantes têm a oportunidade de desenvolver habilidades essenciais. Outra de suas funções é coordenar uma operação de recrutamento em massa, assegurando que novos membros sejam integrados de maneira eficaz. O Desembargador também é encarregado de criar eventos tanto no NYPD quanto no NCPD, promovendo atividades que fortaleçam a interação e a coesão entre os integrantes, contribuindo assim para um ambiente dinâmico e produtivo."
+                },
+                {
+                    "titulo": "10- Contador",
+                    "descricao": "O contador desempenha um papel crucial na plataforma Neext, sendo responsável por registrar e salvar no banco de dados cada entrada e saída de membros. Ele também tem a tarefa de identificar e separar membros repetidos em grupos, garantindo que apenas membros VIP possam permanecer em cada grupo. O contador administra e gerencia a contagem de membros de forma precisa e organizada. Sua função é essencial para manter um controle eficiente da comunidade Neext e garantir que as diretrizes e restrições sejam seguidas adequadamente."
+                }
+            ]
+        },
+        {
+            "nome": "DISTRITO FEDERAL",
+            "cargos": [
+                {
+                    "titulo": "01- Ministro do estado",
+                    "descricao": "O Ministro do Estado tem a responsabilidade de verificar tudo dentro da organização, assegurando que todas as operações estejam em conformidade com os padrões estabelecidos. Ele atua como um representante do grupo como um todo, defendendo os interesses da administração em diversas situações. Entre suas funções, destaca-se a organização e o treinamento dos administradores que ocupam os cargos abaixo dele. Ele é encarregado de garantir que todos estejam devidamente capacitados e alinhados com os objetivos do grupo, mantendo o funcionamento eficiente da administração. Além disso, o Ministro é responsável por verificar as tags e monitorar a comunicação interna e externa, combatendo a desinformação que possa surgir. Essa desinformação pode afetar diretamente a administração, comprometendo sua eficácia. Portanto, ele deve criar estratégias para assegurar uma comunicação clara e transparente, evitando que informações incorretas causem problemas. Em resumo, o Ministro do Estado desempenha um papel fundamental na organização, organizando, treinando e mantendo o funcionamento dos membros da administração, enquanto atua ativamente na verificação de conformidade e na prevenção de desinformação."
+                },
+                {
+                    "titulo": "02- Sindicato",
+                    "descricao": "O Sindicato desempenha uma função semelhante à de um conselheiro, sendo responsável por manter a paz e um ambiente harmonioso na administração. Ele assegura que nenhum administrador seja ignorado ou excluído socialmente, promovendo a inclusão e a colaboração entre todos os membros do grupo. Trabalhando a mando do Ministro do estado, o monge tem a obrigação de estabelecer laços de amizade e apoio com aqueles que se sentem excluídos, ajudando-os a se reintegrar e a se sentir valorizados dentro da administração"
+                },
+                {
+                    "titulo": "03- Repositor",
+                    "descricao": "O repositor é responsável por alocar e solicitar o recrutamento de novos administradores, além de realocar os oligarcas durante o processo de recrutamento. Ele reagrupa e realoca os administradores novatos em categorias de teste e oligarcas, monitorando seu desempenho e progresso. Com base na avaliação do recrutamento, o repositor verifica e promove administradores teste e oligarcas, garantindo que os mais qualificados avancem nas suas funções dentro da administração. Sua função é fundamental para a manutenção da eficiência e eficácia do grupo, assegurando que a administração esteja sempre bem estruturada e capacitada."
+                },
+                {
+                    "titulo": "04- Upador",
+                    "descricao": "O Upador tem a função de promover e elevar os levels dos administradores dentro da organização. Ele é responsável por avaliar o desempenho de cada administrador, garantindo que aqueles que se destacam sejam reconhecidos e recompensados por suas contribuições. Além disso, o Upador escolhe o melhor administrador da semana no grupo."
+                },
+                {
+                    "titulo": "05- Segurança",
+                    "descricao": "O Segurança é responsável por abrir e fechar os grupos na hora certa, sempre garantindo que haja um aviso prévio para os membros. Além de gerenciar o acesso aos grupos, ele também mantém a ordem constante dentro deles, intervindo em situações de conflito e separando brigas entre os membros."
+                },
+                {
+                    "titulo": "06- Vigia",
+                    "descricao": "O Vigia é responsável por monitorar o grupo durante os horários em que nenhum administrador está online, garantindo a vigilância constante 24 horas por dia, inclusive durante a madrugada. Ele cobre os turnos de vigia, assegurando que o grupo permaneça seguro e que todas as interações sejam supervisionadas, mesmo quando a administração não está ativa. Sua função é crucial para prevenir problemas e manter a ordem."
+                },
+                {
+                    "titulo": "07- Agente",
+                    "descricao": "O Agente possui uma função distinta do Perfilador Geral, sendo encarregado de verificar cada pessoa antes que ela receba o cargo de administrador. Sua responsabilidade inclui investigar e avaliar as credenciais dos candidatos a administrador, além de denunciar aqueles que desejam obter esse cargo sem a devida qualificação ou intenção. O Perfilador também se assegura de que nenhum infiltrado seja recrutado para a administração, protegendo a integridade do grupo. Caso encontre um infiltrado, ele tem a autoridade de banir essa pessoa, garantindo assim que a administração permaneça composta apenas por indivíduos de confiança."
+                },
+                {
+                    "titulo": "08- Instrutor",
+                    "descricao": "O Instrutor é responsável por orientar e ensinar toda a administração, garantindo que todos os membros, incluindo os ADMs Testes que enfrentam dificuldades, recebam o suporte necessário para aprender e se desenvolver. Ele tem o dever de fornecer instruções pessoais, adaptando seu ensino às necessidades individuais de cada administrador."
+                },
+                {
+                    "titulo": "09- Carrasco",
+                    "descricao": "O Carrasco é responsável por cuidar de toda a administração, garantindo a proteção contra manipulações e abusos de poder. Ele tem a função de educar e orientar todos os administradores sobre a importância de não permitir que ninguém, incluindo superiores, tenha acesso à administração sem a devida autorização do diretor. Além de ensinar e conversar com os ADMs sobre práticas seguras, o Carrasco fornece dicas de segurança para proteger a integridade da administração. Ele também é encarregado de investigar administradores infratores e monitorar comportamentos que possam indicar abuso de poder."
+                },
+                {
+                    "titulo": "10- Animador",
+                    "descricao": "O Animador é responsável por realizar jogos e atividades interativas com os membros do grupo, promovendo um ambiente dinâmico e engajador. Ele se esforça para fazer com que todos os membros sejam incluídos nas atividades, garantindo que ninguém fique excluído."
+                }
+            ]
+        },
+        {
+            "nome": "MUNICÍPIO KRVOW",
+            "cargos": [
+                {
+                    "titulo": "01- Juíz",
+                    "descricao": "O juiz é responsável por aplicar punições em administradores seguindo as regras. Antes de aplicar qualquer punição, ele deve sempre marcar o juiz inspetor para obter a permissão. Além disso, o juiz regente cuida de manter a ordem no grupo e impedir que as regras sejam violadas, inclusive por membros do distrito federal."
+                },
+                {
+                    "titulo": "02- Prefeito",
+                    "descricao": "O prefeito é responsável pela gestão dos cargos abaixo dele, buscando melhorar o grupo e corrigir os problemas de administradores inativos. Ele tem a responsabilidade de lidar com todos os administradores off, garantindo que suas funções sejam desempenhadas adequadamente. O prefeito é cobrado pelo deputado e pelo vereador para corrigir e solucionar os problemas desses administradores, assegurando que a administração funcione de forma eficaz e que todos os membros do grupo estejam engajados e ativos em suas responsabilidades."
+                },
+                {
+                    "titulo": "03- Advogado",
+                    "descricao": "O Advogado cuida de defender toda a administração, incluindo aqueles sem voz que sofrerem punições ou que forem presos, lutando com base nas regras estabelecidas. Ele pode usar o card de burlamento das regras caso um administrador receba uma punição injusta, garantindo assim o direito do acusado. Quando o card é utilizado, o ministro da Justiça avalia a punição aplicada para determinar sua justiça. Se a punição for considerada injusta, o ministro mantém a validade do card para proteger o administrador. No entanto, se a punição for considerada justa, o card é cancelado e a punição aplicada pelo juiz regente é mantida."
+                },
+                {
+                    "titulo": "04- Sherieff",
+                    "descricao": "O sherieff, como o próprio nome indica, é responsável por garantir a ordem e assegurar que nenhum administrador desrespeite o outro dentro do grupo. Ele trabalha em conjunto com o cargo policial e faz parte do portalnd, comprometendo-se a manter o respeito entre os administradores e a evitar que alguém ultrapasse as autoridades ou desrespeite os superiores. O sherieff tem a autoridade para aplicar um cartão lilás a qualquer indivíduo que cometa a infração de desrespeitar um superior."
+                },
+                {
+                    "titulo": "05-𝘊𝘰𝘰𝘥𝘦𝘳𝘯𝘢𝘥𝘰𝘳",
+                    "descricao": "O Coordenador tem a função de organizar e direcionar as atividades dentro do grupo, conforme seu nome indica. Em situações onde um administrador não saiba como proceder ou quando a ordem não estiver clara, resultando em um ambiente caótico, o Coordenador entra em ação. Ele é responsável por orientar todos os administradores, incluindo aqueles que estão mais perdidos, assegurando que cada um entenda suas funções e responsabilidades. O Coordenador trabalha para restaurar a ordem e garantir que as operações sejam realizadas de maneira eficiente, promovendo a colaboração e o alinhamento entre todos os membros da administração."
+                },
+                {
+                    "titulo": "06- Empregador",
+                    "descricao": "O Empregador é responsável por alocar os cargos dentro da administração com base nos relatórios fornecidos pelo Gerente Analista. Sua função é garantir que cada administrador seja colocado na posição mais adequada, levando em consideração suas habilidades e desempenho. Essa alocação cuidadosa é fundamental para assegurar que a administração nunca pare de funcionar, mantendo a continuidade e a eficiência das operações."
+                },
+                {
+                    "titulo": "07- Gerente Analista",
+                    "descricao": "O Gerente Analista é responsável por analisar cada administrador e cargo dentro da administração, atuando de forma independente para coletar informações relevantes sobre o desempenho e as habilidades dos membros. Ele fornece relatórios detalhados ao Distribuidor, que utiliza esses dados para distribuir os cargos de maneira correta e coerente."
+                },
+                {
+                    "titulo": "08- Indicador",
+                    "descricao": "O Indicador é responsável por identificar administradores prodígios e aqueles que se destacam por sua capacidade e esforço, reconhecendo seus talentos e potencial. Sua função é indicar esses ADMs para cargos ainda mais altos dentro da administração, garantindo que nenhum talento seja desperdiçado. Ao fazer isso, o Indicador não apenas ajuda a promover o crescimento profissional dos membros, mas também fortalece a administração como um todo, assegurando que as melhores habilidades e competências estejam sempre em posições estratégicas."
+                },
+                {
+                    "titulo": "09- Policial",
+                    "descricao": "O Policial trabalha ativamente com o Sheriff para manter a ordem dentro do grupo, colaborando de forma eficaz nas tarefas de supervisão e controle. Juntos, eles garantem que as regras e diretrizes sejam respeitadas, intervindo em situações problemáticas e promovendo um ambiente seguro para todos os membros. O Policial desempenha um papel fundamental na segurança do grupo, fazendo parte da equipe de Portland."
+                },
+                {
+                    "titulo": "10- Recepcionista",
+                    "descricao": "O Recepcionista é responsável por dar as boas-vindas aos novos membros, garantindo que se sintam acolhidos e parte da comunidade. Ele interage ativamente com os membros, fornecendo avisos e informações relevantes, além de responder a perguntas e esclarecer dúvidas."
+                },
+                {
+                    "titulo": "11- ADM federal",
+                    "descricao": "O ADM Federal é um administrador que já completou a fase de residência e tem um histórico comprovado de sucesso ao promover vários administradores de ADM Oficial para Residente. Reconhecido por sua experiência e competência, ele é considerado um dos melhores administradores da administração, demonstrando um grande potencial para crescimento contínuo. Para avançar ainda mais em sua carreira, o ADM Federal deve treinar e ajudar dois administradores Residente a serem promovidos a ADM Federal também. Essa responsabilidade não apenas reforça seu papel como líder, mas também contribui para o fortalecimento da administração, garantindo que a experiência e os conhecimentos sejam transmitidos a novos adms."
+                },
+                {
+                    "titulo": "12- ADM Residente",
+                    "descricao": "O ADM Residente é um administrador que se dedicou a evoluir ainda mais dentro da organização, adquirindo um conhecimento profundo sobre todos os manuais, regras e protocolos da Neext. Sua experiência o torna um membro valioso da administração, pois ele não apenas domina as diretrizes, mas também busca constantemente melhorar sua função. O ADM Interino tem a missão de ajudar o ADM aprendiz l em seu desenvolvimento, atuando como mentor e compartilhando seu conhecimento. Essa colaboração não só contribui para o crescimento do ADM Aprendiz, mas também fortalece a administração como um todo."
+                },
+                {
+                    "titulo": "13- ADM Aprendiz",
+                    "descricao": "é um administrador totalmente formado, com pleno conhecimento das regras e diretrizes da administração. Sua principal função é orientar o iniciante e os novos administradores que ingressam na administração, facilitando sua integração na administração. O ADM aprendiz atua como um mentor, oferecendo suporte e esclarecendo dúvidas, garantindo que todos compreendam suas responsabilidades e o funcionamento do grupo. Sua experiência e conhecimento são fundamentais para ajudar os novos membros a se adaptarem rapidamente e contribuírem de forma eficaz."
+                },
+                {
+                    "titulo": "14- Inciante",
+                    "descricao": "é um administrador que recentemente foi promovido de aluno após recrutar 20 novos administradores. Com essa nova posição, ele traz consigo uma experiência valiosa em recrutamento, o que o torna um recurso importante para a administração. Para continuar sua ascensão, o iniciante deve agora recrutar mais 15 administradores, ampliando ainda mais a sua administração. Além disso, ele tem a responsabilidade de orientar o aluno no processo de recrutamento, compartilhando suas habilidades e conhecimentos adquiridos."
+                },
+                {
+                    "titulo": "15- Aluno",
+                    "descricao": "é um administrador que ascendeu recentemente de um ADM Teste, assumindo novas responsabilidades dentro da administração. Sua principal função é recrutar novos administradores, garantindo que a administração continue a crescer e se fortalecer. Para conseguir essa promoção, o  Aluno deve recrutar no mínimo 20 novos administradores, demonstrando sua capacidade de expandir a administração de forma eficaz."
+                },
+                {
+                    "titulo": "16- Teste",
+                    "descricao": "O ADM Teste é um administrador recentemente recrutado que está em fase de formação. Ele ainda não possui a plena responsabilidade de um administrador, pois está em processo de treinamento e adaptação à administração. Durante esse período, o ADM Teste recebe orientação e supervisão para desenvolver as habilidades necessárias e compreender as funções e protocolos do grupo. Sua função é essencial para garantir que ele se encaixe adequadamente na administração, permitindo que aprenda e cresça até se tornar um administrador pleno, pronto para contribuir de maneira efetiva com a administração."
+                }
+            ]
+        },
+        {
+            "nome": "ASILO",
+            "cargos": [
+                {
+                    "titulo": "01-Atestado",
+                    "descricao": "O Atestado é uma forma de licença ou férias concedida a um membro da administração quando ele apresenta um atestado médico. Essa licença permite que a pessoa se afaste temporariamente de suas responsabilidades e atividades nos grupos para se recuperar ou descansar. Durante o período de Atestado, o indivíduo deve sair dos grupos e se restringir a permanecer no asilo de repouso"
+                },
+                {
+                    "titulo": "02-Licença indeterminada",
+                    "descricao": "Licença indeterminada é um tipo de descanso concedido a um membro por um período de tempo indefinido, onde não há uma data específica para o retorno ao trabalho. Esse tipo de licença pode ser utilizado por diversas razões, como problemas de saúde, questões pessoais ou familiares, ou outras circunstâncias que exigem um afastamento prolongado."
+                },
+                {
+                    "titulo": "03-Visitante",
+                    "descricao": "A TAG de Visitante indica que a pessoa está temporariamente visitando a administração. Os membros com essa TAG são reconhecidos como visitantes"
+                },
+                {
+                    "titulo": "04-Férias",
+                    "descricao": "Essas férias são reconhecidas formalmente e têm uma duração específica, permitindo que o indivíduo se ausente de suas funções por um tempo determinado. Durante esse período, espera-se que o membro descanse e se recupere, garantindo que, ao retornar, possa continuar a desempenhar suas funções com renovado vigor e eficiência."
+                },
+                {
+                    "titulo": "05- Férias vermelha",
+                    "descricao": "Férias Vermelha é uma forma de licença concedida a um membro devido a motivos graves e pessoais. Essa licença tem a duração de dois meses e é destinada a permitir que o indivíduo lide com questões que exigem atenção especial, como problemas de saúde, questões familiares ou outras situações críticas que possam impactar sua capacidade de cumprir as obrigações administrativas."
+                },
+                {
+                    "titulo": "06-Licença Médica",
+                    "descricao": "Licença Médica é uma licença concedida a um membro que está enfrentando problemas de saúde graves, incluindo situações em que a pessoa pode estar hospitalizada ou em condições críticas de saúde. Essa licença é destinada a permitir que o indivíduo se concentre em sua recuperação sem a pressão de cumprir suas obrigações administrativas. A Licença Médica é uma medida que reconhece a gravidade da situação e oferece o suporte necessário para que o membro possa receber os cuidados adequados."
+                },
+                {
+                    "titulo": "07-Licença",
+                    "descricao": "Licença é um tipo de descanso concedido a um membro por um período de duas semanas."
+                },
+                {
+                    "titulo": "08-Aposentado",
+                    "descricao": "é a designação dada a pessoas que se aposentaram após cumprir um período de dois anos em um cargo alto dentro da administração. Esses indivíduos são reconhecidos por suas contribuições significativas e experiência acumulada durante seu tempo de serviço. A aposentadoria pode ser vista como uma forma de reconhecimento e recompensa pelo comprometimento e pelas responsabilidades assumidas ao longo de sua carreira na administração."
+                }
+            ]
+        },
+        {
+            "nome": "INFRAÇÃO",
+            "cargos": [
+                {
+                    "titulo": "01- Habeas corpus",
+                    "descricao": "O Habeas Corpus é um ADM que possui a permissão de atuar no grupo, mesmo estando preso. ajudando nas atividades e no funcionamento dos grupos, enquanto busca a redução de sua pena."
+                },
+                {
+                    "titulo": "02-Terrorista",
+                    "descricao": "são os indivíduos da “prisão 03\""
+                },
+                {
+                    "titulo": "03-Detento",
+                    "descricao": "Um Detento é uma pessoa que está cumprindo uma detenção devido à violação de um dos artigos do regulamento interno, conhecido como \"artigcard\". Essas violações podem variar em gravidade, mas todas resultam em consequências."
+                },
+                {
+                    "titulo": "04-Afastamento indeterminado",
+                    "descricao": "O Afastamento Indeterminado é uma forma de punição similar ao Afastamento, mas sem um prazo definido para o retorno do indivíduo ao seu cargo."
+                },
+                {
+                    "titulo": "05-Afastamento",
+                    "descricao": "O Afastamento é uma forma de punição aplicada a indivíduos em cargos altos dentro da administração. Essa sanção é utilizada quando um membro de alta responsabilidade viola regras ou comete infrações significativas que comprometem a integridade do grupo."
+                },
+                {
+                    "titulo": "06-Punição Alta",
+                    "descricao": "A Punição Alta é uma sanção imposta no sistema de administração, Essa punição é aplicada a indivíduos que quebram regras."
+                },
+                {
+                    "titulo": "07-Punição Grave",
+                    "descricao": "A Punição Grave é uma sanção imposta no sistema de administração, Essa punição é aplicada a indivíduos que quebram regras"
+                },
+                {
+                    "titulo": "08-Punição Média",
+                    "descricao": "A Punição média é uma sanção imposta no sistema de administração, Essa punição é aplicada a indivíduos que quebram regras"
+                },
+                {
+                    "titulo": "09-Punição Patológica",
+                    "descricao": "A Punição patológica é uma sanção imposta no sistema de administração, Essa punição é aplicada a indivíduos que quebram regras"
+                },
+                {
+                    "titulo": "10-Punição Verde",
+                    "descricao": "A Punição verde é uma sanção imposta no sistema de administração, Essa punição é aplicada a indivíduos que quebram regras"
+                },
+                {
+                    "titulo": "11-Punição Amarela",
+                    "descricao": "A Punição Amarela é uma sanção imposta no sistema de administração, Essa punição é aplicada a indivíduos que quebram regras"
+                },
+                {
+                    "titulo": "12-Marca de kitamento",
+                    "descricao": "A Marca de Kitamento é um registro concedido a indivíduos que foram expulsos (kitaram) e, após retornarem, passaram por um processo de reintegração. Essa marca é uma forma de identificação que indica a situação anterior do membro dentro da administração. É proibido remover essa marca, pois ela serve como um lembrete da infração cometida e das consequências enfrentadas. A Marca de Kitamento é recebida após o retorno do indivíduo da ABIN."
+                }
+            ]
+        }
+    ]
+}

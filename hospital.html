@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Atestado Neext</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background-color: #f4f4f4; }
+        h1 { font-size: 30px; margin-top: 20px; text-transform: uppercase; color: #333; }
+        .form-container { margin: 20px; }
+        .form-container input, .form-container textarea, .form-container select { width: 100%; max-width: 400px; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        .atestado {
+            width: 80%;
+            max-width: 600px;
+            padding: 30px;
+            margin: 20px auto;
+            background-color: #fff;
+            position: relative;
+            text-align: center;
+            display: none;
+            border: 1px solid #000;
+            height: 400px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            transform: rotate(0deg);
+        }
+        .hospital-symbol { position: absolute; top: 10px; left: 10px; font-size: 60px; color: red; font-weight: bold; }
+        .line { width: 100%; border-top: 2px solid #000; margin: 20px 0; }
+        .small-title { font-size: 14px; font-weight: bold; color: #333; margin-top: 10px; }
+        .download-btn { margin-top: 20px; }
+        .download-btn button { padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        .assinatura { margin-top: 30px; border-top: 2px solid #000; margin-bottom: 10px; }
+        .assinatura p { font-family: cursive; display: inline; }
+        .icon { margin-right: 10px; }
+        .assinatura-label { font-style: normal; }
+        .assinatura-normal { font-style: normal; font-weight: bold; }
+        @media (max-width: 600px) { 
+            .atestado { width: 95%; height: auto; } 
+            h1 { font-size: 24px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <h1>HOSPITAL NEEXT</h1>
+    <div class="line"></div>
+    <h2>ATESTADO MÉDICO</h2>
+
+    <div class="form-container">
+        <label for="nome"><i class="fas fa-user icon"></i> Nome do Paciente:</label><br>
+        <input type="text" id="nome" placeholder="Nome do Paciente"><br><br>
+        <label for="diagnostico"><i class="fas fa-file-medical icon"></i> Diagnóstico:</label><br>
+        <textarea id="diagnostico" placeholder="Descreva o diagnóstico"></textarea><br><br>
+        <label for="descricao"><i class="fas fa-notes-medical icon"></i> Descrição do Atestado:</label><br>
+        <textarea id="descricao" placeholder="Descreva o motivo do atestado"></textarea><br><br>
+        <label for="dias"><i class="fas fa-calendar-day icon"></i> Dias de Atestado:</label><br>
+        <select id="dias">
+            <option value="indeterminado">Indeterminado</option>
+        </select><br><br>
+        <label for="data"><i class="fas fa-calendar-alt icon"></i> Data de Emissão:</label><br>
+        <input type="date" id="data"><br><br>
+        <label for="assinatura" class="assinatura-label"><i class="fas fa-signature icon"></i> Assinatura:</label><br>
+        <input type="text" id="assinatura" placeholder="Digite a assinatura"><br><br>
+        <button onclick="gerarAtestado()">Gerar Atestado</button>
+        <button onclick="baixarAtestado()" class="download-btn">Baixar Atestado</button>
+    </div>
+
+    <div class="atestado" id="atestado">
+        <div class="hospital-symbol">+</div>
+        <h2>HOSPITAL NEEXT</h2>
+        <div class="line"></div>
+        <h3>ATESTADO MÉDICO</h3>
+        <p><i class="fas fa-user icon"></i><strong> Nome:</strong> <span id="previewNome"></span></p>
+        <p><i class="fas fa-calendar-alt icon"></i><strong> Diagnóstico:</strong> <span id="previewDiagnostico"></span></p>
+        <p><i class="fas fa-notes-medical icon"></i><strong> Descrição:</strong> <span id="previewDescricao"></span></p>
+        <p><i class="fas fa-calendar-day icon"></i><strong> Dias:</strong> <span id="previewDias"></span></p>
+        <p><i class="fas fa-calendar-alt icon"></i><strong> Data de Emissão:</strong> <span id="previewData"></span></p>
+        <div class="assinatura">
+            <p><i class="fas fa-signature icon"></i><strong class="assinatura-normal"> Assinatura:</strong> <span id="previewAssinatura"></span></p>
+        </div>
+    </div>
+
+    <script>
+        function preencherDias() {
+            const selectDias = document.getElementById('dias');
+            for (let i = 1; i <= 100; i++) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.text = `${i} dias`;
+                selectDias.appendChild(option);
+            }
+        }
+
+        window.onload = preencherDias;
+
+        function gerarAtestado() {
+            document.getElementById("atestado").style.display = "block";
+            document.getElementById("previewNome").innerText = document.getElementById("nome").value;
+            document.getElementById("previewDiagnostico").innerText = document.getElementById("diagnostico").value;
+            document.getElementById("previewDescricao").innerText = document.getElementById("descricao").value;
+            document.getElementById("previewDias").innerText = document.getElementById("dias").value;
+            document.getElementById("previewData").innerText = document.getElementById("data").value;
+            document.getElementById("previewAssinatura").innerText = document.getElementById("assinatura").value;
+        }
+
+        function baixarAtestado() {
+            const confirmar = window.confirm("Você tem certeza que deseja baixar o atestado?");
+            if (confirmar) {
+                html2canvas(document.querySelector("#atestado"), { scale: 2, useCORS: true }).then(canvas => {
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    link.download = 'atestado_neext.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }).catch(error => {
+                    console.error('Erro ao gerar o atestado:', error);
+                });
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>

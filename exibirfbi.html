@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários Pendentes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="exibirfbi.css">
+    <link href="https://fonts.googleapis.com/css2?family=Domo+de+Ferro:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #333; color: white; font-family: 'Domo de Ferro', sans-serif; }
+        .status-icon { margin-right: 5px; }
+        .approved { color: green; }
+        .rejected { color: red; }
+        .pending { color: orange; display: flex; align-items: center; }
+        .loading { animation: spin 1s linear infinite; margin-left: 5px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .button { padding: 10px; margin: 5px; border: none; cursor: pointer; color: white; border-radius: 5px; }
+        .aprovar { background-color: green; }
+        .reprovar { background-color: red; }
+        .user-card p, .user-card i, .loading-message, .message, .confirmation-widget { color: white; }
+        .success-message { color: green; }
+        .error-message { color: red; }
+        .pending-status { display: flex; align-items: center; color: orange; }
+        .confirmation-widget {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px; text-align: center;
+            z-index: 1000; color: white;
+        }
+        .confirmation-widget i { font-size: 3em; }
+        .developed-by { position: fixed; bottom: 10px; right: 10px; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-users icon"></i>Usuários Pendentes</h1>
+    
+    <div id="aguardando" class="section">
+        <div class="section-title">Aguardando <i class="fas fa-circle-notch loading-icon loading"></i></div>
+        <div class="loading-message"><p>Aguardando carregamento...</p></div>
+    </div>
+    <div id="aprovados" class="section">
+        <div class="section-title">Aprovados <i class="fas fa-check-circle approved"></i></div>
+    </div>
+    <div id="reprovados" class="section">
+        <div class="section-title">Reprovados <i class="fas fa-times-circle rejected"></i></div>
+    </div>
+    <div id="message" class="message"></div>
+    <div class="developed-by">Desenvolvido pela Neext</div>
+    <div id="confirmation" class="confirmation-widget">
+        <i id="confirmation-icon" class="fas"></i>
+        <p id="confirmation-message"></p>
+    </div>
+
+    <script>
+        // Função para carregar dados
+        function loadData() {
+            fetch('https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec')
+                .then(response => {
+                    if (!response.ok) throw new Error('Erro na rede: ' + response.statusText);
+                    return response.json();
+                })
+                .then(data => {
+                    const entries = data.data;
+                    const aprovadosContainer = document.getElementById('aprovados');
+                    const reprovadosContainer = document.getElementById('reprovados');
+                    const aguardandoContainer = document.getElementById('aguardando');
+                    const loadingMessage = document.querySelector('.loading-message');
+                    loadingMessage.style.display = 'none';
+
+                    if (entries.length === 0) {
+                        aguardandoContainer.innerHTML += '<p>Não há usuários aguardando.</p>';
+                    } else {
+                        let hasPendingUsers = false; // Variável para verificar se há usuários pendentes
+                        entries.forEach(entry => {
+                            // Verifica se os campos obrigatórios estão preenchidos
+                            if (entry.nome && entry.email && entry.ip && entry.idade) {
+                                const userCard = document.createElement('div');
+                                userCard.className = 'user-card';
+                                userCard.innerHTML = `
+                                    <p><i class="fas fa-user icon"></i>Nome: ${entry.nome}</p>
+                                    <p><i class="fas fa-envelope icon"></i>Email: ${entry.email}</p>
+                                    <p><i class="fas fa-calendar-alt icon"></i>Idade: ${entry.idade}</p>
+                                    <p><i class="fas fa-phone icon"></i>Número: ${entry.numero}</p>
+                                    <p><i class="fas fa-users icon"></i>Grupo: ${entry.grupo}</p>
+                                    <p><i class="fas fa-comment-dots icon"></i>Motivo: ${entry.motivo}</p>
+                                    <p><i class="fas fa-id-badge icon"></i>ID: ${entry.id}</p>
+                                    <p><i class="fas fa-laptop icon"></i>IP: ${entry.ip}</p>
+                                    <p class="pending-status"><i class="fas fa-circle-notch loading"></i>Status: ${entry.status || 'Pendente'}</p>
+                                `;
+
+                                // Verifica se o status é pendente ou está vazio
+                                if (!entry.status || entry.status.trim() === '') {
+                                    userCard.querySelector('p:last-child').classList.add('pending');
+                                    userCard.innerHTML += `
+                                        <div class="button-container">
+                                            <button class="button aprovar" onclick="updateStatus('${entry.id}', 'aprovado')"><i class="fas fa-check"></i> Aprovar</button>
+                                            <button class="button reprovar" onclick="updateStatus('${entry.id}', 'reprovado')"><i class="fas fa-times"></i> Reprovar</button>
+                                        </div>
+                                    `;
+                                    aguardandoContainer.appendChild(userCard);
+                                    hasPendingUsers = true; // Indica que há usuários pendentes
+                                } else if (entry.status.toLowerCase() === 'aprovado') {
+                                    userCard.innerHTML += `<p><i class="fas fa-check status-icon approved"></i>Aprovado</p>`;
+                                    aprovadosContainer.appendChild(userCard);
+                                } else if (entry.status.toLowerCase() === 'reprovado') {
+                                    userCard.innerHTML += `<p><i class="fas fa-times status-icon rejected"></i>Reprovado</p>`;
+                                    reprovadosContainer.appendChild(userCard);
+                                }
+                            }
+                        });
+
+                        // Se não houver usuários pendentes, exibe mensagem
+                        if (!hasPendingUsers) {
+                            aguardandoContainer.innerHTML += '<p>Não há usuários aguardando.</p>';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados:', error);
+                    showMessage('Erro ao carregar dados. Verifique o console para mais detalhes.', 'error');
+                });
+        }
+
+        // Função para atualizar o status na planilha
+        function updateStatus(userId, status) {
+    fetch('https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: 'addStatus',
+            id: userId,
+            status: status
+        })
+    })
+    .then(() => {
+        // Exibe mensagem de confirmação com base no status
+        showConfirmation(`Status ${status} enviado com sucesso para o usuário com ID ${userId}.`);
+        location.reload(); // Recarrega a página imediatamente
+    })
+    .catch(error => {
+        console.error('Erro ao atualizar status:', error);
+        showMessage('Erro ao atualizar status. Verifique o console para mais detalhes.', 'error');
+    });
+}
+
+        // Função para exibir a mensagem de confirmação
+        function showConfirmation(message) {
+            const confirmationWidget = document.getElementById('confirmation');
+            const confirmationMessage = document.getElementById('confirmation-message');
+            confirmationMessage.textContent = message;
+            confirmationWidget.style.display = 'block';
+
+// Adiciona um ícone dependendo do status
+            const confirmationIcon = document.getElementById('confirmation-icon');
+            if (message.includes(' aprovado ')) {
+                confirmationIcon.className = 'fas fa-check-circle success-message';
+            } else {
+                confirmationIcon.className = 'fas fa-times-circle error-message';
+            }
+
+            // Oculta o widget após 2 segundos
+            setTimeout(() => {
+                confirmationWidget.style.display = 'none';
+            }, 2000);
+        }
+
+        // Função para mostrar mensagens de erro ou sucesso
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('message');
+            messageContainer.textContent = message;
+            messageContainer.className = type === 'error' ? 'error-message' : 'success-message';
+            setTimeout(() => {
+                messageContainer.textContent = '';
+            }, 3000);
+        }
+
+        // Carrega os dados ao iniciar
+        loadData();
+    </script>
+</body>
+</html>

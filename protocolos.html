@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolos</title>
+    <link rel="icon" href="imagens/logo.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('imagens/4.jpg');
+            background-size: cover; /* Faz a imagem cobrir toda a tela */
+            background-repeat: no-repeat; /* Impede a repetição da imagem */
+            background-position: center; /* Centraliza a imagem de fundo */
+            color: white;
+            padding: 20px;
+            margin: 0; /* Remove a margem padrão */
+            min-height: 100vh; /* Garante que o corpo tenha pelo menos 100% da altura da viewport */
+            display: flex;
+            flex-direction: column; /* Organiza a barra superior e o conteúdo em coluna */
+        }
+
+        .barra-superior {
+            background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+            padding: 15px; /* Espaçamento interno */
+            display: flex; /* Usado para organizar o conteúdo da barra */
+            align-items: center; /* Alinha itens verticalmente no centro */
+            justify-content: center; /* Centraliza itens horizontalmente */
+        }
+
+        .barra-superior h1 {
+            margin: 0; /* Remove margem */
+            margin-left: 10px; /* Espaçamento à esquerda do título */
+        }
+
+        .container {
+            flex: 1; /* O container ocupa o espaço restante */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centraliza os cards */
+            padding: 20px; /* Adiciona espaçamento interno */
+            margin-top: 10px; /* Espaçamento acima do container */
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+            border-radius: 10px;
+            margin: 15px;
+            padding: 20px;
+            width: 300px; /* Largura fixa para os cards */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s; /* Adiciona uma animação ao passar o mouse */
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Aumenta o tamanho do card ao passar o mouse */
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .card p {
+            margin-bottom: 10px;
+        }
+
+        .copiar-btn {
+            background-color: #4CAF50; /* Verde */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin-top: 10px; /* Espaço acima do botão */
+            cursor: pointer;
+            border-radius: 5px; /* Bordas arredondadas */
+        }
+
+        .mensagem-copiado {
+            display: none; /* Oculto por padrão */
+            color: #4CAF50; /* Verde */
+            margin-top: 5px; /* Espaço acima da mensagem */
+        }
+    </style>
+</head>
+<body>
+    <div class="barra-superior">
+        <i class="fas fa-book"></i> <!-- Ícone representando "Protocolos" -->
+        <h1>Protocolos</h1> <!-- Título da barra superior -->
+    </div>
+    <div class="container" id="protocolo-container"></div>
+
+    <script>
+        // Função para carregar os protocolos do arquivo JSON
+        fetch('protocolos.json') // Verifique se o nome do arquivo está correto
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar o arquivo JSON');
+                }
+                return response.json(); // Ler o conteúdo como JSON
+            })
+            .then(protocolos => {
+                const container = document.getElementById('protocolo-container');
+
+                if (protocolos.length === 0) {
+                    const noDataMessage = document.createElement('p');
+                    noDataMessage.innerText = 'Nenhum protocolo encontrado.';
+                    container.appendChild(noDataMessage);
+                    return;
+                }
+
+                protocolos.forEach(protocolo => {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'card';
+
+                    // Adicionar título
+                    const tituloDiv = document.createElement('h2');
+                    tituloDiv.innerText = protocolo.titulo; // Mostrar título
+                    cardDiv.appendChild(tituloDiv);
+                    
+                    // Adicionar descrição
+                    const descricaoDiv = document.createElement('p');
+                    descricaoDiv.innerText = protocolo.descricao; // Descrição do protocolo
+                    cardDiv.appendChild(descricaoDiv);
+                    
+                    // Adicionar parágrafos
+                    protocolo.informacoes.forEach(paragrafo => {
+                        const informacoesDiv = document.createElement('p');
+                        informacoesDiv.innerText = paragrafo; // Mostrar parágrafos
+                        cardDiv.appendChild(informacoesDiv);
+                    });
+
+                    // Botão copiar
+                    const copiarBtn = document.createElement('button');
+                    copiarBtn.className = 'copiar-btn';
+                    copiarBtn.innerText = 'Copiar';
+                    copiarBtn.onclick = function() {
+                        const textoParaCopiar = `${protocolo.titulo}\n${protocolo.descricao}\n${protocolo.informacoes.join('\n')}`;
+                        navigator.clipboard.writeText(textoParaCopiar).then(() => {
+                            const mensagemDiv = document.createElement('span');
+                            mensagemDiv.className = 'mensagem-copiado';
+                            mensagemDiv.innerText = 'Copiado!';
+                            cardDiv.appendChild(mensagemDiv);
+
+                            // Exibir a mensagem temporariamente
+                            mensagemDiv.style.display = 'inline'; // Exibe a mensagem
+                            setTimeout(() => {
+                                mensagemDiv.style.display = 'none'; // Oculta a mensagem após 2 segundos
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Erro ao copiar texto: ', err);
+                        });
+                    };
+                    cardDiv.appendChild(copiarBtn); // Adicionar o botão ao card
+
+                    container.appendChild(cardDiv); // Adicionar o card ao contêiner
+                });
+            })
+            .catch(err => console.error('Erro ao carregar protocolos: ', err));
+    </script>
+</body>
+</html>

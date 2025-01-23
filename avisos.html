@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avisos</title>
+    <!-- Link da Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Link do SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-image: url('fundo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .aviso {
+            text-align: center;
+            margin: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            max-width: 300px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .aviso-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .aviso img {
+            max-width: 90%;
+            height: auto;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 8px;
+        }
+        .download-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            font-size: 14px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1><i class="fas fa-file-alt"></i> AVISOS NEEXT</h1>
+
+<!-- Aviso 1 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 1</div>
+    <img src="avisos/1.png" alt="Aviso 1">
+    <a href="avisos/1.png" download="1.png" class="download-btn" onclick="notifyDownload()">Download Aviso 1</a>
+</div>
+
+<!-- Aviso 2 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 2</div>
+    <img src="avisos/2.png" alt="Aviso 2">
+    <a href="avisos/2.png" download="2.png" class="download-btn" onclick="notifyDownload()">Download Aviso 2</a>
+</div>
+
+<!-- Aviso 3 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 3</div>
+    <img src="avisos/3.png" alt="Aviso 3">
+    <a href="avisos/3.png" download="3.png" class="download-btn" onclick="notifyDownload()">Download Aviso 3</a>
+</div>
+
+<!-- Aviso 4 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 4</div>
+    <img src="avisos/4.png" alt="Aviso 4">
+    <a href="avisos/4.png" download="4.png" class="download-btn" onclick="notifyDownload()">Download Aviso 4</a>
+</div>
+
+<!-- Aviso 5 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 5</div>
+    <img src="avisos/5.png" alt="Aviso 5">
+    <a href="avisos/5.png" download="5.png" class="download-btn" onclick="notifyDownload()">Download Aviso 5</a>
+</div>
+
+<!-- Aviso 6 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 6</div>
+    <img src="avisos/6.png" alt="Aviso 6">
+    <a href="avisos/6.png" download="6.png" class="download-btn" onclick="notifyDownload()">Download Aviso 6</a>
+</div>
+
+<!-- Aviso 7 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 7</div>
+    <img src="avisos/7.png" alt="Aviso 7">
+    <a href="avisos/7.png" download="7.png" class="download-btn" onclick="notifyDownload()">Download Aviso 7</a>
+</div>
+
+<!-- Aviso 8 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 8</div>
+    <img src="avisos/8.png" alt="Aviso 8">
+    <a href="avisos/8.png" download="8.png" class="download-btn" onclick="notifyDownload()">Download Aviso 8</a>
+</div>
+
+<!-- Aviso 9 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 9</div>
+    <img src="avisos/9.png" alt="Aviso 9">
+    <a href="avisos/9.png" download="9.png" class="download-btn" onclick="notifyDownload()">Download Aviso 9</a>
+</div>
+
+<!-- Aviso 10 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 10</div>
+    <img src="avisos/10.png" alt="Aviso 10">
+    <a href="avisos/10.png" download="10.png" class="download-btn" onclick="notifyDownload()">Download Aviso 10</a>
+</div>
+
+<!-- Aviso 11 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 11</div>
+    <img src="avisos/11.png" alt="Aviso 11">
+    <a href="avisos/11.png" download="11.png" class="download-btn" onclick="notifyDownload()">Download Aviso 11</a>
+</div>
+
+<!-- Aviso 12 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 12</div>
+    <img src="avisos/12.png" alt="Aviso 12">
+    <a href="avisos/12.png" download="12.png" class="download-btn" onclick="notifyDownload()">Download Aviso 12</a>
+</div>
+
+<!-- Aviso 13 -->
+<div class="aviso">
+    <div class="aviso-title">Aviso 13</div>
+    <img src="avisos/13.png" alt="Aviso 13">
+    <a href="avisos/13.png" download="13.png" class="download-btn" onclick="notifyDownload()">Download Aviso 13</a>
+</div>
+
+    <script>
+        function notifyDownload() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Download iniciado!',
+                text: 'Seu download foi iniciado com sucesso.',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+    </script>
+
+</body>
+</html>

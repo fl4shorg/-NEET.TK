@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEEXT LTDA. - Carrossel Responsivo</title>
+    <!-- Incluindo o CSS do Slick -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <!-- Incluindo Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .directors-title {
+            font-size: 32px;
+            margin: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #FFD700; /* Cor amarela */
+        }
+
+        .directors-title i {
+            margin-right: 10px; /* Espaço entre o ícone e o texto */
+        }
+
+        .carousel {
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .carousel-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .carousel-item img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .carousel-item h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .carousel-item .subtitle {
+            font-size: 18px;
+            color: #666;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .carousel-item .subtitle i {
+            font-size: 20px;
+        }
+
+        .carousel-item p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .slick-prev, .slick-next {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 50%;
+            padding: 10px;
+        }
+
+        /* Responsividade para mobile */
+        @media (max-width: 768px) {
+            .carousel-item img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .carousel-item h2 {
+                font-size: 20px;
+            }
+
+            .carousel-item .subtitle {
+                font-size: 16px;
+            }
+
+            .carousel-item p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="directors-title"><i class="fas fa-medal"></i>Medalhas</div>
+
+    <div class="carousel">
+        <div class="carousel-item">
+            <img src="imagens/koala.jpg" alt="Pessoa 1">
+            <h2>Koala</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2019-2023</div>
+                <div><i class="fas fa-briefcase"></i>Ex Diretor do Discord & Ex Vigia</div>
+            </div>
+            <p>ato de coragem e devoção que marcou a história da Neext. Koala, com bravura inigualável, enfrentou a adversidade e impediu um golpe de estado arquitetado pela Team Lobos. Em um momento crítico, colocou a neext acima de si mesmo, garantindo a continuidade da neext.</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/gus.jpg" alt="Pessoa 2">
+            <h2>Gus</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2023-2023</div>
+                <div><i class="fas fa-briefcase"></i>Ex Diretor do skur & Ex Primeiro ministro do fbi</div>
+            </div>
+            <p> impediu o arquivamento em massa de toda a Neext, mesmo diante da ameaça de vazamento de dados pessoais, incluindo os de sua família. Embora o risco fosse grande, ele decidiu proteger a comunidade, mostrando lealdade à Neext e priorizando sua integridade, mesmo sob pressão. Sua ação garantiu a continuidade da neext, reafirmando seu compromisso com a segurança e os valores da comunidade.
+
+</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/ruby.jpg" alt="Pessoa 3">
+            <h2>Ruby</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2022-2024</div>
+                <div><i class="fas fa-briefcase"></i>Ex Diretor do FBI & Atual Primeiro Ministro</div>
+            </div>
+            <p>Ruby foi fundamental para acabar com as conspirações e ameaças que estavam cercando a Neext. Sempre apaixonado pela comunidade, ele se destacou ao proteger a Neext contra um movimento de ataques orquestrado pelos ex-diretores do FBI. Mesmo diante de enormes desafios, Ruby contribuiu de maneira decisiva, indo além do que imaginava ser possível para garantir a segurança e a continuidade da plataforma. Sua dedicação e coragem se tornaram vitais para a sobrevivência da Neext, consolidando-o como um verdadeiro pilar da comunidade.
+
+</p>
+
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/vitin.jpg" alt="Pessoa 3">
+            <h2>Vitin</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2022-2024</div>
+                <div><i class="fas fa-briefcase"></i>Ex Diretor do Skur & Atual Assistente do skur </div>
+            </div>
+            <p>se destacou de maneira admirável na difícil missão de ajudar a reabrir os Skur, após o fechamento de todos devido à devastação causada pela gestão do ex-diretor. Sua ação foi crucial para restaurar a estabilidade e a confiança em um momento crítico. A situação estava longe de ser fácil, com o legado de falhas e caos deixado pela administração anterior, mas Vitin não se deixou abater. Com determinação e coragem, ele assumiu a responsabilidade de reconstruir o que foi perdido.
+
+
+</p>
+
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/keit.jpg" alt="Pessoa 3">
+            <h2>Keit</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2023-2024</div>
+                <div><i class="fas fa-briefcase"></i>Ex vice Diretora do Skur</div>
+            </div>
+            <p>O apoio de Keit não se limitou a gestos superficiais, mas foi uma constante presença, repleta de ação e dedicação. Skur, por sua vez, teve a oportunidade de perceber o valor desse apoio e o quanto ele foi essencial em momentos de desafio e necessidade.
+
+
+</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/sam.jpg" alt="Pessoa 3">
+            <h2>Sam</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2023-2024</div>
+                <div><i class="fas fa-briefcase"></i> Atual Diretor do Skur & Atual Juíz inspetor</div>
+            </div>
+            <p>Sam, além de ser um dos melhores diretores que o Skur já teve, foi o criador do sistema de elo para os grupos. Sua inovação trouxe uma maneira mais estruturada e equilibrada de classificar e avaliar os grupos dentro da plataforma, levando em consideração seu desempenho e contribuição. O sistema de elo permitiu que os grupos fossem organizados de forma justa, criando uma competição saudável e incentivando o aprimoramento contínuo.
+
+</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/nick.jpg" alt="Pessoa 3">
+            <h2>Nick</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2023-2024</div>
+                <div><i class="fas fa-briefcase"></i>Ex Ministro da inteligência & Ex Assistente</div>
+            </div>
+            <p>desempenhou um papel essencial em restaurar a honra da Neext em um momento crítico. Após os grupos da Neext serem roubados e a comunidade passar por um período de vergonha, ele não só conseguiu recuperar todos os grupos perdidos, mas também tomou medidas decisivas de retaliação. Durante sua gestão na NSA, Nick arquivou vários grupos inimigos responsáveis pelo roubo, como uma forma de vingança e para reestabelecer o equilíbrio. Sua liderança não apenas devolveu a credibilidade à Neext, mas também impediu diversos arquivamentos.
+
+</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/shelby.jpg" alt="Pessoa 4">
+            <h2>Shelby</h2>
+            <div class="subtitle">
+                <div><i class="fas fa-calendar-alt"></i>2022-2024</div>
+                <div><i class="fas fa-briefcase"></i>Ex Arquiteto & Ex Cto do 4 & Ex Juíz inspetor</div>
+            </div>
+            <p>Shelby fez um sacrifício pessoal enorme em prol da Neext, colocando a comunidade acima de tudo. Ele desempenhou um papel crucial ao ajudar a derrubar um ditador que ameaçava a liberdade e os valores da plataforma. Além disso, foi Shelby quem fundou o Conselho Neext, estruturando a liderança da comunidade de forma a garantir que ela fosse governada com justiça e transparência.</p>
+        </div>
+    </div>
+
+    <!-- Incluindo o jQuery e o Slick JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.carousel').slick({
+                infinite: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                centerMode: true,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 1,
+                            arrows: true
+                        }
+                    }
+                ]
+            });
+
+            // Ajuste da altura do iframe quando o conteúdo for carregado
+            function adjustIframeHeight() {
+                var iframe = window.frameElement;
+                if (iframe) {
+                    var docHeight = document.body.scrollHeight;
+                    iframe.style.height = docHeight + 'px';
+                }
+            }
+
+            // Executa o ajuste de altura assim que o carrossel for inicializado
+            adjustIframeHeight();
+            $(window).resize(adjustIframeHeight); // Ajusta a altura caso a janela seja redimensionada
+        });
+    </script>
+</body>
+</html>

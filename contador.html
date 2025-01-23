@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador - NEEXT LTDA.</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos para o contador */
+        #countdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .countdown {
+            display: flex; /* Flexbox para alinhar os itens lado a lado */
+            flex-direction: column; /* Direção das colunas */
+            align-items: center; /* Centraliza os itens */
+            background: linear-gradient(135deg, #8A2BE2, #00BFFF);
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            font-size: 24px; /* Tamanho do texto */
+        }
+
+        .countdown-title {
+            font-size: 24px; /* Tamanho do título */
+            color: #fff; /* Cor do título */
+            margin-bottom: 10px; /* Espaçamento entre o título e o contador */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espaço entre o ícone e o texto */
+        }
+
+        .countdown-items {
+            display: flex; /* Flexbox para alinhar os itens lado a lado */
+        }
+
+        .countdown-item {
+            margin: 0 10px; /* Espaçamento entre os itens */
+        }
+
+        .countdown-label {
+            font-size: 14px; /* Tamanho do rótulo */
+            color: #fff; /* Cor do rótulo */
+        }
+
+        .countdown-time {
+            font-size: 36px; /* Tamanho do texto */
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra no texto */
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown-container">
+        <div class="countdown">
+            <div class="countdown-title">
+                <i class="fas fa-birthday-cake"></i> Próximo Aniversário
+            </div>
+            <div class="countdown-items">
+                <div class="countdown-item">
+                    <div class="countdown-time" id="days">00</div>
+                    <div class="countdown-label">Dias</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-time" id="hours">00</div>
+                    <div class="countdown-label">Horas</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-time" id="minutes">00</div>
+                    <div class="countdown-label">Minutos</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-time" id="seconds">00</div>
+                    <div class="countdown-label">Segundos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para carregar o contador
+        function loadCountdown() {
+            const daysElement = document.getElementById('days');
+            const hoursElement = document.getElementById('hours');
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+            // Defina a data do próximo aniversário
+            const targetDate = new Date('2025-03-01T00:00:00'); // Atualizado para 1 de março de 2025
+
+            function updateCountdown() {
+                const now = new Date();
+                const timeRemaining = targetDate - now;
+
+                if (timeRemaining < 0) {
+                    daysElement.textContent = '00';
+                    hoursElement.textContent = '00';
+                    minutesElement.textContent = '00';
+                    secondsElement.textContent = '00'; // Se já passou, exibe 00
+                    return;
+                }
+
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                daysElement.textContent = days < 10 ? '0' + days : days;
+                hoursElement.textContent = hours < 10 ? '0' + hours : hours;
+                minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
+                secondsElement.textContent = seconds < 10 ? '0' + seconds : seconds;
+            }
+
+            updateCountdown(); // Chama a função uma vez para evitar um atraso de 1 segundo
+            setInterval(updateCountdown, 1000); // Atualiza a cada segundo
+        }
+
+        window.onload = loadCountdown; // Carrega o contador ao carregar a página
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+[
+    {
+        "titulo": "Protocolo Marcial",
+        "descricao": "O Protocolo Marcial pode ser ativado exclusivamente pelo Imperador em situações de guerra e pode durar 72 horas, podendo ser aumentado, como no passado, quando teve a duração de 1 mês.",
+        "informacoes": [
+            "Parágrafo 01: Ao ativar o protocolo, todos os meios de recrutamento, divulgação e administração de todos os cargos altos são cortados.",
+            "Parágrafo 02: Permanecem apenas os diretores, o Primeiro-Ministro, o Ministro da Defesa e o Ministro da Inteligência, com ADM nos grupos; o restante fica sem ADM em tudo até a finalização do protocolo.",
+            "Parágrafo 03: O protocolo tem um tempo inicial de 72 horas, podendo ser aumentado ou encerrado antes."
+        ]
+    },
+    {
+        "titulo": "Protocolo Supremacia",
+        "descricao": "Esse protocolo não interrompe recrutamento ou divulgação, portanto, fica proibido qualquer forma de interrupção. O Protocolo Supremacia dura 48 horas consecutivas e apenas os diretores ou o Primeiro-Ministro podem ativá-lo.",
+        "informacoes": [
+            "Parágrafo 01: Durante o protocolo, apenas o CTO, diretores, ministros e o chanceler têm ADM nos grupos.",
+            "Parágrafo 02: Ninguém menos e ninguém mais do que os citados acima pode ter ADM no grupo."
+        ]
+    },
+    {
+        "titulo": "Protocolo Regional",
+        "descricao": "Esse protocolo dura 24 horas e pode ser estendido por mais horas. Ele deve ser ativado em caso de ameaças de arquivamento. O Protocolo Regional pode ser ativado pelo CTO de qualquer grupo, sendo ativado somente caso o CTO envie o card de ativação no Kremlin ou na Casa Branca.",
+        "informacoes": [
+            "Parágrafo 01: Ao ativar esse protocolo, apenas os cargos de diretor da Casa Branca, juntamente com o Primeiro-Ministro e o CTO, têm ADM no grupo, assim como os cargos mosquiteiros que são treinados para essa eventualidade.",
+            "Parágrafo 02: Esse protocolo dura apenas 24 horas; para prorrogar, é necessário ativá-lo novamente ao fim do prazo."
+        ]
+    }
+]

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗔𝗣𝗢𝗦𝗧𝗜𝗟𝗔</title>
+    <link rel="icon" href="logo.jpg" type="image/jpeg"> <!-- Verifique se o caminho está correto -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        /* Fundo da página com imagem escurecida */
+        body {
+            font-family: Arial, sans-serif;
+            color: white;
+            background: url('imagens/apostila.gif') no-repeat center center fixed; /* imagem de fundo */
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Evitar rolagem do body */
+        }
+
+        /* Container para permitir rolagem */
+        .content {
+            overflow-y: auto; /* Permite rolagem vertical */
+            height: 100vh; /* Altura total da viewport */
+            padding: 20px; /* Espaçamento interno */
+            box-sizing: border-box; /* Para incluir padding na altura total */
+            position: relative; /* Para controlar a posição do fundo */
+            background: rgba(0, 0, 0, 0.7); /* Fundo escuro sem névoa */
+        }
+
+        /* Título com degradê */
+        .title-container {
+            display: flex;
+            align-items: center; /* Alinhamento vertical do ícone e texto */
+            justify-content: center; /* Centralização horizontal */
+            margin: 30px 0; /* Margem ao redor do título */
+            font-size: 3em; /* Aumentado para melhor destaque */
+            font-weight: bold;
+        }
+
+        /* Estilo do texto com cor sólida */
+        .title {
+            background: linear-gradient(45deg, #FF69B4, #FF1493); /* Gradiente rosa e rosa escuro */
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1; /* Z-index para garantir que o texto fique acima */
+        }
+
+        /* Ícone ao lado do título */
+        .icon-container {
+            margin-right: 10px; /* Espaçamento entre ícone e texto */
+            font-size: 0.8em; /* Tamanho do ícone ajustado */
+            color: #FF69B4; /* Cor do ícone para rosa */
+        }
+
+        /* Contêiner dos cards */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            position: relative; /* Para permitir a posição do fundo escuro */
+            z-index: 1; /* Para garantir que os cards fiquem acima do fundo */
+        }
+
+        /* Estilo dos cards */
+        .card {
+            width: 250px;
+            background-color: rgba(50, 50, 50, 0.8); /* Fundo escuro sem névoa */
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s ease;
+            position: relative; /* Para o z-index */
+            z-index: 2; /* Para garantir que os cards fiquem acima do fundo */
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Ícones e botões */
+        .card-body i {
+            color: #FF69B4; /* Mudado para rosa */
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .btn-primary {
+            background-color: #FF69B4; /* Mudado para rosa */
+            border: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="title-container">
+            <div class="icon-container">
+                <i class="fas fa-book-open"></i> <!-- Ícone da apostila -->
+            </div>
+            <div class="title">Apostila Skur</div>
+        </div>
+           <div class="card-container">
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-user-tie"></i>
+                    <h5 class="card-title">Cargos</h5>
+                    <p class="card-text">Informações sobre os cargos disponíveis.</p>
+                    <a href="cargos skur/skur.html" class="btn btn-primary">Ver Cargos</a> <!-- Verifique se o caminho está correto -->
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-book"></i>
+                    <h5 class="card-title">Regras</h5>
+                    <p class="card-text">Regras e políticas a serem seguidas.</p>
+                    <a href="regras.html" class="btn btn-primary">Ver Regras</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-book-open"></i>
+                    <h5 class="card-title">Manual</h5>
+                    <p class="card-text">Manual do usuário completo.</p>
+                    <a href="manual skur.html" class="btn btn-primary">Ver Manual</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-file-alt"></i>
+                    <h5 class="card-title">Protocolos</h5>
+                    <p class="card-text">Protocolos de operação e segurança.</p>
+                    <a href="protocolos.html" class="btn btn-primary">Ver Protocolos</a>
+                </div>
+            </div>
+            <!-- Novo Card de Level -->
+
+            <!-- Novo Card de Elos Skur -->
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-star"></i> <!-- Ícone representativo para Elos Skur -->
+                    <h5 class="card-title">Elos Skur</h5>
+                    <p class="card-text">Informações sobre os elos.</p>
+                    <a href="elos.html" class="btn btn-primary">Ver Elos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

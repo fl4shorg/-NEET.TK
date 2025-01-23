@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEEXT LTDA. - Carrossel Responsivo</title>
+    <!-- Incluindo o CSS do Slick -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <!-- Incluindo Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .directors-title {
+            font-size: 32px;
+            margin: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .directors-title i {
+            margin-right: 10px; /* Espaço entre o ícone e o texto */
+        }
+
+        .carousel {
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .carousel-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .carousel-item img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .carousel-item h2 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .carousel-item p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .slick-prev, .slick-next {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 50%;
+            padding: 10px;
+        }
+
+        /* Responsividade para mobile */
+        @media (max-width: 768px) {
+            .carousel-item img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .carousel-item h2 {
+                font-size: 20px;
+            }
+
+            .carousel-item p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="directors-title"><i class="fas fa-chalkboard-teacher"></i>Diretores</div>
+
+    <div class="carousel">
+        <div class="carousel-item">
+            <img src="imagens/tay.jpg" alt="Pessoa 1">
+            <h2>Tayzinha💖</h2>
+            <p>A melhor vice-diretora que a Skur já teve e uma das melhores CTOs, conquistando várias medalhas em reconhecimento ao seu trabalho excepcional.</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/sam.jpg" alt="Pessoa 2">
+            <h2>Sam❄️</h2>
+            <p>Sam é um dos melhores diretores que o Skur já teve, com uma carreira marcada por inúmeras conquistas e medalhas de honra. Seu trabalho incansável e sua liderança exemplar fizeram dele uma figura respeitada e admirada.</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/batman.jpg" alt="Pessoa 3">
+            <h2>Batman🦇⏳</h2>
+            <p>Batman, o melhor diretor que visa sempre na melhoria da empresa NEEXT, está disposto a enfrentar qualquer obstáculo em seu caminho para deixar a comunidade o melhor possível.</p>
+        </div>
+        <div class="carousel-item">
+            <img src="imagens/ary.jpg" alt="Pessoa 4">
+            <h2>Ary🐞</h2>
+            <p>Ary, ex-diretora e atual vice-diretora, foi responsável pela liderança por dois anos consecutivos, sempre demonstrando uma gestão excepcional..</p>
+        </div>
+    </div>
+
+    <!-- Incluindo o jQuery e o Slick JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.carousel').slick({
+                infinite: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                centerMode: true,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 1,
+                            arrows: true
+                        }
+                    }
+                ]
+            });
+
+            // Ajuste da altura do iframe quando o conteúdo for carregado
+            function adjustIframeHeight() {
+                var iframe = window.frameElement;
+                if (iframe) {
+                    var docHeight = document.body.scrollHeight;
+                    iframe.style.height = docHeight + 'px';
+                }
+            }
+
+            // Executa o ajuste de altura assim que o carrossel for inicializado
+            adjustIframeHeight();
+            $(window).resize(adjustIframeHeight); // Ajusta a altura caso a janela seja redimensionada
+        });
+    </script>
+</body>
+</html>

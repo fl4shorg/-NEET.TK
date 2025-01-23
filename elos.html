@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗘𝗟𝗢𝗦</title>
+    <link rel="icon" href="logo.jpg" type="image/jpeg"> <!-- Adiciona o ícone do site -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        
+        body { font-family: Arial, sans-serif; background: #2e2e2e; color: #fff; margin: 0; }
+        header { text-align: center; padding: 30px 0; background: linear-gradient(90deg, #ff0066, #ffcc00); }
+        h1 { font-size: 2.5em; margin: 0; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); }
+        .navbar { display: flex; justify-content: center; margin: 10px 0; }
+        .search-container input { padding: 8px; border: none; border-radius: 5px; }
+        .copy-btn { background: #ffcc00; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; transition: background 0.3s; outline: none; }
+        .copy-btn:hover { background: #e6b800; }
+        main { margin: 20px auto; max-width: 600px; }
+        section { padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 15px; }
+        h2 { font-size: 1.8em; border-bottom: 2px solid #ffcc00; padding-bottom: 8px; display: flex; align-items: center; }
+        .elo-symbol { font-size: 1.2em; margin-right: 8px; }
+        p { font-size: 1em; line-height: 1.4em; }
+        footer { text-align: center; padding: 15px; background: #1a1a1a; }
+    </style>
+</head>
+<body>
+    <header><h1>Elos</h1></header>
+    <div class="navbar">
+        <button class="copy-btn" id="copyAll">Copiar Todos os Elos</button>
+        <div class="search-container"><input type="text" id="searchInput" placeholder="Pesquisar elos..."></div>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <p><i class="fas fa-tools"></i>Sistema desenvolvido por Sam</p>
+    </div>
+    <div style="text-align: center; margin: 20px 0;">
+    <div style="background: linear-gradient(to right, #800080, #ff1493); padding: 10px; border-radius: 10px; color: #fff; font-size: 1.2em;">
+        ┍┄┄─┄┄─≪᪥ᬁ᯼ᬁ᪥≫─┄┄─┄┄┑<br>
+        「 PROTEÇÕES DE ELOS」<br>
+        「 ⋅⋆⊱╌╍╌╍╌⋇❬✛❭⋇╌╍╌╍╌⊰⋆⋅」<br>
+        às proteções de Elos e seus valores
+    </div>
+    <table style="margin: 0 auto; border-collapse: collapse; width: 90%; max-width: 600px; background: linear-gradient(to right, #800080, #ff1493); border-radius: 10px; overflow: hidden;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #fff; padding: 8px; color: #fff;">Proteção</th>
+                <th style="border: 1px solid #fff; padding: 8px; color: #fff;">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">Proteção 1: o skur ficará protegido por 1 dia</td>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">4$</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">Proteção 2: o skur ficará protegido por 2 dias</td>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">5$</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">Proteção 3: o skur ficará protegido por 3 dias</td>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">6$</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">Proteção de pontos: o skur ficará protegido por 5 dias</td>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">8$</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">Proteção do 🛡️: o skur ficará protegido por 1 semana</td>
+                <td style="border: 1px solid #fff; padding: 8px; color: #fff;">10$</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+    <main>
+        <section id="elite">
+            <h2><i class="fas fa-star elo-symbol"></i>ELITE</h2>
+            <p>O primeiro elo. É dividido em 5 níveis: Elite I, Elite II, Elite III, Elite IV e Elite V. Para passar de um nível para o outro você precisa de 5 estrelas e quando estiver em Elite 1, você precisará de mais 5 para passar para o próximo elo: Mestre.
+
+No elo Elite você pode perder estrelas de acordo com o mal comportamento do skur, ao menos que:
+
+ Você compre proteção na loja skur.
+  Nesse caso suas estrelas ficaram protegidas uma vez por dia.
+</p>
+            <button class="copy-btn" data-elo="ELITE">Copiar Elo</button>
+        </section>
+        <section id="mestre">
+            <h2><i class="fas fa-crown elo-symbol"></i>MESTRE</h2>
+            <p>É dividido em 5 níveis: Mestre I, Mestre II, Mestre III, Mestre IV e Mestre V. Para passar de um nível para o outro você precisa de 5 estrelas e quando estiver em Mestre 1, você precisará de mais 5 para passar para o próximo elo: Grande Mestre.
+
+No Elo Mestre, você pode perder 2 estrelas de acordo com o comportamento dos seus admin e grupo de administração, incluindo o Skur, ao menos que:
+
+ Você compre proteção dupla na loja skur.
+</p>
+            <button class="copy-btn" data-elo="MESTRE">Copiar Elo</button>
+        </section>
+        <section id="grande-mestre">
+            <h2><i class="fas fa-gem elo-symbol"></i>GRANDE MESTRE</h2>
+            <p>GRANDE MESTRE: É dividido em 5 níveis: Grande Mestre I, Grande Mestre II, Grande Mestre III, Grande Mestre IV e Grande Mestre V. Para passar de um nível para o outro você precisa de 5 estrelas e quando estiver em Grande Mestre 1, você precisará de mais 5 para passar para o próximo elo: Épico.
+
+No elo Grande Mestre, você pode perder 3 estrelas de acordo com o comportamento geral, ao menos que:
+
+ Você compre proteção tripla na loja skur
+</p>
+            <button class="copy-btn" data-elo="GRANDE MESTRE">Copiar Elo</button>
+        </section>
+        <section id="epico">
+            <h2><i class="fas fa-dragon elo-symbol"></i>ÉPICO</h2>
+            <p>É dividido em 5 níveis: Épico I, Épico II, Épico III, Épico IV e Épico V. Para passar de um nível para o outro você precisa de 5 estrelas e quando estiver em Épico 1, você precisará de mais 5 para passar para o próximo elo: Lenda.
+
+A partir desse elo às coisas ficaram mais rígidas, haverá punições para os skurs e grupos de administração, então tenham cuidado com a administração.
+</p>
+            <button class="copy-btn" data-elo="ÉPICO">Copiar Elo</button>
+        </section>
+        <section id="lenda">
+            <h2><i class="fas fa-flag elo-symbol"></i>LENDA</h2>
+            <p>É dividido em 5 níveis: Lenda I, Lenda II, Lenda III, Lenda IV e Lenda V. Para passar de um nível para o outro você precisa de 5 estrelas e quando estiver em Lenda 1, você precisará de mais 5 para passar para o próximo elo: Mítico.
+
+A partir desse elo, os Skurs poderão ganhar prêmios exclusivos escolhidos pelo diretor e a vice-diretora
+</p>
+            <button class="copy-btn" data-elo="LENDA">Copiar Elo</button>
+        </section>
+        <section id="mitico">
+            <h2><i class="fas fa-star-of-david elo-symbol"></i>MÍTICO</h2>
+            <p>O Elo Mítico é o quarto elo mais alto. Quando o Skur ou grupo de administração chegar nesse elo, eles vão entrar na tabela de ranks e sendo assim irá competir com outros Skurs que também estarão na tabela de ranks.
+
+</p>
+            <button class="copy-btn" data-elo="MÍTICO">Copiar Elo</button>
+        </section>
+        <section id="honrar-mitica">
+            <h2><i class="fas fa-award elo-symbol"></i>HONRAR MÍTICA</h2>
+            <p>HONRAR MÍTICA: O  Honrar mítica é o terceiro elo mais alto, objetivo deste elo Honrar Mítica, será classificado como Skur Semi-deus Nesse elo não serão mais estrelas, serão pontos de objetivos conquistados pelos seus administradores.
+
+Por exemplo, o administrador que recrutar 12 pré Admins sozinho ou seus admins recrutar 30 Admins em um só dia ganhará pontos para seu grupo e sendo assim conquistando objetivos para seu grupo.
+
+Pontuação máxima: 900 pontos
+</p>
+            <button class="copy-btn" data-elo="HONRAR MÍTICA">Copiar Elo</button>
+        </section>
+        <section id="gloria">
+            <h2><i class="fas fa-trophy elo-symbol"></i>GLÓRIA</h2>
+            <p>GLÓRIA: Glória é o segundo maior elo. O Glória Mítica já não conta mais com pontos. Depois que você atingir a pontuação máxima do Elo Honrar Mítica, você irá subir para o Elo Glória, sendo assim, serão 6 estrelas.
+</p>
+            <button class="copy-btn" data-elo="GLÓRIA">Copiar Elo</button>
+        </section>
+<section id="misticomortal">
+    <h2><i class="fas fa-magic elo-symbol"></i>MÍSTICO MORTAL</h2>
+    <p>MÍTICO IMORTAL: O mítico Imortal é o último elo, Sendo assim, você será o grupo com o maior desempenho e será nomeado como Deus-Skur.
+
+Mas tenha cuidado se o seu grupo de administração estiver nesse elo e seus administradores ou seu grupo não irem bem no desempenho, poderão voltar para o elo Elite.
+
+
+Se caso vocês não quiserem voltar para o Elo Elite, terão que comprar a proteção Escudo.
+</p>
+    <button class="copy-btn" data-elo="MÍSTICO MORTAL">Copiar Elo</button>
+</section>
+    </main>
+    <footer><p>&copy; 2024 NEEXT LTDA- Todos os direitos reservados.</p></footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.copy-btn').on('click', function () {
+                const elo = $(this).data('elo');
+                navigator.clipboard.writeText(elo).then(() => {
+                    toastr.success(`Você copiou: ${elo}`, 'Copiado!');
+                });
+            });
+            $('#searchInput').on('input', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $('section').each(function () {
+                    $(this).toggle($(this).find('h2').text().toLowerCase().includes(searchTerm));
+                });
+            });
+            $('#copyAll').on('click', function () {
+                const allElos = $('section h2').map(function () { return $(this).text(); }).get().join(', ');
+                navigator.clipboard.writeText(allElos).then(() => {
+                    toastr.success(`Você copiou: ${allElos}`, 'Copiado!');
+                });
+            });
+        });
+    </script>
+    <script>
+    document.getElementById('copyAll').addEventListener('click', function() {
+        let content = '';
+        const sections = document.querySelectorAll('section');
+
+        sections.forEach(section => {
+            const title = section.querySelector('h2').innerText; // Pega o título
+            const paragraph = section.querySelector('p').innerText; // Pega o conteúdo
+            content += `${title}\n${paragraph}\n\n`; // Concatena título e conteúdo
+        });
+
+        navigator.clipboard.writeText(content).then(() => {
+            toastr.success('Todos os elos foram copiados com sucesso!'); // Mensagem de sucesso
+        }, () => {
+            toastr.error('Falha ao copiar os elos.'); // Mensagem de erro
+        });
+    });
+</script>
+</body>
+</html>

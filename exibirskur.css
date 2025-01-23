@@ -1,0 +1,124 @@
+/* Estilo do corpo da página */
+body {
+    font-family: 'Domo de Ferro', sans-serif; /* Fonte do texto */
+    background-image: url('exibir.jpg'); /* Wallpaper */
+    background-size: cover; /* Cobre toda a tela */
+    background-position: center; /* Centraliza o fundo */
+    background-attachment: fixed; /* Mantém a imagem fixa ao rolar */
+    color: #333; /* Cor do texto */
+    margin: 0; /* Remove margens padrão */
+    padding: 0; /* Remove preenchimento padrão */
+}
+
+/* Estilo para o cabeçalho */
+h1 {
+    text-align: center; /* Centraliza o título */
+    font-size: 2.5rem; /* Tamanho do título */
+    color: #ffffff; /* Cor do texto do título */
+    margin-top: 20px; /* Margem acima do título */
+}
+
+/* Estilo das seções */
+.section {
+    background: rgba(255, 255, 255, 0.1); /* Fundo branco muito transparente */
+    border-radius: 15px; /* Bordas arredondadas */
+    margin: 20px; /* Margem em torno das seções */
+    padding: 20px; /* Preenchimento interno */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra mais suave */
+}
+
+/* Estilo para o título das seções */
+.section-title {
+    font-size: 1.8rem; /* Tamanho do título da seção */
+    color: #ffffff; /* Cor do texto do título da seção */
+    position: relative; /* Para posicionar o ícone de carregamento */
+}
+
+/* Ícone de carregamento */
+.loading-icon {
+    animation: spin 1s linear infinite; /* Animação de rotação */
+    margin-left: 10px; /* Margem à esquerda do ícone */
+}
+
+/* Animação de rotação */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estilo para a mensagem de carregamento */
+.loading-message {
+    text-align: center; /* Centraliza a mensagem */
+    font-size: 1.2rem; /* Tamanho da fonte */
+    color: #ffffff; /* Cor da fonte */
+}
+
+/* Estilo para mensagens de sucesso e erro */
+.message {
+    padding: 15px; /* Preenchimento interno */
+    margin: 10px 0; /* Margem em cima e embaixo */
+    border-radius: 5px; /* Bordas arredondadas */
+    display: none; /* Inicialmente escondido */
+}
+
+/* Estilo para mensagens de sucesso */
+.success-message {
+    background-color: rgba(212, 237, 218, 0.8); /* Fundo verde claro */
+    color: #155724; /* Texto verde escuro */
+}
+
+/* Estilo para mensagens de erro */
+.error-message {
+    background-color: rgba(248, 215, 218, 0.8); /* Fundo vermelho claro */
+    color: #721c24; /* Texto vermelho escuro */
+}
+
+/* Estilo para cartões de usuário */
+.user-card {
+    background: rgba(255, 255, 255, 0.1); /* Fundo branco transparente */
+    border-radius: 10px; /* Bordas arredondadas */
+    padding: 15px; /* Preenchimento interno */
+    margin-bottom: 15px; /* Margem embaixo dos cartões */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra mais suave */
+    backdrop-filter: blur(15px); /* Efeito de desfoque de fundo */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda suave */
+}
+
+/* Estilo para os botões */
+.button {
+    background-color: #3498db; /* Cor de fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Sem borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    padding: 10px 15px; /* Preenchimento interno do botão */
+    cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
+    transition: background-color 0.3s, transform 0.2s; /* Transição suave ao passar o mouse */
+}
+
+/* Efeito hover para os botões */
+.button:hover {
+    background-color: #2980b9; /* Cor do botão ao passar o mouse */
+    transform: translateY(-2px); /* Leve elevação ao passar o mouse */
+}
+
+/* Estilo para o rodapé */
+.developed-by {
+    text-align: center; /* Centraliza o texto */
+    margin-top: 20px; /* Margem acima do rodapé */
+    font-size: 0.9rem; /* Tamanho da fonte */
+    color: #ffffff; /* Cor do texto do rodapé */
+}
+
+/* Estilo para o widget de confirmação */
+.confirmation-widget {
+    display: none; /* Inicialmente escondido */
+    position: fixed; /* Para que fique fixo na tela */
+    bottom: 20px; /* Distância do fundo */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Corrige a posição central */
+    background: rgba(0, 0, 0, 0.8); /* Fundo preto semitransparente */
+    color: #ffffff; /* Cor do texto */
+    padding: 15px; /* Preenchimento interno */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Sombra */
+}

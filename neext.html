@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEEXT LTDA. - Carrossel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            overflow: hidden; /* Desativa a rolagem da página */
+            margin: 0; /* Remove margens padrão */
+            padding: 0; /* Remove padding padrão */
+            font-family: Arial, sans-serif; /* Fonte padrão */
+            color: #333; /* Cor do texto padrão */
+        }
+
+        .carousel {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            height: 100vh; /* Ocupa toda a altura da tela */
+            position: relative;
+            align-items: center;
+            justify-content: center; /* Centraliza itens */
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: 100%;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            height: 100%; /* Garante que ocupe a altura do carrossel */
+        }
+
+        .carousel-item h2 {
+            margin: 10px 0;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        .carousel-button.left {
+            left: 10px;
+        }
+
+        .carousel-button.right {
+            right: 10px;
+        }
+
+        /* Estilo para o título e a mensagem abaixo do carrossel */
+        .info-section {
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9; /* Fundo claro para contraste */
+        }
+
+        .info-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .info-section p {
+            font-size: 16px;
+            max-width: 800px; /* Largura máxima para o parágrafo */
+            margin: 0 auto; /* Centraliza o parágrafo */
+        }
+    </style>
+</head>
+<body>
+    <!-- Carrossel de ícones -->
+    <div class="carousel">
+        <button class="carousel-button left" onclick="moveCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="carousel-inner" id="carouselInner">
+            <div class="carousel-item">
+                <i class="fas fa-shield-alt" style="font-size: 50px;"></i>
+                <h2>Segurança</h2>
+                <p>Protegemos seus dados e sua privacidade com as melhores práticas de segurança.</p>
+            </div>
+            <div class="carousel-item">
+                <i class="fas fa-paint-brush" style="font-size: 50px;"></i>
+                <h2>Estética</h2>
+                <p>Nosso design é pensado para ser atrativo e funcional, proporcionando a melhor experiência ao usuário.</p>
+            </div>
+            <div class="carousel-item">
+                <i class="fas fa-folder-open" style="font-size: 50px;"></i>
+                <h2>Organização</h2>
+                <p>Todo o conteúdo é organizado para fácil acesso, aumentando a eficiência na busca de informações.</p>
+            </div>
+            <!-- Adicione mais itens aqui -->
+        </div>
+        <button class="carousel-button right" onclick="moveCarousel(1)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Seção de informações abaixo do carrossel -->
+    <div class="info-section">
+        <h2>O que nos torna a melhor comunidade e empresa online?</h2>
+        <p>O que faz da Neext a melhor comunidade e empresa é a sua abordagem centrada na comunicação eficaz, cultura inclusiva, foco na qualidade, inovação constante, responsabilidade social, apoio ao desenvolvimento profissional, excelência no atendimento ao cliente, integridade e confiança, adaptabilidade às mudanças e uma avaliação contínua para garantir a melhoria contínua…</p>
+        <p>No âmbito da segurança, a Neext orgulhosamente conta com o apoio da SWAT e da SSA Defense, fortalecendo seu compromisso em oferecer um ambiente seguro e protegido para seus membros e colaboradores.</p>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+
+        function moveCarousel(direction) {
+            const items = document.querySelectorAll('.carousel-item');
+            const totalItems = items.length;
+
+            currentIndex += direction;
+
+            if (currentIndex < 0) {
+                currentIndex = totalItems - 1;
+            } else if (currentIndex >= totalItems) {
+                currentIndex = 0;
+            }
+
+            const carouselInner = document.getElementById('carouselInner');
+            carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+    </script>
+</body>
+</html>

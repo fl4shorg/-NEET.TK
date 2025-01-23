@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEEXTCINE</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #141414; color: white; }
+        header, footer { text-align: center; padding: 20px; background-color: #ff0000; }
+        header { font-size: 2rem; font-weight: bold; }
+        .search-bar { display: flex; justify-content: center; padding: 15px; background-color: #333; }
+        .search-bar input, .search-bar button { padding: 10px; font-size: 1rem; border-radius: 5px; }
+        .search-bar input { width: 60%; border: none; }
+        .search-bar button { background-color: #e50914; border: none; cursor: pointer; color: white; font-weight: bold; }
+        .search-bar button:hover { background-color: #f40612; }
+        .category-title { font-size: 1.5rem; font-weight: bold; padding: 10px 15px; }
+        .category-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 10px 15px; }
+        .filme { position: relative; cursor: pointer; transition: transform 0.3s; }
+        .filme:hover { transform: scale(1.05); }
+        .filme img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+        .info { position: absolute; bottom: 20px; left: 20px; right: 20px; text-align: center; opacity: 0; transition: opacity 0.3s; }
+        .filme:hover .info { opacity: 1; }
+        .info h4 { font-size: 1.1rem; font-weight: bold; }
+        .info button { padding: 5px 15px; background-color: #e50914; border: none; color: white; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        .info button:hover { background-color: #f40612; }
+        @media (max-width: 600px) {
+            .search-bar input { width: 80%; }
+            .category-container { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+<header>NEEXTCINE</header>
+<div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Pesquisar..." oninput="searchMovies()">
+    <button onclick="searchMovies()">Pesquisar</button>
+</div>
+
+<!-- Categorias Adicionadas -->
+<div class="category-title">Filmes de Ação</div><div class="category-container" id="actionMovies"></div>
+<div class="category-title">Filmes de Romance</div><div class="category-container" id="romanceMovies"></div>
+<div class="category-title">Filmes de Aventura</div><div class="category-container" id="adventureMovies"></div>
+<div class="category-title">Filmes de Comédia</div><div class="category-container" id="comedyMovies"></div>
+<div class="category-title">Filmes de Drama</div><div class="category-container" id="dramaMovies"></div>
+<div class="category-title">Filmes de Terror</div><div class="category-container" id="horrorMovies"></div>
+<div class="category-title">Documentários</div><div class="category-container" id="documentaryMovies"></div>
+
+<!-- Séries -->
+<div class="category-title">Séries de Ação</div><div class="category-container" id="actionSeries"></div>
+<div class="category-title">Séries de Romance</div><div class="category-container" id="romanceSeries"></div>
+<div class="category-title">Séries Populares</div><div class="category-container" id="popularSeries"></div>
+
+<script>
+    const apiKey = "22ee2833df76ca9621acecddc5c7fcb9";
+    const baseUrl = "https://api.themoviedb.org/3";
+    const urls = {
+        actionMovies: `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=28&language=pt-BR&page=1`,
+        romanceMovies: `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=10749&language=pt-BR&page=1`,
+        adventureMovies: `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=12&language=pt-BR&page=1`,
+        comedyMovies: `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=35&language=pt-BR&page=1`,  // Comédia
+        dramaMovies: `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=18&language=pt-BR&page=1`,   // Drama
+        horrorMovies: `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=27&language=pt-BR&page=1`,   // Terror
+        documentaryMovies: `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=99&language=pt-BR&page=1`,   // Documentários
+        popularSeries: `${baseUrl}/tv/popular?api_key=${apiKey}&language=pt-BR&page=1`,
+        actionSeries: `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=28&language=pt-BR&page=1`,
+        romanceSeries: `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=10749&language=pt-BR&page=1`,
+        releaseUrl: `${baseUrl}/movie/now_playing?api_key=${apiKey}&language=pt-BR&page=1`
+    };
+    let allMovies = [], allSeries = [];
+
+    function displayMovies(movies, containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        movies.forEach(filme => {
+            const img = filme.poster_path ? `https://image.tmdb.org/t/p/w500${filme.poster_path}` : 'https://via.placeholder.com/250x375.png?text=Imagem+Indisponível';
+            container.innerHTML += `
+                <div class="filme">
+                    <img src="${img}" alt="${filme.title || filme.name}">
+                    <div class="info">
+                        <h4>${filme.title || filme.name}</h4>
+                        <p>Classificação: ${filme.vote_average}/10</p>
+                        <p>Lançado em: ${filme.release_date || filme.first_air_date}</p>
+                        <button onclick="showMovieDetails(${filme.id}, '${filme.media_type}')">Ver Informações</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function showMovieDetails(movieId) {
+    const detailsUrl = `${baseUrl}/movie/${movieId}?api_key=${apiKey}&language=pt-BR`;
+
+    fetch(detailsUrl)
+        .then(res => res.json())
+        .then(data => {
+            if (!data || !data.title) {
+                Swal.fire({
+                    title: 'Informações indisponíveis',
+                    text: 'Desculpe, não conseguimos carregar as informações completas deste filme.',
+                    icon: 'warning',
+                    confirmButtonText: 'Fechar',
+                    confirmButtonColor: '#e50914'
+                });
+                return;
+            }
+
+            const detailsContent = `
+                <h2>${data.title}</h2>
+                <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${data.title}" />
+                <p><strong>Sinopse:</strong> ${data.overview}</p>
+                <p><strong>Lançamento:</strong> ${data.release_date}</p>
+                <p><strong>Avaliação:</strong> ${data.vote_average}/10</p>
+            `;
+
+            Swal.fire({
+                title: data.title,
+                html: detailsContent,
+                showCancelButton: true,
+                confirmButtonText: 'Fechar',
+                confirmButtonColor: '#e50914',
+            });
+        })
+        .catch(error => {
+            console.error('Erro ao carregar detalhes do filme:', error);
+            Swal.fire({
+                title: 'Erro',
+                text: 'Ocorreu um erro ao carregar as informações do filme.',
+                icon: 'error',
+                confirmButtonText: 'Fechar',
+                confirmButtonColor: '#e50914'
+            });
+        });
+}
+
+    function searchMovies() {
+        const query = document.getElementById('searchInput').value.trim();
+        if (query.length === 0) {
+            loadAllMovies();
+            return;
+        }
+        
+        const searchUrl = `${baseUrl}/search/multi?api_key=${apiKey}&language=pt-BR&query=${query}&page=1`;
+        fetch(searchUrl)
+            .then(res => res.json())
+            .then(data => {
+                allMovies = data.results.filter(item => item.media_type === 'movie');
+                allSeries = data.results.filter(item => item.media_type === 'tv');
+                displayMovies(allMovies, 'actionMovies');  // Show search results as movies in the action section
+                displayMovies(allSeries, 'actionSeries');  // Show search results as series in the action series section
+            })
+            .catch(error => console.error('Erro ao buscar filmes:', error));
+    }
+
+    function loadAllMovies() {
+        Promise.all([
+            fetch(urls.actionMovies).then(res => res.json()),
+            fetch(urls.romanceMovies).then(res => res.json()),
+            fetch(urls.adventureMovies).then(res => res.json()),
+            fetch(urls.comedyMovies).then(res => res.json()),  // Carregar mais filmes de comédia
+            fetch(urls.dramaMovies).then(res => res.json()),   // Carregar mais filmes de drama
+            fetch(urls.horrorMovies).then(res => res.json()),   // Carregar mais filmes de terror
+            fetch(urls.documentaryMovies).then(res => res.json()), // Carregar mais documentários
+            fetch(urls.popularSeries).then(res => res.json()),
+            fetch(urls.actionSeries).then(res => res.json()),
+            fetch(urls.romanceSeries).then(res => res.json())
+        ])
+        .then(responses => {
+            displayMovies(responses[0].results, 'actionMovies');
+            displayMovies(responses[1].results, 'romanceMovies');
+            displayMovies(responses[2].results, 'adventureMovies');
+            displayMovies(responses[3].results, 'comedyMovies');  // Exibir mais filmes de comédia
+            displayMovies(responses[4].results, 'dramaMovies');   // Exibir mais filmes de drama
+            displayMovies(responses[5].results, 'horrorMovies');  // Exibir mais filmes de terror
+            displayMovies(responses[6].results, 'documentaryMovies');  // Exibir mais documentários
+            displayMovies(responses[7].results, 'popularSeries');
+            displayMovies(responses[8].results, 'actionSeries');
+            displayMovies(responses[9].results, 'romanceSeries');
+        })
+        .catch(error => console.error('Erro ao carregar filmes e séries:', error));
+    }
+
+    // Carregar os filmes ao inicializar a página
+    window.onload = loadAllMovies;
+</script>
+
+<footer>
+    <p>&copy; 2024 Todos os direitos reservados.</p>
+</footer>
+</body>
+</html>
