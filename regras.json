@@ -56,6 +56,16 @@
         ]
     },
 {
+    "titulo": "ARTIGCARD: Obrigatoriedade de ID",
+    "descricao": "A partir de 28 de janeiro de 2025, torna-se obrigatório o uso do ID para todos os membros, administradores e cargos da organização Neext.",
+    "paragrafos": [
+        "Parágrafo 01: O uso do ID é obrigatório para todos os administradores, testadores e demais cargos, sem exceções.",
+        "Parágrafo 02: A não aceitação ou o não uso do ID resultará na perda do direito a férias, promoções de cargo e participação em qualquer grupo da Neext.",
+        "Parágrafo 03: O TVA será o grupo oficial onde permanecerão todos os membros que possuem ID. É proibida a saída deste grupo, sendo a mesma considerada como abandono.",
+        "Parágrafo 04: Todos os que não possuírem ID a partir da data de vigência da regra serão considerados negligentes ou desertores, conforme a interpretação cabível."
+    ]
+},
+{
         "titulo": "ARTIGCARD: Apresentação de Provas para Aplicação de Punição",
         "descricao": "É obrigatório e necessário apresentar provas antes de aplicar qualquer punição.",
         "paragrafos": [
