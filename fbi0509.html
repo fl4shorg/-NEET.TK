@@ -397,6 +397,17 @@ situationCard.style.borderRadius = '8px';
 situationCard.style.flex = '1 1 calc(50% - 10px)';
 situationCard.style.boxSizing = 'border-box';
 
+                // Atualizar os outros cards
+                const cards = [
+                    { title: "Número do Grupo", value: data["Número do Grupo"], color: "#3498db", icon: "fa-users" },
+                    { title: "Total de Administradores", value: data["Total de Administradores"], color: "#e74c3c", icon: "fa-user-shield" },
+                    { title: "Jovens", value: data["Faixa Etária"].Jovens, color: "#2ecc71", icon: "fa-child" },
+                    { title: "Adolescentes", value: data["Faixa Etária"].Adolescentes, color: "#9b59b6", icon: "fa-user-graduate" },
+                    { title: "Adultos", value: data["Faixa Etária"].Adultos, color: "#f39c12", icon: "fa-user" },
+                    { title: "Último ID", value: data["Último ID Enviado"], color: "#16a085", icon: "fa-id-card" },
+                    { title: "Taxa de Crescimento", value: data["Taxa de Crescimento"], color: "#f1c40f", icon: "fa-chart-line" }
+                ];
+
                 // Remover e recriar os outros cards
                 summaryCards.innerHTML = '';
                 summaryCards.appendChild(situationCard);  // Re-add the situation card at the top
