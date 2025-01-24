@@ -374,6 +374,10 @@ if (totalAdmins <= 20) {
     groupStatus = 'Situação Muito Boa';
     statusColor = '#2ecc71'; // Verde
     statusIcon = 'fas fa-laugh'; // Ícone de carinha risonha
+} else if (totalAdmins <= 69) {
+    groupStatus = 'Situação Excelente';
+    statusColor = '#8e44ad'; // Roxo mais claro
+    statusIcon = 'fas fa-grin'; // Ícone de carinha muito feliz
 } else if (totalAdmins >= 70) {
     groupStatus = 'Situação Ultra Boa';
     statusColor = '#9b59b6'; // Roxo
@@ -388,21 +392,10 @@ situationCard.innerHTML = `
     <p style="color: #fff; font-size: 18px; font-weight: bold; text-align: center;">${groupStatus}</p>
 `;
 situationCard.style.backgroundColor = statusColor;
-                situationCard.style.padding = '10px';
-                situationCard.style.borderRadius = '8px';
-                situationCard.style.flex = '1 1 calc(50% - 10px)';
-                situationCard.style.boxSizing = 'border-box';
-
-                // Atualizar os outros cards
-                const cards = [
-                    { title: "Número do Grupo", value: data["Número do Grupo"], color: "#3498db", icon: "fa-users" },
-                    { title: "Total de Administradores", value: data["Total de Administradores"], color: "#e74c3c", icon: "fa-user-shield" },
-                    { title: "Jovens", value: data["Faixa Etária"].Jovens, color: "#2ecc71", icon: "fa-child" },
-                    { title: "Adolescentes", value: data["Faixa Etária"].Adolescentes, color: "#9b59b6", icon: "fa-user-graduate" },
-                    { title: "Adultos", value: data["Faixa Etária"].Adultos, color: "#f39c12", icon: "fa-user" },
-                    { title: "Último ID", value: data["Último ID Enviado"], color: "#16a085", icon: "fa-id-card" },
-                    { title: "Taxa de Crescimento", value: data["Taxa de Crescimento"], color: "#f1c40f", icon: "fa-chart-line" }
-                ];
+situationCard.style.padding = '10px';
+situationCard.style.borderRadius = '8px';
+situationCard.style.flex = '1 1 calc(50% - 10px)';
+situationCard.style.boxSizing = 'border-box';
 
                 // Remover e recriar os outros cards
                 summaryCards.innerHTML = '';
