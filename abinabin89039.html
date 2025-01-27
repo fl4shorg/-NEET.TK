@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗔𝗕𝗜𝗡 𝗦.𝗔</title>
+    
+    <!-- Ícone da página -->
+    <link rel="icon" href="https://i.imgur.com/nDGsGLT.png" type="image/x-icon">
+    
+    <!-- Descrição da página -->
+    <meta name="description" content="© neext ltda.">
+    
+    <!-- Links externos -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <style>
+      
+        body { font-family: Arial, sans-serif; margin: 0; }
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+        #users-cards { margin: 10px auto; max-width: 500px; padding: 10px; }
+        .user-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; background: #fff; }
+        .actions { display: flex; justify-content: space-between; }
+        button { background-color: #007BFF; color: #fff; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
+        .search-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .search-container input {
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<!-- Carregar a biblioteca Font Awesome para o ícone -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<header style="background: linear-gradient(to right, #6a0dad, #ff69b4); padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+    <!-- Ícone de prisão SVG na navbar -->
+    <img src="svg/prisao.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;">
+    <h1 style="text-align: center; margin: 0; color: white; flex: 1;">DASHBOARD</h1>
+    
+    <!-- Botões de Modo Escuro e Sair -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <!-- Botão de Modo Escuro -->
+        <button id="dark-mode-toggle" onclick="toggleDarkMode()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">
+            <i class="fas fa-moon"></i> <!-- Ícone para o Modo Escuro -->
+        </button>
+        
+        <!-- Botão de Sair -->
+        <button onclick="logout()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">
+            <i class="fas fa-sign-out-alt"></i> <!-- Ícone para Sair -->
+        </button>
+    </div>
+</header>
+
+<!-- Segunda Navbar: ABIN Detetion FBI -->
+<nav style="background-color: #333; padding: 10px; text-align: center;">
+    <span style="color: white; font-size: 14px; font-weight: bold;">ABIN Detetion SKUR</span>
+</nav>
+
+<section id="summary-section" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin: 20px;">
+    <!-- Card para Presos -->
+    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #ff4d4d; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+        <i class="fas fa-lock" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Preso -->
+        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Presos</h2>
+        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="total-presos">Carregando...</span></p>
+    </div>
+
+    <!-- Card para Livres -->
+    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #33cc33; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+        <i class="fas fa-user-check" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Livre -->
+        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Livres</h2>
+        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="total-livres">Carregando...</span></p>
+    </div>
+</section>
+
+<script>
+    // URL da API de resumo
+    const summaryApiUrl = "https://script.google.com/macros/s/AKfycbxXCg7h4oe_2BqdjkjdRpaQqdRWRekOXWPxe8zTejp6x9V1at6-hkxe7ATfV75RvOcQ/exec?action=summary";
+
+    // Função para buscar os dados do resumo
+    async function fetchSummary() {
+        try {
+            const response = await fetch(summaryApiUrl);
+            if (!response.ok) throw new Error("Erro ao buscar os dados.");
+
+            const summary = await response.json();
+            document.getElementById("total-presos").textContent = summary["Total de Presos"];
+            document.getElementById("total-livres").textContent = summary["Total de Livres"];
+        } catch (error) {
+            console.error("Erro ao carregar os dados:", error);
+        }
+    }
+
+    // Atualiza os dados em tempo real a cada 10 segundos
+    setInterval(fetchSummary, 10000);
+
+    // Carrega os dados ao abrir a página
+    fetchSummary();
+
+    // Alternar entre Modo Claro e Modo Escuro
+    function toggleDarkMode() {
+        const body = document.body;
+        body.classList.toggle("dark-mode");
+
+        // Mudar ícone de acordo com o estado
+        const icon = document.getElementById("dark-mode-toggle").querySelector("i");
+        if (body.classList.contains("dark-mode")) {
+            icon.classList.remove("fa-moon");
+            icon.classList.add("fa-sun");
+        } else {
+            icon.classList.remove("fa-sun");
+            icon.classList.add("fa-moon");
+        }
+    }
+
+    // Função de logout para redirecionar para o index.html
+    function logout() {
+        window.location.href = "index.html"; // Redireciona para o index.html
+    }
+</script>
+
+<style>
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        #summary-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        #summary-section > div {
+            flex: 1 1 48%; /* Faz os cards ficarem lado a lado em telas pequenas */
+            min-width: 120px; /* Largura mínima para os cards */
+            height: 120px;
+        }
+    }
+
+    /* Estilo para o modo escuro */
+    body.dark-mode {
+        background-color: #121212;
+        color: white;
+    }
+    
+    /* Estilo para os cards no modo escuro */
+    body.dark-mode .user-card {
+        background-color: #444; /* Cor de fundo mais escura para o card */
+        color: white; /* Texto branco no modo escuro */
+        border: 1px solid #666; /* Borda mais clara */
+    }
+    
+    /* Estilo para o modo escuro no SweetAlert2 */
+body.dark-mode .swal2-popup {
+    background-color: #333; /* Fundo escuro para o popup */
+    color: white; /* Texto branco no popup */
+    border: 1px solid #666; /* Borda mais clara */
+}
+
+body.dark-mode .swal2-title,
+body.dark-mode .swal2-html-container {
+    color: white; /* Título e conteúdo em branco */
+}
+
+body.dark-mode .swal2-styled {
+    background-color: #444; /* Cor do botão no modo escuro */
+    color: white; /* Texto do botão em branco */
+}
+
+body.dark-mode .swal2-cancel {
+    background-color: #666; /* Cor do botão de cancelamento */
+}
+
+body.dark-mode .swal2-confirm {
+    background-color: #007BFF; /* Cor do botão de confirmação */
+}
+
+    /* Mudar o fundo e texto do card para o modo escuro */
+    body.dark-mode #summary-section > div {
+        background-color: #333;
+        color: white;
+    }
+
+    body.dark-mode #summary-section > div:nth-child(1) {
+        background-color: #cc3333;
+    }
+
+    body.dark-mode #summary-section > div:nth-child(2) {
+        background-color: #339933;
+    }
+</style>
+
+
+<!-- Linha separadora antes do título -->
+<hr style="border: 1px solid #6a0dad; width: 80%; margin: 20px auto;">
+
+<!-- Título "Prisioneiro" com ícone -->
+<h2 style="text-align: center; margin-top: 20px;">
+    <i class="fas fa-user-lock" style="color: #6a0dad; margin-right: 10px;"></i>Prisioneiro
+</h2>
+
+<!-- Botão para abrir o formulário, com ícone e cor roxa -->
+<div style="text-align: center;">
+    <button onclick="openForm()" style="background-color: #6a0dad; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+        <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>Enviar
+    </button>
+</div>
+
+<script>
+    // Função fictícia para abrir o formulário (você pode ajustar conforme necessário)
+    function openForm() {
+        alert("Formulário aberto!");  // Aqui você pode colocar a lógica para abrir o formulário real
+    }
+</script>
+
+<!-- Barra de pesquisa -->
+<div class="search-container" style="text-align: center; margin: 20px 0;">
+    <div style="position: relative; display: block; margin: 0 auto; width: 100%; max-width: 250px;">
+        <!-- Ícone de pesquisa -->
+        <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6a0dad; font-size: 18px;"></i>
+        
+        <!-- Input da barra de pesquisa -->
+        <input type="text" id="search-bar" placeholder="Pesquise pelo ID ou Número" onkeyup="searchUser()"
+               style="width: 100%; padding: 10px 30px 10px 35px; border-radius: 25px; border: 1px solid #6a0dad; font-size: 16px; outline: none; transition: all 0.3s ease;">
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+
+<style>
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        .search-container {
+            margin: 10px auto;
+        }
+
+        .search-container input {
+            padding: 10px 30px 10px 35px; /* Ajustando padding para telas menores */
+            font-size: 14px; /* Ajustando o tamanho da fonte */
+            width: 80%; /* Barra de pesquisa mais compacta */
+        }
+    }
+
+    /* Responsividade para telas muito pequenas */
+    @media (max-width: 480px) {
+        .search-container input {
+            padding: 10px 25px 10px 30px; /* Ajustando padding para telas pequenas */
+            font-size: 14px;
+            width: 80%; /* Garantindo que a barra de pesquisa não ocupe toda a largura */
+        }
+    }
+</style>
+
+
+
+    <!-- Container para os Cards dos Usuários -->
+    <div id="users-cards"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxXCg7h4oe_2BqdjkjdRpaQqdRWRekOXWPxe8zTejp6x9V1at6-hkxe7ATfV75RvOcQ/exec';
+
+        // Função para abrir o formulário de cadastro
+        // Array para armazenar os IDs já gerados
+let usedIds = [];
+
+function openForm() {
+    // Função para gerar um ID único de 5 dígitos
+    function generateUniqueId() {
+        let id;
+        do {
+            id = Math.floor(Math.random() * 90000) + 10000; // Gera um número aleatório entre 10000 e 99999
+        } while (usedIds.includes(id)); // Garante que o ID não foi gerado antes
+        usedIds.push(id); // Adiciona o ID à lista de usados
+        return id;
+    }
+
+    // Gerando um ID único de 5 dígitos
+    const id = generateUniqueId();
+
+    Swal.fire({
+        title: 'Cadastrar Novo Detento',
+        html: `
+            <label><i class="fas fa-id-badge"></i> ID</label>
+            <input id="swal-id" class="swal2-input" value="${id}" readonly> <!-- Exibe o ID formatado -->
+
+            <label><i class="fas fa-user"></i> Nome</label>
+            <input id="swal-name" class="swal2-input" placeholder="Nome">
+
+            <label><i class="fas fa-phone"></i> Número</label>
+            <input id="swal-number" class="swal2-input" placeholder="Número">
+
+            <label><i class="fas fa-calendar-day"></i> Dias</label>
+            <input id="swal-dias" class="swal2-input" placeholder="Dias">
+
+            <label><i class="fas fa-comment-alt"></i> Motivo</label>
+            <input id="swal-motivo" class="swal2-input" placeholder="Motivo">
+
+            <!-- Campo "Situação" com opções radio -->
+            <label><i class="fas fa-check-circle"></i> Situação</label>
+            <div>
+                <input type="radio" id="situacao-presa" name="situacao" value="Presa">
+                <label for="situacao-presa">Presa</label>
+                <input type="radio" id="situacao-livre" name="situacao" value="Livre">
+                <label for="situacao-livre">Livre</label>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Cadastrar <i class="fas fa-check"></i>',
+        cancelButtonText: 'Cancelar <i class="fas fa-times"></i>',
+        customClass: {
+            popup: 'swal-popup-small',
+            confirmButton: 'swal-btn-cadastrar',
+            cancelButton: 'swal-btn-cancelar'
+        },
+        preConfirm: () => {
+            const id = document.getElementById('swal-id').value;
+            const name = document.getElementById('swal-name').value;
+            const number = document.getElementById('swal-number').value;
+            const dias = document.getElementById('swal-dias').value;
+            const motivo = document.getElementById('swal-motivo').value;
+
+            // Obtendo a situação selecionada
+            const situacao = document.querySelector('input[name="situacao"]:checked')?.value;
+
+            // Verificando se todos os campos obrigatórios foram preenchidos
+            if (!name || !number || !dias || !situacao || !motivo) {
+                Swal.showValidationMessage('Por favor, preencha todos os campos.');
+                return false;
+            }
+
+            // Mostra o "Carregando..." enquanto os dados estão sendo enviados
+            Swal.showLoading();
+
+            // Envio dos dados para o Google Apps Script
+            return fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    action: "create",
+                    id: id, // Envia o ID gerado
+                    name,
+                    number,
+                    dias,
+                    situacao,
+                    motivo
+                })
+            }).then(response => response.json())
+            .catch(() => {
+                Swal.fire('Erro', 'Erro ao cadastrar o detento.', 'error');
+            });
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire('Detento cadastrado com sucesso!');
+            loadUsers(); // Recarrega a lista de detentos
+        } else {
+            Swal.fire('Cadastro cancelado', '', 'info');
+        }
+    });
+}
+
+// Adicionando as classes de estilos para os botões e espaçamento
+const style = document.createElement('style');
+style.innerHTML = `
+    .swal2-input {
+        margin-bottom: 20px; /* Aumentando o espaçamento entre os campos */
+    }
+
+    .swal-btn-cadastrar { 
+        background-color: #800080; 
+        color: white; 
+    }
+    .swal-btn-cadastrar:hover { 
+        background-color: #6a006a; 
+    }
+
+    .swal-btn-cancelar { 
+        background-color: #ff0000; 
+        color: white; 
+    }
+
+    .swal-btn-cancelar:hover { 
+        background-color: #cc0000; 
+    }
+
+    /* Estilizando os radio buttons */
+    div {
+        margin-bottom: 30px;
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    label {
+        margin-right: 20px;
+    }
+`;
+document.head.appendChild(style);
+        // Função para carregar os usuários cadastrados
+        function loadUsers() {
+    fetch(`${API_URL}?action=read`)
+        .then(response => response.text())
+        .then(data => {
+            const cardsContainer = document.getElementById("users-cards");
+            cardsContainer.innerHTML = "";
+            if (data.trim().length > 0) {
+                data.trim().split("\n").slice(1).forEach(line => {
+                    const user = line.split(",");
+                    const card = document.createElement("div");
+                    card.classList.add("user-card");
+                    card.innerHTML = `
+                        <h3><i class="fas fa-user-circle"></i> ${user[0]}</h3> <!-- ID -->
+                        <p><strong><i class="fas fa-id-badge"></i> Nome:</strong> ${user[1]}</p>
+                        <p><strong><i class="fas fa-phone"></i> Número:</strong> ${user[2]}</p>
+                        <p><strong><i class="fas fa-calendar-day"></i> Dias:</strong> ${user[3]}</p>
+                        <p><strong><i class="fas fa-clipboard-list"></i> Situação:</strong> ${user[4]}</p>
+                        <p><strong><i class="fas fa-comment-dots"></i> Motivo:</strong> ${user[5]}</p>
+                        <div class="actions">
+                            <button style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="editUser('${user[0]}', '${user[1]}', '${user[2]}', '${user[3]}', '${user[4]}', '${user[5]}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="deleteUser('${user[0]}')">
+                                <i class="fas fa-trash-alt"></i> Excluir
+                            </button>
+                        </div>
+                    `;
+                    cardsContainer.appendChild(card);
+                });
+            } else {
+                cardsContainer.innerHTML = "<p>Nenhum usuário encontrado.</p>";
+            }
+        })
+        .catch(error => {
+            console.error("Erro ao carregar dados:", error);
+            const cardsContainer = document.getElementById("users-cards");
+            cardsContainer.innerHTML = "<p>Erro ao carregar os usuários. Tente novamente mais tarde.</p>";
+        });
+}
+        // Função para editar um usuário
+function editUser(id, name, number, dias, situacao, motivo) {
+    Swal.fire({
+        title: 'Editar Usuário',
+        html: `
+            <label><i class="fa fa-user"></i> Nome</label>
+            <input id="swal-name" class="swal2-input" value="${name}">
+
+            <label><i class="fa fa-phone"></i> Número</label>
+            <input id="swal-number" class="swal2-input" value="${number}">
+
+            <label><i class="fa fa-calendar"></i> Dias</label>
+            <input id="swal-dias" class="swal2-input" value="${dias}">
+
+            <label><i class="fa fa-comment"></i> Motivo</label>
+            <input id="swal-motivo" class="swal2-input" value="${motivo}">
+
+            <label><i class="fa fa-gavel"></i> Situação</label>
+            <select id="swal-situacao" class="swal2-input">
+                <option value="preso" ${situacao === 'preso' ? 'selected' : ''}>Preso</option>
+                <option value="livre" ${situacao === 'livre' ? 'selected' : ''}>Livre</option>
+            </select>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Salvar',
+        preConfirm: () => {
+            const updatedData = {
+                id,
+                name: document.getElementById('swal-name').value,
+                number: document.getElementById('swal-number').value,
+                dias: document.getElementById('swal-dias').value,
+                situacao: document.getElementById('swal-situacao').value,
+                motivo: document.getElementById('swal-motivo').value,
+                action: "update"
+            };
+
+            return fetch(API_URL, {
+                method: 'POST',
+                body: new URLSearchParams(updatedData)
+            });
+        }
+    }).then(() => loadUsers());
+}
+
+        // Função para excluir um usuário
+        function deleteUser(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você não poderá reverter isso!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, excluir',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(API_URL, {
+                        method: 'POST',
+                        body: new URLSearchParams({ id, action: "delete" })
+                    })
+                    .then(() => {
+                        Swal.fire('Usuário excluído!', '', 'success');
+                        loadUsers();
+                    })
+                    .catch(() => Swal.fire('Erro ao excluir o usuário.', '', 'error'));
+                }
+            });
+        }
+
+        // Função de pesquisa
+        function searchUser() {
+            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+            const cards = document.querySelectorAll('.user-card');
+            cards.forEach(card => {
+                const id = card.querySelector('h3').textContent.toLowerCase();
+                const number = card.querySelector('p').textContent.toLowerCase();
+                if (id.includes(searchTerm) || number.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Carregar usuários na inicialização
+        window.onload = loadUsers;
+    </script>
+</body>
+</html>
