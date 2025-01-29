@@ -263,6 +263,40 @@ body.dark-mode .swal2-popup {
     };
 </script>
 
+
+
+<script>
+    // Função de Logout com confirmação antes de sair utilizando SweetAlert2
+    function confirmExit() {
+        // Exibe o SweetAlert2 com a confirmação
+        Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Você deseja encerrar a sessão?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Limpar as preferências do modo escuro
+                localStorage.removeItem('darkMode');
+                console.log("Modo escuro removido do localStorage.");
+
+                // Limpar a foto de perfil
+                localStorage.removeItem('profilePic');
+                console.log("Foto de perfil removida do localStorage.");
+
+                // Redireciona para a página neext.ltda.com
+                window.location.href = "https://neetk.onrender.com/login";  // Redireciona para a página de logout
+                console.log("Redirecionando para neext.ltda.com após logout.");
+            } else {
+                console.log("Logout cancelado.");
+            }
+        });
+    }
+</script>
+
 <!-- Segunda Navbar -->
 
 
