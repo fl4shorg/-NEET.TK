@@ -261,35 +261,39 @@ body.dark-mode .swal2-popup {
     document.getElementById("profileWrapper").onclick = function() {
         document.getElementById("profileInput").click();
     };
-</script>>
-
-<!-- Segunda Navbar -->
+</script>
 
 
 
-<!-- Barra de Navegação com o Botão de Modo Escuro -->
-
-
-<!-- Estilos CSS para o Modo Escuro -->
-
-
-<!-- Função JavaScript para Alternar o Modo Escuro -->
 <script>
-    // Verifica se o modo escuro está ativado e aplica
-    if(localStorage.getItem('darkMode') === 'enabled') {
-        document.body.classList.add('dark-mode');
-    }
+    // Função de Logout com confirmação antes de sair utilizando SweetAlert2
+    function confirmExit() {
+        // Exibe o SweetAlert2 com a confirmação
+        Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Você deseja encerrar a sessão?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Limpar as preferências do modo escuro
+                localStorage.removeItem('darkMode');
+                console.log("Modo escuro removido do localStorage.");
 
-    // Função para alternar o modo escuro
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        
-        // Salva a preferência no localStorage
-        if(document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            localStorage.setItem('darkMode', 'disabled');
-        }
+                // Limpar a foto de perfil
+                localStorage.removeItem('profilePic');
+                console.log("Foto de perfil removida do localStorage.");
+
+                // Redireciona para a página neext.ltda.com
+                window.location.href = "https://neetk.onrender.com/login";  // Redireciona para a página de logout
+                console.log("Redirecionando para neext.ltda.com após logout.");
+            } else {
+                console.log("Logout cancelado.");
+            }
+        });
     }
 </script>
 
