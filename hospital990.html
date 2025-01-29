@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔.</title>
+    
+    <!-- Ícone da página -->
+    <link rel="icon" href="https://i.imgur.com/nDGsGLT.png" type="image/x-icon">
+
+    <!-- Links externos -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+header {
+    background-color: #6a0dad; /* Cor roxa */
+    padding: 15px 20px;  /* Ajusta o padding da navbar */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Garante que o título e ícones fiquem nas extremidades */
+    box-sizing: border-box;
+    width: 100%;
+}
+        header h1 {
+            margin: 0;
+            color: white;
+            font-size: 26px; /* Ajusta o tamanho do título */
+            display: flex;
+            align-items: center;
+        }
+        header h1 img {
+            width: 30px; /* Ajusta o tamanho do ícone ao lado do título */
+            height: 30px;
+            margin-right: 10px; /* Espaço entre o ícone e o título */
+        }
+#profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    object-fit: cover;
+    margin-left: 20px;  /* Aumenta a distância da esquerda */
+}
+
+
+        #profile-upload {
+            display: none;
+        }
+        nav {
+            background-color: #333;
+            padding: 15px;  /* Aumenta o tamanho da segunda navbar */
+            text-align: center;
+        }
+        nav span {
+            color: white;
+            font-size: 18px; /* Aumenta o tamanho do texto da navbar */
+            font-weight: bold;
+        }
+        button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px; /* Aumenta o tamanho dos ícones */
+            cursor: pointer;
+        }
+        button i {
+            margin: 0;
+        }
+.navbar-options {
+    display: flex;
+    align-items: center;
+    gap: 0px; /* Remove o espaço entre os itens */
+}
+
+#dark-mode-toggle {
+    margin-left: 0; /* Remove qualquer margem que possa estar criando espaço */
+}
+        .profile-logout {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Aumenta o espaço entre foto de perfil e logout */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <!-- Ícone de prisão SVG -->
+    <img src="svg/hospital2.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;"> <!-- Ajusta o tamanho do ícone -->
+    
+    <!-- Título -->
+    <h1>DASHBOARD</h1>
+    
+    <!-- Modo Escuro, Foto de Perfil e Logout -->
+    <div class="navbar-options">
+        <!-- Botão de Modo Escuro -->
+        <button id="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon" id="dark-mode-icon"></i>
+        </button>
+
+        <!-- Foto de Perfil e Botão de Logout -->
+        <div class="profile-logout">
+            <!-- Foto de Perfil -->
+            <img id="profile-picture" src="https://i.imgur.com/nDGsGLT.png" alt="Foto de Perfil" title="Clique para alterar">
+            <input id="profile-upload" type="file" accept="image/*" onchange="updateProfilePicture()">
+
+            <!-- Botão de Sair -->
+            <button onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<nav style="background: linear-gradient(to right, #6a0dad, #ff69b4); display: flex; justify-content: center; align-items: center; padding: 10px;">
+    <span style="font-size: 18px; display: flex; align-items: center;">
+        <img src="svg/hospital.svg" alt="Ícone" style="width: 1em; height: 1em; margin-right: 10px;">
+        HOSPITAL NEEXT
+    </span>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Alternar modo escuro
+    function toggleDarkMode() {
+        const body = document.body;
+        const icon = document.getElementById('dark-mode-icon');
+        
+        // Alterna a classe "dark-mode"
+        body.classList.toggle('dark-mode');
+        
+        // Salva a preferência no localStorage
+        const isDarkMode = body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        
+        // Atualiza o ícone do botão
+        icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    // Carrega a preferência do modo escuro ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            document.getElementById('dark-mode-icon').className = 'fas fa-sun';
+        }
+        
+        // Carregar a foto de perfil salva no localStorage
+        const savedProfilePicture = localStorage.getItem('profilePicture');
+        if (savedProfilePicture) {
+            document.getElementById('profile-picture').src = savedProfilePicture;
+        }
+    });
+
+    // Abrir o seletor de arquivo ao clicar na foto de perfil
+    document.getElementById('profile-picture').addEventListener('click', () => {
+        document.getElementById('profile-upload').click();
+    });
+
+    // Atualizar a foto de perfil
+    function updateProfilePicture() {
+        const fileInput = document.getElementById('profile-upload');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const profilePicture = e.target.result;
+                document.getElementById('profile-picture').src = profilePicture;
+
+                // Salvar a foto no localStorage
+                localStorage.setItem('profilePicture', profilePicture);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Função de logout com SweetAlert2
+    function logout() {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: 'Você realmente deseja sair?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, quero sair',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Desconectado!',
+                    'Você saiu com sucesso.',
+                    'success'
+                );
+                // Aqui você pode adicionar a lógica de redirecionamento ou logout.
+            }
+        });
+    }
+</script>
+
+
+<!-- Link para a biblioteca Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div style="display: flex; justify-content: space-around; margin-top: 20px;">
+    <!-- Card para "Em Licença" -->
+    <div id="cardEmLicenca" style="border: 1px solid #007bff; border-radius: 8px; padding: 16px; max-width: 250px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); text-align: center; background: linear-gradient(45deg, #007bff, #00bfff); color: white;">
+        <h3>Em Licença</h3>
+        <i id="symbolEmLicenca" class="fas fa-user" style="font-size: 40px;"></i>
+        <p><strong>Total Em Licença:</strong> <span id="totalEmLicenca">Carregando...</span></p>
+    </div>
+
+    <!-- Card para "Saiu da Licença" -->
+    <div id="cardSaiuLicenca" style="border: 1px solid #dc3545; border-radius: 8px; padding: 16px; max-width: 250px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); text-align: center; background: linear-gradient(45deg, #dc3545, #ff6f61); color: white;">
+        <h3>Saiu da Licença</h3>
+        <i id="symbolSaiuLicenca" class="fas fa-user" style="font-size: 40px;"></i>
+        <p><strong>Total Saiu da Licença:</strong> <span id="totalSaiuLicenca">Carregando...</span></p>
+    </div>
+</div>
+
+<script>
+    fetch('https://script.google.com/macros/s/AKfycbwWSl5Mpj04M1zrhWHJF4KmCHTvIx32wHK6j0_MXDLZGD5ifiH8Mjxcp2w4hAeQmG3l/exec?action=summary')
+        .then(response => response.json())
+        .then(data => {
+            // Acessando os valores do JSON e colocando nos elementos HTML
+            document.getElementById('totalEmLicenca').textContent = data['Total Em Licença'] || 0;
+            document.getElementById('totalSaiuLicenca').textContent = data['Total Saiu da Licença'] || 0;
+        })
+        .catch(error => {
+            console.error('Erro ao carregar os dados:', error);
+        });
+</script>
+
+<!-- Botão de Cadastro com Ícone -->
+<button id="registerButton" style="background: linear-gradient(to right, #ff007f, #8a2be2); color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; margin: 20px auto; font-size: 16px; font-weight: bold;">
+    <img src="svg/Button.svg" alt="Ícone de Cadastro" style="width: 25px; height: 25px; margin-right: 10px;">
+    Cadastrar Novo Paciente
+</button>
+
+<script>
+    document.getElementById("registerButton").addEventListener("click", function() {
+        Swal.fire({
+            title: 'Cadastrar Novo Paciente',
+            html: `
+                <label for="swal-id"><i class="fas fa-hashtag"></i> ID</label>
+                <input id="swal-id" type="text" class="swal2-input" placeholder="ID" required>
+
+                <label for="swal-name"><i class="fas fa-id-badge"></i> Nome</label>
+                <input id="swal-name" class="swal2-input" placeholder="Nome">
+
+                <label for="swal-number"><i class="fas fa-phone-alt"></i> Número</label>
+                <input id="swal-number" class="swal2-input" placeholder="Número">
+
+                <label for="swal-dias"><i class="fas fa-calendar-day"></i> Dias</label>
+                <input id="swal-dias" type="number" class="swal2-input" placeholder="Número de dias">
+
+                <label for="swal-data-entrada"><i class="fas fa-calendar-alt"></i> Data de Entrada</label>
+                <input id="swal-data-entrada" type="date" class="swal2-input">
+
+                <label for="swal-data-saida"><i class="fas fa-calendar-alt"></i> Data para Sair</label>
+                <input id="swal-data-saida" type="date" class="swal2-input">
+
+                <label><i class="fas fa-exclamation-circle"></i> Situação</label>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <label><input type="radio" name="swal-situacao" value="Em Licença"> Em Licença</label>
+                    <label><input type="radio" name="swal-situacao" value="Saiu da Licença"> Saiu da Licença</label>
+                </div>
+
+                <label for="swal-motivo"><i class="fas fa-info-circle"></i> Motivo</label>
+                <input id="swal-motivo" class="swal2-input" placeholder="Motivo">
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Cadastrar',
+            preConfirm: () => {
+                const id = document.getElementById('swal-id').value.trim();
+                const name = document.getElementById('swal-name').value.trim();
+                const number = document.getElementById('swal-number').value.trim();
+                const dias = document.getElementById('swal-dias').value.trim();
+                const dataEntrada = document.getElementById('swal-data-entrada').value.trim();
+                const dataSaida = document.getElementById('swal-data-saida').value.trim();
+                const motivo = document.getElementById('swal-motivo').value.trim();
+                const situacao = document.querySelector('input[name="swal-situacao"]:checked')?.value;
+
+                if (!id || !name || !number || !dias || !dataEntrada || !dataSaida || !situacao || !motivo) {
+                    Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                    return false;
+                }
+
+                Swal.showLoading();
+
+                return fetch('https://script.google.com/macros/s/AKfycbwWSl5Mpj04M1zrhWHJF4KmCHTvIx32wHK6j0_MXDLZGD5ifiH8Mjxcp2w4hAeQmG3l/exec', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        action: 'create',
+                        id: id,
+                        name: name,
+                        number: number,
+                        dias: dias,
+                        dataEntrada: dataEntrada,
+                        dataParaSair: dataSaida, // Ajustado conforme seu exemplo
+                        situacao: situacao,
+                        motivo: motivo
+                    })
+                })
+                .then(response => response.text())
+                .then(text => {
+                    if (text.toLowerCase().includes('sucesso')) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: 'Paciente cadastrado com sucesso!',
+                            icon: 'success',
+                            confirmButtonText: 'Fechar'
+                        }).then(() => {
+                            // Se necessário, atualizar lista de usuários
+                            loadUsers();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: `Erro ao cadastrar. Detalhes: ${text}`,
+                            icon: 'error',
+                            confirmButtonText: 'Fechar'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Erro!',
+                        text: `Falha na requisição. Detalhes: ${error.message}`,
+                        icon: 'error',
+                        confirmButtonText: 'Fechar'
+                    });
+                });
+            },
+            customClass: {
+                popup: 'custom-popup'
+            }
+        });
+    });
+</script>
+
+
+
+
+<div style="margin: 20px; display: flex; align-items: center; justify-content: center;">
+    <div style="position: relative; width: 100%; max-width: 300px;">
+        <input type="text" id="search-input" placeholder="Pesquisar por ID..." 
+            style="padding: 12px 20px 12px 15px; width: 100%; border-radius: 50px; border: 1px solid #ddd; 
+                   background-color: #f7f7f7; font-size: 16px; color: #333; transition: all 0.3s ease-in-out; 
+                   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bbb;"></i>
+    </div>
+</div>
+
+<div id="users-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwWSl5Mpj04M1zrhWHJF4KmCHTvIx32wHK6j0_MXDLZGD5ifiH8Mjxcp2w4hAeQmG3l/exec";
+let allUsers = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchUsers();
+    document.getElementById("search-input").addEventListener("input", filterUsers);
+});
+
+function fetchUsers() {
+    fetch(`${API_URL}?action=read`)
+        .then(response => response.text())
+        .then(data => {
+            allUsers = [];
+            const usersContainer = document.getElementById("users-container");
+            usersContainer.innerHTML = "";
+            let lines = data.trim().split("\n");
+            let headers = lines[0].split(", ");
+
+            for (let i = 1; i < lines.length; i++) {
+                let userData = lines[i].split(", ");
+                let user = {};
+
+                headers.forEach((header, index) => user[header] = userData[index]);
+                allUsers.push(user);
+                usersContainer.appendChild(createUserCard(user));
+            }
+        })
+        .catch(error => console.error("Erro ao buscar usuários:", error));
+}
+
+function filterUsers(event) {
+    const searchTerm = event.target.value.toLowerCase();
+    const filteredUsers = allUsers.filter(user => user["ID"].toLowerCase().includes(searchTerm));
+    const usersContainer = document.getElementById("users-container");
+    usersContainer.innerHTML = "";
+    filteredUsers.forEach(user => usersContainer.appendChild(createUserCard(user)));
+}
+
+function createUserCard(user) {
+    let card = document.createElement("div");
+    card.style = "border-radius: 8px; padding: 15px; margin: 10px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); display: inline-block; width: 250px;";
+
+    let userInfo = document.createElement("p");
+    userInfo.innerHTML = `
+        <i class="fas fa-user"></i> <strong>${user["Nome"]}</strong><br>
+        <i class="fas fa-id-badge"></i> ID: ${user["ID"]}<br>
+        <i class="fas fa-phone"></i> Número: ${user["Número"]}<br>
+        <i class="fas fa-calendar-day"></i> Dias: ${user["Dias"]}<br>
+        <i class="fas fa-sign-in-alt"></i> Entrada: ${user["Data de Entrada"]}<br>
+        <i class="fas fa-sign-out-alt"></i> Saída: ${user["Data para Sair"]}<br>
+        <i class="fas fa-exclamation-circle"></i> Situação: ${user["Situação"]}<br>
+        <i class="fas fa-question-circle"></i> Motivo: ${user["Motivo"]}
+    `;
+
+    let editButton = document.createElement("button");
+    editButton.innerHTML = '<i class="fas fa-edit"></i>';
+    editButton.style = "background: green; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px;";
+    editButton.onclick = () => editUser(user);
+
+    let deleteButton = document.createElement("button");
+    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    deleteButton.style = "background: red; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px;";
+    deleteButton.onclick = () => deleteUser(user["ID"]);
+
+    card.appendChild(userInfo);
+    card.appendChild(editButton);
+    card.appendChild(deleteButton);
+
+    return card;
+}
+
+function editUser(user) {
+    Swal.fire({
+        title: "Editar Usuário",
+        html: `
+            <label><i class="fas fa-user"></i> Nome</label>
+            <input id="swal-name" class="swal2-input" value="${user["Nome"]}">
+            <label><i class="fas fa-phone"></i> Número</label>
+            <input id="swal-number" class="swal2-input" value="${user["Número"]}">
+            <label><i class="fas fa-calendar-day"></i> Dias</label>
+            <input id="swal-dias" class="swal2-input" value="${user["Dias"]}">
+            <label><i class="fas fa-sign-in-alt"></i> Entrada</label>
+            <input id="swal-entrada" class="swal2-input" type="date" value="${user["Data de Entrada"]}">
+            <label><i class="fas fa-sign-out-alt"></i> Saída</label>
+            <input id="swal-saida" class="swal2-input" type="date" value="${user["Data para Sair"]}">
+            <label><i class="fas fa-exclamation-circle"></i> Situação</label>
+            <select id="swal-situacao" class="swal2-input">
+                <option value="Em licença" ${user["Situação"] === "Em licença" ? "selected" : ""}>Em licença</option>
+                <option value="Saiu da Licença" ${user["Situação"] === "Saiu da Licença" ? "selected" : ""}>Saiu da Licença</option>
+            </select>
+            <label><i class="fas fa-question-circle"></i> Motivo</label>
+            <input id="swal-motivo" class="swal2-input" value="${user["Motivo"]}">
+        `,
+        confirmButtonText: "Salvar",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        preConfirm: () => {
+            let formData = new URLSearchParams();
+            formData.append("action", "update");
+            formData.append("id", user["ID"]);
+            formData.append("name", document.getElementById("swal-name").value);
+            formData.append("number", document.getElementById("swal-number").value);
+            formData.append("dias", document.getElementById("swal-dias").value);
+            formData.append("dataEntrada", document.getElementById("swal-entrada").value);
+            formData.append("dataParaSair", document.getElementById("swal-saida").value);
+            formData.append("situacao", document.getElementById("swal-situacao").value);
+            formData.append("motivo", document.getElementById("swal-motivo").value);
+
+            return fetch(API_URL, { method: "POST", body: formData })
+                .then(response => response.text())
+                .then(() => {
+                    Swal.fire("Sucesso!", "Usuário atualizado com sucesso!", "success");
+                    fetchUsers();
+                })
+                .catch(error => Swal.fire("Erro!", "Erro ao atualizar usuário.", "error"));
+        }
+    });
+}
+
+function deleteUser(id) {
+    Swal.fire({
+        title: "Tem certeza?",
+        text: "Você não poderá reverter isso!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sim, excluir!",
+        cancelButtonText: "Cancelar"
+    }).then(result => {
+        if (result.isConfirmed) {
+            let formData = new URLSearchParams();
+            formData.append("action", "delete");
+            formData.append("id", id);
+
+            fetch(API_URL, { method: "POST", body: formData })
+                .then(response => response.text())
+                .then(() => {
+                    Swal.fire("Excluído!", "Usuário removido com sucesso!", "success");
+                    fetchUsers();
+                })
+                .catch(error => Swal.fire("Erro!", "Erro ao excluir usuário.", "error"));
+        }
+    });
+}
+</script>
+
+
+
+
+
+</body>
+</html>
