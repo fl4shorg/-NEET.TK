@@ -297,42 +297,6 @@ body.dark-mode .swal2-popup {
     }
 </script>
 
-<!-- Segunda Navbar -->
-
-
-
-<!-- Barra de Navegação com o Botão de Modo Escuro -->
-
-
-<!-- Estilos CSS para o Modo Escuro -->
-
-
-<!-- Função JavaScript para Alternar o Modo Escuro -->
-<script>
-    // Verifica se o modo escuro está ativado e aplica
-    if(localStorage.getItem('darkMode') === 'enabled') {
-        document.body.classList.add('dark-mode');
-    }
-
-    // Função para alternar o modo escuro
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        
-        // Salva a preferência no localStorage
-        if(document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            localStorage.setItem('darkMode', 'disabled');
-        }
-    }
-</script>
-
-
-
-
-
-
-
 
 <!-- Container para os cards -->
 <div id="summary-cards" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 20px; padding: 0 10px;"></div>
@@ -400,10 +364,6 @@ if (totalAdmins <= 20) {
     groupStatus = 'Situação Muito Boa';
     statusColor = '#2ecc71'; // Verde
     statusIcon = 'fas fa-laugh'; // Ícone de carinha risonha
-} else if (totalAdmins <= 69) {
-    groupStatus = 'Situação Excelente';
-    statusColor = '#8e44ad'; // Roxo mais claro
-    statusIcon = 'fas fa-grin'; // Ícone de carinha muito feliz
 } else if (totalAdmins >= 70) {
     groupStatus = 'Situação Ultra Boa';
     statusColor = '#9b59b6'; // Roxo
@@ -418,10 +378,10 @@ situationCard.innerHTML = `
     <p style="color: #fff; font-size: 18px; font-weight: bold; text-align: center;">${groupStatus}</p>
 `;
 situationCard.style.backgroundColor = statusColor;
-situationCard.style.padding = '10px';
-situationCard.style.borderRadius = '8px';
-situationCard.style.flex = '1 1 calc(50% - 10px)';
-situationCard.style.boxSizing = 'border-box';
+                situationCard.style.padding = '10px';
+                situationCard.style.borderRadius = '8px';
+                situationCard.style.flex = '1 1 calc(50% - 10px)';
+                situationCard.style.boxSizing = 'border-box';
 
                 // Atualizar os outros cards
                 const cards = [
@@ -466,7 +426,7 @@ situationCard.style.boxSizing = 'border-box';
                 new Chart(ctxBar, {
                     type: 'bar',
                     data: {
-                        labels: ['Pontuação de CTF'],
+                        labels: ['Pontuação de CTS'],
                         datasets: [{
                             label: 'Pontuação',
                             data: [finalScore],
