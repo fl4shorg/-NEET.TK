@@ -123,6 +123,15 @@
         ]
     },
 {
+    "titulo": "ARTIGCARD: Psicóloga e Transferência de Pacientes",
+    "descricao": "A psicóloga tem a autoridade para recomendar a internação de indivíduos em estabelecimentos psiquiátricos, conforme a gravidade de distúrbios comportamentais que afetam a paz e o bem-estar de outros. Essa decisão será tomada com base em critérios médicos e acompanhamento especializado.",
+    "paragrafos": [
+        "Parágrafo 01: A psicóloga, em conformidade com sua competência e diretrizes médicas, pode recomendar a internação de um indivíduo em estabelecimento psiquiátrico (hospício) caso haja identificação de distúrbios comportamentais significativos que envolvam a perturbação da paz ou o bem-estar de outros pacientes do asilo ou da comunidade.",
+        "Parágrafo 02: Caso seja identificada uma violação grave da tranquilidade ou um comportamento altamente perturbador, a psicóloga poderá encaminhar o indivíduo para avaliação e possível internação em um hospital psiquiátrico, de acordo com a gravidade do quadro clínico apresentado.",
+        "Parágrafo 03: Em situações de crise aguda ou comportamento disruptivo persistente, a psicóloga poderá aplicar o *Card Preto* no indivíduo, o que implicará na internação imediata e obrigatória por um período de até **um mês**, com acompanhamento médico contínuo. Essa recomendação será baseada em avaliação criteriosa, visando a segurança e o bem-estar do indivíduo, e poderá ser revisada durante o período de internação conforme a evolução clínica."
+    ]
+},
+{
         "titulo": "ARTIGCARD: CRIAÇÃO DE GRUPOS NA NEEXT",
         "descricao": "Os membros da Neext estão autorizados a criar grupos com amigos que fazem parte da comunidade, desde que solicitem autorização ao superior responsável. É obrigatório que o superior esteja presente nesse grupo.",
         "paragrafos": [
