@@ -170,78 +170,65 @@ body.dark-mode .swal2-popup {
 </style>
 
 <script>
-    // Função de alternância de modo escuro
-    function toggleDarkMode() {
-        // Adiciona a classe 'cut' para o efeito
-        const icon = document.getElementById('icon');
-        
-        // Aplica o efeito de corte
-        icon.classList.add('cut');
-
-        // Remove a classe após a animação terminar
-        setTimeout(() => {
-            icon.classList.remove('cut');
-        }, 500);
-
-        // Alterna o ícone entre lua e sol
-        if (icon.classList.contains('fa-moon')) {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');  // Ícone do sol
-        } else {
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');  // Ícone da lua
-        }
-
-        // Aqui pode ir a lógica do modo escuro que você desejar
-        console.log("Modo escuro ativado!");
-    }
-
-    function confirmExit() {
-        // Exibe o pop-up de confirmação com SweetAlert2
-        Swal.fire({
-            title: 'Tem certeza que deseja encerrar a sessão?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim, sair',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Limpa o histórico e redireciona para uma página em branco
-                window.history.replaceState(null, null, window.location.href);
-                window.location.href = 'about:blank'; // Redireciona para uma página em branco
-            }
-        });
-    }
-</script>
-
-<script>
     // Função para alternar entre modo escuro e claro
     function toggleDarkMode() {
         const body = document.body;
         const icon = document.getElementById("icon");
 
+        // Alterna a classe 'dark-mode' no corpo da página
         body.classList.toggle("dark-mode");
 
+        // Alterna o ícone entre lua e sol
         if (body.classList.contains("dark-mode")) {
             icon.classList.remove("fa-moon");
             icon.classList.add("fa-sun");
+
+            // Salva no localStorage
+            localStorage.setItem('darkMode', 'enabled');
+            console.log("Modo escuro ativado e salvo no localStorage.");
         } else {
             icon.classList.remove("fa-sun");
             icon.classList.add("fa-moon");
+
+            // Salva no localStorage
+            localStorage.setItem('darkMode', 'disabled');
+            console.log("Modo claro ativado e salvo no localStorage.");
         }
     }
 
-    // Carregar a foto de perfil do armazenamento local (se houver)
+    // Função para carregar configurações do localStorage e fotos de perfil
     window.onload = function() {
+        console.log("Página carregada. Verificando configurações no localStorage.");
+
+        // Carregar a foto de perfil do localStorage (se houver)
         const savedProfilePic = localStorage.getItem("profilePic");
         const profilePic = document.getElementById("profilePic");
         const defaultIcon = document.getElementById("defaultIcon");
 
+        // Verificar se existe foto de perfil salva no localStorage
         if (savedProfilePic) {
             profilePic.src = savedProfilePic;
             profilePic.style.display = "block";
             defaultIcon.style.display = "none";
+            console.log("Foto de perfil carregada do localStorage.");
+        } else {
+            console.log("Nenhuma foto de perfil encontrada no localStorage.");
+        }
+
+        // Verifica se o modo escuro está salvo no localStorage e aplica
+        const darkModeStatus = localStorage.getItem('darkMode');
+        if (darkModeStatus === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById("icon").classList.remove('fa-moon');
+            document.getElementById("icon").classList.add('fa-sun');
+            console.log("Modo escuro ativado.");
+        } else if (darkModeStatus === 'disabled') {
+            document.body.classList.remove('dark-mode');
+            document.getElementById("icon").classList.remove('fa-sun');
+            document.getElementById("icon").classList.add('fa-moon');
+            console.log("Modo claro ativado.");
+        } else {
+            console.log("Modo escuro não encontrado no localStorage.");
         }
     };
 
@@ -255,13 +242,18 @@ body.dark-mode .swal2-popup {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = function() {
+                // Define a imagem carregada como foto de perfil
                 profilePic.src = reader.result;
                 profilePic.style.display = "block";
                 defaultIcon.style.display = "none";
 
+                // Salva a nova foto de perfil no localStorage
                 localStorage.setItem("profilePic", reader.result);
+                console.log("Foto de perfil salva no localStorage.");
             };
             reader.readAsDataURL(file);
+        } else {
+            console.log("Nenhum arquivo selecionado para foto de perfil.");
         }
     }
 
@@ -269,7 +261,7 @@ body.dark-mode .swal2-popup {
     document.getElementById("profileWrapper").onclick = function() {
         document.getElementById("profileInput").click();
     };
-</script>
+</script>>
 
 <!-- Segunda Navbar -->
 
