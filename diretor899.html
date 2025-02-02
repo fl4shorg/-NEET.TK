@@ -98,7 +98,7 @@ header {
 <body>
 <header>
     <!-- Ícone de prisão SVG -->
-    <img src="svg/prisao.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;"> <!-- Ajusta o tamanho do ícone -->
+    <img src="svg/dr.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;"> <!-- Ajusta o tamanho do ícone -->
     
     <!-- Título -->
     <h1>DASHBOARD</h1>
@@ -133,9 +133,111 @@ header {
 <nav style="background: linear-gradient(to right, #6a0dad, #ff69b4); display: flex; justify-content: center; align-items: center; padding: 10px;">
     <span style="font-size: 18px; display: flex; align-items: center;">
         <img src="svg/n.svg" alt="Ícone" style="width: 1em; height: 1em; margin-right: 10px;">
-        PAINEL GERAL
+        DESENVOLVIDO PELA NEEXT
     </span>
 </nav>
+
+<!-- Adicione Font Awesome para os ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Barra de Pesquisa com Botão -->
+<div class="search-container" style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+  <button id="search-btn" class="search-btn" 
+    style="font-size: 18px; padding: 10px 20px; background-color: #7F00FF; color: white; border: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    <i class="fas fa-search" style="margin-right: 10px;"></i> Pesquisar
+  </button>
+</div>
+
+<script>
+  const apiUrls = [
+    // APIs existentes
+    "https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?id=",
+    "https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?id=",
+    "https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?id=",
+
+    // Novas APIs adicionadas
+    "https://script.google.com/macros/s/AKfycbxu8xRBhGDSxy2NkEqLxs4K38q3IgoEfOCCnJyYpOLzWTEnLaMZVecMTuYRV5sQ0HF9HA/exec?id=",
+    "https://script.google.com/macros/s/AKfycbxu49RPRSL0zxLsd-A_2Y8IvNBirRBxFI3XrAyk7scf-dysgN-olBbSE-AgtsUZlRu4bA/exec?id=",
+    "https://script.google.com/macros/s/AKfycbxfZEM50YySxQ6zG8eN3sFNGgVFL_lPT7Zq2Th8YDfM97St1R1Uip9lOtGIn1eOeWTZ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzK4-NoE1S1_bkRe6zbGc28LfnpU15mwxVHelFRnsoHF7rJNTcyCEnH7XJjGDHT0nTE/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyLBcAMW6E4-vgBYGvYx2OM1CK_dtAoqoRvG_uFseRHOT2gGouq4k6zbZD5mQneiYzpmQ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwaKgjdg36rw5KjwSEhUi2bLWySktMtAerrLVGjcqN43k4Px5MkeGKp0b0oFPNWNgRR/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzMPxhhs7X3-0KQ9ypmTs8_ppXKl4_zRZN-DY0mN9FBXF872bBGYUaldZj6OoIQIJU7/exec?id="
+  ];
+
+  document.getElementById('search-btn').addEventListener('click', function() {
+    Swal.fire({
+      title: 'Pesquisar Usuário',
+      input: 'text',
+      inputLabel: 'Digite o ID do Usuário',
+      inputPlaceholder: 'Ex: 213',
+      showCancelButton: true,
+      confirmButtonText: 'Pesquisar',
+      cancelButtonText: 'Cancelar',
+      inputValidator: (value) => {
+        if (!value.trim()) {
+          return 'Você precisa digitar um ID!';
+        }
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const query = result.value.trim();
+        Swal.fire({
+          title: 'Buscando...',
+          html: 'Aguarde enquanto pesquisamos.',
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading()
+        });
+
+        try {
+          const responses = await Promise.all(apiUrls.map(url => fetch(url + query).then(res => res.text()).catch(() => "")));
+          const results = responses.flatMap(data => data.split("\n").map(row => row.split(","))).filter(columns => columns[0] && columns[0].includes(query));
+
+          Swal.close();
+
+          if (results.length > 0) {
+            let usersHtml = results.map(columns => `
+              <div style="text-align: left; padding: 10px;">
+                <p><i class="fas fa-id-badge"></i> <strong>ID:</strong> ${columns[0]}</p>
+                <p><i class="fas fa-user"></i> <strong>Nome:</strong> ${columns[1]}</p>
+                <p><i class="fas fa-calendar-alt"></i> <strong>Idade:</strong> ${columns[2]}</p>
+                <p><i class="fas fa-phone"></i> <strong>Telefone:</strong> ${columns[3]}</p>
+                <p><i class="fab fa-instagram"></i> <strong>Instagram:</strong> ${columns[4]}</p>
+                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> ${columns[5]}</p>
+              </div>
+              <hr>
+            `).join("");
+
+            Swal.fire({
+              title: `Usuário${results.length > 1 ? 's' : ''} Encontrado${results.length > 1 ? 's' : ''}`,
+              html: usersHtml,
+              icon: 'success'
+            });
+          } else {
+            Swal.fire({
+              title: 'Usuário Não Encontrado',
+              text: 'Nenhum usuário encontrado com esse ID.',
+              icon: 'error'
+            });
+          }
+        } catch (error) {
+          Swal.fire({ title: 'Erro na Pesquisa', text: 'Ocorreu um erro ao buscar os dados.', icon: 'error' });
+          console.error("Erro ao buscar dados:", error);
+        }
+      }
+    });
+  });
+</script>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -220,258 +322,796 @@ header {
 <!-- Incluindo a biblioteca Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-<!-- Barra de Pesquisa com Botão (centralizado abaixo da navbar) -->
-<div class="search-container" style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
-  <button id="search-btn" class="search-btn" 
-    style="font-size: 18px; padding: 10px 20px; background-color: #7F00FF; color: white; border: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-    <i class="fas fa-search" style="margin-right: 10px;"></i> Pesquisar
-  </button>
+
+
+<!-- Card do Total de Administradores -->
+<div id="admin-card" style="text-align: center; font-size: 22px; font-weight: bold; color: white; background-color: #9B4DFF; padding: 20px; border-radius: 10px; max-width: 350px; margin: 20px auto;">
+  <i class="fa fa-users" style="margin-right: 10px;"></i> Total de Administradores no Sistema da Neext: Carregando...
 </div>
 
-<!-- Área de Carregamento -->
-<div id="loading-message" style="display: none; text-align: center; margin-top: 20px;">
-  <i class="fas fa-spinner fa-spin" style="font-size: 30px;"></i>
-  <p>Pesquisando...</p>
+<!-- Gráfico de Progresso -->
+<div style="text-align: center; margin-top: 20px;">
+  <canvas id="adminChart" width="300" height="300"></canvas>
 </div>
 
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.5/dist/sweetalert2.all.min.js"></script>
 
+<!-- Chart.js para o gráfico -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Font Awesome para o ícone -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<div class="container">
+    <div class="title">
+        <i class="fas fa-shield-alt"></i> Abin Quântico FBI
+    </div>
+    <div class="cards">
+        <div class="card aprovado">
+            <i class="fas fa-check-circle"></i>
+            <div>Aprovados: <span id="aprovados">0</span></div>
+        </div>
+        <div class="card reprovado">
+            <i class="fas fa-times-circle"></i>
+            <div>Reprovados: <span id="reprovados">0</span></div>
+        </div>
+        <div class="card aguarde">
+            <i class="fas fa-hourglass-half"></i>
+            <div>Aguardando Aprovação: <span id="aguarde">0</span></div>
+        </div>
+    </div>
+</div>
+
 <script>
-  // URLs das APIs
-  const apiUrls = [
-    "https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?id=",
-    "https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?id=",
-    "https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?id=",
-    "https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?id=",
-    "https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?id=",
-    "https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?id=",
-    "https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?id="
-  ];
+    async function contarStatus() {
+        const url = "https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec";
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
 
-  // Funcionalidade de abrir o popup de pesquisa
-  document.getElementById('search-btn').addEventListener('click', function() {
-    Swal.fire({
-      title: 'Pesquisar Usuário',
-      input: 'text',
-      inputLabel: 'Digite o ID do Usuário',
-      inputPlaceholder: 'Ex: 213',
-      showCancelButton: true,
-      confirmButtonText: 'Pesquisar',
-      cancelButtonText: 'Cancelar',
-      inputValidator: (value) => {
-        if (!value) {
-          return 'Você precisa digitar um ID!';
-        }
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const query = result.value.trim(); // Pega o ID inserido
-        if (query === "") {
-          Swal.fire('Erro', 'Por favor, insira um ID para pesquisar.', 'error');
-          return;
-        }
+            console.log("Dados recebidos:", data); // Depuração: verifique os dados recebidos
 
-        // Exibe o indicador de carregamento
-        document.getElementById('loading-message').style.display = 'block';
+            let aprovados = 0, reprovados = 0, aguardando = 0;
+            
+            // Verificando os dados recebidos
+            if (data && data.data) {
+                data.data.forEach(pessoa => {
+                    const status = pessoa.status ? pessoa.status.trim() : "";
 
-        // Tenta todas as URLs de API
-        for (let apiUrl of apiUrls) {
-          try {
-            const response = await fetch(apiUrl + query);
-            const data = await response.text(); // Resposta em formato CSV
-            const rows = data.split("\n");
+                    // Depuração: mostrar status de cada pessoa
+                    console.log(`Status de ${pessoa.nome}:`, status);
 
-            let userFound = false;
-
-            for (let row of rows) {
-              const columns = row.split(",");
-
-              // Se o ID for encontrado, exibe os dados no popup
-              if (columns[0] && columns[0].trim() == query) {
-                userFound = true;
-                // Oculta o carregamento e exibe o resultado
-                document.getElementById('loading-message').style.display = 'none';
-                Swal.fire({
-                  title: `Usuário Encontrado: ${columns[1]}`,
-                  html: `
-                    <p><strong>ID:</strong> ${columns[0]}</p>
-                    <p><strong>Nome:</strong> ${columns[1]}</p>
-                    <p><strong>Idade:</strong> ${columns[2]}</p>
-                    <p><strong>Número:</strong> ${columns[3]}</p>
-                    <p><strong>Instagram:</strong> ${columns[4]}</p>
-                    <p><strong>Email:</strong> ${columns[5]}</p>
-                  `,
-                  icon: 'success'
+                    // Verificação robusta para "aprovado" e "reprovado"
+                    if (status === "aprovado") {
+                        aprovados++;
+                    } else if (status === "reprovado") {
+                        reprovados++;
+                    } else if (status === "" || status.match(/^ *$/)) {  // Verifica se o status está vazio ou só tem espaços
+                        aguardando++;
+                    }
                 });
-                return; // Encerra a função depois que o popup for exibido
-              }
+            } else {
+                console.error("Formato de dados inesperado ou vazio.");
             }
 
-            // Se não encontrar o usuário na API atual, tenta a próxima
-          } catch (error) {
-            console.error("Erro ao buscar dados:", error);
-            continue; // Tenta a próxima API se falhar
-          }
+            // Atualizando os valores no HTML
+            document.getElementById("aprovados").textContent = aprovados;
+            document.getElementById("reprovados").textContent = reprovados;
+            document.getElementById("aguarde").textContent = aguardando;
+        } catch (error) {
+            console.error("Erro ao buscar os dados:", error);
         }
-
-        // Se não encontrar o usuário em nenhuma das APIs
-        document.getElementById('loading-message').style.display = 'none'; // Esconde o carregamento
-        Swal.fire({
-          title: 'Usuário Não Encontrado',
-          text: 'Nenhum usuário encontrado com esse ID.',
-          icon: 'error'
-        });
-      }
-    });
-  });
-</script>
-
-<!-- Incluindo a biblioteca Font Awesome para ícones -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-<!-- Título 'Grupos' com ícone de painel -->
-<h2 style="text-align: center; margin-top: 20px;">
-  <i class="fa fa-tachometer-alt"></i> Grupos
-</h2>
-<!-- Contêiner do Total de Administradores -->
-<div id="total-admins-container" style="text-align: center; margin-top: 20px;"></div>
-
-<!-- Contêiner dos Cards -->
-<div id="cards-container" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 20px;"></div>
-
-<!-- SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.5/dist/sweetalert2.all.min.js"></script>
-
-<script>
-  // Lista de APIs com nome e links (numeração de 1 até 10)
-  const apis = [
-    { name: 'API 1', url: 'https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?action=summary' },
-    { name: 'API 2', url: 'https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?action=summary' },
-    { name: 'API 3', url: 'https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?action=summary' },
-    { name: 'API 4', url: 'https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?action=summary' },
-    { name: 'API 5', url: 'https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?action=summary' },
-    { name: 'API 6', url: 'https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?action=summary' },
-    { name: 'API 7', url: 'https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?action=summary' },
-    { name: 'API 8', url: 'https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?action=summary' },
-    { name: 'API 9', url: 'https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?action=summary' },
-    { name: 'API 10', url: 'https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?action=summary' }
-  ];
-
-  // Cores diferentes para cada card
-  const cardColors = [
-    "#7F00FF", "#FF5733", "#33FF57", "#FFC300", "#FF33FF",
-    "#33CFFF", "#FF6347", "#C71585", "#20B2AA", "#8A2BE2"
-  ];
-
-  // Função para buscar dados de uma API
-  async function fetchSummaryData(apiUrl, index) {
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json(); // Espera resposta JSON
-
-      if (data && data['Número do Grupo'] && data['Total de Administradores']) {
-        const totalAdmins = Object.values(data['Faixa Etária'] || {}).reduce((sum, count) => sum + count, 0);
-        const taxaCrescimento = data['Taxa de Crescimento'] || 'N/A'; // Adiciona a taxa de crescimento
-
-        const card = document.getElementById(`api-card-${index}`);
-        
-        if (!card) {
-          const newCard = document.createElement('div');
-          newCard.id = `api-card-${index}`;
-          newCard.innerHTML = `
-            <div style="width: 100%; max-width: 300px; height: 200px; background-color: ${cardColors[index]}; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
-              <i class="fas fa-users" style="font-size: 50px; margin-bottom: 10px;"></i>
-              <p><strong>Grupo:</strong> ${data['Número do Grupo']}</p>
-              <p><strong>Administradores:</strong> ${totalAdmins}</p>
-              <p><strong>Taxa de Crescimento:</strong> ${taxaCrescimento} <i class="fas fa-arrow-up" style="color: yellow;"></i></p>
-            </div>
-          `;
-          document.getElementById('cards-container').appendChild(newCard);
-        } else {
-          card.innerHTML = `
-            <div style="width: 100%; max-width: 300px; height: 200px; background-color: ${cardColors[index]}; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
-              <i class="fas fa-users" style="font-size: 50px; margin-bottom: 10px;"></i>
-              <p><strong>Grupo:</strong> ${data['Número do Grupo']}</p>
-              <p><strong>Administradores:</strong> ${totalAdmins}</p>
-              <p><strong>Taxa de Crescimento:</strong> ${taxaCrescimento} <i class="fas fa-arrow-up" style="color: yellow;"></i></p>
-            </div>
-          `;
-        }
-
-        return totalAdmins; // Retorna o total de administradores dessa API
-      }
-    } catch (error) {
-      console.error("Erro ao buscar dados:", error);
-    }
-    return 0;
-  }
-
-  // Função para carregar os dados de múltiplas APIs e calcular o total
-  async function loadAPIs() {
-    let totalAdministradores = 0;
-    const totalCard = document.getElementById('total-admins-container');
-    totalCard.innerHTML = `
-      <div style="width: 100%; max-width: 350px; height: 180px; background-color: #9B4DFF; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
-        <i class="fas fa-users-cog" style="font-size: 50px; margin-bottom: 10px;"></i>
-        <p><strong>Total de Administradores no Sistema:</strong> Calculando...</p>
-      </div>
-    `;
-
-    // Carrega cada API em um card separado com cor variada
-    for (let i = 0; i < apis.length; i++) {
-      const totalAdminsAPI = await fetchSummaryData(apis[i].url, i);
-      totalAdministradores += totalAdminsAPI; // Soma o total de administradores
     }
 
-    // Atualiza o card de Total de Administradores
-    totalCard.innerHTML = `
-      <div style="width: 100%; max-width: 350px; height: 180px; background-color: #9B4DFF; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
-        <i class="fas fa-users-cog" style="font-size: 50px; margin-bottom: 10px;"></i>
-        <p><strong>Total de Administradores no Sistema:</strong> ${totalAdministradores}</p>
-      </div>
-    `;
-
-    // Carrega os cards dos grupos (não recalculará o total de administradores)
-    const cardsContainer = document.getElementById('cards-container');
-    cardsContainer.innerHTML = '';
-    for (let i = 0; i < apis.length; i++) {
-      await fetchSummaryData(apis[i].url, i); // Atualiza os cards com os dados das APIs
-    }
-  }
-
-  // Chama a função para carregar os dados apenas uma vez ao carregar a página
-  window.onload = loadAPIs;
+    contarStatus();
 </script>
 
 <style>
-  /* Centraliza o contêiner de cards na tela */
-  #cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+    /* Container principal */
+    .container {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    /* Título */
+    .title {
+        font-size: 30px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    .title i {
+        margin-right: 10px;
+        font-size: 36px;
+        color: #007bff;
+    }
+
+    /* Estilos dos cards */
+    .cards {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 180px;
+        height: 180px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .card i {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    /* Estilos dos cards com suas respectivas cores */
+    .aprovado { background-color: #28a745; }
+    .reprovado { background-color: #dc3545; }
+    .aguarde { background-color: #ffc107; }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        .card {
+            width: 140px;
+            height: 140px;
+            font-size: 18px;
+        }
+
+        .title {
+            font-size: 24px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card {
+            width: 120px;
+            height: 120px;
+            font-size: 16px;
+        }
+
+        .title {
+            font-size: 20px;
+        }
+
+        .cards {
+            justify-content: center;
+            gap: 15px;
+        }
+    }
+</style>
+
+<!-- Link para a biblioteca Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<!-- Link para a biblioteca Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<div class="container">
+    <div class="title">
+        <i class="fas fa-user-shield"></i> Abin Quântico - SKUR  </div>
+    <div class="cards">
+        <div class="card aprovado">
+            <i class="fas fa-check-circle"></i>
+            <div>Aprovados: <span id="aprovados2">0</span></div>
+        </div>
+        <div class="card reprovado">
+            <i class="fas fa-times-circle"></i>
+            <div>Reprovados: <span id="reprovados2">0</span></div>
+        </div>
+        <div class="card aguarde">
+            <i class="fas fa-hourglass-half"></i>
+            <div>Aguardando Aprovação: <span id="aguarde2">0</span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function contarStatus2() {
+        const url = "https://script.google.com/macros/s/AKfycbxL8TnQwmrXvZ9cwEsGaN_JQmfqNuqAifU-rqD3QBQhl2_E3Qd62YV043nv87tVVryR/exec";
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            let aprovados = 0, reprovados = 0, aguardando = 0;
+            data.data.forEach(pessoa => {
+                const status = pessoa.status.trim();  // Remove espaços extras antes de verificar o status
+                if (status === "aprovado") {
+                    aprovados++;
+                } else if (status === "reprovado") {
+                    reprovados++;
+                } else if (status === "" || status === " ") {  // Confirma se está vazio ou só tem espaços
+                    aguardando++;
+                }
+            });
+
+            document.getElementById("aprovados2").textContent = aprovados;
+            document.getElementById("reprovados2").textContent = reprovados;
+            document.getElementById("aguarde2").textContent = aguardando;
+        } catch (error) {
+            console.error("Erro ao buscar os dados:", error);
+        }
+    }
+
+    contarStatus2();
+</script>
+
+<style>
+    /* Container principal */
+    .container {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    /* Título */
+    .title {
+        font-size: 30px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    .title i {
+        margin-right: 10px;
+        font-size: 36px;
+        color: #007bff;
+    }
+
+    /* Estilos dos cards */
+    .cards {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 180px;
+        height: 180px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .card i {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    /* Estilos dos cards com suas respectivas cores */
+    .aprovado { background-color: #28a745; }
+    .reprovado { background-color: #dc3545; }
+    .aguarde { background-color: #ffc107; }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        .card {
+            width: 140px;
+            height: 140px;
+            font-size: 18px;
+        }
+
+        .title {
+            font-size: 24px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card {
+            width: 120px;
+            height: 120px;
+            font-size: 16px;
+        }
+
+        .title {
+            font-size: 20px;
+        }
+
+        .cards {
+            justify-content: center;
+            gap: 15px;
+        }
+    }
+</style>
+
+<!-- Link para a biblioteca Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+<script>
+  const apis = [
+    'https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbxu8xRBhGDSxy2NkEqLxs4K38q3IgoEfOCCnJyYpOLzWTEnLaMZVecMTuYRV5sQ0HF9HA/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbxu49RPRSL0zxLsd-A_2Y8IvNBirRBxFI3XrAyk7scf-dysgN-olBbSE-AgtsUZlRu4bA/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbxfZEM50YySxQ6zG8eN3sFNGgVFL_lPT7Zq2Th8YDfM97St1R1Uip9lOtGIn1eOeWTZ/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbzK4-NoE1S1_bkRe6zbGc28LfnpU15mwxVHelFRnsoHF7rJNTcyCEnH7XJjGDHT0nTE/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbyLBcAMW6E4-vgBYGvYx2OM1CK_dtAoqoRvG_uFseRHOT2gGouq4k6zbZD5mQneiYzpmQ/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbwaKgjdg36rw5KjwSEhUi2bLWySktMtAerrLVGjcqN43k4Px5MkeGKp0b0oFPNWNgRR/exec?action=summary',
+    'https://script.google.com/macros/s/AKfycbzMPxhhs7X3-0KQ9ypmTs8_ppXKl4_zRZN-DY0mN9FBXF872bBGYUaldZj6OoIQIJU7/exec?action=summary'
+  ];
+
+  let adminChart; // Variável para armazenar o gráfico
+
+  async function fetchTotalAdmins() {
+    try {
+      const adminCard = document.getElementById('admin-card');
+      let totalAdmins = 0;
+
+      // Busca todas as APIs ao mesmo tempo (carregamento mais rápido)
+      const responses = await Promise.all(apis.map(url => fetch(url).then(res => res.json()).catch(() => null)));
+
+      responses.forEach(data => {
+        if (data && data['Faixa Etária']) {
+          totalAdmins += Object.values(data['Faixa Etária']).reduce((sum, count) => sum + count, 0);
+        }
+      });
+
+      // Atualiza o card de total de administradores
+      adminCard.innerHTML = `<i class="fa fa-users" style="margin-right: 10px;"></i> Total de Administradores no Sistema da Neext: ${totalAdmins}`;
+
+      // Atualiza o gráfico
+      updateChart(totalAdmins);
+
+    } catch (error) {
+      console.error("Erro ao buscar os administradores:", error);
+    }
   }
 
-  #total-admins-container {
-    margin-top: 20px;
-    text-align: center;
-    margin-bottom: 20px;
+  function updateChart(totalAdmins) {
+    const ctx = document.getElementById('adminChart').getContext('2d');
+    const maxAdmins = 1000; // Meta de administradores
+    const faltaAdmins = Math.max(0, maxAdmins - totalAdmins);
+
+    if (!adminChart) {
+      adminChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Administradores', 'Faltam para 1000'],
+          datasets: [{
+            data: [totalAdmins, faltaAdmins],
+            backgroundColor: ['#9B4DFF', '#E0E0E0'],
+            hoverBackgroundColor: ['#7C3DCC', '#C0C0C0']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '60%',
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    } else {
+      // Atualiza os dados do gráfico
+      adminChart.data.datasets[0].data = [totalAdmins, faltaAdmins];
+      adminChart.update();
+    }
   }
 
-  /* Responsividade para telas pequenas (celulares) */
+  // Chama a função ao carregar a página
+  fetchTotalAdmins();
+
+  // Atualiza o total de administradores e o gráfico a cada 5 segundos
+  setInterval(fetchTotalAdmins, 5000);
+</script>
+
+<style>
   @media screen and (max-width: 768px) {
-    #total-admins-container, #cards-container > div {
-      width: 100%;
-      max-width: 100%;
+    #admin-card {
+      max-width: 90%;
     }
   }
 </style>
 
+
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.5/dist/sweetalert2.all.min.js"></script>
+
+
+
+
+
+
+<!-- Link para a biblioteca Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Título centralizado com ícone de hospital -->
+<h2 style="text-align: center; margin-bottom: 20px;">
+    <i class="fas fa-hospital"></i> Hospital
+</h2>
+
+<div style="display: flex; justify-content: space-around; margin-top: 20px;">
+    <!-- Card para "Em Licença" -->
+    <div id="cardEmLicenca" style="border: 1px solid #007bff; border-radius: 8px; padding: 16px; max-width: 250px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); text-align: center; background: linear-gradient(45deg, #007bff, #00bfff); color: white;">
+        <h3>Em Licença</h3>
+        <i id="symbolEmLicenca" class="fas fa-user" style="font-size: 40px;"></i>
+        <p><strong>Total Em Licença:</strong> <span id="totalEmLicenca">Carregando...</span></p>
+    </div>
+
+    <!-- Card para "Saiu da Licença" -->
+    <div id="cardSaiuLicenca" style="border: 1px solid #dc3545; border-radius: 8px; padding: 16px; max-width: 250px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); text-align: center; background: linear-gradient(45deg, #dc3545, #ff6f61); color: white;">
+        <h3>Saiu da Licença</h3>
+        <i id="symbolSaiuLicenca" class="fas fa-user" style="font-size: 40px;"></i>
+        <p><strong>Total Saiu da Licença:</strong> <span id="totalSaiuLicenca">Carregando...</span></p>
+    </div>
+</div>
+
+<script>
+    fetch('https://script.google.com/macros/s/AKfycbwWSl5Mpj04M1zrhWHJF4KmCHTvIx32wHK6j0_MXDLZGD5ifiH8Mjxcp2w4hAeQmG3l/exec?action=summary')
+        .then(response => response.json())
+        .then(data => {
+            // Acessando os valores do JSON e colocando nos elementos HTML
+            document.getElementById('totalEmLicenca').textContent = data['Total Em Licença'] || 0;
+            document.getElementById('totalSaiuLicenca').textContent = data['Total Saiu da Licença'] || 0;
+        })
+        .catch(error => {
+            console.error('Erro ao carregar os dados:', error);
+        });
+</script>
+
+<section id="prisao-summary-section" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin: 20px;">
+    <!-- Título de Prisão Skur com Ícone -->
+    <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+        <h1 style="font-size: 24px; color: #ff4d4d; display: flex; justify-content: center; align-items: center;">
+            <i class="fas fa-gavel" style="font-size: 40px; color: #ff4d4d; margin-right: 10px;"></i>
+            Detenção Skur
+        </h1>
+    </div>
+
+    <!-- Card para Presos -->
+    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #ff4d4d; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+        <i class="fas fa-lock" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Preso -->
+        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Presos</h2>
+        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="prisao-total-presos">Carregando...</span></p>
+    </div>
+
+    <!-- Card para Livres -->
+    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #33cc33; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+        <i class="fas fa-user-check" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Livre -->
+        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Livres</h2>
+        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="prisao-total-livres">Carregando...</span></p>
+    </div>
+</section>
+
+<script>
+    // URL da API de resumo da Prisão Skur
+    const prisaoApiUrl = "https://script.google.com/macros/s/AKfycbxXCg7h4oe_2BqdjkjdRpaQqdRWRekOXWPxe8zTejp6x9V1at6-hkxe7ATfV75RvOcQ/exec?action=summary";
+
+    // Função para buscar os dados do resumo da Prisão Skur
+    async function fetchPrisaoSummary() {
+        try {
+            const response = await fetch(prisaoApiUrl);
+            if (!response.ok) throw new Error("Erro ao buscar os dados da API.");
+
+            const data = await response.json();
+            document.getElementById("prisao-total-presos").textContent = data["Total de Presos"] || "0";
+            document.getElementById("prisao-total-livres").textContent = data["Total de Livres"] || "0";
+        } catch (error) {
+            console.error("Erro ao carregar os dados:", error);
+            document.getElementById("prisao-total-presos").textContent = "Erro";
+            document.getElementById("prisao-total-livres").textContent = "Erro";
+        }
+    }
+
+    // Atualiza os dados a cada 10 segundos
+    setInterval(fetchPrisaoSummary, 10000);
+
+    // Carrega os dados ao abrir a página
+    fetchPrisaoSummary();
+</script>
+
+
+<h1 style="text-align: center; font-size: 24px; font-weight: bold; color: #ff0000; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px;">
+    <i class="fas fa-gavel"></i> Detenção FBI
+</h1>
+
+<section id="summary-section" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin: 20px;">
+    <!-- Card para Presos -->
+    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #ff4d4d; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+        <i class="fas fa-lock" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Preso -->
+        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Presos</h2>
+        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="total-presos">Carregando...</span></p>
+    </div>
+
+    <!-- Card para Livres -->
+    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #33cc33; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+        <i class="fas fa-user-check" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Livre -->
+        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Livres</h2>
+        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="total-livres">Carregando...</span></p>
+    </div>
+</section>
+
+<script>
+    // URL da API de resumo
+    const summaryApiUrl = "https://script.google.com/macros/s/AKfycbzcxuuC1aadI0KUJCpaYLmPQkz7q4vTS9F7vdu9WHiu9PEaOyk-qaKWaYx3QOUGQP1L/exec?action=summary";
+
+    // Função para buscar os dados do resumo
+    async function fetchSummary() {
+        try {
+            const response = await fetch(summaryApiUrl);
+            if (!response.ok) throw new Error("Erro ao buscar os dados.");
+
+            const summary = await response.json();
+            document.getElementById("total-presos").textContent = summary["Total de Presos"];
+            document.getElementById("total-livres").textContent = summary["Total de Livres"];
+        } catch (error) {
+            console.error("Erro ao carregar os dados:", error);
+        }
+    }
+
+    // Atualiza os dados em tempo real a cada 10 segundos
+    setInterval(fetchSummary, 10000);
+
+    // Carrega os dados ao abrir a página
+    fetchSummary();
+
+    // Alternar entre Modo Claro e Modo Escuro
+    function toggleDarkMode() {
+        const body = document.body;
+        body.classList.toggle("dark-mode");
+
+        // Mudar ícone de acordo com o estado
+        const icon = document.getElementById("dark-mode-toggle").querySelector("i");
+        if (body.classList.contains("dark-mode")) {
+            icon.classList.remove("fa-moon");
+            icon.classList.add("fa-sun");
+        } else {
+            icon.classList.remove("fa-sun");
+            icon.classList.add("fa-moon");
+        }
+    }
+
+    // Função de logout para redirecionar para o index.html
+    function logout() {
+        window.location.href = "index.html"; // Redireciona para o index.html
+    }
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Incluindo a biblioteca Font Awesome para ícones -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<!-- Adicione a biblioteca Font Awesome para os ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div id="stickerZoneTitle" style="text-align: center; margin: 20px 0;">
+    <h1 style="font-size: 40px; color: #800080;">
+        <i class="fas fa-sticky-note" style="color: #800080; margin-right: 10px;"></i>
+        @neextstickers
+    </h1>
+</div>
+
+<!-- Contêiner para os cards -->
+<div id="stickerCardContainer" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
+
+<script>
+    // Lista de URLs das APIs com ?action=summary
+    const apiLinks = [
+        { nome: 'neepool', url: 'https://script.google.com/macros/s/AKfycbxu8xRBhGDSxy2NkEqLxs4K38q3IgoEfOCCnJyYpOLzWTEnLaMZVecMTuYRV5sQ0HF9HA/exec?action=summary' },
+        { nome: 'Skur 01', url: 'https://script.google.com/macros/s/AKfycbxu49RPRSL0zxLsd-A_2Y8IvNBirRBxFI3XrAyk7scf-dysgN-olBbSE-AgtsUZlRu4bA/exec?action=summary' },
+        { nome: 'Skur 02', url: 'https://script.google.com/macros/s/AKfycbxfZEM50YySxQ6zG8eN3sFNGgVFL_lPT7Zq2Th8YDfM97St1R1Uip9lOtGIn1eOeWTZ/exec?action=summary' },
+        { nome: 'Skur 03', url: 'https://script.google.com/macros/s/AKfycbzK4-NoE1S1_bkRe6zbGc28LfnpU15mwxVHelFRnsoHF7rJNTcyCEnH7XJjGDHT0nTE/exec?action=summary' },
+        { nome: 'Skur 04', url: 'https://script.google.com/macros/s/AKfycbyLBcAMW6E4-vgBYGvYx2OM1CK_dtAoqoRvG_uFseRHOT2gGouq4k6zbZD5mQneiYzpmQ/exec?action=summary' },
+        { nome: 'Skur 05', url: 'https://script.google.com/macros/s/AKfycbwaKgjdg36rw5KjwSEhUi2bLWySktMtAerrLVGjcqN43k4Px5MkeGKp0b0oFPNWNgRR/exec?action=summary' },
+        { nome: 'Skur 06', url: 'https://script.google.com/macros/s/AKfycbzMPxhhs7X3-0KQ9ypmTs8_ppXKl4_zRZN-DY0mN9FBXF872bBGYUaldZj6OoIQIJU7/exec?action=summary' }
+    ];
+
+    // Função para criar e exibir o card com os dados
+    function createCard(stickerData, adminCount) {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('stickerCard');
+        
+        // Estilo inline para o card
+        cardElement.style.border = '1px solid #ccc';
+        cardElement.style.padding = '20px';
+        cardElement.style.margin = '15px';
+        cardElement.style.borderRadius = '10px';
+        cardElement.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        cardElement.style.background = 'linear-gradient(135deg, #ff66cc, #800080)';  // Degradê de rosa para roxo
+        cardElement.style.width = '250px';
+        cardElement.style.height = '250px';
+        cardElement.style.display = 'flex';
+        cardElement.style.flexDirection = 'column';
+        cardElement.style.justifyContent = 'center';
+        cardElement.style.alignItems = 'center';
+        cardElement.style.textAlign = 'center';
+
+        cardElement.innerHTML = `
+            <i class="fas fa-sticky-note" style="font-size: 40px; color: #fff; margin-bottom: 15px;"></i>
+            <h3 style="color: white; margin: 0;">${stickerData.nome}</h3>
+            <p style="color: white; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-users" style="margin-right: 10px; color: white;"></i>
+                Total de Administradores: ${adminCount}
+            </p>
+        `;
+        
+        // Adicionar o card ao contêiner
+        document.getElementById('stickerCardContainer').appendChild(cardElement);
+    }
+
+    // Função para buscar os dados das APIs de forma paralela
+    async function fetchAndDisplayCards() {
+        try {
+            // Mapeia todas as promessas de requisição para um array
+            const apiRequests = apiLinks.map(api => {
+                return fetch(api.url)
+                    .then(response => response.json())
+                    .then(data => ({
+                        stickerData: api,
+                        adminCount: data['Total de Administradores']
+                    }))
+                    .catch(error => console.error('Erro ao buscar dados para a API', api.nome, error));
+            });
+
+            // Espera todas as promessas serem resolvidas
+            const results = await Promise.all(apiRequests);
+
+            // Para cada grupo, chama a função de criar o card
+            results.forEach(result => {
+                createCard(result.stickerData, result.adminCount);
+            });
+        } catch (error) {
+            console.error('Erro ao buscar dados', error);
+        }
+    }
+
+    // Função para inicializar a página
+    function initializeStickerPage() {
+        // Exibe os cards logo que a página for carregada
+        fetchAndDisplayCards();
+    }
+
+    // Inicializando a exibição dos cards
+    initializeStickerPage();  // Chamando a função para iniciar os cards logo ao carregar a página
+</script>
+
+
+
+
+
+
+
+<!-- Título e ícone "NeextChat" -->
+<div id="titulo" style="text-align: center; margin: 20px 0;">
+    <h1 style="font-size: 40px; color: #800080;">
+        <i class="fas fa-comments" style="color: #800080; margin-right: 10px;"></i>
+        @neextchat
+    </h1>
+</div>
+
+<!-- Contêiner para os cards -->
+<div id="cards-container" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
+
+<script>
+    // Lista de grupos com URLs para API
+    const grupos = [
+        { nome: 'FBI 1', url: 'https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 2', url: 'https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 3', url: 'https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 4', url: 'https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 5', url: 'https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 6', url: 'https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 7', url: 'https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 8', url: 'https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 9', url: 'https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?action=summary', icon: 'fa-users' },
+        { nome: 'FBI 10', url: 'https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?action=summary', icon: 'fa-users' }
+    ];
+
+    // Função para criar e exibir o card com os dados
+    function criarCard(grupo, totalAdministradores) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        
+        // Estilo inline para o card
+        card.style.border = '1px solid #ccc';
+        card.style.padding = '20px';
+        card.style.margin = '15px';
+        card.style.borderRadius = '10px';
+        card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        card.style.background = 'linear-gradient(135deg, #ff66cc, #800080)';  // Degradê de rosa para roxo
+        card.style.width = '250px';
+        card.style.height = '250px';
+        card.style.display = 'flex';
+        card.style.flexDirection = 'column';
+        card.style.justifyContent = 'center';
+        card.style.alignItems = 'center';
+        card.style.textAlign = 'center';
+
+        card.innerHTML = `
+            <i class="fas ${grupo.icon}" style="font-size: 40px; color: #fff; margin-bottom: 15px;"></i>
+            <h3 style="color: white; margin: 0;">${grupo.nome}</h3>
+            <p style="color: white; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-users" style="margin-right: 10px; color: white;"></i>
+                Total de Administradores: ${totalAdministradores}
+            </p>
+        `;
+        
+        // Adicionar o card ao contêiner
+        document.getElementById('cards-container').appendChild(card);
+    }
+
+    // Função para buscar os dados da API de forma paralela
+    async function exibirCards() {
+        try {
+            // Mapeia todas as promessas de requisição para um array
+            const promises = grupos.map(grupo => {
+                return fetch(grupo.url)
+                    .then(response => response.json())
+                    .then(data => ({
+                        grupo: grupo,
+                        totalAdministradores: data['Total de Administradores']
+                    }))
+                    .catch(error => console.error('Erro ao buscar dados para o grupo', grupo.nome, error));
+            });
+
+            // Espera todas as promessas serem resolvidas
+            const results = await Promise.all(promises);
+
+            // Para cada grupo, chama a função de criar o card
+            results.forEach(result => {
+                criarCard(result.grupo, result.totalAdministradores);
+            });
+        } catch (error) {
+            console.error('Erro ao buscar dados', error);
+        }
+    }
+
+    // Inicializando a exibição dos cards
+    window.onload = function() {
+        // Exibe os cards logo que a página for carregada
+        exibirCards();
+    };
+</script>
+
+<!-- Adicione a biblioteca Font Awesome para os ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Título e ícone "StickerZone" -->
 
 </body>
 </html>
