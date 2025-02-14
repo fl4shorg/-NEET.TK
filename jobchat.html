@@ -25,28 +25,22 @@
         .dark-mode .logo {
             filter: invert(1);
         }
-        /* Aumentando o tamanho do botão do modo escuro e do ícone dentro dele */
         #dark-mode-toggle i {
-            font-size: 24px; /* Aumente o valor conforme necessário */
+            font-size: 24px;
         }
-        /* Adicionando a borda branca e fina na logo */
         .logo-container img {
-            margin: 0 15px; /* Adiciona a margem desejada */
-            border: 2px solid white; /* Borda branca fina */
-            border-radius: 50%; /* Mantém a forma arredondada */
+            margin: 0 15px;
+            border: 2px solid white;
+            border-radius: 50%;
         }
-        /* Ajustando a posição e o alinhamento do ícone e do cargo */
         .navbar-center {
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        /* Mudar fundo do card para preto no modo escuro */
         .dark-mode .bg-white {
             background-color: #333;
         }
-
-        /* Animação para o botão de copiar */
         .copy-btn {
             transition: background-color 0.3s, transform 0.2s ease-in-out;
         }
@@ -55,7 +49,15 @@
             color: white;
             transform: scale(1.1);
         }
-
+        /* Ajuste para garantir que o rodapé fique no final da página */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        #cards-container {
+            flex: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -66,11 +68,11 @@
                 <img src="https://i.imgur.com/nTqoKxv.png" alt="Logo" class="w-12 h-12 rounded-full">
             </div>
             <div class="navbar-center space-x-4">
-                <i class="fas fa-briefcase text-4xl text-white"></i>  <!-- Ícone de briefcase -->
+                <i class="fas fa-briefcase text-4xl text-white"></i>
                 <span class="text-white text-3xl font-extrabold">Cargos</span>
             </div>
             <button id="dark-mode-toggle" class="text-white flex items-center space-x-2">
-                <i class="fas fa-moon" id="dark-mode-icon"></i> <!-- Ícone de Lua para o Modo Escuro -->
+                <i class="fas fa-moon" id="dark-mode-icon"></i>
             </button>
         </div>
     </nav>
@@ -95,25 +97,22 @@
             <p>&copy; NEEXT LTDA 2019 - Todos os direitos reservados</p>
         </div>
     </footer>
-
     <script>
         let allCards = [];
         function toggleDarkMode() {
             const body = document.body;
             const icon = document.getElementById('dark-mode-icon');
-            body.classList.toggle('dark-mode');  // Alterna o ícone entre Lua e Sol
+            body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
-                localStorage.setItem('dark-mode', 'enabled');  // Salva o estado no localStorage
+                localStorage.setItem('dark-mode', 'enabled');
             } else {
                 icon.classList.remove('fa-sun');
                 icon.classList.add('fa-moon');
-                localStorage.setItem('dark-mode', 'disabled');  // Salva o estado no localStorage
+                localStorage.setItem('dark-mode', 'disabled');
             }
         }
-
-        // Verifica o estado do modo escuro ao carregar a página
         window.onload = () => {
             if (localStorage.getItem('dark-mode') === 'enabled') {
                 document.body.classList.add('dark-mode');
@@ -125,8 +124,6 @@
                 document.getElementById('dark-mode-icon').classList.add('fa-moon');
             }
         };
-
-        // Evento para alternar o modo escuro
         document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
         async function fetchData() {
@@ -175,7 +172,7 @@
                         </div>
                         <div class="flex items-center space-x-4">
                             <button class="text-purple-600 bg-white border border-purple-600 rounded-lg px-4 py-1 cursor-pointer copy-btn" data-tag="${cargoData.tag}">
-                                <i class="fas fa-tags"></i> <!-- Ícone de TAG -->
+                                <i class="fas fa-tags"></i>
                             </button>
                         </div>
                     </div>
@@ -196,7 +193,7 @@
                     copyTag(tag);
                     setTimeout(() => {
                         this.classList.remove('clicked');
-                    }, 500); // Remove a classe após a animação
+                    }, 500);
                 });
             });
         }
@@ -227,12 +224,12 @@
         function copyTag(tag) {
             if (tag) {
                 navigator.clipboard.writeText(tag)
-                    .then(() => {
-                        const confirmationElement = document.getElementById('sewelart2');
-                        confirmationElement.classList.remove('hidden');
-                        setTimeout(() => { confirmationElement.classList.add('hidden'); }, 2000);
-                    })
-                    .catch(err => { console.error('Erro ao copiar: ', err); });
+                .then(() => {
+                    const confirmationElement = document.getElementById('sewelart2');
+                    confirmationElement.classList.remove('hidden');
+                    setTimeout(() => { confirmationElement.classList.add('hidden'); }, 2000);
+                })
+                .catch(err => { console.error('Erro ao copiar: ', err); });
             } else {
                 alert('Não há tag para copiar.');
             }
