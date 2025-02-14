@@ -45,6 +45,17 @@
         .dark-mode .bg-white {
             background-color: #333;
         }
+
+        /* Animação para o botão de copiar */
+        .copy-btn {
+            transition: background-color 0.3s, transform 0.2s ease-in-out;
+        }
+        .copy-btn.clicked {
+            background-color: #6b3f90;
+            color: white;
+            transform: scale(1.1);
+        }
+
     </style>
 </head>
 <body class="bg-gray-100">
@@ -181,7 +192,11 @@
             document.querySelectorAll('.copy-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const tag = this.getAttribute('data-tag');
+                    this.classList.add('clicked');
                     copyTag(tag);
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 500); // Remove a classe após a animação
                 });
             });
         }
@@ -226,4 +241,4 @@
         fetchData();
     </script>
 </body>
-</html
+</html>
