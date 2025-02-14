@@ -45,24 +45,6 @@
         .dark-mode .bg-white {
             background-color: #333;
         }
-        /* Estilo do rodapé */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            font-size: 20px;
-            font-weight: bold;
-            z-index: 1000;
-        }
-        /* Garantir que os cards não sejam cobertos pelo rodapé */
-        .content {
-            padding-bottom: 80px; /* Ajuste conforme necessário */
-        }
     </style>        
 </head>        
 <body class="bg-gray-100">        
@@ -94,155 +76,157 @@
         </div>        
     </div>        
     <!-- Cards Container -->        
-    <div id="cards-container" class="space-y-4 p-6 content"></div>        
+    <div id="cards-container" class="space-y-4 p-6"></div>        
     <!-- Confirmação de Cópia -->        
     <div id="sewelart2" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg hidden">        
         Tag copiada com sucesso!        
     </div>        
 
-    <!-- Rodapé fixo -->
-    <div class="footer">
-        © NEEXT LTDA 2019 TODOS OS DIREITOS RESERVADOS
-    </div>
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-4 mt-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; NEEXT LTDA 2019 - Todos os direitos reservados</p>
+        </div>
+    </footer>
 
     <script>        
-let allCards = [];      // Função de alternância do modo escuro  
-function toggleDarkMode() {  
-const body = document.body;  
-const icon = document.getElementById('dark-mode-icon');  
-body.classList.toggle('dark-mode');  // Alterna o ícone entre Lua e Sol
-if (body.classList.contains('dark-mode')) {
-icon.classList.remove('fa-moon');
-icon.classList.add('fa-sun');
-localStorage.setItem('dark-mode', 'enabled');  // Salva o estado no localStorage
-} else {
-icon.classList.remove('fa-sun');
-icon.classList.add('fa-moon');
-localStorage.setItem('dark-mode', 'disabled');  // Salva o estado no localStorage
-}
+        let allCards = [];      
+        function toggleDarkMode() {  
+        const body = document.body;  
+        const icon = document.getElementById('dark-mode-icon');  
+        body.classList.toggle('dark-mode');  // Alterna o ícone entre Lua e Sol
+        if (body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('dark-mode', 'enabled');  // Salva o estado no localStorage
+        } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('dark-mode', 'disabled');  // Salva o estado no localStorage
+        }
 
-}
+        }
 
-// Verifica o estado do modo escuro ao carregar a página
-window.onload = () => {
-if (localStorage.getItem('dark-mode') === 'enabled') {
-document.body.classList.add('dark-mode');
-document.getElementById('dark-mode-icon').classList.remove('fa-moon');
-document.getElementById('dark-mode-icon').classList.add('fa-sun');
-} else {
-document.body.classList.remove('dark-mode');
-document.getElementById('dark-mode-icon').classList.remove('fa-sun');
-document.getElementById('dark-mode-icon').classList.add('fa-moon');
-}
-};
+        // Verifica o estado do modo escuro ao carregar a página
+        window.onload = () => {
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('dark-mode-icon').classList.remove('fa-moon');
+        document.getElementById('dark-mode-icon').classList.add('fa-sun');
+        } else {
+        document.body.classList.remove('dark-mode');
+        document.getElementById('dark-mode-icon').classList.remove('fa-sun');
+        document.getElementById('dark-mode-icon').classList.add('fa-moon');
+        }
+        };
 
-// Evento para alternar o modo escuro
-document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        // Evento para alternar o modo escuro
+        document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
-async function fetchData() {
-const url = 'https://script.google.com/macros/s/AKfycbwt1ry_dhiJv6G1cjOY0EKz6h8liBjc_RsaGOuXC0oQTGR_JMQNKv1E6xpjIW7-9AvxQg/exec?action=read';
-const response = await fetch(url);
-const data = await response.text();
-const rows = data.split('\n').slice(1);
+        async function fetchData() {
+        const url = 'https://script.google.com/macros/s/AKfycbwt1ry_dhiJv6G1cjOY0EKz6h8liBjc_RsaGOuXC0oQTGR_JMQNKv1E6xpjIW7-9AvxQg/exec?action=read';
+        const response = await fetch(url);
+        const data = await response.text();
+        const rows = data.split('\n').slice(1);
 
-const categories = {};
+        const categories = {};
 
-rows.forEach(row => {
-const columns = row.split(',');
-const id = columns[0]?.trim();
-const categoria = columns[1]?.trim();
-const cargo = columns[2]?.trim();
-const tag = columns[3]?.trim();
+        rows.forEach(row => {
+        const columns = row.split(',');
+        const id = columns[0]?.trim();
+        const categoria = columns[1]?.trim();
+        const cargo = columns[2]?.trim();
+        const tag = columns[3]?.trim();
 
-if (id && categoria && cargo) {        
-    if (!categories[categoria]) {        
-        categories[categoria] = [];        
-    }        
-    categories[categoria].push({ id, cargo, tag });        
-}
+        if (id && categoria && cargo) {        
+            if (!categories[categoria]) {        
+            categories[categoria] = [];        
+            }        
+            categories[categoria].push({ id, cargo, tag });        
+        }
 
-});
+        });
 
-for (const [categoria, cargos] of Object.entries(categories)) {
-let categoryHTML =     `<div class="bg-white rounded-lg shadow-lg w-full max-w-sm">          <div class="bg-purple-600 text-white text-center py-2 rounded-t-lg">          <div class="flex items-center justify-center space-x-3">          <span class="text-xl"><i class="fas fa-database"></i></span>     <!-- Substituído o ícone para "database" -->     <h1 class="text-lg font-bold">${categoria}</h1>          </div>          <div class="text-sm text-gray-300">Total de Cargos: ${cargos.length}</div>          </div>          <div class="p-4">        `;
+        for (const [categoria, cargos] of Object.entries(categories)) {
+        let categoryHTML =     `<div class="bg-white rounded-lg shadow-lg w-full max-w-sm">          <div class="bg-purple-600 text-white text-center py-2 rounded-t-lg">          <div class="flex items-center justify-center space-x-3">          <span class="text-xl"><i class="fas fa-database"></i></span>     <!-- Substituído o ícone para "database" -->     <h1 class="text-lg font-bold">${categoria}</h1>          </div>          <div class="text-sm text-gray-300">Total de Cargos: ${cargos.length}</div>          </div>          <div class="p-4">        `;
 
-cargos.forEach((cargoData, index) => {        
-    const cardHTML = `        
-        <div class="flex items-center mb-4 card" data-id="${cargoData.id}" data-categoria="${categoria.toLowerCase()}" data-cargo="${cargoData.cargo.toLowerCase()}" data-tag="${cargoData.tag.toLowerCase()}">        
-            <span class="text-gray-500 text-sm mr-4">${index + 1}</span>        
-            <div class="flex items-center">        
-                <div class="w-2 h-8 bg-purple-600 rounded-full mr-2"></div>        
+        cargos.forEach((cargoData, index) => {        
+        const cardHTML = `        
+            <div class="flex items-center mb-4 card" data-id="${cargoData.id}" data-categoria="${categoria.toLowerCase()}" data-cargo="${cargoData.cargo.toLowerCase()}" data-tag="${cargoData.tag.toLowerCase()}">        
+                <span class="text-gray-500 text-sm mr-4">${index + 1}</span>        
+                <div class="flex items-center">        
+                    <div class="w-2 h-8 bg-purple-600 rounded-full mr-2"></div>        
+                </div>        
+                <div class="flex-1">        
+                    <span class="font-bold text-lg">${cargoData.cargo}</span>        
+                </div>        
+                <div class="flex items-center space-x-4">        
+                    <button class="text-purple-600 bg-white border border-purple-600 rounded-lg px-4 py-1 cursor-pointer copy-btn" data-tag="${cargoData.tag}">        
+                        <i class="fas fa-tags"></i> <!-- Ícone de TAG -->        
+                    </button>        
+                </div>        
             </div>        
-            <div class="flex-1">        
-                <span class="font-bold text-lg">${cargoData.cargo}</span>        
-            </div>        
-            <div class="flex items-center space-x-4">        
-                <button class="text-purple-600 bg-white border border-purple-600 rounded-lg px-4 py-1 cursor-pointer copy-btn" data-tag="${cargoData.tag}">        
-                    <i class="fas fa-tags"></i> <!-- Ícone de TAG -->        
-                </button>        
-            </div>        
-        </div>        
-    `;        
-    categoryHTML += cardHTML;        
-});        
+        `;        
+        categoryHTML += cardHTML;        
+        });        
 
-categoryHTML += `</div></div>`;        
-document.getElementById('cards-container').insertAdjacentHTML('beforeend', categoryHTML);
+        categoryHTML += `</div></div>`;        
+        document.getElementById('cards-container').insertAdjacentHTML('beforeend', categoryHTML);
 
-}
+        }
 
-allCards = document.querySelectorAll('.card');
+        allCards = document.querySelectorAll('.card');
 
-document.querySelectorAll('.copy-btn').forEach(button => {
-button.addEventListener('click', function() {
-const tag = this.getAttribute('data-tag');
-copyTag(tag);
-});
-});
+        document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+        const tag = this.getAttribute('data-tag');
+        copyTag(tag);
+        });
+        });
 
-}
+        }
 
-function filterCards() {
-const searchTerm = document.getElementById('search-input').value.toLowerCase();
-let visibleCards = false;
+        function filterCards() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        let visibleCards = false;
 
-allCards.forEach(card => {
-const categoria = card.getAttribute('data-categoria').toLowerCase();
-const cargo = card.getAttribute('data-cargo').toLowerCase();
-const tag = card.getAttribute('data-tag').toLowerCase();
-const id = card.getAttribute('data-id').toLowerCase();
+        allCards.forEach(card => {
+        const categoria = card.getAttribute('data-categoria').toLowerCase();
+        const cargo = card.getAttribute('data-cargo').toLowerCase();
+        const tag = card.getAttribute('data-tag').toLowerCase();
+        const id = card.getAttribute('data-id').toLowerCase();
 
-if (categoria.includes(searchTerm) || cargo.includes(searchTerm) || tag.includes(searchTerm) || id.includes(searchTerm)) {        
-    card.style.display = 'flex';        
-    visibleCards = true;        
-} else {        
-    card.style.display = 'none';        
-}
+        if (categoria.includes(searchTerm) || cargo.includes(searchTerm) || tag.includes(searchTerm) || id.includes(searchTerm)) {        
+            card.style.display = 'flex';        
+            visibleCards = true;        
+        } else {        
+            card.style.display = 'none';        
+        }
 
-});
+        });
 
-if (!visibleCards) {
-alert('Nenhum cargo encontrado para a pesquisa!');
-}
+        if (!visibleCards) {
+        alert('Nenhum cargo encontrado para a pesquisa!');
+        }
 
-}
+        }
 
-function copyTag(tag) {
-if (tag) {
-navigator.clipboard.writeText(tag)
-.then(() => {
-const confirmationElement = document.getElementById('sewelart2');
-confirmationElement.classList.remove('hidden');
-setTimeout(() => { confirmationElement.classList.add('hidden'); }, 2000);
-})
-.catch(err => { console.error('Erro ao copiar: ', err); });
-} else {
-alert('Não há tag para copiar.');
-}
-}
+        function copyTag(tag) {
+        if (tag) {
+        navigator.clipboard.writeText(tag)
+        .then(() => {
+        const confirmationElement = document.getElementById('sewelart2');
+        confirmationElement.classList.remove('hidden');
+        setTimeout(() => { confirmationElement.classList.add('hidden'); }, 2000);
+        })
+        .catch(err => { console.error('Erro ao copiar: ', err); });
+        } else {
+        alert('Não há tag para copiar.');
+        }
+        }
 
-fetchData();
-</script>
+        fetchData();
+    </script>
 
 </body>    
 </html>
