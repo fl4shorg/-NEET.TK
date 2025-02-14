@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .dark-mode {
+            background-color: #2d2d2d;
+            color: #f5f5f5;
+        }
+
+        .dark-mode .bg-purple-600 {
+            background-color: #6b3f90;
+        }
+
+        .dark-mode .bg-white {
+            background-color: #444;
+        }
+
+        .dark-mode .text-gray-500 {
+            color: #d1d1d1;
+        }
+
+        .dark-mode .text-purple-600 {
+            color: #a1a1f5;
+        }
+
+        .dark-mode .logo {
+            filter: invert(1);
+        }
+
+        /* Aumentando o tamanho do botão do modo escuro e do ícone dentro dele */
+        #dark-mode-toggle i {
+            font-size: 24px;
+        }
+
+        /* Adicionando a borda branca e fina na logo */
+        .logo-container img {
+            margin: 0 15px;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        /* Ajustando a posição e o alinhamento do ícone e do cargo */
+        .navbar-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Mudar fundo do card para preto no modo escuro */
+        .dark-mode .bg-white {
+            background-color: #333;
+        }
+
+        /* Flexbox para o layout */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;  /* Garante que o corpo ocupe toda a altura da tela */
+        }
+
+        /* Garantir que o rodapé não sobreponha os cards */
+        .main-content {
+            flex-grow: 1;  /* Faz o conteúdo crescer e ocupar o espaço disponível */
+        }
+
+        /* Rodapé */
+        footer {
+            margin-top: auto;  /* Faz com que o rodapé fique no final da página */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar Fixa -->
+    <nav class="bg-purple-600 p-6 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center logo-container">
+                <img src="https://i.imgur.com/nTqoKxv.png" alt="Logo" class="w-12 h-12 rounded-full">
+            </div>
+            <div class="navbar-center space-x-4">
+                <i class="fas fa-briefcase text-4xl text-white"></i>
+                <span class="text-white text-3xl font-extrabold">Cargos</span>
+            </div>
+            <button id="dark-mode-toggle" class="text-white flex items-center space-x-2">
+                <i class="fas fa-moon" id="dark-mode-icon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Barra de Pesquisa -->
+    <div class="bg-white p-4 shadow-md">
+        <div class="max-w-7xl mx-auto">
+            <div class="relative">
+                <input type="text" id="search-input" placeholder="Buscar cargos..." class="w-full py-3 pl-10 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" oninput="filterCards()" />
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Container -->
+    <div id="cards-container" class="main-content space-y-4 p-6"></div>
+
+    <!-- Confirmação de Cópia -->
+    <div id="sewelart2" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg hidden">
+        Tag copiada com sucesso!
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; NEEXT LTDA 2019 - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        // Seu código JavaScript permanece o mesmo
+    </script>
+
+</body>
+</html>
