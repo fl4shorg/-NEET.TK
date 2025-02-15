@@ -1,0 +1,276 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Cargos</title>
+    <!-- Adicionando o SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .card {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .card p {
+            margin: 5px 0;
+        }
+        .action-buttons {
+            margin-top: 10px;
+        }
+        .action-buttons button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body><div class="container">
+    <h2>Gerenciar Cargos</h2>
+
+    <!-- Formulário para adicionar e editar cargos -->
+    <div class="input-group">
+        <button class="button" onclick="abrirFormulario()">Enviar Cargo</button>
+    </div>
+
+    <!-- Exibição dos cargos -->
+    <h3>Cargos Existentes</h3>
+    <div id="cargoList"></div>
+</div>
+
+<script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwt1ry_dhiJv6G1cjOY0EKz6h8liBjc_RsaGOuXC0oQTGR_JMQNKv1E6xpjIW7-9AvxQg/exec';
+
+    // Função para gerar um ID aleatório
+    function gerarID() {
+        return 'ID_' + Math.random().toString(36).substr(2, 9); // Gerar um ID aleatório
+    }
+
+    // Função para limpar espaços extras
+    function limparEspacos(valor) {
+        return valor.trim().replace(/\s+/g, ' ');
+    }
+
+    // Função para abrir o formulário com SweetAlert2
+    function abrirFormulario() {
+        Swal.fire({
+            title: 'Adicionar Cargo',
+            html: `
+                <label for="categoria">Categoria</label>
+                <input type="text" id="categoria" placeholder="Digite a categoria" required><br><br>
+                <label for="cargo">Cargo</label>
+                <input type="text" id="cargo" placeholder="Digite o cargo" required><br><br>
+                <label for="tag">Tag</label>
+                <input type="text" id="tag" placeholder="Digite a tag" required><br><br>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            cancelButtonText: 'Cancelar',
+            preConfirm: () => {
+                const categoria = limparEspacos(document.getElementById('categoria').value);
+                const cargo = limparEspacos(document.getElementById('cargo').value);
+                const tag = limparEspacos(document.getElementById('tag').value);
+                const id = gerarID(); // Gerando o ID automaticamente
+
+                if (!categoria || !cargo || !tag) {
+                    Swal.showValidationMessage('Por favor, preencha todos os campos!');
+                    return false;
+                }
+
+                // Enviar os dados para o API
+                const params = new URLSearchParams();
+                params.append('action', 'create');
+                params.append('id', id);
+                params.append('categoria', categoria);
+                params.append('cargo', cargo);
+                params.append('tag', tag);
+
+                return fetch(API_URL, {
+                    method: 'POST',
+                    body: params,
+                }).then(response => response.text())
+                  .then(result => {
+                      Swal.fire('Sucesso!', result, 'success');
+                      fetchCargos(); // Atualiza a lista após o envio
+                  }).catch(error => {
+                      Swal.fire('Erro!', 'Falha ao enviar os dados.', 'error');
+                  });
+            }
+        });
+    }
+
+    // Função para buscar e exibir os cargos, organizando por categoria
+    async function fetchCargos() {
+        try {
+            const response = await fetch(API_URL + "?action=read");
+            const result = await response.text();
+            const cargos = result.split('\n').slice(1);
+
+            const categorias = {};
+
+            // Organiza os cargos por categoria
+            cargos.forEach(cargo => {
+                const [id, categoria, cargoNome, tag] = cargo.split(', ');
+
+                if (id && categoria && cargoNome && tag) {
+                    if (!categorias[categoria]) {
+                        categorias[categoria] = [];
+                    }
+                    categorias[categoria].push({ id, cargoNome, tag });
+                }
+            });
+
+            let cargoListHTML = '';
+
+            // Exibe os cargos organizados por categoria
+            for (const categoria in categorias) {
+                cargoListHTML += `<h3>${categoria}</h3>`;
+                categorias[categoria].forEach(cargo => {
+                    cargoListHTML += `
+                        <div class="card" data-id="${cargo.id}">
+                            <h3>${cargo.cargoNome}</h3>
+                            <p><strong>Tag:</strong> ${cargo.tag}</p>
+                            <div class="action-buttons">
+                                <button class="button" onclick="editarCargo('${cargo.id}', '${categoria}', '${cargo.cargoNome}', '${cargo.tag}')">Editar</button>
+                                <button class="button" onclick="deletarCargo('${cargo.id}')">Deletar</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById("cargoList").innerHTML = cargoListHTML;
+        } catch (error) {
+            console.error('Erro ao buscar cargos:', error);
+        }
+    }
+
+    // Função para editar o cargo com SweetAlert2
+    function editarCargo(id, categoria, cargoNome, tag) {
+        Swal.fire({
+            title: 'Editar Cargo',
+            html: `
+                <label for="categoria">Categoria</label>
+                <input type="text" id="categoria" value="${categoria}" required><br><br>
+                <label for="cargo">Cargo</label>
+                <input type="text" id="cargo" value="${cargoNome}" required><br><br>
+                <label for="tag">Tag</label>
+                <input type="text" id="tag" value="${tag}" required><br><br>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Salvar',
+            cancelButtonText: 'Cancelar',
+            preConfirm: () => {
+                const novaCategoria = limparEspacos(document.getElementById('categoria').value);
+                const novoCargo = limparEspacos(document.getElementById('cargo').value);
+                const novaTag = limparEspacos(document.getElementById('tag').value);
+
+                if (!novaCategoria || !novoCargo || !novaTag) {
+                    Swal.showValidationMessage('Por favor, preencha todos os campos!');
+                    return false;
+                }
+
+                // Enviar os dados para o API
+                const params = new URLSearchParams();
+                params.append('action', 'update');
+                params.append('id', id);
+                params.append('categoria', novaCategoria);
+                params.append('cargo', novoCargo);
+                params.append('tag', novaTag);
+
+                return fetch(API_URL, {
+                    method: 'POST',
+                    body: params,
+                }).then(response => response.text())
+                  .then(result => {
+                      Swal.fire('Sucesso!', result, 'success');
+                      fetchCargos(); // Atualiza a lista após a edição
+                  }).catch(error => {
+                      Swal.fire('Erro!', 'Falha ao editar os dados.', 'error');
+                  });
+            }
+        });
+    }
+
+    // Função para deletar o cargo com SweetAlert2
+    function deletarCargo(id) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Você não poderá reverter essa ação!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, deletar!',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const params = new URLSearchParams();
+                params.append('action', 'delete');
+                params.append('id', id);
+
+                fetch(API_URL, {
+                    method: 'POST',
+                    body: params,
+                }).then(response => response.text())
+                  .then(result => {
+                      Swal.fire('Deletado!', result, 'success');
+                      fetchCargos(); // Atualiza a lista após a exclusão
+                  }).catch(error => {
+                      Swal.fire('Erro!', 'Falha ao deletar o cargo.', 'error');
+                  });
+            }
+        });
+    }
+
+    // Carregar cargos ao iniciar a página
+    fetchCargos();
+</script>
+
+</body>
+</html>
