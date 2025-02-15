@@ -128,7 +128,7 @@
         document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
         async function fetchData() {
-            const url = 'https://script.google.com/macros/s/AKfycbwt1ry_dhiJv6G1cjOY0EKz6h8liBjc_RsaGOuXC0oQTGR_JMQNKv1E6xpjIW7-9AvxQg/exec?action=read';
+            const url = 'https://script.google.com/macros/s/AKfycbxtleMqYSbkIf5p6k7TWEr7sMIlszUPsvXwqP_xE80yOgkEEYWD-XwbufaIdTfjVRt_/exec?action=read';
             const response = await fetch(url);
             const data = await response.text();
             const rows = data.split('\n').slice(1);
