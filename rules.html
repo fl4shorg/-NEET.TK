@@ -242,9 +242,9 @@ document.getElementById('image-popup').addEventListener('click', (e) => {
     const imageList = document.getElementById('image-list');
     imageList.innerHTML = '';  // Limpar imagens anteriores
 
-    // Gerar imagens dinâmicas de card1.jpg a card20.jpg
+    // Gerar imagens dinâmicas de card1.jpg a card20.jpg dentro da pasta "cards"
     for (let i = 1; i <= 20; i++) {
-        const imgSrc = `card${i}.jpg`;  // Caminho das imagens
+        const imgSrc = `cards/card${i}.jpg`;  // Caminho das imagens na pasta 'cards'
         const imgElement = document.createElement('img');
         imgElement.src = imgSrc;  // Definir o caminho da imagem
         imgElement.alt = `Imagem do card ${i}`;
@@ -265,7 +265,6 @@ document.getElementById('image-popup').addEventListener('click', (e) => {
 
     popup.style.display = 'flex';  // Exibir o popup
 }
-
 // Função para contar as regras e atualizar o card
 function contarRegras(linhas) {
     const totalRegras = linhas.length;
