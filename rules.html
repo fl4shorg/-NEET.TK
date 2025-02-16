@@ -171,43 +171,52 @@
 
         document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
-        async function carregarRegras() { 
+async function carregarRegras() { 
     const url = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec?action=read";
     try {
         const response = await fetch(url);
-        const data = await response.json(); // Converte para JSON corretamente
+        const text = await response.text();
+        console.log("Resposta da API:", text); // Verifique se a resposta contém todas as regras esperadas
+
+        const linhas = text.trim().split("\n").slice(1); // Ignorar o cabeçalho
+        console.log("Linhas processadas:", linhas.length); // Verifica quantas regras foram identificadas
 
         let container = document.getElementById("cards-container");
         container.innerHTML = "";
 
-        data.forEach((regra, index) => {
-            let titulo = regra.titulo;
-            let descricao = regra.descricao.replace(/\|/g, ",");
-            let paragrafos = [regra.p1, regra.p2, regra.p3, regra.p4].filter(p => p).map((p, i) => 
-                `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(i + 1).padStart(2, '0')}:</strong> ${p.replace(/\|/g, ",")}</li>`
-            ).join('');
+        linhas.forEach((linha, index) => {
+            console.log(`Processando linha ${index + 1}:`, linha); // Mostra cada linha processada
+
+            let [id, titulo, descricao, p1, p2, p3, p4] = linha.split(", ");
+            if (!titulo || !descricao) {
+                console.warn(`Linha ${index + 1} tem dados inválidos:`, linha);
+                return; // Pular a linha se houver erro
+            }
+            descricao = descricao.replace(/\|/g, ",");
+            p1 = p1 ? p1.replace(/\|/g, ",") : "";
+            p2 = p2 ? p2.replace(/\|/g, ",") : "";
+            p3 = p3 ? p3.replace(/\|/g, ",") : "";
+            p4 = p4 ? p4.replace(/\|/g, ",") : "";
 
             let regraHTML = `
-                <div class="bg-white rounded-lg shadow-lg w-full max-w-sm" data-titulo="${titulo}" data-descricao="${descricao}" data-paragrafos="${paragrafos}">
-                    <div class="card-header bg-purple-600 text-white rounded-t-lg">
-                        <i class="fas fa-balance-scale text-xl"></i>
-                        <h1 class="text-lg font-bold">${titulo}</h1>
-                    </div>
-                    <div class="p-4">
-                        <p class="text-gray-700 text-sm"><i class="fas fa-info-circle"></i> ${descricao}</p>
-                        <ul class="text-gray-600 mt-2 text-sm list-inside">${paragrafos}</ul>
-                        <div class="mt-4 flex space-x-4">
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded copy-button" onclick="copyCard(${index})"><i class="fas fa-copy"></i></button>
-                            <button class="bg-yellow-500 text-white px-4 py-2 rounded" onclick="showCardPopup(${index})"><i class="fas fa-images"></i></button>
-                        </div>
-                    </div>
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-sm">
+                <div class="card-header bg-purple-600 text-white rounded-t-lg">
+                    <i class="fas fa-balance-scale text-xl"></i>
+                    <h1 class="text-lg font-bold">${titulo}</h1>
                 </div>
-            `;
+                <div class="p-4">
+                    <p class="text-gray-700 text-sm"><i class="fas fa-info-circle"></i> ${descricao}</p>
+                    <ul class="text-gray-600 mt-2 text-sm list-inside">
+                        ${p1 ? `<li><i class="fas fa-paragraph"></i> ${p1}</li>` : ''}
+                        ${p2 ? `<li><i class="fas fa-paragraph"></i> ${p2}</li>` : ''}
+                        ${p3 ? `<li><i class="fas fa-paragraph"></i> ${p3}</li>` : ''}
+                        ${p4 ? `<li><i class="fas fa-paragraph"></i> ${p4}</li>` : ''}
+                    </ul>
+                </div>
+            </div>`;
+
             container.insertAdjacentHTML("beforeend", regraHTML);
         });
-
-        // Atualizar total de regras
-        document.getElementById("total-regras").innerText = data.length;
 
     } catch (error) {
         console.error("Erro ao carregar as regras:", error);
