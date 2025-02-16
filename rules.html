@@ -15,6 +15,7 @@
         .dark-mode .bg-purple-600 {
             background-color: #6b3f90;
         }
+        
         .dark-mode .bg-white { background-color: #444; }
         .dark-mode .text-gray-700, .dark-mode .text-gray-600 { color: #d1d1d1; }
         .dark-mode .text-white { color: #fff; }
@@ -44,6 +45,16 @@
 .popup .popup-buttons button {
     margin: 5px;
 }
+        .logo-container img {
+            margin: 0 15px;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+        .navbar-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .popup-success {
             display: none;
             position: fixed;
@@ -72,7 +83,7 @@
     <!-- Navbar -->
     <nav class="bg-purple-600 p-6 shadow-lg">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center">
+            <div class="flex items-center logo-container">
                 <img src="https://i.imgur.com/nTqoKxv.png" alt="Logo" class="w-12 h-12 rounded-full">
             </div>
             <div class="navbar-center space-x-4 flex items-center">
@@ -85,15 +96,21 @@
         </div>
     </nav>
     <!-- Barra de Pesquisa -->
-    <div class="search-bar">
-        <input 
-            type="text" 
-            id="search-input" 
-            class="p-2 rounded-md border border-gray-300" 
-            placeholder="Pesquisar por nome, descrição ou parágrafo" 
-            oninput="filtrarRegras()"
-        />
+    <!-- Barra de Pesquisa -->
+<div class="bg-white p-4 shadow-md">
+    <div class="max-w-7xl mx-auto">
+        <div class="relative">
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Pesquisar por nome, descrição ou parágrafo" 
+                class="w-full py-3 pl-10 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" 
+                oninput="filtrarRegras()"
+            />
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+        </div>
     </div>
+</div>
     
 <!-- Card para Contar Regras -->
 <div id="total-regras-card" class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-lg w-full max-w-sm mx-auto p-6 mt-6">
