@@ -334,24 +334,26 @@ async function carregarRegras() {
 }
 
         function copyCard(index) {
-            const button = document.querySelectorAll('.copy-button')[index];
-            button.classList.add('copied-button');
-            const popup = document.getElementById('popup-success');
-            popup.style.display = 'block';
-            setTimeout(() => {
-                popup.style.opacity = 1;
-            }, 100);
-            setTimeout(() => {
-                popup.style.opacity = 0;
-                setTimeout(() => {
-                    popup.style.display = 'none';
-                }, 500);
-            }, 2000);
-            setTimeout(() => {
-                button.classList.remove('copied-button');
-            }, 500);
-        }
+    const card = document.querySelectorAll('#cards-container .bg-white')[index];
+    const titulo = card.querySelector('h1').textContent;
+    const descricao = card.querySelector('.text-gray-700').textContent;
+    const paragrafos = card.querySelector('.list-inside').textContent;
 
+    // Juntar o texto que você quer copiar
+    const textToCopy = `${titulo}\n${descricao}\n${paragrafos}`;
+
+    // Copiar para a área de transferência
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Mostrar o popup de sucesso
+        const popupSuccess = document.getElementById('popup-success');
+        popupSuccess.style.opacity = 1;
+        setTimeout(() => {
+            popupSuccess.style.opacity = 0;
+        }, 2000);
+    }).catch(err => {
+        console.error('Erro ao copiar texto: ', err);
+    });
+}
         carregarRegras();
     </script>
 </body>
