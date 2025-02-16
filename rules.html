@@ -176,27 +176,29 @@ async function carregarRegras() {
     try {
         const response = await fetch(url);
         const text = await response.text();
-        console.log("Resposta da API:", text); // Verifique se a resposta contém todas as regras esperadas
+        console.log("Resposta da API:", text); // Verificar se a API retorna todas as regras
 
         const linhas = text.trim().split("\n").slice(1); // Ignorar o cabeçalho
-        console.log("Linhas processadas:", linhas.length); // Verifica quantas regras foram identificadas
+        console.log("Linhas processadas:", linhas.length); // Verificar quantas regras foram identificadas
 
         let container = document.getElementById("cards-container");
         container.innerHTML = "";
 
         linhas.forEach((linha, index) => {
-            console.log(`Processando linha ${index + 1}:`, linha); // Mostra cada linha processada
+            console.log(`Processando linha ${index + 1}:`, linha); // Exibir cada linha no console
 
-            let [id, titulo, descricao, p1, p2, p3, p4] = linha.split(", ");
+            // Separar os dados corretamente
+            let colunas = linha.split(",");
+            console.log("Colunas da linha:", colunas);
+
+            let id = colunas[0];
+            let titulo = colunas[1];
+            let descricao = colunas.slice(2).join(", ").replace(/\|/g, ","); // Junta o restante como descrição
+
             if (!titulo || !descricao) {
                 console.warn(`Linha ${index + 1} tem dados inválidos:`, linha);
                 return; // Pular a linha se houver erro
             }
-            descricao = descricao.replace(/\|/g, ",");
-            p1 = p1 ? p1.replace(/\|/g, ",") : "";
-            p2 = p2 ? p2.replace(/\|/g, ",") : "";
-            p3 = p3 ? p3.replace(/\|/g, ",") : "";
-            p4 = p4 ? p4.replace(/\|/g, ",") : "";
 
             let regraHTML = `
             <div class="bg-white rounded-lg shadow-lg w-full max-w-sm">
@@ -206,12 +208,6 @@ async function carregarRegras() {
                 </div>
                 <div class="p-4">
                     <p class="text-gray-700 text-sm"><i class="fas fa-info-circle"></i> ${descricao}</p>
-                    <ul class="text-gray-600 mt-2 text-sm list-inside">
-                        ${p1 ? `<li><i class="fas fa-paragraph"></i> ${p1}</li>` : ''}
-                        ${p2 ? `<li><i class="fas fa-paragraph"></i> ${p2}</li>` : ''}
-                        ${p3 ? `<li><i class="fas fa-paragraph"></i> ${p3}</li>` : ''}
-                        ${p4 ? `<li><i class="fas fa-paragraph"></i> ${p4}</li>` : ''}
-                    </ul>
                 </div>
             </div>`;
 
