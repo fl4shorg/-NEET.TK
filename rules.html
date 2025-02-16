@@ -245,22 +245,36 @@ document.getElementById('image-popup').addEventListener('click', (e) => {
     // Gerar imagens dinâmicas de card1.jpg a card20.jpg dentro da pasta "cards"
     for (let i = 1; i <= 20; i++) {
         const imgSrc = `cards/card${i}.jpg`;  // Caminho das imagens na pasta 'cards'
+        
+        // Criar o elemento de imagem
         const imgElement = document.createElement('img');
         imgElement.src = imgSrc;  // Definir o caminho da imagem
         imgElement.alt = `Imagem do card ${i}`;
 
+        // Criar o botão de download
         const downloadButton = document.createElement('a');
         downloadButton.href = imgSrc;  // Link para download da imagem
         downloadButton.download = imgSrc;  // Definir o nome do arquivo
         downloadButton.textContent = 'Download';
         downloadButton.classList.add('bg-green-500', 'text-white', 'px-4', 'py-2', 'rounded', 'mt-2');
 
+        // Criar o container para imagem e botão
         const imageContainer = document.createElement('div');
         imageContainer.classList.add('text-center');
         imageContainer.appendChild(imgElement);
         imageContainer.appendChild(downloadButton);
 
-        imageList.appendChild(imageContainer);
+        // Verificar se a imagem realmente existe antes de adicionar
+        const img = new Image();
+        img.onload = function() {
+            // Imagem carregada com sucesso, então adiciona ao DOM
+            imageList.appendChild(imageContainer);
+        };
+        img.onerror = function() {
+            // Caso a imagem não exista ou tenha um erro
+            console.log(`Imagem não encontrada: ${imgSrc}`);
+        };
+        img.src = imgSrc;  // Tenta carregar a imagem
     }
 
     popup.style.display = 'flex';  // Exibir o popup
