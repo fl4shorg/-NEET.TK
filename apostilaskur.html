@@ -3,60 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𝗔𝗣𝗢𝗦𝗧𝗜𝗟𝗔</title>
-    <link rel="icon" href="logo.jpg" type="image/jpeg"> <!-- Verifique se o caminho está correto -->
+    <title>©𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+    <link rel="icon" href="https://i.imgur.com/nTqoKxv.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
     <style>
-        /* Fundo da página com imagem escurecida */
         body {
             font-family: Arial, sans-serif;
             color: white;
-            background: url('imagens/apostila.gif') no-repeat center center fixed; /* imagem de fundo */
-            background-size: cover;
+            background-color: #f8f9fa;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Evitar rolagem do body */
-        }
-
-        /* Container para permitir rolagem */
-        .content {
-            overflow-y: auto; /* Permite rolagem vertical */
-            height: 100vh; /* Altura total da viewport */
-            padding: 20px; /* Espaçamento interno */
-            box-sizing: border-box; /* Para incluir padding na altura total */
-            position: relative; /* Para controlar a posição do fundo */
-            background: rgba(0, 0, 0, 0.7); /* Fundo escuro sem névoa */
-        }
-
-        /* Título com degradê */
-        .title-container {
+            min-height: 100vh;
             display: flex;
-            align-items: center; /* Alinhamento vertical do ícone e texto */
-            justify-content: center; /* Centralização horizontal */
-            margin: 30px 0; /* Margem ao redor do título */
-            font-size: 3em; /* Aumentado para melhor destaque */
-            font-weight: bold;
+            flex-direction: column;
         }
 
-        /* Estilo do texto com cor sólida */
-        .title {
-            background: linear-gradient(45deg, #FF69B4, #FF1493); /* Gradiente rosa e rosa escuro */
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            position: relative;
-            z-index: 1; /* Z-index para garantir que o texto fique acima */
+        .navbar {
+            background-color: #6A0DAD;
+            padding: 20px;
         }
 
-        /* Ícone ao lado do título */
-        .icon-container {
-            margin-right: 10px; /* Espaçamento entre ícone e texto */
-            font-size: 0.8em; /* Tamanho do ícone ajustado */
-            color: #FF69B4; /* Cor do ícone para rosa */
+        .navbar .navbar-brand {
+            font-size: 1.5rem;
+            text-align: center;
+            flex-grow: 1;
         }
 
-        /* Contêiner dos cards */
+        .navbar .navbar-brand img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid #fff;
+            padding: 2px;
+        }
+
+        .navbar i {
+            margin-right: 10px;
+        }
+
+        .navbar .navbar-brand span {
+            font-size: 1.5rem;
+            margin-left: 10px;
+            font-weight: bolder;
+            color: white;
+        }
+
+        .dark-mode-toggle {
+            color: white;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+        }
+
+        .dark-mode {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .dark-mode .navbar {
+            background-color: #222;
+        }
+
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -65,96 +74,163 @@
             max-width: 1200px;
             margin: auto;
             padding: 20px;
-            position: relative; /* Para permitir a posição do fundo escuro */
-            z-index: 1; /* Para garantir que os cards fiquem acima do fundo */
+            flex-grow: 1;
         }
 
-        /* Estilo dos cards */
         .card {
-            width: 250px;
-            background-color: rgba(50, 50, 50, 0.8); /* Fundo escuro sem névoa */
+            width: 300px;
+            background-color: #800080;
             border: none;
             border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
             color: white;
             text-align: center;
             padding: 20px;
             transition: transform 0.3s ease;
-            position: relative; /* Para o z-index */
-            z-index: 2; /* Para garantir que os cards fiquem acima do fundo */
+            box-shadow: none;
+            margin-bottom: 20px;
+            position: relative;
         }
 
         .card:hover {
             transform: scale(1.05);
         }
 
-        /* Ícones e botões */
         .card-body i {
-            color: #FF69B4; /* Mudado para rosa */
+            color: white;
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
+
         .btn-primary {
-            background-color: #FF69B4; /* Mudado para rosa */
+            background-color: #ffc107;
             border: none;
             margin-top: 10px;
+            display: inline-block;
+        }
+
+        .card .plus-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 1rem;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <div class="title-container">
-            <div class="icon-container">
-                <i class="fas fa-book-open"></i> <!-- Ícone da apostila -->
-            </div>
-            <div class="title">Apostila Skur</div>
-        </div>
-           <div class="card-container">
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-user-tie"></i>
-                    <h5 class="card-title">Cargos</h5>
-                    <p class="card-text">Informações sobre os cargos disponíveis.</p>
-                    <a href="cargosskur/skur.html" class="btn btn-primary">Ver Cargos</a> <!-- Verifique se o caminho está correto -->
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-book"></i>
-                    <h5 class="card-title">Regras</h5>
-                    <p class="card-text">Regras e políticas a serem seguidas.</p>
-                    <a href="regras.html" class="btn btn-primary">Ver Regras</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-book-open"></i>
-                    <h5 class="card-title">Manual</h5>
-                    <p class="card-text">Manual do usuário completo.</p>
-                    <a href="manual skur.html" class="btn btn-primary">Ver Manual</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-file-alt"></i>
-                    <h5 class="card-title">Protocolos</h5>
-                    <p class="card-text">Protocolos de operação e segurança.</p>
-                    <a href="protocolos.html" class="btn btn-primary">Ver Protocolos</a>
-                </div>
-            </div>
-            <!-- Novo Card de Level -->
+    <nav class="navbar navbar-expand-lg d-flex">
+        <a class="navbar-brand" href="#">
+            <img src="https://i.imgur.com/nTqoKxv.png" alt="Logo">
+            <span><i class="fas fa-book"></i> Apostila</span>
+        </a>
+        <button class="dark-mode-toggle" id="dark-mode-toggle">
+            <i class="fas fa-sun" id="mode-icon"></i>
+        </button>
+    </nav>
 
-            <!-- Novo Card de Elos Skur -->
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-star"></i> <!-- Ícone representativo para Elos Skur -->
-                    <h5 class="card-title">Elos Skur</h5>
-                    <p class="card-text">Informações sobre os elos.</p>
-                    <a href="elos.html" class="btn btn-primary">Ver Elos</a>
-                </div>
+    <div class="card-container">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-user-tie"></i>
+                <h5 class="card-title">Cargos</h5>
+                <p class="card-text">Informações sobre os cargos disponíveis.</p>
+                <a href="cargosfbi/fbi.html" class="btn btn-primary">Ver Cargos</a>
             </div>
+            <i class="fas fa-plus plus-icon"></i>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-book"></i>
+                <h5 class="card-title">Regras</h5>
+                <p class="card-text">Regras e políticas a serem seguidas.</p>
+                <a href="regras.html" class="btn btn-primary">Ver Regras</a>
+            </div>
+            <i class="fas fa-plus plus-icon"></i>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-book-open"></i>
+                <h5 class="card-title">Manual</h5>
+                <p class="card-text">Manual do usuário completo.</p>
+                <a href="manual.html" class="btn btn-primary">Ver Manual</a>
+            </div>
+            <i class="fas fa-plus plus-icon"></i>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-file-alt"></i>
+                <h5 class="card-title">Protocolos</h5>
+                <p class="card-text">Protocolos de operação e segurança.</p>
+                <a href="protocolos.html" class="btn btn-primary">Ver Protocolos</a>
+            </div>
+            <i class="fas fa-plus plus-icon"></i>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-level-up-alt"></i>
+                <h5 class="card-title">Level</h5>
+                <p class="card-text">Progresso e conquistas dos usuários.</p>
+                <a href="site em construção.html" class="btn btn-primary">Ver Level</a>
+            </div>
+            <i class="fas fa-plus plus-icon"></i>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-user-md"></i>
+                <h5 class="card-title">Falar com a Psicóloga</h5>
+                <p class="card-text">Se você precisar de ajuda, estamos aqui.</p>
+                <a href="psicologa.html" class="btn btn-primary">Conversar</a>
+            </div>
+            <i class="fas fa-plus plus-icon"></i>
+        </div>
+
+        <!-- Novo card: Neextense Fuso Horário -->
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-clock"></i>
+                <h5 class="card-title">Neextense Fuso Horário</h5>
+                <p class="card-text">Saiba o fuso horário exato da Neext para melhor comunicação.</p>
+                <a href="neextense_fuso.html" class="btn btn-primary">Ver Fuso Horário</a>
+            </div>
+            <i class="fas fa-plus plus-icon"></i>
         </div>
     </div>
+
+    <footer>
+        © NEEXT Ltda 2019 - Todos os direitos reservados
+    </footer>
+
+    <script>
+        if(localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('mode-icon').classList.remove('fa-sun');
+            document.getElementById('mode-icon').classList.add('fa-moon');
+        }
+
+        document.getElementById('dark-mode-toggle').addEventListener('click', function () {
+            document.body.classList.toggle('dark-mode');
+            let icon = document.getElementById('mode-icon');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
