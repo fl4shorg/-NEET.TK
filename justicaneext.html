@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador Justiça Neext</title>
+    <title>Gerador de Documento Justiça Neext</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background-color: #f4f4f4; }
         h1 { font-size: 30px; margin-top: 20px; text-transform: uppercase; color: #333; }
         .form-container { margin: 20px; }
         .form-container input, .form-container textarea { width: 100%; max-width: 400px; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-        .atestado {
+        .documento {
             width: 80%;
             max-width: 600px;
             padding: 30px;
@@ -36,7 +36,7 @@
         .assinatura-label { font-style: normal; }
         .assinatura-normal { font-style: normal; font-weight: bold; }
         @media (max-width: 600px) { 
-            .atestado { width: 95%; height: auto; } 
+            .documento { width: 95%; height: auto; } 
             h1 { font-size: 24px; } 
         }
     </style>
@@ -47,8 +47,8 @@
 
     <!-- Opção para escolher entre Mandado de Prisão, Pedido Regulatório ou Notificação de Aviso -->
     <div class="form-container">
-        <label for="tituloAtestadoEscolha"><i class="fas fa-balance-scale icon"></i> Selecione o Tipo :</label><br>
-        <select id="tituloAtestadoEscolha" onchange="alterarTituloAtestado()">
+        <label for="tituloDocumentoEscolha"><i class="fas fa-balance-scale icon"></i> Selecione o Tipo de Documento:</label><br>
+        <select id="tituloDocumentoEscolha" onchange="alterarTituloDocumento()">
             <option value="mandadoPrissao">Mandado de Prisão</option>
             <option value="pedidoRegulatorio">Pedido Regulatório</option>
             <option value="notificacaoAviso">Notificação de Aviso</option>
@@ -59,26 +59,26 @@
     </div>
 
     <!-- Título que será alterado dinamicamente -->
-    <h2 id="tituloAtestado">ATESTADO</h2> 
+    <h2 id="tituloDocumento">DOCUMENTO</h2> 
 
     <div class="form-container">
-        <label for="nome"><i class="fas fa-user icon"></i> Nome :</label><br>
+        <label for="nome"><i class="fas fa-user icon"></i> Nome do Paciente:</label><br>
         <input type="text" id="nome" placeholder="Nome do Paciente"><br><br>
-        <label for="descricao"><i class="fas fa-notes-medical icon"></i> Descrição:</label><br>
-        <textarea id="descricao" placeholder="Descreva o motivo"></textarea><br><br>
+        <label for="descricao"><i class="fas fa-notes-medical icon"></i> Descrição do Documento:</label><br>
+        <textarea id="descricao" placeholder="Descreva o motivo do documento"></textarea><br><br>
         <label for="data"><i class="fas fa-calendar-alt icon"></i> Data de Emissão:</label><br>
         <input type="date" id="data"><br><br>
         <label for="assinatura" class="assinatura-label"><i class="fas fa-signature icon"></i> Assinatura:</label><br>
         <input type="text" id="assinatura" placeholder="Digite a assinatura"><br><br>
-        <button onclick="gerar()">Gerar Atestado</button>
-        <button onclick="baixar()" class="download-btn">Baixar</button>
+        <button onclick="gerarDocumento()">Gerar Documento</button>
+        <button onclick="baixarDocumento()" class="download-btn">Baixar Documento</button>
     </div>
 
-    <div class="atestado" id="atestado">
+    <div class="documento" id="documento">
         <div class="justice-symbol"><i class="fas fa-balance-scale"></i></div>
         <h2>JUSTIÇA NEEXT</h2>
         <div class="line"></div>
-        <h3 id="previewTipo">NEEXT</h3> 
+        <h3 id="previewTipo">DOCUMENTO</h3> 
         <p><i class="fas fa-user icon"></i><strong> Nome:</strong> <span id="previewNome"></span></p>
 
         <p><i class="fas fa-notes-medical icon"></i><strong> Descrição:</strong> <span id="previewDescricao"></span></p>
@@ -89,63 +89,63 @@
     </div>
 
     <script>
-        function alterarTituloAtestado() {
-            const tipoAtestadoEscolhido = document.getElementById("tituloAtestadoEscolha").value;
-            const tituloAtestado = document.getElementById("previewTipo");
+        function alterarTituloDocumento() {
+            const tipoDocumentoEscolhido = document.getElementById("tituloDocumentoEscolha").value;
+            const tituloDocumento = document.getElementById("previewTipo");
 
-            if (tipoAtestadoEscolhido === "mandadoPrissao") {
-                tituloAtestado.innerText = "Mandado de Prisão";
-            } else if (tipoAtestadoEscolhido === "pedidoRegulatorio") {
-                tituloAtestado.innerText = "Pedido Regulatório";
-            } else if (tipoAtestadoEscolhido === "notificacaoAviso") {
-                tituloAtestado.innerText = "Notificação de Aviso";
-            } else if (tipoAtestadoEscolhido === "notificacaoRegras") {
-                tituloAtestado.innerText = "Notificação de Regras Novas";
-            } else if (tipoAtestadoEscolhido === "burlamentoRegras") {
-                tituloAtestado.innerText = "Notificação de Burlamento de Regras";
-            } else if (tipoAtestadoEscolhido === "pedidoAlteracao") {
-                tituloAtestado.innerText = "Pedido de Alteração";
+            if (tipoDocumentoEscolhido === "mandadoPrissao") {
+                tituloDocumento.innerText = "Mandado de Prisão";
+            } else if (tipoDocumentoEscolhido === "pedidoRegulatorio") {
+                tituloDocumento.innerText = "Pedido Regulatório";
+            } else if (tipoDocumentoEscolhido === "notificacaoAviso") {
+                tituloDocumento.innerText = "Notificação de Aviso";
+            } else if (tipoDocumentoEscolhido === "notificacaoRegras") {
+                tituloDocumento.innerText = "Notificação de Regras Novas";
+            } else if (tipoDocumentoEscolhido === "burlamentoRegras") {
+                tituloDocumento.innerText = "Notificação de Burlamento de Regras";
+            } else if (tipoDocumentoEscolhido === "pedidoAlteracao") {
+                tituloDocumento.innerText = "Pedido de Alteração";
             }
         }
 
-        function gerarAtestado() {
-            document.getElementById("atestado").style.display = "block";
+        function gerarDocumento() {
+            document.getElementById("documento").style.display = "block";
             document.getElementById("previewNome").innerText = document.getElementById("nome").value;
             document.getElementById("previewDescricao").innerText = document.getElementById("descricao").value;
             document.getElementById("previewData").innerText = document.getElementById("data").value;
             document.getElementById("previewAssinatura").innerText = document.getElementById("assinatura").value;
 
-            const tipoAtestadoEscolhido = document.getElementById("tituloAtestadoEscolha").value;
+            const tipoDocumentoEscolhido = document.getElementById("tituloDocumentoEscolha").value;
             const previewTipo = document.getElementById("previewTipo");
 
-            if (tipoAtestadoEscolhido === "mandadoPrissao") {
+            if (tipoDocumentoEscolhido === "mandadoPrissao") {
                 previewTipo.innerText = "Mandado de Prisão";
-            } else if (tipoAtestadoEscolhido === "pedidoRegulatorio") {
+            } else if (tipoDocumentoEscolhido === "pedidoRegulatorio") {
                 previewTipo.innerText = "Pedido Regulatório";
-            } else if (tipoAtestadoEscolhido === "notificacaoAviso") {
+            } else if (tipoDocumentoEscolhido === "notificacaoAviso") {
                 previewTipo.innerText = "Notificação de Aviso";
-            } else if (tipoAtestadoEscolhido === "notificacaoRegras") {
+            } else if (tipoDocumentoEscolhido === "notificacaoRegras") {
                 previewTipo.innerText = "Notificação de Regras Novas";
-            } else if (tipoAtestadoEscolhido === "burlamentoRegras") {
+            } else if (tipoDocumentoEscolhido === "burlamentoRegras") {
                 previewTipo.innerText = "Notificação de Burlamento de Regras";
-            } else if (tipoAtestadoEscolhido === "pedidoAlteracao") {
+            } else if (tipoDocumentoEscolhido === "pedidoAlteracao") {
                 previewTipo.innerText = "Pedido de Alteração";
             }
         }
 
-        function baixarAtestado() {
-            const confirmar = window.confirm("Você tem certeza que deseja baixar o atestado?");
+        function baixarDocumento() {
+            const confirmar = window.confirm("Você tem certeza que deseja baixar o documento?");
             if (confirmar) {
-                html2canvas(document.querySelector("#atestado"), { scale: 2, useCORS: true }).then(canvas => {
+                html2canvas(document.querySelector("#documento"), { scale: 2, useCORS: true }).then(canvas => {
                     const dataUrl = canvas.toDataURL('image/png');
                     const link = document.createElement('a');
                     link.href = dataUrl;
-                    link.download = 'atestado_justica_neext.png';
+                    link.download = 'documento_justica_neext.png';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 }).catch(error => {
-                    console.error('Erro ao gerar o atestado:', error);
+                    console.error('Erro ao gerar o documento:', error);
                 });
             }
         }
