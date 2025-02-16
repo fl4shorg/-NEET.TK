@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,102 +15,61 @@
         .dark-mode .bg-purple-600 {
             background-color: #6b3f90;
         }
-        .dark-mode .bg-white {
-            background-color: #444;
-        }
-        .dark-mode .text-gray-700, 
-        .dark-mode .text-gray-600 {
-            color: #d1d1d1;
-        }
-        .dark-mode .text-white {
-            color: #fff;
-        }
-        .dark-mode .logo {
-            filter: invert(1);
-        }
-        #dark-mode-toggle i {
-            font-size: 24px;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        #cards-container {
-            flex: 1;
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 1rem;
-        }
-        .card-header h1 {
-            font-size: 1rem;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
-            line-height: 1.4;
-            margin: 0;
-        }
-        p {
-            margin-bottom: 1rem;
-        }
-        ul li {
-            margin-bottom: 1rem;
-        }
-        .popup {
+        .dark-mode .bg-white { background-color: #444; }
+        .dark-mode .text-gray-700, .dark-mode .text-gray-600 { color: #d1d1d1; }
+        .dark-mode .text-white { color: #fff; }
+        .dark-mode .logo { filter: invert(1); }
+        #dark-mode-toggle i { font-size: 24px; }
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        #cards-container { flex: 1; }
+        .card-header { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 16px; text-align: center; font-size: 1rem; }
+        .card-header h1 { font-size: 1rem; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; line-height: 1.4; margin: 0; }
+        p { margin-bottom: 1rem; }
+        ul li { margin-bottom: 1rem; }
+        .popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
+        .popup-content { background: white; padding: 20px; border-radius: 8px; max-width: 80%; max-height: 80%; overflow-y: scroll; width: 90%; }
+        .popup img { width: 100%; max-width: 200px; margin: 10px; display: block; }
+        .popup .popup-buttons { text-align: center; margin-top: 20px; }
+        .popup .popup-buttons button { margin: 5px; }
+        .search-bar { margin-top: 16px; margin-bottom: 16px; text-align: center; }
+        .popup img {
+    width: 100%;
+    max-width: 150px;
+    margin: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.popup .popup-buttons button {
+    margin: 5px;
+}
+        .popup-success {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .popup-content {
-            background: white;
-            padding: 20px;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
             border-radius: 8px;
-            max-width: 80%;
-            max-height: 80%;
-            overflow-y: scroll;
-            width: 90%;
+            font-size: 16px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
-        .popup img {
-            width: 100%;
-            max-width: 200px;
-            margin: 10px;
-            display: block;
+        .copied-button {
+            animation: copied 0.5s ease-in-out;
         }
-        .popup .popup-buttons {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .popup .popup-buttons button {
-            margin: 5px;
-        }
-        .search-bar {
-            margin-top: 16px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .copied {
-            animation: bounce 0.5s ease-in-out;
-        }
-        @keyframes bounce {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        @keyframes copied {
+            0% { background-color: #3498db; }
+            100% { background-color: #2ecc71; }
         }
     </style>
 </head>
 <body class="bg-gray-100">
+    <!-- Navbar -->
     <nav class="bg-purple-600 p-6 shadow-lg">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center">
@@ -124,24 +84,52 @@
             </button>
         </div>
     </nav>
-
+    <!-- Barra de Pesquisa -->
     <div class="search-bar">
-        <input type="text" id="search-input" class="p-2 rounded-md border border-gray-300" placeholder="Pesquisar por nome, descrição ou parágrafo" oninput="filtrarRegras()">
+        <input 
+            type="text" 
+            id="search-input" 
+            class="p-2 rounded-md border border-gray-300" 
+            placeholder="Pesquisar por nome, descrição ou parágrafo" 
+            oninput="filtrarRegras()"
+        />
     </div>
-
+    
+<!-- Card para Contar Regras -->
+<div id="total-regras-card" class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-lg w-full max-w-sm mx-auto p-6 mt-6">
+    <div class="flex items-center justify-between">
+        <h1 class="text-white text-2xl font-semibold">Total de Regras</h1>
+        <div class="bg-white rounded-full p-3">
+            <i class="fas fa-list-ul text-purple-600 text-xl"></i>
+        </div>
+    </div>
+    <div class="flex items-center justify-between mt-4">
+        <div class="flex items-center space-x-2">
+            <span class="text-white text-3xl font-bold" id="total-regras">0</span>
+            <span class="text-white text-lg">Regras</span>
+        </div>
+        <div class="bg-white p-3 rounded-full text-purple-600">
+            <i class="fas fa-chart-bar text-2xl"></i>
+        </div>
+    </div>
+</div>
+    <!-- Regras Container -->
     <div id="cards-container" class="space-y-4 p-6"></div>  
-
+    <!-- Popup de Imagens -->
     <div id="image-popup" class="popup">
         <div class="popup-content">
             <div id="image-list" class="grid grid-cols-4 gap-4"></div>
         </div>
     </div>
-
+    <!-- Rodapé -->
     <footer class="bg-gray-800 text-white py-4 mt-8">
         <div class="max-w-7xl mx-auto text-center">
             <p>&copy; NEEXT LTDA 2019 - Todos os direitos reservados</p>
         </div>
     </footer>
+
+    <!-- Popup de Sucesso -->
+    <div id="popup-success" class="popup-success">Texto copiado com sucesso!</div>
 
     <script>
         function toggleDarkMode() {
@@ -166,7 +154,7 @@
 
         document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
-        async function carregarRegras() {
+        async function carregarRegras() { 
             const url = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec?action=read";
             try {
                 const response = await fetch(url);
@@ -182,25 +170,25 @@
                     p3 = p3 ? p3.replace(/\|/g, ",") : "";
                     p4 = p4 ? p4.replace(/\|/g, ",") : "";
                     let regraHTML = `
-                        <div class="bg-white rounded-lg shadow-lg w-full max-w-sm" data-titulo="${titulo}" data-descricao="${descricao}" data-paragrafos="${p1} ${p2} ${p3} ${p4}">
-                            <div class="card-header bg-purple-600 text-white rounded-t-lg">
-                                <i class="fas fa-balance-scale text-xl"></i>
-                                <h1 class="text-lg font-bold">${titulo}</h1>
-                            </div>
-                            <div class="p-4">
-                                <p class="text-gray-700 text-sm"><i class="fas fa-info-circle"></i> ${descricao}</p>
-                                <ul class="text-gray-600 mt-2 text-sm list-inside">
-                                    ${p1 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 1).padStart(2, '0')}:</strong> ${p1}</li>` : ''}
-                                    ${p2 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 2).padStart(2, '0')}:</strong> ${p2}</li>` : ''}
-                                    ${p3 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 3).padStart(2, '0')}:</strong> ${p3}</li>` : ''}
-                                    ${p4 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 4).padStart(2, '0')}:</strong> ${p4}</li>` : ''}
-                                </ul>
-                                <div class="mt-4 flex space-x-4">
-                                    <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="copyCard(${index})"><i class="fas fa-copy"></i></button>
-                                    <button class="bg-yellow-500 text-white px-4 py-2 rounded" onclick="showCardPopup(${index})"><i class="fas fa-images"></i></button>
-                                </div>
+                    <div class="bg-white rounded-lg shadow-lg w-full max-w-sm" data-titulo="${titulo}" data-descricao="${descricao}" data-paragrafos="${p1} ${p2} ${p3} ${p4}">
+                        <div class="card-header bg-purple-600 text-white rounded-t-lg">
+                            <i class="fas fa-balance-scale text-xl"></i>
+                            <h1 class="text-lg font-bold">${titulo}</h1>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-700 text-sm"><i class="fas fa-info-circle"></i> ${descricao}</p>
+                            <ul class="text-gray-600 mt-2 text-sm list-inside">
+                                ${p1 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 1).padStart(2, '0')}:</strong> ${p1}</li>` : ''}
+                                ${p2 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 2).padStart(2, '0')}:</strong> ${p2}</li>` : ''}
+                                ${p3 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 3).padStart(2, '0')}:</strong> ${p3}</li>` : ''}
+                                ${p4 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 4).padStart(2, '0')}:</strong> ${p4}</li>` : ''}
+                            </ul>
+                            <div class="mt-4 flex space-x-4">
+                                <button class="bg-blue-500 text-white px-4 py-2 rounded copy-button" onclick="copyCard(${index})"><i class="fas fa-copy"></i></button>
+                                <button class="bg-yellow-500 text-white px-4 py-2 rounded" onclick="showCardPopup(${index})"><i class="fas fa-images"></i></button>
                             </div>
                         </div>
+                    </div>
                     `;
                     container.insertAdjacentHTML("beforeend", regraHTML);
                 });
@@ -209,9 +197,9 @@
             }
         }
 
-        function filtrarRegras() {
-            const input = document.getElementById('search-input');
-            const filter = input.value.toLowerCase();
+        function filtrarRegras() { 
+            const input = document.getElementById('search-input'); 
+            const filter = input.value.toLowerCase(); 
             const cards = document.querySelectorAll('#cards-container .bg-white');
             cards.forEach(card => {
                 const titulo = card.getAttribute('data-titulo').toLowerCase();
@@ -224,20 +212,114 @@
                 }
             });
         }
+        
+        // Fechar o popup ao clicar fora dele
+document.getElementById('image-popup').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('image-popup')) {
+        e.target.style.display = 'none';  // Esconde o popup
+    }
+});
+        
+        function showCardPopup(index) {
+    const popup = document.getElementById('image-popup');
+    const imageList = document.getElementById('image-list');
+    imageList.innerHTML = '';  // Limpar imagens anteriores
+
+    // Gerar imagens dinâmicas de card1.jpg a card20.jpg
+    for (let i = 1; i <= 20; i++) {
+        const imgSrc = `card${i}.jpg`;  // Caminho das imagens
+        const imgElement = document.createElement('img');
+        imgElement.src = imgSrc;  // Definir o caminho da imagem
+        imgElement.alt = `Imagem do card ${i}`;
+
+        const downloadButton = document.createElement('a');
+        downloadButton.href = imgSrc;  // Link para download da imagem
+        downloadButton.download = imgSrc;  // Definir o nome do arquivo
+        downloadButton.textContent = 'Download';
+        downloadButton.classList.add('bg-green-500', 'text-white', 'px-4', 'py-2', 'rounded', 'mt-2');
+
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('text-center');
+        imageContainer.appendChild(imgElement);
+        imageContainer.appendChild(downloadButton);
+
+        imageList.appendChild(imageContainer);
+    }
+
+    popup.style.display = 'flex';  // Exibir o popup
+}
+
+// Função para contar as regras e atualizar o card
+function contarRegras(linhas) {
+    const totalRegras = linhas.length;
+    document.getElementById("total-regras").innerText = totalRegras;  // Atualiza o contador do card
+}
+
+async function carregarRegras() { 
+    const url = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec?action=read";
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const linhas = text.trim().split("\n").slice(1);
+        
+        // Chama a função para contar as regras
+        contarRegras(linhas);
+
+        let container = document.getElementById("cards-container");
+        container.innerHTML = "";
+
+        linhas.forEach((linha, index) => {
+            let [id, titulo, descricao, p1, p2, p3, p4] = linha.split(", ");
+            descricao = descricao.replace(/\|/g, ",");
+            p1 = p1 ? p1.replace(/\|/g, ",") : "";
+            p2 = p2 ? p2.replace(/\|/g, ",") : "";
+            p3 = p3 ? p3.replace(/\|/g, ",") : "";
+            p4 = p4 ? p4.replace(/\|/g, ",") : "";
+            let regraHTML = `
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-sm" data-titulo="${titulo}" data-descricao="${descricao}" data-paragrafos="${p1} ${p2} ${p3} ${p4}">
+                <div class="card-header bg-purple-600 text-white rounded-t-lg">
+                    <i class="fas fa-balance-scale text-xl"></i>
+                    <h1 class="text-lg font-bold">${titulo}</h1>
+                </div>
+                <div class="p-4">
+                    <p class="text-gray-700 text-sm"><i class="fas fa-info-circle"></i> ${descricao}</p>
+                    <ul class="text-gray-600 mt-2 text-sm list-inside">
+                        ${p1 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 1).padStart(2, '0')}:</strong> ${p1}</li>` : ''}
+                        ${p2 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 2).padStart(2, '0')}:</strong> ${p2}</li>` : ''}
+                        ${p3 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 3).padStart(2, '0')}:</strong> ${p3}</li>` : ''}
+                        ${p4 ? `<li><i class="fas fa-paragraph"></i> <strong>Parágrafo ${String(index + 4).padStart(2, '0')}:</strong> ${p4}</li>` : ''}
+                    </ul>
+                    <div class="mt-4 flex space-x-4">
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded copy-button" onclick="copyCard(${index})"><i class="fas fa-copy"></i></button>
+                        <button class="bg-yellow-500 text-white px-4 py-2 rounded" onclick="showCardPopup(${index})"><i class="fas fa-images"></i></button>
+                    </div>
+                </div>
+            </div>
+            `;
+            container.insertAdjacentHTML("beforeend", regraHTML);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar as regras:", error);
+    }
+}
 
         function copyCard(index) {
-            const card = document.querySelector(`#cards-container .bg-white:nth-child(${index + 1})`);
-            const content = card.querySelector('.text-sm').textContent;
-            navigator.clipboard.writeText(content).then(() => {
-                const button = card.querySelector('button');
-                button.classList.add('copied');
-                alert("Conteúdo copiado com sucesso!");
+            const button = document.querySelectorAll('.copy-button')[index];
+            button.classList.add('copied-button');
+            const popup = document.getElementById('popup-success');
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.opacity = 1;
+            }, 100);
+            setTimeout(() => {
+                popup.style.opacity = 0;
                 setTimeout(() => {
-                    button.classList.remove('copied');
+                    popup.style.display = 'none';
                 }, 500);
-            }).catch((error) => {
-                console.error('Erro ao copiar para a área de transferência:', error);
-            });
+            }, 2000);
+            setTimeout(() => {
+                button.classList.remove('copied-button');
+            }, 500);
         }
 
         carregarRegras();
