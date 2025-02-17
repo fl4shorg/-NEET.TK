@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Cargos</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+        }
+        .navbar {
+            background: #333;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .category {
+            margin-bottom: 20px;
+        }
+        .category h3 {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            width: 250px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        .card p {
+            max-height: none;
+            overflow: visible;
+            white-space: pre-wrap; /* Mantém a formatação do texto */
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .actions button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <span>Manual de Cargos</span>
+        <button onclick="abrirFormulario()">Adicionar</button>
+    </div>
+
+    <div class="container" id="categories-container"></div>
+
+    <script>
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzubq9yPn77Dy6-AHz67CoZlYvYHPcOKjn9T1_7wiNozpRobYUI4P5j1o58IbbL81Z9TQ/exec";
+
+        function carregarDados() {
+            fetch(`${apiUrl}?action=read`)
+                .then(response => response.text())
+                .then(text => {
+                    let linhas = text.trim().split("\n").slice(1);
+                    let categorias = {};
+
+                    linhas.forEach(linha => {
+                        let partes = linha.split(", ");
+                        let id = partes[0];
+                        let categoria = partes[1];
+                        let titulo = partes[2];
+                        let descricao = partes.slice(3).join(", "); // Garante que descrições com vírgulas sejam lidas corretamente
+
+                        if (!categorias[categoria]) {
+                            categorias[categoria] = [];
+                        }
+
+                        categorias[categoria].push({ id, titulo, descricao });
+                    });
+
+                    let container = document.getElementById("categories-container");
+                    container.innerHTML = "";
+
+                    Object.keys(categorias).forEach(categoria => {
+                        let section = document.createElement("div");
+                        section.classList.add("category");
+                        section.innerHTML = `<h3>${categoria}</h3>`;
+
+                        let cardsContainer = document.createElement("div");
+                        cardsContainer.classList.add("cards-container");
+
+                        categorias[categoria].forEach(item => {
+                            let card = document.createElement("div");
+                            card.classList.add("card");
+                            card.innerHTML = `
+                                <strong>${item.titulo}</strong>
+                                <p>${item.descricao}</p>
+                                <div class="actions">
+                                    <button onclick="editar('${item.id}', '${categoria}', '${item.titulo.replace(/'/g, "\\'")}', \`${item.descricao.replace(/`/g, "\\`")}\`)">Editar</button>
+                                    <button onclick="excluir('${item.id}')">Excluir</button>
+                                </div>
+                            `;
+                            cardsContainer.appendChild(card);
+                        });
+
+                        section.appendChild(cardsContainer);
+                        container.appendChild(section);
+                    });
+                });
+        }
+
+        function abrirFormulario(id = "", categoria = "", titulo = "", descricao = "") {
+            Swal.fire({
+                title: id ? "Editar Registro" : "Adicionar Registro",
+                html: `
+                    <input id="swal-id" type="hidden" value="${id}">
+                    <input id="swal-categoria" class="swal2-input" placeholder="Categoria" value="${categoria}">
+                    <input id="swal-titulo" class="swal2-input" placeholder="Título" value="${titulo}">
+                    <textarea id="swal-descricao" class="swal2-textarea" placeholder="Descrição" style="width: 100%; height: 150px;">${descricao}</textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: id ? "Atualizar" : "Adicionar",
+            }).then(result => {
+                if (result.isConfirmed) {
+                    let id = document.getElementById("swal-id").value;
+                    let categoria = document.getElementById("swal-categoria").value;
+                    let titulo = document.getElementById("swal-titulo").value;
+                    let descricao = document.getElementById("swal-descricao").value;
+
+                    if (!categoria || !titulo || !descricao) {
+                        Swal.fire("Erro", "Todos os campos são obrigatórios!", "error");
+                        return;
+                    }
+
+                    if (id) {
+                        editarRegistro(id, categoria, titulo, descricao);
+                    } else {
+                        adicionarRegistro(categoria, titulo, descricao);
+                    }
+                }
+            });
+        }
+
+        function adicionarRegistro(categoria, titulo, descricao) {
+            let id = Date.now();
+            fetch(apiUrl, {
+                method: "POST",
+                body: new URLSearchParams({ action: "create", id, categoria, titulo, descricao }),
+            }).then(() => {
+                Swal.fire("Sucesso", "Registro adicionado!", "success");
+                carregarDados();
+            });
+        }
+
+        function editar(id, categoria, titulo, descricao) {
+            abrirFormulario(id, categoria, titulo, descricao);
+        }
+
+        function editarRegistro(id, categoria, titulo, descricao) {
+            fetch(apiUrl, {
+                method: "POST",
+                body: new URLSearchParams({ action: "update", id, categoria, titulo, descricao }),
+            }).then(() => {
+                Swal.fire("Sucesso", "Registro atualizado!", "success");
+                carregarDados();
+            });
+        }
+
+        function excluir(id) {
+            Swal.fire({
+                title: "Tem certeza?",
+                text: "Esta ação não pode ser desfeita!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sim, excluir",
+            }).then(result => {
+                if (result.isConfirmed) {
+                    fetch(apiUrl, {
+                        method: "POST",
+                        body: new URLSearchParams({ action: "delete", id }),
+                    }).then(() => {
+                        Swal.fire("Sucesso", "Registro excluído!", "success");
+                        carregarDados();
+                    });
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", carregarDados);
+    </script>
+
+</body>
+</html>
