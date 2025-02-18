@@ -215,47 +215,31 @@
     const imageContainer = document.getElementById("imageContainer");
     imageContainer.innerHTML = ""; 
 
-    for (let i = 1; i <= 20; i++) { // Exibe até 20 imagens, como no original
-        // Definir o caminho da imagem no formato JPG inicialmente
-        let imgSrc = `cards/card${i}.jpg`;
-        let fileType = '.jpg'; // Inicializa com .jpg
+    for (let i = 1; i <= 20; i++) { // Agora exibe apenas 6 imagens por vez
+        const imgSrc = `cards${i}.jpg`;
 
-        // Verificar se a imagem existe, caso contrário, tenta com .png
-        const img = new Image();
-        img.src = imgSrc;
+        const imgWrapper = document.createElement("div");
+        imgWrapper.classList.add("flex", "flex-col", "items-center", "w-24");
 
-        // Caso a imagem no formato JPG não seja encontrada, tentamos o PNG
-        img.onerror = function() {
-            imgSrc = `cards/card${i}.png`;
-            fileType = '.png'; // Muda para .png
-            img.src = imgSrc; // Tenta carregar o arquivo PNG
-        };
+        imgWrapper.innerHTML = `
+            <img src="${imgSrc}" alt="Card ${i}" class="w-20 h-20 object-cover rounded-md shadow">
+            <a href="${imgSrc}" download="card${i}.jpg" class="mt-1 bg-blue-500 text-white px-2 py-1 rounded text-xs">
+                Baixar
+            </a>
+        `;
 
-        // Após carregar a imagem com sucesso, adicionar ao container do popup
-        img.onload = function() {
-            const imgWrapper = document.createElement("div");
-            imgWrapper.classList.add("flex", "flex-col", "items-center", "w-24");
-
-            // Adiciona a imagem com o link de download
-            imgWrapper.innerHTML = `
-                <img src="${imgSrc}" alt="Card ${i}" class="w-20 h-20 object-cover rounded-md shadow">
-                <a href="${imgSrc}" download="card${i}${fileType}" class="mt-1 bg-blue-500 text-white px-2 py-1 rounded text-xs">
-                    Baixar
-                </a>
-            `;
-
-            // Adiciona a imagem ao container
-            imageContainer.appendChild(imgWrapper);
-        };
+        imageContainer.appendChild(imgWrapper);
     }
 
-    // Exibe o popup
     document.getElementById("imagePopup").classList.remove("hidden");
 }
 
 function closePopup() {
     document.getElementById("imagePopup").classList.add("hidden");
 }
+
+        loadRules();
+    </script>
     
 
 
