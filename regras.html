@@ -3,238 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regras</title>
-    <link rel="icon" href="imagens/logo.jpeg" type="image/jpeg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <title>© 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+    <link rel="icon" href="https://i.imgur.com/nTqoKxv.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            color: white;
-            background-image: url('imagens/regras.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            padding-top: 80px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        #regras-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 10px;
-            margin-bottom: 20px;
-        }
-        .navbar {
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-        .navbar h1 {
-            color: #fff;
-            font-size: 32px;
-            font-weight: bold;
-        }
-        .navbar .profile-section {
-            display: flex;
-            align-items: center;
-        }
-        .navbar .profile-section img {
-            width: 40px;
-            height: 40px;
+        .toast { animation: fadeInOut 2s ease-in-out; }
+        @keyframes fadeInOut { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        .copy-button { background-color: #5A67D8; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: background-color 0.3s; }
+        .copy-button:hover { background-color: #4C51BF; }
+        .toast { position: fixed; top: 20px; right: 20px; background-color: green; color: white; padding: 12px; border-radius: 8px; font-size: 16px; z-index: 1000; }
+                .logo-container img {
+            margin: 0 15px;
+            border: 2px solid white;
             border-radius: 50%;
-            margin-right: 10px;
         }
-        .navbar .profile-section button {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            margin-left: 15px;
-        }
-        .barra-pesquisa {
-            margin: 20px auto;
-            width: 80%;
-            position: relative;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 25px;
-        }
-        .barra-pesquisa input {
-            width: 100%;
-            padding: 10px 40px 10px 15px;
-            border: none;
-            border-radius: 25px;
-            outline: none;
-            font-size: 16px;
-            background-color: transparent;
-        }
-        .barra-pesquisa i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-            font-size: 18px;
-        }
-        .regra {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            backdrop-filter: blur(10px);
-        }
-        .regra h3 {
-            font-size: 20px;
-            color: #ffdd57;
-            margin-bottom: 10px;
-        }
-        .regra .descricao, .regra p {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #f0f0f0;
-            line-height: 1.6;
-        }
-        .botoes {
+        .navbar-center {
             display: flex;
-            justify-content: space-around;
-            margin-top: 15px;
+            justify-content: center;
+            align-items: center;
         }
-        .botao-copiar, .botao-card {
-            padding: 10px 20px;
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            text-align: center;
-            flex: 1;
-            margin: 0 5px;
-        }
-        .botao-copiar:hover, .botao-card:hover {
-            background: linear-gradient(to right, #e65c3d, #e99f68);
-        }
-        .card-img {
-            width: 100%;
-            max-width: 300px;
-            margin: 10px;
-            border-radius: 10px;
-        }
-        .swal2-popup {
-            max-width: 90%;
-        }
+        
     </style>
 </head>
-<body>
-    <div class="navbar">
-        <h1><i class="fas fa-hammer" style="color: white;"></i> Regras</h1>
-        <div class="profile-section">
-            <img src="https://i.imgur.com/gMX0CRX.png" alt="Foto de Perfil" id="foto-perfil">
-            <button id="sair-btn"><i class="fas fa-sign-out-alt"></i></button>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+<nav class="bg-purple-600 p-6 shadow-lg">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <div class="flex items-center logo-container">
+            <img src="https://i.imgur.com/nTqoKxv.png" alt="Logo" class="w-12 h-12 rounded-full">
+        </div>
+
+        <!-- Centralizado -->
+        <div class="navbar-center space-x-4">
+            <i class="fas fa-balance-scale text-4xl text-white"></i>
+            <span class="text-white text-3xl font-extrabold">Regras</span>
+        </div>
+
+
+            <i class="fas fa-moon" id="dark-mode-icon"></i>
+        </button>
+    </div>
+</nav>
+
+    <!-- Total de Regras -->
+    <div id="rulesCounter" class="bg-white shadow-lg rounded-lg p-6 mb-0 mx-auto max-w-7xl">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="bg-purple-100 p-3 rounded-full">
+                    <i class="fas fa-book-open text-purple-600 text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Total de Regras</h2>
+                    <p class="text-gray-600">Base atualizada de regras e diretrizes</p>
+                </div>
+            </div>
+            <div id="totalRegras" class="bg-purple-600 px-6 py-3 rounded-lg">
+                <span class="text-3xl font-bold text-white">0</span>
+            </div>
         </div>
     </div>
-    <div class="barra-pesquisa">
-        <input type="text" id="barra-pesquisa-input" placeholder="Pesquisar regras...">
-        <i class="fas fa-search"></i>
+
+    <!-- Barra de Pesquisa (colada com o Total de Regras) -->
+    <div class="bg-white p-4 shadow-md mb-6 mx-auto max-w-7xl">
+        <div class="relative">
+            <input id="searchInput" type="text" placeholder="Buscar regras..." class="w-full py-3 pl-10 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+        </div>
     </div>
-    <div id="regras-container"></div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Cards Container -->
+    <div id="cardsContainer" class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6"></div>
+
+
     <script>
-        const sairBtn = document.getElementById('sair-btn');
-        sairBtn.addEventListener('click', () => {
-            window.location.href = "URL_PARA_ONDE_REDIRECIONAR_AQUI";
+        let parsedRules = [];  // Variável global para armazenar as regras
+
+        document.getElementById("darkModeBtn").addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+            const modeText = document.body.classList.contains("dark") ? 'Modo Claro' : 'Modo Escuro';
+            document.getElementById("darkModeBtn").innerText = modeText;
         });
 
-        fetch('regras.json')
-        .then(response => response.json())
-        .then(regras => {
-            const container = document.getElementById('regras-container');
+        async function loadRules() {
+            const response = await fetch("https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec?action=read");
+            const data = await response.text();
+            const rows = data.split('\n').slice(1);
 
-            function renderizarRegras(regrasFiltradas) {
-                container.innerHTML = '';
-                regrasFiltradas.forEach(regra => {
-                    const regraDiv = document.createElement('div');
-                    regraDiv.className = 'regra';
-                    regraDiv.innerHTML = `
-                        <h3><i class="fas fa-star" style="color: yellow;"></i> ${regra.titulo}</h3>
-                        <p class="descricao"><i class="fas fa-scroll"></i> ${regra.descricao}</p>
-                        ${regra.paragrafos.map(paragrafo => `<p><i class="fas fa-check"></i> ${paragrafo.trim()}</p>`).join('')}
-                        <div class="botoes">
-                            <button class="botao-copiar"><i class="fas fa-copy"></i> Copiar Regra</button>
-                            <button class="botao-card"><i class="fas fa-images"></i> Cards</button>
-                        </div>
-                    `;
-                    const botaoCopiar = regraDiv.querySelector('.botao-copiar');
-                    botaoCopiar.onclick = () => {
-                        const textoRegra = `${regra.titulo}\n\n${regra.descricao}\n\n${regra.paragrafos.join('\n\n')}`;
-                        navigator.clipboard.writeText(textoRegra.trim())
-                            .then(() => Swal.fire('Copiado!', 'Regra copiada para a área de transferência.', 'success'))
-                            .catch(() => Swal.fire('Erro!', 'Não foi possível copiar a regra.', 'error'));
-                    };
+            // Preenche parsedRules com as regras extraídas
+            parsedRules = rows.map(row => {
+                const columns = row.split(',');
+                if (columns.length < 6) return null;
 
-                    const botaoCard = regraDiv.querySelector('.botao-card');
-                    botaoCard.onclick = () => {
-                        const totalCards = 14;
-                        let imagensHTML = '';
-                        for (let i = 1; i <= totalCards; i++) {
-                            imagensHTML += `
-                                <div style="text-align: center; margin-bottom: 15px;">
-                                    <img src="cards/card${i}.jpg" class="card-img" alt="Card ${i}">
-                                    <br>
-                                    <a href="cards/card${i}.jpg" download="card${i}.jpg">
-                                        <button class="botao-copiar" style="margin-top: 10px;">
-                                            <i class="fas fa-download"></i> Baixar Card ${i}
-                                        </button>
-                                    </a>
-                                </div>
-                            `;
-                        }
-                        Swal.fire({
-                            title: 'Cards',
-                            html: imagensHTML,
-                            showCloseButton: true,
-                            focusConfirm: false,
-                            confirmButtonText: 'Fechar'
-                        });
-                    };
+                return {
+                    id: columns[0]?.trim(),
+                    title: columns[1]?.trim(),
+                    description: columns[2]?.trim(),
+                    paragraphs: columns.slice(3, 7).map(p => p.trim()).filter(p => p)
+                };
+            }).filter(item => item !== null);
 
-                    container.appendChild(regraDiv);
+            updateRulesCounter(parsedRules.length);
+            displayRules(parsedRules);
+
+            // Função de pesquisa
+            const searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("input", (event) => {
+                const query = event.target.value.toLowerCase();
+                const filteredRules = parsedRules.filter(rule => {
+                    return rule.title.toLowerCase().includes(query) || rule.description.toLowerCase().includes(query);
                 });
-            }
-
-            renderizarRegras(regras);
-
-            document.getElementById('barra-pesquisa-input').addEventListener('input', function() {
-                const termoPesquisa = this.value.toLowerCase();
-                const regrasFiltradas = regras.filter(regra =>
-                    regra.titulo.toLowerCase().includes(termoPesquisa) ||
-                    regra.descricao.toLowerCase().includes(termoPesquisa) ||
-                    regra.paragrafos.some(paragrafo => paragrafo.toLowerCase().includes(termoPesquisa))
-                );
-                renderizarRegras(regrasFiltradas);
+                displayRules(filteredRules);
+                updateRulesCounter(filteredRules.length);
             });
-        })
-        .catch(err => {
-            console.error('Erro ao carregar regras: ', err);
-            Swal.fire({ title: 'Erro!', text: 'Não foi possível carregar as regras. Tente novamente mais tarde.', icon: 'error' });
-        });
+        }
+
+        function updateRulesCounter(total) {
+            document.getElementById("totalRegras").querySelector("span").innerText = total;
+        }
+
+        function displayRules(rules) {
+            const container = document.getElementById("cardsContainer");
+            container.innerHTML = "";
+            rules.forEach(rule => {
+                const card = document.createElement("div");
+                card.classList.add("card", "bg-white", "shadow-xl", "rounded-lg", "overflow-hidden", "border", "border-gray-200", "hover:border-purple-500", "transition-all", "duration-300");
+                card.innerHTML = `
+                    <div class="border-b-2 border-gray-200 bg-gradient-to-r from-purple-500 to-purple-700 p-4">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-white p-2 rounded-full">
+                                    <i class="fas fa-balance-scale text-black text-2xl"></i> <!-- Ícone da balança -->
+                                </div>
+                                <h2 class="text-xl font-bold text-white">${rule.title}</h2>
+                            </div>
+<button class="copy-button" onclick="copyContent('${rule.id}')"
+    style="border: 2px solid transparent; margin-right: 5px; background-color: transparent;" 
+    onmousedown="this.style.backgroundColor = '#ddd'" 
+    onmouseup="this.style.backgroundColor = 'transparent'" 
+    onmouseleave="this.style.backgroundColor = 'transparent'">  
+    <i class="fas fa-copy"></i>  
+</button>  
+
+<button class="copy-button" onclick="openPopup('${rule.id}')"
+    style="border: 2px solid transparent; margin-left: 5px; background-color: transparent;" 
+    onmousedown="this.style.backgroundColor = '#ddd'" 
+    onmouseup="this.style.backgroundColor = 'transparent'" 
+    onmouseleave="this.style.backgroundColor = 'transparent'">  
+    <i class="fas fa-image"></i>  
+</button>
+<div id="imagePopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4">
+    <div class="bg-white p-4 rounded-lg shadow-lg w-full max-w-xs relative">
+        <button onclick="closePopup()" class="absolute top-2 right-2 text-gray-700 text-xl">&times;</button>
+        <h2 class="text-lg font-bold mb-3 text-center">Imagens do Card</h2>
+        <div id="imageContainer" class="flex flex-wrap justify-center gap-2 max-h-60 overflow-y-auto"></div>
+    </div>
+</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-start space-x-3 mb-6">
+                            <div class="bg-purple-100 p-2 rounded-full mt-1">
+                                <i class="fas fa-align-left text-purple-600"></i>
+                            </div>
+                            <p class="text-gray-700">${rule.description.replace(/\|/g, ',')}</p>
+                        </div>
+                        <div class="space-y-4">
+                            ${rule.paragraphs.map((paragraph, index) => `
+                                <div class="flex items-start space-x-3 bg-gray-50 p-3 rounded-lg">
+                                    <div class="bg-purple-100 p-2 rounded-full">
+                                        <span class="text-sm font-bold text-purple-600">Parágrafo ${index + 1}:</span>
+                                    </div>
+                                    <p class="text-gray-700">${paragraph.replace(/\|/g, ',')}</p>
+                                </div>`).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function copyContent(id) {
+            // Localiza a regra pelo ID
+            const rule = parsedRules.find(r => r.id === id);
+            if (rule) {
+                // Formatação da cópia no formato desejado, substituindo | por ,
+                const content = `${rule.title.toUpperCase()} \n\n${rule.description.replace(/\|/g, ',')}\n\n` +
+                    rule.paragraphs.map((paragraph, index) => `Parágrafo ${index + 1}: ${paragraph.replace(/\|/g, ',')}`).join('\n\n');
+                navigator.clipboard.writeText(content).then(() => {
+                    showToast("Conteúdo copiado com sucesso!");
+                }).catch(err => {
+                    console.error('Erro ao copiar', err);
+                    showToast("Erro ao copiar conteúdo.");
+                });
+            } else {
+                showToast("Regra não encontrada.");
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.classList.add('toast');
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        function openPopup(id) {
+    const imageContainer = document.getElementById("imageContainer");
+    imageContainer.innerHTML = ""; 
+
+    for (let i = 1; i <= 20; i++) { // Agora exibe apenas 6 imagens por vez
+        const imgSrc = `imagens/card${i}.jpg`;
+
+        const imgWrapper = document.createElement("div");
+        imgWrapper.classList.add("flex", "flex-col", "items-center", "w-24");
+
+        imgWrapper.innerHTML = `
+            <img src="${imgSrc}" alt="Card ${i}" class="w-20 h-20 object-cover rounded-md shadow">
+            <a href="${imgSrc}" download="card${i}.jpg" class="mt-1 bg-blue-500 text-white px-2 py-1 rounded text-xs">
+                Baixar
+            </a>
+        `;
+
+        imageContainer.appendChild(imgWrapper);
+    }
+
+    document.getElementById("imagePopup").classList.remove("hidden");
+}
+
+function closePopup() {
+    document.getElementById("imagePopup").classList.add("hidden");
+}
+
+        loadRules();
     </script>
+    
+
+
+    <!-- Footer -->
+    <footer class="footer" style="background-color: #2d2d2d; color: white; text-align: center; padding: 10px 0;">
+        <p>&copy; 2025 Neext. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</body>
+</body>
 </body>
 </html>
