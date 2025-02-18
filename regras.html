@@ -215,8 +215,8 @@
     const imageContainer = document.getElementById("imageContainer");
     imageContainer.innerHTML = ""; 
 
-    for (let i = 1; i <= 20; i++) { // Agora exibe apenas 6 imagens por vez
-        const imgSrc = `cards${i}.jpg`;
+    for (let i = 1; i <= 6; i++) { // Agora exibe apenas 6 imagens
+        const imgSrc = `cards/cards${i}.jpg`;
 
         const imgWrapper = document.createElement("div");
         imgWrapper.classList.add("flex", "flex-col", "items-center", "w-24");
@@ -237,9 +237,6 @@
 function closePopup() {
     document.getElementById("imagePopup").classList.add("hidden");
 }
-
-        loadRules();
-    </script>
     
 
 
