@@ -215,24 +215,15 @@
     const imageContainer = document.getElementById("imageContainer");
     imageContainer.innerHTML = ""; 
 
-    for (let i = 1; i <= 6; i++) { // Agora exibe apenas 6 imagens
-        // Tentar primeiro o formato JPG
-        let imgSrc = `cards/cards${i}.jpg`;
-        
-        // Caso o arquivo .jpg não exista, tentar o formato PNG
+    for (let i = 1; i <= 20; i++) { // Agora exibe apenas 6 imagens por vez
+        const imgSrc = `cards${i}.jpg`;
+
         const imgWrapper = document.createElement("div");
         imgWrapper.classList.add("flex", "flex-col", "items-center", "w-24");
 
-        // Verifica se o arquivo JPG existe. Se não, usa PNG
-        let fileType = '.jpg'; // Default to jpg
-        if (/* Verificar se cards/cards${i}.jpg não existe */) {
-            imgSrc = `cards/cards${i}.png`;
-            fileType = '.png';
-        }
-
         imgWrapper.innerHTML = `
             <img src="${imgSrc}" alt="Card ${i}" class="w-20 h-20 object-cover rounded-md shadow">
-            <a href="${imgSrc}" download="card${i}${fileType}" class="mt-1 bg-blue-500 text-white px-2 py-1 rounded text-xs">
+            <a href="${imgSrc}" download="card${i}.jpg" class="mt-1 bg-blue-500 text-white px-2 py-1 rounded text-xs">
                 Baixar
             </a>
         `;
@@ -246,6 +237,9 @@
 function closePopup() {
     document.getElementById("imagePopup").classList.add("hidden");
 }
+
+        loadRules();
+    </script>
     
 
 
