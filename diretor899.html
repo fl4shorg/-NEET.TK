@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+    
+    <!-- Ícone da página -->
+    <link rel="icon" href="https://i.imgur.com/nDGsGLT.png" type="image/x-icon">
+
+    <!-- Links externos -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+header {
+    background-color: #6a0dad; /* Cor roxa */
+    padding: 15px 20px;  /* Ajusta o padding da navbar */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Garante que o título e ícones fiquem nas extremidades */
+    box-sizing: border-box;
+    width: 100%;
+}
+        header h1 {
+            margin: 0;
+            color: white;
+            font-size: 26px; /* Ajusta o tamanho do título */
+            display: flex;
+            align-items: center;
+        }
+        header h1 img {
+            width: 30px; /* Ajusta o tamanho do ícone ao lado do título */
+            height: 30px;
+            margin-right: 10px; /* Espaço entre o ícone e o título */
+        }
+#profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    object-fit: cover;
+    margin-left: 20px;  /* Aumenta a distância da esquerda */
+}
+
+
+        #profile-upload {
+            display: none;
+        }
+        nav {
+            background-color: #333;
+            padding: 15px;  /* Aumenta o tamanho da segunda navbar */
+            text-align: center;
+        }
+        nav span {
+            color: white;
+            font-size: 18px; /* Aumenta o tamanho do texto da navbar */
+            font-weight: bold;
+        }
+        button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px; /* Aumenta o tamanho dos ícones */
+            cursor: pointer;
+        }
+        button i {
+            margin: 0;
+        }
+.navbar-options {
+    display: flex;
+    align-items: center;
+    gap: 0px; /* Remove o espaço entre os itens */
+}
+
+#dark-mode-toggle {
+    margin-left: 0; /* Remove qualquer margem que possa estar criando espaço */
+}
+        .profile-logout {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Aumenta o espaço entre foto de perfil e logout */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <!-- Ícone de prisão SVG -->
+    <img src="svg/dr.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;"> <!-- Ajusta o tamanho do ícone -->
+    
+    <!-- Título -->
+    <h1>DASHBOARD</h1>
+    
+    <!-- Modo Escuro, Foto de Perfil e Logout -->
+    <div class="navbar-options">
+        <!-- Botão de Modo Escuro -->
+        <button id="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon" id="dark-mode-icon"></i>
+        </button>
+
+        <!-- Foto de Perfil e Botão de Logout -->
+        <div class="profile-logout">
+            <!-- Foto de Perfil -->
+            <img id="profile-picture" src="https://i.imgur.com/nDGsGLT.png" alt="Foto de Perfil" title="Clique para alterar">
+            <input id="profile-upload" type="file" accept="image/*" onchange="updateProfilePicture()">
+
+            <!-- Botão de Sair -->
+            <button onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<!-- Segunda Navbar -->
+<nav style="background: linear-gradient(to right, #6a0dad, #ff69b4); display: flex; justify-content: center; align-items: center; padding: 10px;">
+    <span style="font-size: 18px; display: flex; align-items: center;">
+        <img src="svg/n.svg" alt="Ícone" style="width: 1em; height: 1em; margin-right: 10px;">
+        DESENVOLVIDO PELA NEEXT
+    </span>
+</nav>
+
+<!-- Adicione Font Awesome para os ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Barra de Pesquisa com Botão -->
+<div class="search-container" style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+  <button id="search-btn" class="search-btn" 
+    style="font-size: 18px; padding: 10px 20px; background-color: #7F00FF; color: white; border: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    <i class="fas fa-search" style="margin-right: 10px;"></i> Pesquisar
+  </button>
+</div>
+
+<script>
+  const apiUrls = [
+    // APIs existentes
+    "https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwjo5BRXE8yqQs3M8Nj_HMZ5ANYlOR9JVXDdUHVw1XzQ4QNxTHSK93mArsbOqGW0i9sGQ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?id=",
+    "https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?id=",
+    "https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?id=",
+
+    // Novas APIs adicionadas
+    "https://script.google.com/macros/s/AKfycbxu8xRBhGDSxy2NkEqLxs4K38q3IgoEfOCCnJyYpOLzWTEnLaMZVecMTuYRV5sQ0HF9HA/exec?id=",
+    "https://script.google.com/macros/s/AKfycbxu49RPRSL0zxLsd-A_2Y8IvNBirRBxFI3XrAyk7scf-dysgN-olBbSE-AgtsUZlRu4bA/exec?id=",
+    "https://script.google.com/macros/s/AKfycbxfZEM50YySxQ6zG8eN3sFNGgVFL_lPT7Zq2Th8YDfM97St1R1Uip9lOtGIn1eOeWTZ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzK4-NoE1S1_bkRe6zbGc28LfnpU15mwxVHelFRnsoHF7rJNTcyCEnH7XJjGDHT0nTE/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyLBcAMW6E4-vgBYGvYx2OM1CK_dtAoqoRvG_uFseRHOT2gGouq4k6zbZD5mQneiYzpmQ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwaKgjdg36rw5KjwSEhUi2bLWySktMtAerrLVGjcqN43k4Px5MkeGKp0b0oFPNWNgRR/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzMPxhhs7X3-0KQ9ypmTs8_ppXKl4_zRZN-DY0mN9FBXF872bBGYUaldZj6OoIQIJU7/exec?id="
+  ];
+
+  document.getElementById('search-btn').addEventListener('click', function() {
+    Swal.fire({
+      title: 'Pesquisar Usuário',
+      input: 'text',
+      inputLabel: 'Digite o ID do Usuário',
+      inputPlaceholder: 'Ex: 213',
+      showCancelButton: true,
+      confirmButtonText: 'Pesquisar',
+      cancelButtonText: 'Cancelar',
+      inputValidator: (value) => {
+        if (!value.trim()) {
+          return 'Você precisa digitar um ID!';
+        }
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const query = result.value.trim();
+        Swal.fire({
+          title: 'Buscando...',
+          html: 'Aguarde enquanto pesquisamos.',
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading()
+        });
+
+        try {
+          const responses = await Promise.all(apiUrls.map(url => fetch(url + query).then(res => res.text()).catch(() => "")));
+          const results = responses.flatMap(data => data.split("\n").map(row => row.split(","))).filter(columns => columns[0] && columns[0].includes(query));
+
+          Swal.close();
+
+          if (results.length > 0) {
+            let usersHtml = results.map(columns => `
+              <div style="text-align: left; padding: 10px;">
+                <p><i class="fas fa-id-badge"></i> <strong>ID:</strong> ${columns[0]}</p>
+                <p><i class="fas fa-user"></i> <strong>Nome:</strong> ${columns[1]}</p>
+                <p><i class="fas fa-calendar-alt"></i> <strong>Idade:</strong> ${columns[2]}</p>
+                <p><i class="fas fa-phone"></i> <strong>Telefone:</strong> ${columns[3]}</p>
+                <p><i class="fab fa-instagram"></i> <strong>Instagram:</strong> ${columns[4]}</p>
+                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> ${columns[5]}</p>
+              </div>
+              <hr>
+            `).join("");
+
+            Swal.fire({
+              title: `Usuário${results.length > 1 ? 's' : ''} Encontrado${results.length > 1 ? 's' : ''}`,
+              html: usersHtml,
+              icon: 'success'
+            });
+          } else {
+            Swal.fire({
+              title: 'Usuário Não Encontrado',
+              text: 'Nenhum usuário encontrado com esse ID.',
+              icon: 'error'
+            });
+          }
+        } catch (error) {
+          Swal.fire({ title: 'Erro na Pesquisa', text: 'Ocorreu um erro ao buscar os dados.', icon: 'error' });
+          console.error("Erro ao buscar dados:", error);
+        }
+      }
+    });
+  });
+</script>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Alternar modo escuro
+    function toggleDarkMode() {
+        const body = document.body;
+        const icon = document.getElementById('dark-mode-icon');
+        
+        // Alterna a classe "dark-mode"
+        body.classList.toggle('dark-mode');
+        
+        // Salva a preferência no localStorage
+        const isDarkMode = body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        
+        // Atualiza o ícone do botão
+        icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    // Carrega a preferência do modo escuro ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            document.getElementById('dark-mode-icon').className = 'fas fa-sun';
+        }
+        
+        // Carregar a foto de perfil salva no localStorage
+        const savedProfilePicture = localStorage.getItem('profilePicture');
+        if (savedProfilePicture) {
+            document.getElementById('profile-picture').src = savedProfilePicture;
+        }
+    });
+
+    // Abrir o seletor de arquivo ao clicar na foto de perfil
+    document.getElementById('profile-picture').addEventListener('click', () => {
+        document.getElementById('profile-upload').click();
+    });
+
+    // Atualizar a foto de perfil
+    function updateProfilePicture() {
+        const fileInput = document.getElementById('profile-upload');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const profilePicture = e.target.result;
+                document.getElementById('profile-picture').src = profilePicture;
+
+                // Salvar a foto no localStorage
+                localStorage.setItem('profilePicture', profilePicture);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Função de logout com SweetAlert2
+    function logout() {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: 'Você realmente deseja sair?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, quero sair',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Desconectado!',
+                    'Você saiu com sucesso.',
+                    'success'
+                );
+                // Aqui você pode adicionar a lógica de redirecionamento ou logout.
+            }
+        });
+    }
+</script>
+
+<!-- Incluindo a biblioteca Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
+
+<!-- Card do Total de Administradores -->
+<div id="admin-card" style="text-align: center; font-size: 22px; font-weight: bold; color: white; background-color: #9B4DFF; padding: 20px; border-radius: 10px; max-width: 350px; margin: 20px auto;">
+  <i class="fa fa-users" style="margin-right: 10px;"></i> Total de Administradores no Sistema da Neext: Carregando...
+</div>
+
+<!-- Gráfico de Progresso -->
+<div style="text-align: center; margin-top: 20px;">
+  <canvas id="adminChart" width="300" height="300"></canvas>
+</div>
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.5/dist/sweetalert2.all.min.js"></script>
+
+<!-- Chart.js para o gráfico -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Font Awesome para o ícone -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+
+
+<script>
+    async function obterDadosDomoDeFerro() {
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxIG53Hskr69iwx5OREGTqEHYkBCIQYwZr820x2gU7AJ2Fvd2b82iOszZMU0nQ5hQ/exec";
+
+        try {
+            // Obter dados da API como texto
+            const response = await fetch(apiUrl);
+            const textData = await response.text();
+
+            console.log(textData);  // Diagnóstico para verificar como os dados estão chegando
+
+            // Verifique se a resposta contém o texto "Total de números enviados:"
+            const regex = /Total de números enviados:\s*(\d+)/;
+            const match = textData.match(regex);
+
+            if (match && match[1]) {
+                const totalNumerosEnviados = parseInt(match[1], 10);  // Extrai o número do total
+                document.getElementById("totalNumeros").textContent = totalNumerosEnviados;  // Atualiza o card
+
+                // Calculando a Taxa de Defesa (em relação ao objetivo de 2000)
+                const objetivoDefesa = 2000;
+                const taxaDefesa = (totalNumerosEnviados / objetivoDefesa) * 100;
+
+                // Atualiza a taxa de defesa
+                document.getElementById("taxaDefesa").textContent = `${Math.min(taxaDefesa, 100).toFixed(2)}%`;
+
+                // Atualiza o gráfico de defesa
+                document.getElementById("graficoDefesa").style.width = `${Math.min(taxaDefesa, 100)}%`;
+
+                // Taxa de Infiltração (falta de 1k a 2k)
+                const infiltraçãoFaltante = Math.max(0, 2000 - totalNumerosEnviados); // O que falta para 2k
+                const taxaInfiltracao = (infiltraçãoFaltante / 1000) * 100;  // Calcula o quanto falta para o 2k
+
+                // Atualiza a Taxa de Infiltração
+                document.getElementById("taxaInfiltracao").textContent = `${Math.min(taxaInfiltracao, 100).toFixed(2)}%`;
+
+                // Atualiza o gráfico de Taxa de Infiltração
+                document.getElementById("graficoInfiltracao").style.width = `${Math.min(taxaInfiltracao, 100)}%`;
+
+            } else {
+                console.error("Erro: Não foi possível encontrar o número de total enviado.");
+            }
+
+        } catch (error) {
+            console.error("Erro ao obter dados da API:", error);
+        }
+    }
+
+    // Chama a função para obter os dados e atualizar os cards
+    obterDadosDomoDeFerro();
+</script>
+
+<!-- Card com o Sistema Operacional -->
+<div style="text-align: center; margin-top: 20px;">
+    <div class="card-operacional" style="background-color: #28a745; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-plug" style="font-size: 40px; margin-bottom: 10px;"></i>
+        <div style="font-size: 24px; font-weight: bold;">
+            Sistema Domo de Ferro Operacional
+        </div>
+    </div>
+</div>
+
+<!-- Card com Total de Números Enviados -->
+<div style="text-align: center; margin-top: 20px;">
+    <!-- Card com Total de Números Enviados -->
+    <div class="card" style="background-color: #007bff; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-broadcast-tower" style="font-size: 40px; margin-bottom: 10px;"></i>
+        <div style="font-size: 24px; font-weight: bold;">
+            Total de Números Enviados: <span id="totalNumeros">0</span>
+        </div>
+    </div>
+
+    <!-- Card com Taxa de Defesa -->
+    <div class="card" style="background-color: #28a745; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-shield-alt" style="font-size: 40px; margin-bottom: 10px;"></i>
+        <div style="font-size: 24px; font-weight: bold;">
+            Taxa de Defesa: <span id="taxaDefesa">0%</span>
+        </div>
+        <!-- Gráfico de Progresso -->
+        <div style="width: 100%; background-color: #e9ecef; height: 20px; border-radius: 10px;">
+            <div id="graficoDefesa" style="height: 100%; background-color: #007bff; border-radius: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- Card com Taxa de Infiltração -->
+    <div class="card" style="background-color: #ffc107; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 10px;"></i>
+        <div style="font-size: 24px; font-weight: bold;">
+            Taxa de Infiltração (1k a 2k): <span id="taxaInfiltracao">0%</span>
+        </div>
+        <!-- Gráfico de Progresso -->
+        <div style="width: 100%; background-color: #e9ecef; height: 20px; border-radius: 10px;">
+            <div id="graficoInfiltracao" style="height: 100%; background-color: #ffc107; border-radius: 10px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Carregando o Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<!-- CSS Responsivo -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-color: #f8f9fa;
+    }
+
+    .card-operacional, .card {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .card-operacional {
+        background-color: #28a745;
+    }
+
+    @media (max-width: 600px) {
+        .card-operacional, .card {
+            width: 90%;
+            margin: 10px auto;
+        }
+
+        .card i {
+            font-size: 30px;
+        }
+
+        .card .fa-pie-chart {
+            font-size: 40px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="title">
+        <i class="fas fa-shield-alt"></i> Abin Quântico FBI
+    </div>
+    <div class="cards">
+        <div class="card aprovado">
+            <i class="fas fa-check-circle"></i>
+            <div>Aprovados: <span id="aprovados">0</span></div>
+        </div>
+        <div class="card reprovado">
+            <i class="fas fa-times-circle"></i>
+            <div>Reprovados: <span id="reprovados">0</span></div>
+        </div>
+        <div class="card aguarde">
+            <i class="fas fa-hourglass-half"></i>
+            <div>Aguardando Aprovação: <span id="aguarde">0</span></div>
