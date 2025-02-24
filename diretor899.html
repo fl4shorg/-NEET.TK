@@ -98,7 +98,7 @@ header {
 <body>
 <header>
     <!-- Ícone de prisão SVG -->
-    <img src="svg/dr.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;"> <!-- Ajusta o tamanho do ícone -->
+    <img src="svg/prisao.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;"> <!-- Ajusta o tamanho do ícone -->
     
     <!-- Título -->
     <h1>DASHBOARD</h1>
@@ -133,112 +133,9 @@ header {
 <nav style="background: linear-gradient(to right, #6a0dad, #ff69b4); display: flex; justify-content: center; align-items: center; padding: 10px;">
     <span style="font-size: 18px; display: flex; align-items: center;">
         <img src="svg/n.svg" alt="Ícone" style="width: 1em; height: 1em; margin-right: 10px;">
-        DESENVOLVIDO PELA NEEXT
+        PAINEL GERAL
     </span>
 </nav>
-
-<!-- Adicione Font Awesome para os ícones -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<!-- Barra de Pesquisa com Botão -->
-<div class="search-container" style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
-  <button id="search-btn" class="search-btn" 
-    style="font-size: 18px; padding: 10px 20px; background-color: #7F00FF; color: white; border: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-    <i class="fas fa-search" style="margin-right: 10px;"></i> Pesquisar
-  </button>
-</div>
-
-<script>
-  const apiUrls = [
-    // APIs existentes
-    "https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?id=",
-    "https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwjo5BRXE8yqQs3M8Nj_HMZ5ANYlOR9JVXDdUHVw1XzQ4QNxTHSK93mArsbOqGW0i9sGQ/exec?id=",
-    "https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?id=",
-    "https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?id=",
-    "https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?id=",
-    "https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?id=",
-    "https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?id=",
-
-    // Novas APIs adicionadas
-    "https://script.google.com/macros/s/AKfycbxu8xRBhGDSxy2NkEqLxs4K38q3IgoEfOCCnJyYpOLzWTEnLaMZVecMTuYRV5sQ0HF9HA/exec?id=",
-    "https://script.google.com/macros/s/AKfycbxu49RPRSL0zxLsd-A_2Y8IvNBirRBxFI3XrAyk7scf-dysgN-olBbSE-AgtsUZlRu4bA/exec?id=",
-    "https://script.google.com/macros/s/AKfycbxfZEM50YySxQ6zG8eN3sFNGgVFL_lPT7Zq2Th8YDfM97St1R1Uip9lOtGIn1eOeWTZ/exec?id=",
-    "https://script.google.com/macros/s/AKfycbzK4-NoE1S1_bkRe6zbGc28LfnpU15mwxVHelFRnsoHF7rJNTcyCEnH7XJjGDHT0nTE/exec?id=",
-    "https://script.google.com/macros/s/AKfycbyLBcAMW6E4-vgBYGvYx2OM1CK_dtAoqoRvG_uFseRHOT2gGouq4k6zbZD5mQneiYzpmQ/exec?id=",
-    "https://script.google.com/macros/s/AKfycbwaKgjdg36rw5KjwSEhUi2bLWySktMtAerrLVGjcqN43k4Px5MkeGKp0b0oFPNWNgRR/exec?id=",
-    "https://script.google.com/macros/s/AKfycbzMPxhhs7X3-0KQ9ypmTs8_ppXKl4_zRZN-DY0mN9FBXF872bBGYUaldZj6OoIQIJU7/exec?id="
-  ];
-
-  document.getElementById('search-btn').addEventListener('click', function() {
-    Swal.fire({
-      title: 'Pesquisar Usuário',
-      input: 'text',
-      inputLabel: 'Digite o ID do Usuário',
-      inputPlaceholder: 'Ex: 213',
-      showCancelButton: true,
-      confirmButtonText: 'Pesquisar',
-      cancelButtonText: 'Cancelar',
-      inputValidator: (value) => {
-        if (!value.trim()) {
-          return 'Você precisa digitar um ID!';
-        }
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const query = result.value.trim();
-        Swal.fire({
-          title: 'Buscando...',
-          html: 'Aguarde enquanto pesquisamos.',
-          allowOutsideClick: false,
-          didOpen: () => Swal.showLoading()
-        });
-
-        try {
-          const responses = await Promise.all(apiUrls.map(url => fetch(url + query).then(res => res.text()).catch(() => "")));
-          const results = responses.flatMap(data => data.split("\n").map(row => row.split(","))).filter(columns => columns[0] && columns[0].includes(query));
-
-          Swal.close();
-
-          if (results.length > 0) {
-            let usersHtml = results.map(columns => `
-              <div style="text-align: left; padding: 10px;">
-                <p><i class="fas fa-id-badge"></i> <strong>ID:</strong> ${columns[0]}</p>
-                <p><i class="fas fa-user"></i> <strong>Nome:</strong> ${columns[1]}</p>
-                <p><i class="fas fa-calendar-alt"></i> <strong>Idade:</strong> ${columns[2]}</p>
-                <p><i class="fas fa-phone"></i> <strong>Telefone:</strong> ${columns[3]}</p>
-                <p><i class="fab fa-instagram"></i> <strong>Instagram:</strong> ${columns[4]}</p>
-                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> ${columns[5]}</p>
-              </div>
-              <hr>
-            `).join("");
-
-            Swal.fire({
-              title: `Usuário${results.length > 1 ? 's' : ''} Encontrado${results.length > 1 ? 's' : ''}`,
-              html: usersHtml,
-              icon: 'success'
-            });
-          } else {
-            Swal.fire({
-              title: 'Usuário Não Encontrado',
-              text: 'Nenhum usuário encontrado com esse ID.',
-              icon: 'error'
-            });
-          }
-        } catch (error) {
-          Swal.fire({ title: 'Erro na Pesquisa', text: 'Ocorreu um erro ao buscar os dados.', icon: 'error' });
-          console.error("Erro ao buscar dados:", error);
-        }
-      }
-    });
-  });
-</script>
-
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -323,181 +220,258 @@ header {
 <!-- Incluindo a biblioteca Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-
-
-<!-- Card do Total de Administradores -->
-<div id="admin-card" style="text-align: center; font-size: 22px; font-weight: bold; color: white; background-color: #9B4DFF; padding: 20px; border-radius: 10px; max-width: 350px; margin: 20px auto;">
-  <i class="fa fa-users" style="margin-right: 10px;"></i> Total de Administradores no Sistema da Neext: Carregando...
+<!-- Barra de Pesquisa com Botão (centralizado abaixo da navbar) -->
+<div class="search-container" style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+  <button id="search-btn" class="search-btn" 
+    style="font-size: 18px; padding: 10px 20px; background-color: #7F00FF; color: white; border: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    <i class="fas fa-search" style="margin-right: 10px;"></i> Pesquisar
+  </button>
 </div>
 
-<!-- Gráfico de Progresso -->
-<div style="text-align: center; margin-top: 20px;">
-  <canvas id="adminChart" width="300" height="300"></canvas>
+<!-- Área de Carregamento -->
+<div id="loading-message" style="display: none; text-align: center; margin-top: 20px;">
+  <i class="fas fa-spinner fa-spin" style="font-size: 30px;"></i>
+  <p>Pesquisando...</p>
 </div>
 
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.5/dist/sweetalert2.all.min.js"></script>
 
-<!-- Chart.js para o gráfico -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Font Awesome para o ícone -->
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
-
-
 <script>
-    async function obterDadosDomoDeFerro() {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbxIG53Hskr69iwx5OREGTqEHYkBCIQYwZr820x2gU7AJ2Fvd2b82iOszZMU0nQ5hQ/exec";
+  // URLs das APIs
+  const apiUrls = [
+    "https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?id=",
+    "https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?id=",
+    "https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?id=",
+    "https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?id=",
+    "https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?id=",
+    "https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?id="
+  ];
 
-        try {
-            // Obter dados da API como texto
-            const response = await fetch(apiUrl);
-            const textData = await response.text();
+  // Funcionalidade de abrir o popup de pesquisa
+  document.getElementById('search-btn').addEventListener('click', function() {
+    Swal.fire({
+      title: 'Pesquisar Usuário',
+      input: 'text',
+      inputLabel: 'Digite o ID do Usuário',
+      inputPlaceholder: 'Ex: 213',
+      showCancelButton: true,
+      confirmButtonText: 'Pesquisar',
+      cancelButtonText: 'Cancelar',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Você precisa digitar um ID!';
+        }
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const query = result.value.trim(); // Pega o ID inserido
+        if (query === "") {
+          Swal.fire('Erro', 'Por favor, insira um ID para pesquisar.', 'error');
+          return;
+        }
 
-            console.log(textData);  // Diagnóstico para verificar como os dados estão chegando
+        // Exibe o indicador de carregamento
+        document.getElementById('loading-message').style.display = 'block';
 
-            // Verifique se a resposta contém o texto "Total de números enviados:"
-            const regex = /Total de números enviados:\s*(\d+)/;
-            const match = textData.match(regex);
+        // Tenta todas as URLs de API
+        for (let apiUrl of apiUrls) {
+          try {
+            const response = await fetch(apiUrl + query);
+            const data = await response.text(); // Resposta em formato CSV
+            const rows = data.split("\n");
 
-            if (match && match[1]) {
-                const totalNumerosEnviados = parseInt(match[1], 10);  // Extrai o número do total
-                document.getElementById("totalNumeros").textContent = totalNumerosEnviados;  // Atualiza o card
+            let userFound = false;
 
-                // Calculando a Taxa de Defesa (em relação ao objetivo de 2000)
-                const objetivoDefesa = 2000;
-                const taxaDefesa = (totalNumerosEnviados / objetivoDefesa) * 100;
+            for (let row of rows) {
+              const columns = row.split(",");
 
-                // Atualiza a taxa de defesa
-                document.getElementById("taxaDefesa").textContent = `${Math.min(taxaDefesa, 100).toFixed(2)}%`;
-
-                // Atualiza o gráfico de defesa
-                document.getElementById("graficoDefesa").style.width = `${Math.min(taxaDefesa, 100)}%`;
-
-                // Taxa de Infiltração (falta de 1k a 2k)
-                const infiltraçãoFaltante = Math.max(0, 2000 - totalNumerosEnviados); // O que falta para 2k
-                const taxaInfiltracao = (infiltraçãoFaltante / 1000) * 100;  // Calcula o quanto falta para o 2k
-
-                // Atualiza a Taxa de Infiltração
-                document.getElementById("taxaInfiltracao").textContent = `${Math.min(taxaInfiltracao, 100).toFixed(2)}%`;
-
-                // Atualiza o gráfico de Taxa de Infiltração
-                document.getElementById("graficoInfiltracao").style.width = `${Math.min(taxaInfiltracao, 100)}%`;
-
-            } else {
-                console.error("Erro: Não foi possível encontrar o número de total enviado.");
+              // Se o ID for encontrado, exibe os dados no popup
+              if (columns[0] && columns[0].trim() == query) {
+                userFound = true;
+                // Oculta o carregamento e exibe o resultado
+                document.getElementById('loading-message').style.display = 'none';
+                Swal.fire({
+                  title: `Usuário Encontrado: ${columns[1]}`,
+                  html: `
+                    <p><strong>ID:</strong> ${columns[0]}</p>
+                    <p><strong>Nome:</strong> ${columns[1]}</p>
+                    <p><strong>Idade:</strong> ${columns[2]}</p>
+                    <p><strong>Número:</strong> ${columns[3]}</p>
+                    <p><strong>Instagram:</strong> ${columns[4]}</p>
+                    <p><strong>Email:</strong> ${columns[5]}</p>
+                  `,
+                  icon: 'success'
+                });
+                return; // Encerra a função depois que o popup for exibido
+              }
             }
 
-        } catch (error) {
-            console.error("Erro ao obter dados da API:", error);
+            // Se não encontrar o usuário na API atual, tenta a próxima
+          } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+            continue; // Tenta a próxima API se falhar
+          }
         }
-    }
 
-    // Chama a função para obter os dados e atualizar os cards
-    obterDadosDomoDeFerro();
+        // Se não encontrar o usuário em nenhuma das APIs
+        document.getElementById('loading-message').style.display = 'none'; // Esconde o carregamento
+        Swal.fire({
+          title: 'Usuário Não Encontrado',
+          text: 'Nenhum usuário encontrado com esse ID.',
+          icon: 'error'
+        });
+      }
+    });
+  });
 </script>
 
-<!-- Card com o Sistema Operacional -->
-<div style="text-align: center; margin-top: 20px;">
-    <div class="card-operacional" style="background-color: #28a745; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        <i class="fas fa-plug" style="font-size: 40px; margin-bottom: 10px;"></i>
-        <div style="font-size: 24px; font-weight: bold;">
-            Sistema Domo de Ferro Operacional
-        </div>
-    </div>
-</div>
+<!-- Incluindo a biblioteca Font Awesome para ícones -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-<!-- Card com Total de Números Enviados -->
-<div style="text-align: center; margin-top: 20px;">
-    <!-- Card com Total de Números Enviados -->
-    <div class="card" style="background-color: #007bff; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        <i class="fas fa-broadcast-tower" style="font-size: 40px; margin-bottom: 10px;"></i>
-        <div style="font-size: 24px; font-weight: bold;">
-            Total de Números Enviados: <span id="totalNumeros">0</span>
-        </div>
-    </div>
+<!-- Título 'Grupos' com ícone de painel -->
+<h2 style="text-align: center; margin-top: 20px;">
+  <i class="fa fa-tachometer-alt"></i> Grupos
+</h2>
+<!-- Contêiner do Total de Administradores -->
+<div id="total-admins-container" style="text-align: center; margin-top: 20px;"></div>
 
-    <!-- Card com Taxa de Defesa -->
-    <div class="card" style="background-color: #28a745; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        <i class="fas fa-shield-alt" style="font-size: 40px; margin-bottom: 10px;"></i>
-        <div style="font-size: 24px; font-weight: bold;">
-            Taxa de Defesa: <span id="taxaDefesa">0%</span>
-        </div>
-        <!-- Gráfico de Progresso -->
-        <div style="width: 100%; background-color: #e9ecef; height: 20px; border-radius: 10px;">
-            <div id="graficoDefesa" style="height: 100%; background-color: #007bff; border-radius: 10px;"></div>
-        </div>
-    </div>
+<!-- Contêiner dos Cards -->
+<div id="cards-container" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 20px;"></div>
 
-    <!-- Card com Taxa de Infiltração -->
-    <div class="card" style="background-color: #ffc107; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 10px;"></i>
-        <div style="font-size: 24px; font-weight: bold;">
-            Taxa de Infiltração (1k a 2k): <span id="taxaInfiltracao">0%</span>
-        </div>
-        <!-- Gráfico de Progresso -->
-        <div style="width: 100%; background-color: #e9ecef; height: 20px; border-radius: 10px;">
-            <div id="graficoInfiltracao" style="height: 100%; background-color: #ffc107; border-radius: 10px;"></div>
-        </div>
-    </div>
-</div>
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.5/dist/sweetalert2.all.min.js"></script>
 
-<!-- Carregando o Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script>
+  // Lista de APIs com nome e links (numeração de 1 até 10)
+  const apis = [
+    { name: 'API 1', url: 'https://script.google.com/macros/s/AKfycbxN8oQka12RF0ClzKnB-7px6RWtdR20RAA5dOPOBLNYpgi8dwVd4qreq8O96RarUDmz/exec?action=summary' },
+    { name: 'API 2', url: 'https://script.google.com/macros/s/AKfycbyeaSM8dqofVXd-QbyJoqUb4d9qTLX01zRXit-mHNmnmdpJay_iXbv1fl1Nfsh8Lxa82A/exec?action=summary' },
+    { name: 'API 3', url: 'https://script.google.com/macros/s/AKfycbyF1o0YMEdNvW6Anmb2MSSvhMWK4KYizZ994TuMwcdH-8I4r48CDfONXboEWL79HkpKBQ/exec?action=summary' },
+    { name: 'API 4', url: 'https://script.google.com/macros/s/AKfycbzUVFrJvOLFKWLvlJ2IQ-HC9dF9uN85Q-BSTI2D-S1dwgjSIHPvQ83fvNXslwA0Q-38/exec?action=summary' },
+    { name: 'API 5', url: 'https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?action=summary' },
+    { name: 'API 6', url: 'https://script.google.com/macros/s/AKfycbwzqH9i4Uw31AhROI07DZE_I0MC9YyIBjHev3YxD0bLuxWoBzYXsv7HP3T4BX-8xhS5/exec?action=summary' },
+    { name: 'API 7', url: 'https://script.google.com/macros/s/AKfycbxWZ54qIZNmZiR0tupWv0GeUQZXoyYYJhA_gFGQNQkEQsRg5TI38VdTdaXxQVYn-dAwBg/exec?action=summary' },
+    { name: 'API 8', url: 'https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec?action=summary' },
+    { name: 'API 9', url: 'https://script.google.com/macros/s/AKfycby8jM5nHHhE-e8jSXjUeaVgo-r_dN8xNGkhLaEv_LoNPGQ6r3wIqA7pDSVl00d5D3g/exec?action=summary' },
+    { name: 'API 10', url: 'https://script.google.com/macros/s/AKfycbzsv-47c4mTN-k6d1gshhliGSfhZ7KffhI2e01wbBlejF_fCs3PJur7X1Ztm5-oQ5nT/exec?action=summary' }
+  ];
 
-<!-- CSS Responsivo -->
+  // Cores diferentes para cada card
+  const cardColors = [
+    "#7F00FF", "#FF5733", "#33FF57", "#FFC300", "#FF33FF",
+    "#33CFFF", "#FF6347", "#C71585", "#20B2AA", "#8A2BE2"
+  ];
+
+  // Função para buscar dados de uma API
+  async function fetchSummaryData(apiUrl, index) {
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json(); // Espera resposta JSON
+
+      if (data && data['Número do Grupo'] && data['Total de Administradores']) {
+        const totalAdmins = Object.values(data['Faixa Etária'] || {}).reduce((sum, count) => sum + count, 0);
+        const taxaCrescimento = data['Taxa de Crescimento'] || 'N/A'; // Adiciona a taxa de crescimento
+
+        const card = document.getElementById(`api-card-${index}`);
+        
+        if (!card) {
+          const newCard = document.createElement('div');
+          newCard.id = `api-card-${index}`;
+          newCard.innerHTML = `
+            <div style="width: 100%; max-width: 300px; height: 200px; background-color: ${cardColors[index]}; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
+              <i class="fas fa-users" style="font-size: 50px; margin-bottom: 10px;"></i>
+              <p><strong>Grupo:</strong> ${data['Número do Grupo']}</p>
+              <p><strong>Administradores:</strong> ${totalAdmins}</p>
+              <p><strong>Taxa de Crescimento:</strong> ${taxaCrescimento} <i class="fas fa-arrow-up" style="color: yellow;"></i></p>
+            </div>
+          `;
+          document.getElementById('cards-container').appendChild(newCard);
+        } else {
+          card.innerHTML = `
+            <div style="width: 100%; max-width: 300px; height: 200px; background-color: ${cardColors[index]}; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
+              <i class="fas fa-users" style="font-size: 50px; margin-bottom: 10px;"></i>
+              <p><strong>Grupo:</strong> ${data['Número do Grupo']}</p>
+              <p><strong>Administradores:</strong> ${totalAdmins}</p>
+              <p><strong>Taxa de Crescimento:</strong> ${taxaCrescimento} <i class="fas fa-arrow-up" style="color: yellow;"></i></p>
+            </div>
+          `;
+        }
+
+        return totalAdmins; // Retorna o total de administradores dessa API
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados:", error);
+    }
+    return 0;
+  }
+
+  // Função para carregar os dados de múltiplas APIs e calcular o total
+  async function loadAPIs() {
+    let totalAdministradores = 0;
+    const totalCard = document.getElementById('total-admins-container');
+    totalCard.innerHTML = `
+      <div style="width: 100%; max-width: 350px; height: 180px; background-color: #9B4DFF; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
+        <i class="fas fa-users-cog" style="font-size: 50px; margin-bottom: 10px;"></i>
+        <p><strong>Total de Administradores no Sistema:</strong> Calculando...</p>
+      </div>
+    `;
+
+    // Carrega cada API em um card separado com cor variada
+    for (let i = 0; i < apis.length; i++) {
+      const totalAdminsAPI = await fetchSummaryData(apis[i].url, i);
+      totalAdministradores += totalAdminsAPI; // Soma o total de administradores
+    }
+
+    // Atualiza o card de Total de Administradores
+    totalCard.innerHTML = `
+      <div style="width: 100%; max-width: 350px; height: 180px; background-color: #9B4DFF; color: white; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; margin-bottom: 15px;">
+        <i class="fas fa-users-cog" style="font-size: 50px; margin-bottom: 10px;"></i>
+        <p><strong>Total de Administradores no Sistema:</strong> ${totalAdministradores}</p>
+      </div>
+    `;
+
+    // Carrega os cards dos grupos (não recalculará o total de administradores)
+    const cardsContainer = document.getElementById('cards-container');
+    cardsContainer.innerHTML = '';
+    for (let i = 0; i < apis.length; i++) {
+      await fetchSummaryData(apis[i].url, i); // Atualiza os cards com os dados das APIs
+    }
+  }
+
+  // Chama a função para carregar os dados apenas uma vez ao carregar a página
+  window.onload = loadAPIs;
+</script>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        background-color: #f8f9fa;
+  /* Centraliza o contêiner de cards na tela */
+  #cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  #total-admins-container {
+    margin-top: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* Responsividade para telas pequenas (celulares) */
+  @media screen and (max-width: 768px) {
+    #total-admins-container, #cards-container > div {
+      width: 100%;
+      max-width: 100%;
     }
-
-    .card-operacional, .card {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-        border-radius: 10px;
-    }
-
-    .card-operacional {
-        background-color: #28a745;
-    }
-
-    @media (max-width: 600px) {
-        .card-operacional, .card {
-            width: 90%;
-            margin: 10px auto;
-        }
-
-        .card i {
-            font-size: 30px;
-        }
-
-        .card .fa-pie-chart {
-            font-size: 40px;
-        }
-    }
+  }
 </style>
 
-<div class="container">
-    <div class="title">
-        <i class="fas fa-shield-alt"></i> Abin Quântico FBI
-    </div>
-    <div class="cards">
-        <div class="card aprovado">
-            <i class="fas fa-check-circle"></i>
-            <div>Aprovados: <span id="aprovados">0</span></div>
-        </div>
-        <div class="card reprovado">
-            <i class="fas fa-times-circle"></i>
-            <div>Reprovados: <span id="reprovados">0</span></div>
-        </div>
-        <div class="card aguarde">
-            <i class="fas fa-hourglass-half"></i>
-            <div>Aguardando Aprovação: <span id="aguarde">0</span></div>
+
+</body>
+</html>
