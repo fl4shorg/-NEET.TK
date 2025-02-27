@@ -1024,7 +1024,7 @@
         function loadData() {
             showMessage('Carregando usuários...', 'pending');
             
-            fetch('https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec')
+            fetch('https://script.google.com/macros/s/AKfycbxL8TnQwmrXvZ9cwEsGaN_JQmfqNuqAifU-rqD3QBQhl2_E3Qd62YV043nv87tVVryR/exec')
                 .then(response => {
                     if (!response.ok) throw new Error('Erro na rede: ' + response.statusText);
                     return response.json();
@@ -1293,7 +1293,7 @@
             // Mostrar efeito de loading durante o processo
             showMessage('Atualizando status...', 'pending');
             
-            fetch('https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxL8TnQwmrXvZ9cwEsGaN_JQmfqNuqAifU-rqD3QBQhl2_E3Qd62YV043nv87tVVryR/exec', {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
