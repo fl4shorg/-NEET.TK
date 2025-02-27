@@ -1255,8 +1255,10 @@
             const downloadButton = document.createElement('button');
             downloadButton.className = 'button button-outline button-block';
             downloadButton.innerHTML = '<i class="fas fa-download"></i> Salvar como imagem';
-            downloadButton.onclick = function() {
-                downloadCardAsImage(userCard, entry.nome || 'usuario');
+            downloadButton.onclick = function(e) {
+                e.preventDefault(); // Previne comportamento padrão
+                e.stopPropagation(); // Impede propagação do evento
+                downloadCardAsImage(userCard, entry);
             };
             cardFooter.appendChild(downloadButton);
             
@@ -1434,7 +1436,7 @@
         });
         
         // Função otimizada para baixar card como imagem
-        async function downloadCardAsImage(card, userName) {
+        async function downloadCardAsImage(card, entry) {
             try {
                 // Mostra mensagem de loading
                 showMessage('Gerando imagem...', 'pending');
@@ -1442,34 +1444,38 @@
                 // Cria um clone do card para não alterar o original
                 const cardClone = card.cloneNode(true);
                 
-                // Remove botões e informações desnecessárias
+                // Remove botões e informações desnecessárias do clone
                 const downloadBtn = cardClone.querySelector('.button-outline');
                 if (downloadBtn) downloadBtn.remove();
                 
                 const buttonContainer = cardClone.querySelector('.button-container');
                 if (buttonContainer) buttonContainer.remove();
                 
-                // Prepara o card para exportação
+                // Define um estilo específico para o clone durante a exportação
                 cardClone.style.cssText = `
                     position: fixed;
                     left: -9999px;
                     top: 0;
                     margin: 20px;
                     max-width: 400px;
-                    background: white;
-                    border: 1px solid #e2e8f0;
-                    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                    background: ${getComputedStyle(document.body).getPropertyValue('--card-bg')};
+                    border: 1px solid ${getComputedStyle(document.body).getPropertyValue('--border-color')};
+                    box-shadow: ${getComputedStyle(document.body).getPropertyValue('--shadow-lg')};
                     transform: none !important;
                     transition: none !important;
                     z-index: -1;
+                    border-radius: ${getComputedStyle(document.body).getPropertyValue('--radius-md')};
                 `;
                 
                 document.body.appendChild(cardClone);
                 
-                // Usa Promise para tornar o processo assíncrono
+                // Adiciona um pequeno atraso para permitir que o DOM renderize completamente
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Usa html2canvas para converter o elemento DOM em um canvas
                 const canvas = await html2canvas(cardClone, {
                     backgroundColor: getComputedStyle(document.body).getPropertyValue('--card-bg'),
-                    scale: 2,
+                    scale: 2, // Maior escala para melhor qualidade
                     logging: false,
                     useCORS: true,
                     allowTaint: true,
@@ -1484,19 +1490,34 @@
                     }
                 });
                 
-                // Converte para imagem com qualidade otimizada
-                const imgData = canvas.toDataURL('image/png', 0.8);
+                // Converte o canvas para uma URL de dados de imagem PNG
+                const imgData = canvas.toDataURL('image/png', 0.9);
                 
-                // Cria e dispara o download
+                // Cria um elemento link para acionar o download
                 const link = document.createElement('a');
-                link.download = `usuario-${userName.replace(/\s+/g, '-')}.png`;
+                const fileName = entry.nome ? 
+                    `usuario-${entry.nome.replace(/\s+/g, '-').toLowerCase()}.png` : 
+                    `usuario-${entry.id || 'sem-nome'}.png`;
+                
+                link.download = fileName;
                 link.href = imgData;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                
+                // Simula um clique no link para iniciar o download
                 link.click();
                 
-                // Limpa a memória
-                document.body.removeChild(cardClone);
+                // Limpa os recursos
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    if (document.body.contains(cardClone)) {
+                        document.body.removeChild(cardClone);
+                    }
+                }, 100);
+                
                 canvas.remove();
                 
+                // Exibe mensagem de sucesso
                 showMessage('Imagem salva com sucesso!', 'success');
             } catch (err) {
                 console.error('Erro ao gerar imagem:', err);
