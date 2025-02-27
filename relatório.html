@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>© 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+    <title>©𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
     <meta name="description" content="Sistema Neext" />
     <meta name="author" content="neext" />
     <meta property="og:image" content="https://i.imgur.com/nTqoKxv.png" />
@@ -56,7 +56,7 @@
             gap: 1.5rem;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -175,8 +175,45 @@
             background: linear-gradient(to right, rgb(126, 34, 206), rgb(67, 56, 202));
         }
 
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .color-option {
+            height: 2rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .color-option:hover, .color-option.active {
+            transform: scale(1.05);
+            border-color: white;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
         @media (max-width: 768px) {
-            .input-grid, .sections-grid, .report-sections {
+            .input-grid, .sections-grid, .report-sections, .color-options {
                 grid-template-columns: 1fr;
             }
         }
@@ -192,6 +229,29 @@
         </div>
 
         <input type="text" id="title" placeholder="Título do Relatório">
+
+        <div class="settings-section">
+            <div class="settings-title">
+                <i class="fas fa-palette"></i>
+                <span>Escolha o estilo do relatório</span>
+            </div>
+            <select id="gradient-select" onchange="changeGradient()">
+                <option value="purple-indigo">Roxo & Índigo (Padrão)</option>
+                <option value="blue-teal">Azul & Verde Água</option>
+                <option value="pink-orange">Rosa & Laranja</option>
+                <option value="green-yellow">Verde & Amarelo</option>
+                <option value="red-orange">Vermelho & Laranja</option>
+                <option value="blue-purple">Azul & Roxo</option>
+            </select>
+            <div class="color-options">
+                <div class="color-option active" style="background: linear-gradient(to right, rgb(147, 51, 234), rgb(79, 70, 229));" onclick="selectGradient('purple-indigo')"></div>
+                <div class="color-option" style="background: linear-gradient(to right, rgb(56, 189, 248), rgb(20, 184, 166));" onclick="selectGradient('blue-teal')"></div>
+                <div class="color-option" style="background: linear-gradient(to right, rgb(236, 72, 153), rgb(234, 88, 12));" onclick="selectGradient('pink-orange')"></div>
+                <div class="color-option" style="background: linear-gradient(to right, rgb(34, 197, 94), rgb(234, 179, 8));" onclick="selectGradient('green-yellow')"></div>
+                <div class="color-option" style="background: linear-gradient(to right, rgb(239, 68, 68), rgb(249, 115, 22));" onclick="selectGradient('red-orange')"></div>
+                <div class="color-option" style="background: linear-gradient(to right, rgb(59, 130, 246), rgb(168, 85, 247));" onclick="selectGradient('blue-purple')"></div>
+            </div>
+        </div>
 
         <div class="sections-grid">
             <div class="section-card">
@@ -306,6 +366,79 @@
     </div>
 
     <script>
+        // Gradientes disponíveis
+        const gradients = {
+            'purple-indigo': {
+                bg: 'linear-gradient(to bottom right, rgb(147, 51, 234), rgb(79, 70, 229))',
+                button: 'linear-gradient(to right, rgb(147, 51, 234), rgb(79, 70, 229))',
+                buttonHover: 'linear-gradient(to right, rgb(126, 34, 206), rgb(67, 56, 202))',
+                title: 'linear-gradient(to right, rgb(147, 51, 234), rgb(79, 70, 229))'
+            },
+            'blue-teal': {
+                bg: 'linear-gradient(to bottom right, rgb(56, 189, 248), rgb(20, 184, 166))',
+                button: 'linear-gradient(to right, rgb(56, 189, 248), rgb(20, 184, 166))',
+                buttonHover: 'linear-gradient(to right, rgb(2, 132, 199), rgb(13, 148, 136))',
+                title: 'linear-gradient(to right, rgb(56, 189, 248), rgb(20, 184, 166))'
+            },
+            'pink-orange': {
+                bg: 'linear-gradient(to bottom right, rgb(236, 72, 153), rgb(234, 88, 12))',
+                button: 'linear-gradient(to right, rgb(236, 72, 153), rgb(234, 88, 12))',
+                buttonHover: 'linear-gradient(to right, rgb(219, 39, 119), rgb(194, 65, 12))',
+                title: 'linear-gradient(to right, rgb(236, 72, 153), rgb(234, 88, 12))'
+            },
+            'green-yellow': {
+                bg: 'linear-gradient(to bottom right, rgb(34, 197, 94), rgb(234, 179, 8))',
+                button: 'linear-gradient(to right, rgb(34, 197, 94), rgb(234, 179, 8))',
+                buttonHover: 'linear-gradient(to right, rgb(22, 163, 74), rgb(202, 138, 4))',
+                title: 'linear-gradient(to right, rgb(34, 197, 94), rgb(234, 179, 8))'
+            },
+            'red-orange': {
+                bg: 'linear-gradient(to bottom right, rgb(239, 68, 68), rgb(249, 115, 22))',
+                button: 'linear-gradient(to right, rgb(239, 68, 68), rgb(249, 115, 22))',
+                buttonHover: 'linear-gradient(to right, rgb(220, 38, 38), rgb(234, 88, 12))',
+                title: 'linear-gradient(to right, rgb(239, 68, 68), rgb(249, 115, 22))'
+            },
+            'blue-purple': {
+                bg: 'linear-gradient(to bottom right, rgb(59, 130, 246), rgb(168, 85, 247))',
+                button: 'linear-gradient(to right, rgb(59, 130, 246), rgb(168, 85, 247))',
+                buttonHover: 'linear-gradient(to right, rgb(37, 99, 235), rgb(147, 51, 234))',
+                title: 'linear-gradient(to right, rgb(59, 130, 246), rgb(168, 85, 247))'
+            }
+        };
+
+        // Função para selecionar o gradiente
+        function selectGradient(gradientKey) {
+            document.getElementById('gradient-select').value = gradientKey;
+            
+            // Atualiza o estilo do relatório
+            const gradient = gradients[gradientKey];
+            const report = document.getElementById('report');
+            const downloadButton = document.querySelector('.download-button');
+            const title = document.querySelector('h1');
+            
+            report.style.background = gradient.bg;
+            downloadButton.style.background = gradient.button;
+            title.style.background = gradient.title;
+            title.style.webkitBackgroundClip = 'text';
+            
+            // Atualiza o hover do botão
+            const style = document.createElement('style');
+            style.innerHTML = `.download-button:hover { background: ${gradient.buttonHover}; }`;
+            document.head.appendChild(style);
+            
+            // Atualiza a classe active nos elementos de opção de cor
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`.color-option[onclick="selectGradient('${gradientKey}')"]`).classList.add('active');
+        }
+
+        // Função para mudar o gradiente a partir do select
+        function changeGradient() {
+            const gradientKey = document.getElementById('gradient-select').value;
+            selectGradient(gradientKey);
+        }
+
         // Função para atualizar os campos do relatório
         function updateReport() {
             document.getElementById('report-name').textContent = document.getElementById('name').value || 'Nome';
