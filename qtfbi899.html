@@ -5,45 +5,398 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuários Pendentes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="exibirfbi.css">
-    <link href="https://fonts.googleapis.com/css2?family=Domo+de+Ferro:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #333; color: white; font-family: 'Domo de Ferro', sans-serif; }
-        .status-icon { margin-right: 5px; }
-        .approved { color: green; }
-        .rejected { color: red; }
-        .pending { color: orange; display: flex; align-items: center; }
-        .loading { animation: spin 1s linear infinite; margin-left: 5px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .button { padding: 10px; margin: 5px; border: none; cursor: pointer; color: white; border-radius: 5px; }
-        .aprovar { background-color: green; }
-        .reprovar { background-color: red; }
-        .user-card p, .user-card i, .loading-message, .message, .confirmation-widget { color: white; }
-        .success-message { color: green; }
-        .error-message { color: red; }
-        .pending-status { display: flex; align-items: center; color: orange; }
-        .confirmation-widget {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px; text-align: center;
-            z-index: 1000; color: white;
+        :root {
+            --primary-color: #6E59A5;
+            --secondary-color: #9b87f5;
+            --background-color: #1A1F2C;
+            --card-bg: #2A2F3C;
+            --text-color: #ffffff;
+            --success-color: #4CAF50;
+            --error-color: #F44336;
+            --pending-color: #FFC107;
         }
-        .confirmation-widget i { font-size: 3em; }
-        .developed-by { position: fixed; bottom: 10px; right: 10px; font-size: 0.8em; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, var(--card-bg), #323845);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-approved .stat-value { color: var(--success-color); }
+        .stat-rejected .stat-value { color: var(--error-color); }
+        .stat-pending .stat-value { color: var(--pending-color); }
+
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            border-radius: 50px;
+            background-color: var(--card-bg);
+            padding: 5px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 15px 20px;
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-button {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .section {
+            margin: 30px 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+
+        .user-card:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 
+                -10px -10px 20px rgba(255, 255, 255, 0.05),
+                10px 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .user-card p {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .user-card .icon {
+            margin-right: 10px;
+            color: var(--secondary-color);
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .status-icon {
+            margin-right: 10px;
+        }
+
+        .approved { color: var(--success-color); }
+        .rejected { color: var(--error-color); }
+        .pending { 
+            color: var(--pending-color); 
+            display: flex; 
+            align-items: center; 
+        }
+
+        .loading {
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .button {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .aprovar {
+            background-color: var(--success-color);
+        }
+
+        .reprovar {
+            background-color: var(--error-color);
+        }
+
+        .download-btn {
+            background-color: var(--primary-color);
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading-message, .message {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .success-message { color: var(--success-color); }
+        .error-message { color: var(--error-color); }
+
+        .confirmation-widget {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+        }
+
+        .confirmation-widget i {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .developed-by {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            background-color: var(--card-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            opacity: 0.7;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                flex-direction: column;
+            }
+
+            .stat-card {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .confirmation-widget {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+
+        /* Efeito de gradiente no texto */
+        .gradient-text {
+            background: linear-gradient(90deg, var(--secondary-color), #D6BCFA);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        /* Animações de fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .user-card {
+            animation: fadeIn 0.5s ease forwards;
+            animation-delay: calc(0.1s * var(--i, 0));
+        }
+
+        /* Estilo para nenhum resultado na pesquisa */
+        .no-results {
+            text-align: center;
+            margin: 50px 0;
+            font-size: 1.2rem;
+            color: #888;
+        }
     </style>
 </head>
 <body>
-    <h1><i class="fas fa-users icon"></i>Usuários Pendentes</h1>
+    <h1><i class="fas fa-users icon"></i>Painel de <span class="gradient-text">Usuários</span></h1>
     
-    <div id="aguardando" class="section">
-        <div class="section-title">Aguardando <i class="fas fa-circle-notch loading-icon loading"></i></div>
-        <div class="loading-message"><p>Aguardando carregamento...</p></div>
+    <div class="dashboard-container">
+        <div class="stats-container">
+            <div class="stat-card stat-approved">
+                <i class="fas fa-check-circle fa-2x approved"></i>
+                <h3>Aprovados</h3>
+                <div class="stat-value" id="approved-count">0</div>
+            </div>
+            <div class="stat-card stat-rejected">
+                <i class="fas fa-times-circle fa-2x rejected"></i>
+                <h3>Reprovados</h3>
+                <div class="stat-value" id="rejected-count">0</div>
+            </div>
+            <div class="stat-card stat-pending">
+                <i class="fas fa-clock fa-2x pending"></i>
+                <h3>Pendentes</h3>
+                <div class="stat-value" id="pending-count">0</div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="search-input" class="search-input" placeholder="Buscar por ID, número ou nome...">
+                <button class="search-button" onclick="searchUsers()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="aguardando" class="section">
+            <div class="section-title">Aguardando <i class="fas fa-circle-notch loading-icon loading"></i></div>
+            <div class="card-container" id="aguardando-cards">
+                <div class="loading-message"><p>Aguardando carregamento...</p></div>
+            </div>
+        </div>
+        
+        <div id="aprovados" class="section">
+            <div class="section-title">Aprovados <i class="fas fa-check-circle approved"></i></div>
+            <div class="card-container" id="aprovados-cards"></div>
+        </div>
+        
+        <div id="reprovados" class="section">
+            <div class="section-title">Reprovados <i class="fas fa-times-circle rejected"></i></div>
+            <div class="card-container" id="reprovados-cards"></div>
+        </div>
     </div>
-    <div id="aprovados" class="section">
-        <div class="section-title">Aprovados <i class="fas fa-check-circle approved"></i></div>
-    </div>
-    <div id="reprovados" class="section">
-        <div class="section-title">Reprovados <i class="fas fa-times-circle rejected"></i></div>
-    </div>
+    
     <div id="message" class="message"></div>
     <div class="developed-by">Desenvolvido pela Neext</div>
     <div id="confirmation" class="confirmation-widget">
@@ -51,7 +404,12 @@
         <p id="confirmation-message"></p>
     </div>
 
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
+        // Variáveis para armazenar os dados
+        let allUsers = [];
+        let cardIndex = 0;
+        
         // Função para carregar dados
         function loadData() {
             fetch('https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec')
@@ -60,60 +418,8 @@
                     return response.json();
                 })
                 .then(data => {
-                    const entries = data.data;
-                    const aprovadosContainer = document.getElementById('aprovados');
-                    const reprovadosContainer = document.getElementById('reprovados');
-                    const aguardandoContainer = document.getElementById('aguardando');
-                    const loadingMessage = document.querySelector('.loading-message');
-                    loadingMessage.style.display = 'none';
-
-                    if (entries.length === 0) {
-                        aguardandoContainer.innerHTML += '<p>Não há usuários aguardando.</p>';
-                    } else {
-                        let hasPendingUsers = false; // Variável para verificar se há usuários pendentes
-                        entries.forEach(entry => {
-                            // Verifica se os campos obrigatórios estão preenchidos
-                            if (entry.nome && entry.email && entry.ip && entry.idade) {
-                                const userCard = document.createElement('div');
-                                userCard.className = 'user-card';
-                                userCard.innerHTML = `
-                                    <p><i class="fas fa-user icon"></i>Nome: ${entry.nome}</p>
-                                    <p><i class="fas fa-envelope icon"></i>Email: ${entry.email}</p>
-                                    <p><i class="fas fa-calendar-alt icon"></i>Idade: ${entry.idade}</p>
-                                    <p><i class="fas fa-phone icon"></i>Número: ${entry.numero}</p>
-                                    <p><i class="fas fa-users icon"></i>Grupo: ${entry.grupo}</p>
-                                    <p><i class="fas fa-comment-dots icon"></i>Motivo: ${entry.motivo}</p>
-                                    <p><i class="fas fa-id-badge icon"></i>ID: ${entry.id}</p>
-                                    <p><i class="fas fa-laptop icon"></i>IP: ${entry.ip}</p>
-                                    <p class="pending-status"><i class="fas fa-circle-notch loading"></i>Status: ${entry.status || 'Pendente'}</p>
-                                `;
-
-                                // Verifica se o status é pendente ou está vazio
-                                if (!entry.status || entry.status.trim() === '') {
-                                    userCard.querySelector('p:last-child').classList.add('pending');
-                                    userCard.innerHTML += `
-                                        <div class="button-container">
-                                            <button class="button aprovar" onclick="updateStatus('${entry.id}', 'aprovado')"><i class="fas fa-check"></i> Aprovar</button>
-                                            <button class="button reprovar" onclick="updateStatus('${entry.id}', 'reprovado')"><i class="fas fa-times"></i> Reprovar</button>
-                                        </div>
-                                    `;
-                                    aguardandoContainer.appendChild(userCard);
-                                    hasPendingUsers = true; // Indica que há usuários pendentes
-                                } else if (entry.status.toLowerCase() === 'aprovado') {
-                                    userCard.innerHTML += `<p><i class="fas fa-check status-icon approved"></i>Aprovado</p>`;
-                                    aprovadosContainer.appendChild(userCard);
-                                } else if (entry.status.toLowerCase() === 'reprovado') {
-                                    userCard.innerHTML += `<p><i class="fas fa-times status-icon rejected"></i>Reprovado</p>`;
-                                    reprovadosContainer.appendChild(userCard);
-                                }
-                            }
-                        });
-
-                        // Se não houver usuários pendentes, exibe mensagem
-                        if (!hasPendingUsers) {
-                            aguardandoContainer.innerHTML += '<p>Não há usuários aguardando.</p>';
-                        }
-                    }
+                    allUsers = data.data;
+                    renderUsers();
                 })
                 .catch(error => {
                     console.error('Erro ao carregar dados:', error);
@@ -121,39 +427,209 @@
                 });
         }
 
+        // Função para renderizar os usuários
+        function renderUsers(filteredUsers = null) {
+            const usersToRender = filteredUsers || allUsers;
+            
+            const aprovadosContainer = document.getElementById('aprovados-cards');
+            const reprovadosContainer = document.getElementById('reprovados-cards');
+            const aguardandoContainer = document.getElementById('aguardando-cards');
+            const loadingMessage = document.querySelector('.loading-message');
+            
+            // Limpa os contêineres
+            aprovadosContainer.innerHTML = '';
+            reprovadosContainer.innerHTML = '';
+            aguardandoContainer.innerHTML = '';
+            
+            // Contadores
+            let approvedCount = 0;
+            let rejectedCount = 0;
+            let pendingCount = 0;
+            
+            cardIndex = 0; // Reset do índice para animação
+            
+            if (usersToRender.length === 0) {
+                if (filteredUsers) {
+                    // Se foi uma pesquisa, mostra mensagem de nenhum resultado
+                    showNoResults();
+                } else {
+                    // Se não há usuários no total
+                    aguardandoContainer.innerHTML = '<p>Não há usuários aguardando.</p>';
+                }
+            } else {
+                let hasPendingUsers = false;
+                
+                usersToRender.forEach(entry => {
+                    // Verifica se os campos obrigatórios estão preenchidos
+                    if (entry.nome && entry.email && entry.ip) {
+                        const userCard = createUserCard(entry);
+                        
+                        // Verifica se o status é pendente ou está vazio
+                        if (!entry.status || entry.status.trim() === '') {
+                            addPendingActions(userCard, entry);
+                            aguardandoContainer.appendChild(userCard);
+                            hasPendingUsers = true;
+                            pendingCount++;
+                        } else if (entry.status.toLowerCase() === 'aprovado') {
+                            addApprovedStatus(userCard);
+                            aprovadosContainer.appendChild(userCard);
+                            approvedCount++;
+                        } else if (entry.status.toLowerCase() === 'reprovado') {
+                            addRejectedStatus(userCard);
+                            reprovadosContainer.appendChild(userCard);
+                            rejectedCount++;
+                        }
+                    }
+                    cardIndex++;
+                });
+                
+                // Se não houver usuários pendentes, exibe mensagem
+                if (!hasPendingUsers && !filteredUsers) {
+                    aguardandoContainer.innerHTML = '<p>Não há usuários aguardando.</p>';
+                }
+                
+                // Atualiza contadores
+                document.getElementById('approved-count').textContent = approvedCount;
+                document.getElementById('rejected-count').textContent = rejectedCount;
+                document.getElementById('pending-count').textContent = pendingCount;
+            }
+        }
+        
+        // Função para criar um card de usuário
+        function createUserCard(entry) {
+            const userCard = document.createElement('div');
+            userCard.className = 'user-card';
+            userCard.style.setProperty('--i', cardIndex); // Para animação sequencial
+            
+            userCard.innerHTML = `
+                <p><i class="fas fa-user icon"></i>Nome: ${entry.nome || 'N/A'}</p>
+                <p><i class="fas fa-envelope icon"></i>Email: ${entry.email || 'N/A'}</p>
+                <p><i class="fas fa-calendar-alt icon"></i>Idade: ${entry.idade || 'N/A'}</p>
+                <p><i class="fas fa-phone icon"></i>Número: ${entry.numero || 'N/A'}</p>
+                <p><i class="fas fa-users icon"></i>Grupo: ${entry.grupo || 'N/A'}</p>
+                <p><i class="fas fa-comment-dots icon"></i>Motivo: ${entry.motivo || 'N/A'}</p>
+                <p><i class="fas fa-id-badge icon"></i>ID: ${entry.id || 'N/A'}</p>
+                <p><i class="fas fa-laptop icon"></i>IP: ${entry.ip || 'N/A'}</p>
+            `;
+            
+            // Adiciona botão de download
+            const downloadButton = document.createElement('button');
+            downloadButton.className = 'button download-btn';
+            downloadButton.innerHTML = '<i class="fas fa-download"></i> Salvar como imagem';
+            downloadButton.onclick = function() {
+                downloadCardAsImage(userCard, entry.nome || 'usuario');
+            };
+            
+            userCard.appendChild(downloadButton);
+            
+            return userCard;
+        }
+        
+        // Função para adicionar ações pendentes ao card
+        function addPendingActions(userCard, entry) {
+            const statusP = document.createElement('p');
+            statusP.className = 'pending-status';
+            statusP.innerHTML = '<i class="fas fa-circle-notch loading"></i>Status: Pendente';
+            userCard.appendChild(statusP);
+            
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container';
+            buttonContainer.innerHTML = `
+                <button class="button aprovar" onclick="updateStatus('${entry.id}', 'aprovado')">
+                    <i class="fas fa-check"></i> Aprovar
+                </button>
+                <button class="button reprovar" onclick="updateStatus('${entry.id}', 'reprovado')">
+                    <i class="fas fa-times"></i> Reprovar
+                </button>
+            `;
+            userCard.appendChild(buttonContainer);
+        }
+        
+        // Função para adicionar status aprovado ao card
+        function addApprovedStatus(userCard) {
+            const statusP = document.createElement('p');
+            statusP.innerHTML = '<i class="fas fa-check-circle status-icon approved"></i>Status: Aprovado';
+            statusP.className = 'approved';
+            userCard.appendChild(statusP);
+        }
+        
+        // Função para adicionar status reprovado ao card
+        function addRejectedStatus(userCard) {
+            const statusP = document.createElement('p');
+            statusP.innerHTML = '<i class="fas fa-times-circle status-icon rejected"></i>Status: Reprovado';
+            statusP.className = 'rejected';
+            userCard.appendChild(statusP);
+        }
+        
+        // Função para mostrar nenhum resultado na pesquisa
+        function showNoResults() {
+            const containers = [
+                document.getElementById('aguardando-cards'),
+                document.getElementById('aprovados-cards'),
+                document.getElementById('reprovados-cards')
+            ];
+            
+            containers.forEach(container => {
+                container.innerHTML = '';
+            });
+            
+            document.getElementById('aguardando-cards').innerHTML = 
+                '<div class="no-results"><i class="fas fa-search fa-3x"></i><p>Nenhum resultado encontrado</p></div>';
+        }
+        
         // Função para atualizar o status na planilha
         function updateStatus(userId, status) {
-    fetch('https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            action: 'addStatus',
-            id: userId,
-            status: status
-        })
-    })
-    .then(() => {
-        // Exibe mensagem de confirmação com base no status
-        showConfirmation(`Status ${status} enviado com sucesso para o usuário com ID ${userId}.`);
-        location.reload(); // Recarrega a página imediatamente
-    })
-    .catch(error => {
-        console.error('Erro ao atualizar status:', error);
-        showMessage('Erro ao atualizar status. Verifique o console para mais detalhes.', 'error');
-    });
-}
+            // Mostrar efeito de loading durante o processo
+            showMessage('Atualizando status...', 'pending');
+            
+            fetch('https://script.google.com/macros/s/AKfycbz5rzdqmAmh8DJ0TFeEe4OSJiqmCXFZ6InfFW7GGbhwzMWEVnZENytIOqWYMx8ngk3X/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'addStatus',
+                    id: userId,
+                    status: status
+                })
+            })
+            .then(() => {
+                // Exibe mensagem de confirmação com base no status
+                const statusText = status === 'aprovado' ? 'aprovado' : 'reprovado';
+                showConfirmation(`Usuário ${statusText} com sucesso!`, status);
+                
+                // Atualiza o status localmente para não precisar recarregar toda a página
+                updateLocalUserStatus(userId, status);
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar status:', error);
+                showMessage('Erro ao atualizar status. Verifique o console para mais detalhes.', 'error');
+            });
+        }
+        
+        // Função para atualizar status localmente
+        function updateLocalUserStatus(userId, status) {
+            // Atualiza o array de usuários
+            allUsers = allUsers.map(user => {
+                if (user.id === userId) {
+                    return { ...user, status: status };
+                }
+                return user;
+            });
+            
+            // Re-renderiza para atualizar UI
+            renderUsers();
+        }
 
         // Função para exibir a mensagem de confirmação
-        function showConfirmation(message) {
+        function showConfirmation(message, status) {
             const confirmationWidget = document.getElementById('confirmation');
             const confirmationMessage = document.getElementById('confirmation-message');
             confirmationMessage.textContent = message;
             confirmationWidget.style.display = 'block';
 
-// Adiciona um ícone dependendo do status
+            // Adiciona um ícone dependendo do status
             const confirmationIcon = document.getElementById('confirmation-icon');
-            if (message.includes(' aprovado ')) {
+            if (status === 'aprovado') {
                 confirmationIcon.className = 'fas fa-check-circle success-message';
             } else {
                 confirmationIcon.className = 'fas fa-times-circle error-message';
@@ -169,12 +645,153 @@
         function showMessage(message, type) {
             const messageContainer = document.getElementById('message');
             messageContainer.textContent = message;
-            messageContainer.className = type === 'error' ? 'error-message' : 'success-message';
+            
+            // Remove classes anteriores
+            messageContainer.classList.remove('success-message', 'error-message', 'pending');
+            
+            // Adiciona a classe de acordo com o tipo
+            if (type === 'error') {
+                messageContainer.classList.add('error-message');
+            } else if (type === 'success') {
+                messageContainer.classList.add('success-message');
+            } else if (type === 'pending') {
+                messageContainer.classList.add('pending');
+            }
+            
             setTimeout(() => {
                 messageContainer.textContent = '';
             }, 3000);
         }
-
+        
+        // Função para pesquisar usuários
+        function searchUsers() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                renderUsers(); // Se a busca estiver vazia, mostra todos
+                return;
+            }
+            
+            // Filtra os usuários com base no termo de pesquisa
+            const filteredUsers = allUsers.filter(user => {
+                return (
+                    (user.id && user.id.toLowerCase().includes(searchTerm)) ||
+                    (user.numero && user.numero.toLowerCase().includes(searchTerm)) ||
+                    (user.nome && user.nome.toLowerCase().includes(searchTerm))
+                );
+            });
+            
+            renderUsers(filteredUsers);
+        }
+        
+        // Adicionar evento de pressionar Enter na busca
+        document.getElementById('search-input').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                searchUsers();
+            }
+        });
+        
+        // Função otimizada para baixar card como imagem
+        async function downloadCardAsImage(card, userName) {
+            try {
+                // Mostra mensagem de loading
+                showMessage('Gerando imagem...', 'pending');
+                
+                // Cria um clone do card para não alterar o original
+                const cardClone = card.cloneNode(true);
+                
+                // Remove elementos desnecessários
+                const downloadBtn = cardClone.querySelector('.download-btn');
+                if (downloadBtn) cardClone.removeChild(downloadBtn);
+                
+                const buttonContainer = cardClone.querySelector('.button-container');
+                if (buttonContainer) cardClone.removeChild(buttonContainer);
+                
+                // Prepara o card para exportação
+                cardClone.style.cssText = `
+                    margin: 20px;
+                    background: var(--card-bg);
+                    width: 350px;
+                    position: fixed;
+                    left: -9999px;
+                    top: 0;
+                    transform: none !important;
+                    transition: none !important;
+                `;
+                
+                document.body.appendChild(cardClone);
+                
+                // Usa Promise para tornar o processo assíncrono
+                const canvas = await html2canvas(cardClone, {
+                    backgroundColor: null,
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    removeContainer: true,
+                    imageTimeout: 15000,
+                    onclone: (clonedDoc) => {
+                        const clonedCard = clonedDoc.querySelector('.user-card');
+                        if (clonedCard) {
+                            clonedCard.style.transform = 'none';
+                            clonedCard.style.transition = 'none';
+                        }
+                    }
+                });
+                
+                // Converte para imagem com qualidade otimizada
+                const imgData = canvas.toDataURL('image/png', 0.8);
+                
+                // Cria e dispara o download
+                const link = document.createElement('a');
+                link.download = `usuario-${userName.replace(/\s+/g, '-')}.png`;
+                link.href = imgData;
+                link.click();
+                
+                // Limpa a memória
+                document.body.removeChild(cardClone);
+                canvas.remove();
+                
+                showMessage('Imagem salva com sucesso!', 'success');
+            } catch (err) {
+                console.error('Erro ao gerar imagem:', err);
+                showMessage('Erro ao gerar imagem', 'error');
+            }
+        }
+        
+        // Efeito 3D para os cards (seguindo o cursor)
+        document.addEventListener('mousemove', function(e) {
+            const cards = document.querySelectorAll('.user-card');
+            cards.forEach(card => {
+                // Verifica se o mouse está sobre o card
+                const rect = card.getBoundingClientRect();
+                if (
+                    e.clientX >= rect.left &&
+                    e.clientX <= rect.right &&
+                    e.clientY >= rect.top &&
+                    e.clientY <= rect.bottom
+                ) {
+                    // Calcula a posição relativa do mouse dentro do card
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Normaliza a posição para valores entre -1 e 1
+                    const xRatio = (x / rect.width) * 2 - 1;
+                    const yRatio = (y / rect.height) * 2 - 1;
+                    
+                    // Aplica a rotação (limitada a 5 graus)
+                    card.style.transform = `perspective(1000px) rotateX(${-yRatio * 5}deg) rotateY(${xRatio * 5}deg)`;
+                }
+            });
+        });
+        
+        // Restaura rotação quando o mouse sai do card
+        document.addEventListener('mouseleave', function(e) {
+            if (e.target.classList.contains('user-card')) {
+                e.target.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            }
+        });
+        
         // Carrega os dados ao iniciar
         loadData();
     </script>
