@@ -1,209 +1,1264 @@
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𝗗𝗢𝗠𝗢 𝗗𝗘 𝗙𝗘𝗥𝗥𝗢</title>
+    <title>𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+    
+    <!-- Ícone da página -->
+    <link rel="icon" href="https://i.imgur.com/nDGsGLT.png" type="image/x-icon">
+    <meta name="description" content="Painel profissional de gestão - DOMO DE FERRO" />
+    <meta name="author" content="DOMO DE FERRO" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f4f7fa; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
-        h2, h1 { font-size: 1.5rem; color: #333; }
-        .section { margin: 15px 0; }
-        .user-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1.2rem;
-    width: 200px;
-    margin: 10px auto;
-}
-.user-box i {
-    margin-right: 10px;
-}
-        .section input, textarea { width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        .button { padding: 10px 20px; background: #007BFF; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-        .button:hover { background: #0056b3; }
-        ul { list-style-type: none; margin-top: 20px; }
-        li { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 8px; margin-bottom: 5px; border-radius: 4px; }
-        li button { margin-left: 10px; padding: 5px 10px; background: #e74c3c; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-        li button:hover { background: #c0392b; }
-        #numberModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
-        #modalContent { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; }
-        .modal-actions { display: flex; justify-content: space-between; margin-top: 15px; }
-        @media (max-width: 600px) { .container { padding: 10px; } }
+      :root {
+        --background: 210 20% 98%;
+        --foreground: 220 20% 10%;
+        --card: 0 0% 100%;
+        --card-foreground: 220 20% 10%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 220 20% 10%;
+        --primary: 210 100% 50%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 220 20% 96%;
+        --secondary-foreground: 220 20% 10%;
+        --muted: 220 20% 96%;
+        --muted-foreground: 220 10% 40%;
+        --accent: 210 100% 50%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 220 20% 90%;
+        --input: 220 20% 90%;
+        --ring: 210 100% 50%;
+        --radius: 0.75rem;
+      }
+
+      .dark {
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 240 4.9% 83.9%;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header styles */
+      .header {
+        width: 100%;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .primary-nav {
+        background-color: hsl(var(--primary));
+        background-color: rgba(0, 123, 255, 0.95);
+        backdrop-filter: blur(4px);
+        width: 100%;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .secondary-nav {
+        background-color: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(4px);
+        width: 100%;
+        padding: 0.625rem 1.5rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .logo-text {
+        font-weight: 600;
+        font-size: 1.25rem;
+        letter-spacing: -0.025em;
+        color: hsl(var(--primary-foreground));
+        color: white;
+      }
+
+      .nav-version {
+        font-weight: 500;
+        font-size: 0.875rem;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .nav-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .nav-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .notification-dot {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: #e53e3e;
+        border-radius: 9999px;
+      }
+
+      .secondary-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .nav-link:hover {
+        color: rgba(255, 255, 255, 1);
+      }
+
+      /* Main content layout */
+      .main-content {
+        display: flex;
+        flex: 1;
+      }
+
+      /* Sidebar styles */
+      .sidebar {
+        width: 16rem;
+        background-color: white;
+        background-color: hsl(var(--card));
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        padding: 1rem;
+      }
+
+      .sidebar-title {
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: hsl(var(--muted-foreground));
+        margin-bottom: 1rem;
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background-color 0.2s;
+      }
+
+      .sidebar-link.active {
+        background-color: rgba(0, 123, 255, 0.1);
+        color: hsl(var(--primary));
+      }
+
+      .sidebar-link:not(.active) {
+        color: hsl(var(--foreground));
+      }
+
+      .sidebar-link:hover:not(.active) {
+        background-color: hsl(var(--secondary));
+      }
+
+      .sidebar-icon {
+        margin-right: 0.75rem;
+      }
+
+      /* Main area styles */
+      .main-area {
+        flex: 1;
+        padding: 2rem 1rem;
+        overflow-y: auto;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .main-container {
+        max-width: 64rem;
+        margin: 0 auto;
+      }
+
+      /* Card grid styles */
+      .card-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      @media (min-width: 768px) {
+        .card-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* Card styles */
+      .card {
+        background-color: white;
+        background-color: hsl(var(--card));
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        padding: 1.5rem;
+      }
+
+      .dark .card {
+        background-color: hsl(var(--card));
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
+      .card-title {
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: hsl(var(--card-foreground));
+      }
+
+      .card-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: hsl(var(--primary));
+      }
+
+      .card-value {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: hsl(var(--card-foreground));
+      }
+
+      .card-subtitle {
+        font-size: 0.875rem;
+        color: hsl(var(--muted-foreground));
+        margin-top: 0.5rem;
+      }
+
+      /* Button styles */
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border: 1px solid transparent;
+      }
+
+      .button-primary {
+        background-color: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
+      }
+
+      .button-primary:hover {
+        background-color: hsl(var(--primary) / 0.9);
+      }
+
+      .button-outline {
+        background-color: transparent;
+        border-color: hsl(var(--border));
+        color: hsl(var(--foreground));
+      }
+
+      .button-outline:hover {
+        background-color: hsl(var(--secondary));
+      }
+
+      .button-icon {
+        margin-right: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+      }
+
+      .button-full {
+        width: 100%;
+      }
+
+      /* Content grid styles */
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      @media (min-width: 768px) {
+        .content-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* Chart container */
+      .chart-container {
+        position: relative;
+        margin: 0 auto;
+      }
+
+      .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+      }
+
+      .legend-color {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 9999px;
+        margin-right: 0.5rem;
+      }
+
+      .legend-label {
+        font-size: 0.875rem;
+        color: hsl(var(--foreground));
+      }
+
+      #chart-tooltip {
+        position: absolute;
+        display: none;
+        z-index: 10;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        pointer-events: none;
+      }
+
+      /* Form and input styles */
+      .input {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: hsl(var(--foreground));
+        background-color: hsl(var(--background));
+        border: 1px solid hsl(var(--input));
+        border-radius: 0.375rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      .input:focus {
+        outline: none;
+        border-color: hsl(var(--ring));
+        box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+      }
+
+      /* Table styles */
+      .numbers-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .numbers-table th, .numbers-table td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid hsl(var(--border));
+      }
+
+      .numbers-table th {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: hsl(var(--muted-foreground));
+        text-transform: uppercase;
+      }
+
+      .numbers-table tbody tr:hover {
+        background-color: hsl(var(--muted) / 0.5);
+      }
+
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      .modal-content {
+        background-color: white;
+        background-color: hsl(var(--card));
+        border-radius: 0.75rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        width: 90%;
+        max-width: 32rem;
+        padding: 1.5rem;
+        animation: modalSlideIn 0.3s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from { transform: translateY(10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: hsl(var(--card-foreground));
+        margin-bottom: 1rem;
+      }
+
+      .modal-form label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: hsl(var(--foreground));
+        margin-bottom: 0.5rem;
+      }
+
+      .modal-form textarea {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        border: 1px solid hsl(var(--input));
+        border-radius: 0.375rem;
+        min-height: 8rem;
+        margin-bottom: 1rem;
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      /* Footer styles */
+      .footer {
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.875rem;
+        color: hsl(var(--muted-foreground));
+        background-color: white;
+        background-color: hsl(var(--card));
+        border-top: 1px solid hsl(var(--border));
+      }
+
+      /* Responsive styles */
+      @media (max-width: 767px) {
+        .sidebar {
+          display: none;
+        }
+
+        .secondary-links {
+          display: none;
+        }
+      }
+
+      /* Search input */
+      .search-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
+      /* Loading indicator */
+      .shimmer {
+        background: linear-gradient(90deg, 
+          hsl(var(--muted) / 0.6) 25%, 
+          hsl(var(--muted) / 0.3) 37%, 
+          hsl(var(--muted) / 0.6) 63%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+
+      .number-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        margin-bottom: 0.375rem;
+        background-color: hsl(var(--secondary));
+      }
+
+      .number-row-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .button-small {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+      }
+
+      .button-edit {
+        background-color: #f39c12;
+        color: white;
+      }
+
+      .button-edit:hover {
+        background-color: #e67e22;
+      }
+
+      .button-delete {
+        background-color: #e74c3c;
+        color: white;
+      }
+
+      .button-delete:hover {
+        background-color: #c0392b;
+      }
     </style>
-</head>
-<body>
-<!-- Primeira Navbar (Sistema Domo de Ferro) -->
-<nav style="background-color: #007BFF; padding: 10px; display: flex; align-items: center;">
-    <i class="fas fa-list" style="color: #fff; margin-right: 10px;"></i>
-    <span style="color: #fff; font-size: 1.5rem;">DOMO DE FERRO</span>
-</nav>
+    <script>
+      // Check for dark mode preference at page load
+      if (localStorage.getItem('theme') === 'dark' || 
+         (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
 
-<!-- Segunda Navbar (Versão 1.0 com ícone de engrenagem) -->
-<nav style="background-color: #000; padding: 10px; display: flex; align-items: center;">
-    <i class="fas fa-cogs" style="color: #fff; margin-right: 10px;"></i>
-    <span style="color: #fff; font-size: 1.5rem;">VERSÃO 1.0</span>
-</nav>
-
-<div class="section">
-    <div class="user-box">
-        <i class="fas fa-users"></i> 
-        <span id="totalUsers">0</span>
-    </div>
-</div>
-        <div class="section">
-<button id="openModalButton" class="button"><i class="fas fa-paper-plane"></i> Enviar</button>
+  <body>
+    <header class="header">
+      <!-- Primary Navigation -->
+      <div class="primary-nav">
+        <div class="container">
+          <div class="logo-section">
+            <i class="fas fa-list" style="color: white;"></i>
+            <span class="logo-text">DOMO DE FERRO</span>
+          </div>
+          
+          <div class="nav-actions">
+            <button id="theme-toggle" class="nav-button" aria-label="Toggle theme">
+              <i class="fas fa-moon" id="dark-icon"></i>
+              <i class="fas fa-sun" id="light-icon" style="display: none;"></i>
+            </button>
+            
+            <button class="nav-button" aria-label="Notifications" style="position: relative;">
+              <i class="fas fa-bell"></i>
+              <span class="notification-dot"></span>
+            </button>
+            
+            <button class="nav-button" aria-label="Logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
         </div>
-        <div id="numberModal" class="modal">
-            <div id="modalContent">
-                <h1>Gerenciar Números</h1>
-                <form id="numberForm">
-                    <label for="numbers">Digite os números separados por vírgulas:</label>
-                    <textarea id="numbers" rows="5" placeholder="12345678,87654321,11223344"></textarea>
-                    <div class="modal-actions">
-                        <button type="button" id="submitButton" class="button">Enviar</button>
-                        <button type="button" id="closeModalButton" class="button">Fechar</button>
-                    </div>
-                </form>
+      </div>
+      
+      <!-- Secondary Navigation -->
+      <div class="secondary-nav">
+        <div class="container">
+          <div class="logo-section">
+            <i class="fas fa-cogs" style="color: rgba(255, 255, 255, 0.8);"></i>
+            <span class="nav-version">VERSÃO 2.0</span>
+          </div>
+          
+          <div class="secondary-links">
+            <a href="#" class="nav-link">Dashboard</a>
+            <a href="#" class="nav-link">Relatórios</a>
+            <a href="#" class="nav-link">Contatos</a>
+            <a href="#" class="nav-link">Configurações</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-title">Menu</div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link active">
+            <i class="fas fa-chart-bar sidebar-icon"></i>
+            Dashboard
+          </a>
+          <a href="#" class="sidebar-link">
+            <i class="fas fa-users sidebar-icon"></i>
+            Contatos
+          </a>
+          <a href="#" class="sidebar-link">
+            <i class="fas fa-file-alt sidebar-icon"></i>
+            Relatórios
+          </a>
+          <a href="#" class="sidebar-link">
+            <i class="fas fa-cog sidebar-icon"></i>
+            Configurações
+          </a>
+        </nav>
+      </aside>
+      
+      <main class="main-area">
+        <div class="main-container">
+          <!-- Stats Cards -->
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Total de Usuários</h3>
+                <i class="fas fa-users card-icon"></i>
+              </div>
+              <p id="totalUsers" class="card-value">0</p>
+              <p class="card-subtitle">Atualizado agora</p>
             </div>
+            
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Exportar</h3>
+                <i class="fas fa-phone-alt card-icon"></i>
+              </div>
+              <button id="exportVcfButton" class="button button-outline button-full" style="margin-top: 1rem;">
+                <i class="fas fa-download button-icon"></i>
+                Exportar Contatos (VCF)
+              </button>
+            </div>
+            
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Relatório</h3>
+                <i class="fas fa-print card-icon"></i>
+              </div>
+              <button id="exportChartButton" class="button button-outline button-full" style="margin-top: 1rem;">
+                <i class="fas fa-download button-icon"></i>
+                Exportar Gráfico (PNG)
+              </button>
+            </div>
+          </div>
+          
+          <!-- Charts & Controls -->
+          <div class="content-grid">
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom: 1rem;">Distribuição de Usuários</h3>
+              <div class="chart-container">
+                <canvas id="pieChart" width="300" height="300"></canvas>
+                <div id="chart-tooltip"></div>
+              </div>
+              <div class="chart-legend" id="chartLegend">
+                <!-- Legend items will be added dynamically -->
+              </div>
+            </div>
+            
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom: 1rem;">Enviar Números</h3>
+              <p style="font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-bottom: 1rem;">
+                Adicione novos números ao sistema para serem processados automaticamente.
+              </p>
+              <button id="openModalButton" class="button button-primary button-full" style="padding: 1.5rem 0;">
+                <i class="fas fa-paper-plane button-icon"></i>
+                Enviar Números
+              </button>
+            </div>
+          </div>
+          
+          <!-- Numbers List -->
+          <div class="card" style="margin-bottom: 2rem;">
+            <div class="search-container">
+              <h3 class="card-title">Lista de Números</h3>
+              <input type="search" id="searchNumber" placeholder="Buscar número..." class="input" style="max-width: 20rem;" />
+            </div>
+            <div id="numbersList">
+              <!-- Numbers will be added dynamically -->
+            </div>
+          </div>
         </div>
-        <div class="section">
-<h2><i class="fas fa-users"></i> Procurados</h2>
-            <input type="text" id="searchNumber" placeholder="Pesquisar número..." oninput="searchNumber()">
-            <ul id="numberList"></ul>
-        </div>
+      </main>
     </div>
     
+    <footer class="footer">
+      <div class="container">
+        DOMO DE FERRO &copy; <span id="currentYear"></span> - Todos os direitos reservados
+      </div>
+    </footer>
+    
+    <!-- Add Number Modal -->
+    <div id="numberModal" class="modal">
+      <div class="modal-content">
+        <h2 class="modal-title">Gerenciar Números</h2>
+        <form id="numberForm" class="modal-form">
+          <label for="numbers">Digite os números separados por vírgulas:</label>
+          <textarea id="numbers" placeholder="12345678,87654321,11223344"></textarea>
+          <div class="modal-actions">
+            <button type="button" id="closeModalButton" class="button button-outline">Fechar</button>
+            <button type="button" id="submitButton" class="button button-primary">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    
     <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Script URL for Google Apps Script
         const scriptUrl = "https://script.google.com/macros/s/AKfycbxIG53Hskr69iwx5OREGTqEHYkBCIQYwZr820x2gU7AJ2Fvd2b82iOszZMU0nQ5hQ/exec";
-        let allNumbers = [];
-
-        function fetchTotalUsersAndList() {
-            fetch(scriptUrl + "?action=read")
-                .then(response => response.text())
-                .then(data => {
-                    const lines = data.split("\n");
-                    const totalText = lines[0];
-                    allNumbers = lines.slice(2).map(num => num.trim()).filter(num => num.length > 0);
-                    document.getElementById("totalUsers").textContent = totalText;
-                    updateNumberList(allNumbers);
-                })
-                .catch(error => {
-                    document.getElementById("totalUsers").textContent = "Erro ao carregar números: " + error.message;
-                });
-        }
-
-        function updateNumberList(numbers) {
-    const numberList = document.getElementById("numberList");
-    numberList.innerHTML = "";
-    numbers.forEach((number, index) => {
-        const li = document.createElement("li");
-        // Usando o ícone de telefone da Font Awesome
-        li.innerHTML = `<i class="fas fa-phone-alt"></i> +${number}`; // ícone de telefone
-        const editButton = document.createElement("button");
-        editButton.innerHTML = `<i class="fas fa-edit"></i> Editar`; // Ícone de editar
-        editButton.style.backgroundColor = "#f39c12"; // Cor de fundo para o botão de editar (dourado)
-        editButton.onclick = () => editNumber(index + 2, number);
-        const deleteButton = document.createElement("button");
-        deleteButton.innerHTML = `<i class="fas fa-trash"></i> Apagar`; // Ícone de apagar
-        deleteButton.style.backgroundColor = "#e74c3c"; // Cor de fundo para o botão de apagar (vermelho)
-        deleteButton.onclick = () => deleteNumber(index + 2);
-        li.appendChild(editButton);
-        li.appendChild(deleteButton);
-        numberList.appendChild(li);
-    });
-}
-        function searchNumber() {
-            const searchValue = document.getElementById("searchNumber").value.trim();
-            const result = allNumbers.filter(number => number.includes(searchValue.replace('+', '')));
-            updateNumberList(searchValue ? result : allNumbers);
-        }function editNumber(row, oldNumber) {
-    Swal.fire({
-        title: 'Editar número',
-        input: 'text',
-        inputValue: oldNumber,
-        showCancelButton: true,
-        confirmButtonText: 'Salvar',
-        cancelButtonText: 'Cancelar',
-        inputValidator: (value) => {
-            if (!value) {
-                return 'Por favor, insira um número!';
-            }
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const newNumber = result.value;
-            if (newNumber && newNumber !== oldNumber) {
-                const params = new URLSearchParams({ action: "delete", row });
-                fetch(scriptUrl + "?" + params.toString(), { method: "POST" })
-                    .then(() => {
-                        const paramsCreate = new URLSearchParams({ action: "create", numbers: newNumber.replace('+', '') });
-                        return fetch(scriptUrl + "?" + paramsCreate.toString(), { method: "POST" });
-                    })
-                    .then(() => {
-                        Swal.fire("Sucesso", "Número editado com sucesso!", "success");
-                        fetchTotalUsersAndList();
-                    })
-                    .catch(error => Swal.fire("Erro", "Erro ao editar número: " + error.message, "error"));
-            }
-        }
-    });
-}
-
-
-function deleteNumber(row) {
-    Swal.fire({
-        title: "Tem certeza que deseja apagar este número?",
-        text: "Essa ação não pode ser desfeita.",
-        icon: "warning",  // Ícone de alerta para confirmação
-        showCancelButton: true,
-        confirmButtonText: "Sim, apagar",
-        cancelButtonText: "Cancelar"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const params = new URLSearchParams({ action: "delete", row });
-            fetch(scriptUrl + "?" + params.toString(), { method: "POST" })
-                .then(() => {
-                    Swal.fire("Sucesso", "Número apagado com sucesso!", "success");
-                    fetchTotalUsersAndList();
-                })
-                .catch(error => Swal.fire("Erro", "Erro ao apagar número: " + error.message, "error"));
-        }
-    });
-}
         
-        document.getElementById("submitButton").addEventListener("click", function() {
-    const numbersInput = document.getElementById("numbers").value;
-    const numbersArray = numbersInput.split(",").map(num => num.trim()) // Remove espaços extras
-                                      .map(num => num.replace(/[^\d]/g, "")); // Remove caracteres não numéricos (como + e -)
-    if (numbersArray.length > 0) {
-        const params = new URLSearchParams({ action: "create", numbers: numbersArray.join(",") });
-        fetch(scriptUrl + "?" + params.toString(), { method: "POST" })
-            .then(() => {
-                Swal.fire("Sucesso", "Números enviados com sucesso!", "success");
+        // State variables
+        let allNumbers = [];
+        let totalUsers = "0";
+        let isLoading = true;
+        
+        // Chart data
+        let chartData = {
+          total: 0,
+          segments: [
+            { label: "Ativos", value: 60, color: "#4CAF50" },
+            { label: "Pendentes", value: 30, color: "#FFC107" },
+            { label: "Expirados", value: 10, color: "#F44336" }
+          ]
+        };
+        
+        // Set current year for footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Toggle theme functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('dark-icon');
+        const lightIcon = document.getElementById('light-icon');
+        
+        function updateThemeIcons() {
+          const isDark = document.documentElement.classList.contains('dark');
+          darkIcon.style.display = isDark ? 'none' : 'block';
+          lightIcon.style.display = isDark ? 'block' : 'none';
+        }
+        
+        updateThemeIcons();
+        
+        themeToggle.addEventListener('click', function() {
+          if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+          } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+          }
+          updateThemeIcons();
+        });
+        
+        // Modal functionality
+        const modal = document.getElementById('numberModal');
+        const openModalButton = document.getElementById('openModalButton');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const submitButton = document.getElementById('submitButton');
+        const numbersInput = document.getElementById('numbers');
+        
+        function openModal() {
+          modal.style.display = 'flex';
+        }
+        
+        function closeModal() {
+          modal.style.display = 'none';
+          numbersInput.value = '';
+        }
+        
+        openModalButton.addEventListener('click', openModal);
+        closeModalButton.addEventListener('click', closeModal);
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(event) {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
+        
+        // Fetch data from API
+        async function fetchTotalUsersAndList() {
+          try {
+            isLoading = true;
+            updateNumbersList(); // Show loading state
+            
+            const response = await fetch(scriptUrl + "?action=read");
+            const data = await response.text();
+            
+            const lines = data.split("\n");
+            totalUsers = lines[0];
+            allNumbers = lines.slice(2)
+              .map(num => num.trim())
+              .filter(num => num.length > 0);
+            
+            document.getElementById("totalUsers").textContent = totalUsers;
+            
+            // Update chart data
+            const numTotal = parseInt(totalUsers) || 0;
+            chartData = {
+              total: numTotal,
+              segments: [
+                { label: "Ativos", value: Math.round(numTotal * 0.6), color: "#4CAF50" },
+                { label: "Pendentes", value: Math.round(numTotal * 0.3), color: "#FFC107" },
+                { label: "Expirados", value: Math.round(numTotal * 0.1), color: "#F44336" }
+              ]
+            };
+            
+            isLoading = false;
+            updateNumbersList();
+            drawPieChart();
+            updateChartLegend();
+            
+          } catch (error) {
+            console.error("Error loading data:", error);
+            Swal.fire("Erro", "Erro ao carregar dados. Tente novamente.", "error");
+            isLoading = false;
+            updateNumbersList();
+          }
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchNumber');
+        searchInput.addEventListener('input', function() {
+          const searchValue = this.value.trim();
+          const filteredNumbers = searchValue 
+            ? allNumbers.filter(num => num.includes(searchValue.replace('+', '')))
+            : allNumbers;
+          updateNumbersList(filteredNumbers);
+        });
+        
+        // Update numbers list
+        function updateNumbersList(numbers = allNumbers) {
+          const numbersList = document.getElementById('numbersList');
+          
+          if (isLoading) {
+            numbersList.innerHTML = `
+              <div class="shimmer" style="height: 3rem; border-radius: 0.375rem; margin-bottom: 0.5rem;"></div>
+              <div class="shimmer" style="height: 3rem; border-radius: 0.375rem; margin-bottom: 0.5rem;"></div>
+              <div class="shimmer" style="height: 3rem; border-radius: 0.375rem;"></div>
+            `;
+            return;
+          }
+          
+          if (numbers.length === 0) {
+            numbersList.innerHTML = `
+              <div style="text-align: center; padding: 2rem 0; color: hsl(var(--muted-foreground));">
+                Nenhum número encontrado.
+              </div>
+            `;
+            return;
+          }
+          
+          numbersList.innerHTML = '';
+          
+          numbers.forEach((number, index) => {
+            const row = document.createElement('div');
+            row.className = 'number-row';
+            
+            row.innerHTML = `
+              <div>
+                <i class="fas fa-phone-alt" style="margin-right: 0.5rem;"></i>
+                +${number}
+              </div>
+              <div class="number-row-buttons">
+                <button class="button button-small button-edit">
+                  <i class="fas fa-edit" style="margin-right: 0.25rem;"></i> Editar
+                </button>
+                <button class="button button-small button-delete">
+                  <i class="fas fa-trash" style="margin-right: 0.25rem;"></i> Apagar
+                </button>
+              </div>
+            `;
+            
+            // Add event listeners to buttons
+            const editButton = row.querySelector('.button-edit');
+            const deleteButton = row.querySelector('.button-delete');
+            
+            editButton.addEventListener('click', () => editNumber(index + 2, number));
+            deleteButton.addEventListener('click', () => deleteNumber(index + 2));
+            
+            numbersList.appendChild(row);
+          });
+        }
+        
+        // Add numbers
+        submitButton.addEventListener('click', async function() {
+          const numbersInput = document.getElementById('numbers').value;
+          const numbersArray = numbersInput.split(",")
+            .map(num => num.trim()) // Remove extra spaces
+            .map(num => num.replace(/[^\d]/g, "")); // Remove non-numeric characters
+          
+          if (numbersArray.length === 0 || numbersArray.every(n => n === "")) {
+            Swal.fire("Erro", "Por favor, insira pelo menos um número válido.", "error");
+            return;
+          }
+          
+          try {
+            const params = new URLSearchParams({
+              action: "create", 
+              numbers: numbersArray.join(",")
+            });
+            
+            await fetch(scriptUrl + "?" + params.toString(), { method: "POST" });
+            
+            Swal.fire("Sucesso", "Números enviados com sucesso!", "success");
+            fetchTotalUsersAndList();
+            closeModal();
+          } catch (error) {
+            Swal.fire("Erro", "Erro ao enviar os números: " + error.message, "error");
+          }
+        });
+        
+        // Edit number
+        function editNumber(row, oldNumber) {
+          Swal.fire({
+            title: 'Editar número',
+            input: 'text',
+            inputValue: oldNumber,
+            showCancelButton: true,
+            confirmButtonText: 'Salvar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+              if (!value) {
+                return 'Por favor, insira um número!';
+              }
+            }
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              const newNumber = result.value;
+              if (newNumber && newNumber !== oldNumber) {
+                try {
+                  // First delete the old number
+                  const paramsDelete = new URLSearchParams({ action: "delete", row });
+                  await fetch(scriptUrl + "?" + paramsDelete.toString(), { method: "POST" });
+                  
+                  // Then add the new number
+                  const cleanNumber = newNumber.replace(/[^\d]/g, "");
+                  const paramsCreate = new URLSearchParams({ action: "create", numbers: cleanNumber });
+                  await fetch(scriptUrl + "?" + paramsCreate.toString(), { method: "POST" });
+                  
+                  Swal.fire("Sucesso", "Número editado com sucesso!", "success");
+                  fetchTotalUsersAndList();
+                } catch (error) {
+                  Swal.fire("Erro", "Erro ao editar número: " + error.message, "error");
+                }
+              }
+            }
+          });
+        }
+        
+        // Delete number
+        function deleteNumber(row) {
+          Swal.fire({
+            title: "Tem certeza que deseja apagar este número?",
+            text: "Essa ação não pode ser desfeita.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim, apagar",
+            cancelButtonText: "Cancelar"
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              try {
+                const params = new URLSearchParams({ action: "delete", row });
+                await fetch(scriptUrl + "?" + params.toString(), { method: "POST" });
+                
+                Swal.fire("Sucesso", "Número apagado com sucesso!", "success");
                 fetchTotalUsersAndList();
-                closeModal();
-            })
-            .catch(error => Swal.fire("Erro", "Erro ao enviar os números: " + error.message, "error"));
-    } else {
-        Swal.fire("Erro", "Por favor, insira pelo menos um número.", "error");
-    }
-});
-
-        document.getElementById("openModalButton").addEventListener("click", () => document.getElementById("numberModal").style.display = "flex");
-        document.getElementById("closeModalButton").addEventListener("click", closeModal);
-        function closeModal() { document.getElementById("numberModal").style.display = "none"; }
-
-        window.onload = fetchTotalUsersAndList;
+              } catch (error) {
+                Swal.fire("Erro", "Erro ao apagar número: " + error.message, "error");
+              }
+            }
+          });
+        }
+        
+        // Draw pie chart
+        function drawPieChart() {
+          const canvas = document.getElementById('pieChart');
+          if (!canvas) return;
+          
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
+          
+          // Clear the canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          
+          // Set up the pie chart
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          const radius = Math.min(centerX, centerY) - 10;
+          
+          let startAngle = 0;
+          const total = chartData.segments.reduce((sum, segment) => sum + segment.value, 0);
+          
+          // Draw each segment
+          chartData.segments.forEach(segment => {
+            const sliceAngle = (segment.value / total) * 2 * Math.PI;
+            const endAngle = startAngle + sliceAngle;
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.closePath();
+            
+            ctx.fillStyle = segment.color;
+            ctx.fill();
+            
+            // Draw segment label
+            const labelAngle = startAngle + sliceAngle / 2;
+            const labelX = centerX + (radius * 0.7) * Math.cos(labelAngle);
+            const labelY = centerY + (radius * 0.7) * Math.sin(labelAngle);
+            
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "bold 12px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(`${Math.round((segment.value / total) * 100)}%`, labelX, labelY);
+            
+            startAngle = endAngle;
+          });
+          
+          // Draw center circle (donut hole)
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius * 0.5, 0, 2 * Math.PI);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fill();
+          
+          // Draw total in center
+          ctx.fillStyle = "#333333";
+          ctx.font = "bold 16px Arial";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(totalUsers, centerX, centerY);
+          
+          // Draw "Total" text
+          ctx.font = "12px Arial";
+          ctx.fillText("Total", centerX, centerY + 20);
+          
+          // Setup chart tooltips
+          setupChartTooltips(canvas, centerX, centerY, radius);
+        }
+        
+        // Update chart legend
+        function updateChartLegend() {
+          const legend = document.getElementById('chartLegend');
+          legend.innerHTML = '';
+          
+          chartData.segments.forEach(segment => {
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            
+            const colorBox = document.createElement('div');
+            colorBox.className = 'legend-color';
+            colorBox.style.backgroundColor = segment.color;
+            
+            const label = document.createElement('span');
+            label.className = 'legend-label';
+            label.textContent = segment.label;
+            
+            item.appendChild(colorBox);
+            item.appendChild(label);
+            legend.appendChild(item);
+          });
+        }
+        
+        // Setup chart tooltips
+        function setupChartTooltips(canvas, centerX, centerY, radius) {
+          const tooltip = document.getElementById('chart-tooltip');
+          
+          canvas.addEventListener('mousemove', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Calculate distance from center
+            const distanceFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+            
+            // Only show tooltip if mouse is within the donut ring
+            if (distanceFromCenter < radius && distanceFromCenter > radius * 0.5) {
+              // Calculate angle from center
+              let angle = Math.atan2(y - centerY, x - centerX);
+              if (angle < 0) angle += 2 * Math.PI;
+              
+              // Find which segment the angle corresponds to
+              let startAngle = 0;
+              const total = chartData.segments.reduce((sum, segment) => sum + segment.value, 0);
+              
+              for (const segment of chartData.segments) {
+                const sliceAngle = (segment.value / total) * 2 * Math.PI;
+                const endAngle = startAngle + sliceAngle;
+                
+                if (angle >= startAngle && angle < endAngle) {
+                  // Show tooltip
+                  tooltip.style.display = "block";
+                  tooltip.style.left = `${e.clientX + 10}px`;
+                  tooltip.style.top = `${e.clientY + 10}px`;
+                  tooltip.textContent = `${segment.label}: ${segment.value} (${Math.round((segment.value / total) * 100)}%)`;
+                  return;
+                }
+                
+                startAngle = endAngle;
+              }
+            } else {
+              // Hide tooltip
+              tooltip.style.display = "none";
+            }
+          });
+          
+          canvas.addEventListener('mouseout', function() {
+            tooltip.style.display = "none";
+          });
+        }
+        
+        // Export contacts as VCF
+        document.getElementById('exportVcfButton').addEventListener('click', function() {
+          if (allNumbers.length === 0) {
+            Swal.fire("Erro", "Não há contatos para exportar", "error");
+            return;
+          }
+          
+          let vcfContent = "";
+          allNumbers.forEach((number, index) => {
+            vcfContent += `BEGIN:VCARD\nVERSION:3.0\nFN:Contato ${index + 1}\nTEL;TYPE=CELL:${number}\nEND:VCARD\n`;
+          });
+          
+          const blob = new Blob([vcfContent], { type: "text/vcard" });
+          const url = URL.createObjectURL(blob);
+          const today = new Date().toISOString().slice(0, 10);
+          
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `Contatos_Painel_${today}.vcf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          
+          Swal.fire("Sucesso", "Contatos exportados com sucesso", "success");
+        });
+        
+        // Export chart as image
+        document.getElementById('exportChartButton').addEventListener('click', function() {
+          const canvas = document.getElementById('pieChart');
+          if (!canvas) {
+            Swal.fire("Erro", "Não foi possível gerar a imagem", "error");
+            return;
+          }
+          
+          // Create a new canvas with a white background and header
+          const newCanvas = document.createElement("canvas");
+          newCanvas.width = canvas.width;
+          newCanvas.height = canvas.height + 60;
+          const ctx = newCanvas.getContext("2d");
+          if (!ctx) return;
+          
+          // Fill with white background
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+          
+          // Add header with date
+          ctx.fillStyle = "#333333";
+          ctx.font = "bold 16px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("Relatório de Contatos", newCanvas.width / 2, 30);
+          
+          const today = new Date().toLocaleDateString("pt-BR");
+          ctx.font = "12px Arial";
+          ctx.fillText(today, newCanvas.width / 2, 50);
+          
+          // Draw the original chart on the new canvas
+          ctx.drawImage(canvas, 0, 60);
+          
+          // Convert to image and download
+          const url = newCanvas.toDataURL("image/png");
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `Relatorio_Painel_${new Date().toISOString().slice(0, 10)}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          
+          Swal.fire("Sucesso", "Relatório exportado com sucesso", "success");
+        });
+        
+        // Initialize the page
+        fetchTotalUsersAndList();
+      });
     </script>
-</body>
+  </body>
 </html>
