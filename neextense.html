@@ -1,114 +1,1208 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEEXTENSE</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>© 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+    <link rel="icon" href="https://i.imgur.com/nTqoKxv.png" type="image/png">
+  <meta name="description" content="Monitore em tempo real o status dos grupos no horário de Brasília." />
+  <meta name="author" content="neextense" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: url('hora.jpg') no-repeat center center fixed; background-size: cover; color: white; text-align: center; }
-    .content { position: relative; z-index: 1; backdrop-filter: blur(10px); background-color: rgba(0, 0, 0, 0.5); padding: 20px; }
-    h1 { font-size: 3em; margin: 20px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-    nav { background: #222; padding: 10px 0; text-align: center; font-size: 1.5em; font-weight: bold; color: white; }
-    .clock { position: relative; width: 200px; height: 200px; margin: 30px auto; border: 10px solid #fff; border-radius: 50%; background: #333; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    .clock div { position: absolute; width: 50%; height: 4px; background: #fff; top: 50%; left: 50%; transform-origin: 0% 50%; border-radius: 4px; }
-    .minute { background: #ddd; }
-    .second { background: red; width: 4px; height: 50%; top: 25%; }
-    .center { width: 12px; height: 12px; background: #fff; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .center-text { top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2em; font-weight: bold; background: linear-gradient(135deg, #ff6a00, #ee0979); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .status { margin: 10px 0; font-size: 1.2em; }
-    .aberto { color: #4CAF50; } 
-    .fechado { color: #F44336; }
-    table { width: 80%; margin: 30px auto; border-collapse: collapse; }
-    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-    th { background-color: #222; } 
-    tr:nth-child(even) { background-color: #333; } 
-    tr:nth-child(odd) { background-color: #444; }
-    @media (max-width: 600px) { h1 { font-size: 2em; } table { font-size: 14px; } }
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    /* 3D Effect Styles */
+    .rotate-x-1 {
+      transform: rotateX(2deg);
+      transform-style: preserve-3d;
+    }
+    
+    .shadow-3d {
+      box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1),
+        0 -2px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .table-3d {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+    
+    .card-3d {
+      transform: rotateX(5deg);
+      transform-style: preserve-3d;
+      transition: transform 0.5s ease;
+    }
+    
+    .card-3d:hover {
+      transform: rotateX(0deg) translateY(-10px);
+    }
+    
+    .card-shadow {
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 35px 35px -15px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Header */
+    header {
+      background-color: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .logo-subtitle {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-left: 0.5rem;
+    }
+    
+    /* Main sections */
+    .hero {
+      padding: 4rem 0;
+      text-align: center;
+    }
+    
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .subtitle {
+      font-size: 1.125rem;
+      color: #64748b;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Clock */
+    .clock-container {
+      background-color: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 500px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                  0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .clock-label {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.75rem;
+      opacity: 0.75;
+      font-weight: 300;
+    }
+    
+    .clock-time {
+      font-family: monospace;
+      font-size: 4rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+    
+    .clock-date {
+      font-size: 0.875rem;
+      opacity: 0.6;
+    }
+    
+    /* Content Section */
+    .content-section {
+      background-color: rgba(241, 245, 249, 0.5);
+      padding: 3rem 0;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .tabs {
+      display: flex;
+      background-color: #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 0.375rem;
+      transition: all 0.2s ease;
+    }
+    
+    .tab.active {
+      background-color: white;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Table styles */
+    .status-table {
+      width: 100%;
+      background-color: white;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                  0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .status-table th {
+      background-color: #f8fafc;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 500;
+      color: #64748b;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .status-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .status-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .status-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+    
+    .status-dot.open {
+      background-color: #22c55e;
+      box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-dot.closed {
+      background-color: #ef4444;
+      box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+    }
+    
+    .status-text {
+      font-weight: 500;
+    }
+    
+    .status-text.open {
+      color: #15803d;
+    }
+    
+    .status-text.closed {
+      color: #b91c1c;
+    }
+    
+    /* Image generator */
+    .control-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      border: none;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .button:hover {
+      background-color: #2563eb;
+    }
+    
+    .button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .button.outline {
+      background-color: transparent;
+      color: #3b82f6;
+      border: 1px solid #3b82f6;
+    }
+    
+    .button.outline:hover {
+      background-color: #eff6ff;
+    }
+    
+    .image-container {
+      margin-top: 1.5rem;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                  0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .generated-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* Footer */
+    footer {
+      background-color: white;
+      border-top: 1px solid #e2e8f0;
+      padding: 1.5rem 0;
+      margin-top: 3rem;
+    }
+    
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .copyright {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+      .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      
+      .copyright {
+        margin-bottom: 0;
+      }
+      
+      .title {
+        font-size: 3rem;
+      }
+      
+      .clock-time {
+        font-size: 5rem;
+      }
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                  0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+      max-width: 300px;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .toast-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .toast-message {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    /* Image Content Styles */
+    #content-for-image {
+      width: 1200px;
+      background: #f8fafc;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                  0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      position: relative;
+      z-index: 1;
+      transform-style: preserve-3d;
+    }
+    
+    .image-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .image-title {
+      color: #2563eb;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .image-subtitle {
+      color: #64748b;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+    
+    .image-time {
+      text-align: right;
+    }
+    
+    .image-current-time {
+      font-family: monospace;
+      color: #2563eb;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .image-current-date {
+      color: #64748b;
+    }
+    
+    .image-table-container {
+      transform: rotateX(2deg);
+      transform-style: preserve-3d;
+      margin-bottom: 2rem;
+    }
+    
+    .image-table {
+      width: 100%;
+      background-color: white;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                  0 4px 6px -4px rgba(0, 0, 0, 0.1),
+                  0 25px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .image-table th {
+      background-color: #2563eb;
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .image-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      border-right: 1px solid #e5e7eb;
+    }
+    
+    .image-table td:last-child,
+    .image-table th:last-child {
+      border-right: none;
+    }
+    
+    .image-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    
+    .image-footer {
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      color: #64748b;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
   </style>
 </head>
+
 <body>
-  <nav>Neext</nav>
-  <div class="content">
-    <h1>Fuso Horário Neextense</h1>
-    <div class="clock">
-      <div class="hour"></div>
-      <div class="minute"></div>
-      <div class="second"></div>
-      <div class="center"></div>
-      <div class="center-text">N</div>
+  <header>
+    <div class="container header-content">
+      <div>
+        <span class="logo">Neextense</span>
+        <span class="logo-subtitle">Timekeeper</span>
+      </div>
+      
+      <button id="theme-toggle" class="button outline">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </button>
     </div>
-    <div id="status"></div>
-    <table>
-      <thead>
-        <tr><th>Local</th><th>Abertura</th><th>Fechamento</th><th>Dias</th></tr>
-      </thead>
-      <tbody id="tabelaHorarios"></tbody>
-    </table>
+  </header>
+  
+  <section class="hero">
+    <div class="container">
+      <h1 class="title">Neextense Timekeeper</h1>
+      <p class="subtitle">Monitore em tempo real o status dos grupos.</p>
+      
+      <div class="clock-container">
+        <div class="clock-label">Horário de Brasília (GMT-3)</div>
+        <div id="clock" class="clock-time">00:00:00</div>
+        <div id="date" class="clock-date">01/01/2023</div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="content-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Status dos Grupos</h2>
+        
+        <div class="tabs">
+          <div class="tab active" data-tab="status">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 4px; vertical-align: -3px;">
+              <path d="M3 3h18v18H3z"></path>
+              <path d="M3 9h18"></path>
+              <path d="M3 15h18"></path>
+              <path d="M9 3v18"></path>
+              <path d="M15 3v18"></path>
+            </svg>
+            Tabela de Status
+          </div>
+          <div class="tab" data-tab="image">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 4px; vertical-align: -3px;">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            Gerar Imagem
+          </div>
+        </div>
+      </div>
+      
+      <div id="status-tab" class="tab-content active">
+        <div style="display: flex; align-items: center; margin-bottom: 1rem; color: #64748b; font-size: 0.875rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Atualizado automaticamente a cada minuto
+        </div>
+        
+        <div class="table-container">
+          <table class="status-table" id="status-table">
+            <thead>
+              <tr>
+                <th>Grupo</th>
+                <th>Status</th>
+                <th>Próxima Mudança</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody id="status-table-body">
+              <!-- Status rows will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div id="image-tab" class="tab-content">
+        <div class="control-panel">
+          <h3>Gerar Imagem do Status</h3>
+          
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="generate-btn" class="button">
+              Gerar Imagem
+            </button>
+            
+            <button id="download-btn" class="button outline" style="display: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Baixar
+            </button>
+            
+            <button id="share-btn" class="button outline" style="display: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              Compartilhar
+            </button>
+          </div>
+        </div>
+        
+        <div id="image-container" class="image-container" style="display: none;">
+          <img id="generated-image" class="generated-image" alt="Status dos Grupos" />
+        </div>
+        
+        <!-- Hidden div used for image generation -->
+        <div style="position: absolute; left: -9999px; visibility: hidden;">
+          <div id="content-for-image">
+            <div class="image-header">
+              <div>
+                <h1 class="image-title">Neextense</h1>
+                <p class="image-subtitle">Status dos Grupos</p>
+              </div>
+              <div class="image-time">
+                <p id="image-current-time" class="image-current-time">00:00:00</p>
+                <p id="image-current-date" class="image-current-date">01/01/2023</p>
+              </div>
+            </div>
+            
+            <div class="image-table-container">
+              <table class="image-table">
+                <thead>
+                  <tr>
+                    <th>Grupo</th>
+                    <th>Status</th>
+                    <th>Próxima Mudança</th>
+                    <th>Descrição</th>
+                  </tr>
+                </thead>
+                <tbody id="image-table-body">
+                  <!-- Will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="image-footer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span id="image-footer-text">Gerado em 01/01/2023 às 00:00:00 • neextense.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="container footer-content">
+      <p class="copyright">&copy; <span id="current-year">2023</span> Neextense. Todos os direitos reservados.</p>
+      
+      <button id="back-to-top" class="button outline">Voltar ao topo</button>
+    </div>
+  </footer>
+  
+  <div id="toast" class="toast">
+    <div>
+      <div class="toast-title">Título da notificação</div>
+      <div class="toast-message">Mensagem da notificação</div>
+    </div>
   </div>
+  
+  <!-- Load HTML2Canvas for image generation -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  
   <script>
-    const locais = { 
-      "FBI": { open: "07:00", close: "23:31", days: [0,1,2,3,4,5,6] },
-      "Skur": { open: "07:00", close: "23:31", days: [0,1,2,3,4,5,6] },
-      "Discord": { open: "07:00", close: "23:31", days: [0,1,2,3,4,5,6] },
-      "Telegram": { open: "07:00", close: "23:31", days: [0,1,2,3,4,5,6] },
-      "Biblioteca": { open: "00:00", close: "23:59", days: [0,1,2,3,4,5,6] },
-      "Cartório": { open: "07:00", close: "23:31", days: [0,1,2,3,4,5,6] },
-      "Cinema": { open: "23:31", close: "07:00", days: [5,6] },
-      "Bar Homem e Girl": { open: "23:31", close: "07:00", days: [0,1,4] },
-      "Bar Normal": { open: "23:31", close: "07:00", days: [2] },
-      "Coffe": { open: "23:31", close: "07:00", days: [3] }
-    };
-
-    function obterHoraBrasilia() {
-      const agora = new Date();
-      return new Date(agora.getTime() + agora.getTimezoneOffset() * 60000 + 3600000 * -3);
+    // Groups data
+    const groups = [
+      {
+        id: 'biblioteca',
+        name: 'Biblioteca',
+        description: 'Sempre aberta (24/7)'
+      },
+      {
+        id: 'bar',
+        name: 'Bar',
+        description: 'Abre às 23:31 e fecha às 07:00 apenas nos dias de semana (segunda a sexta)'
+      },
+      {
+        id: 'cinema',
+        name: 'Cinema',
+        description: 'Aberto somente sexta e sábado às 23:31'
+      },
+      {
+        id: 'house-gamer',
+        name: 'House Gamer',
+        description: 'Aberto apenas sábado após o filme e domingo após a sessão da tarde'
+      },
+      {
+        id: 'fbi',
+        name: 'FBI',
+        description: 'Aberto das 07:00 às 23:31 todos os dias'
+      },
+      {
+        id: 'skur',
+        name: 'Skur',
+        description: 'Aberto das 07:00 às 23:31 todos os dias'
+      },
+      {
+        id: 'discord',
+        name: 'Discord',
+        description: 'Aberto das 07:00 às 23:31'
+      },
+      {
+        id: 'telegram',
+        name: 'Telegram',
+        description: 'Aberto das 07:00 às 23:31'
+      }
+    ];
+    
+    // Time utility functions
+    function getBrasiliaTime() {
+      const now = new Date();
+      
+      // Calculate the offset for Brasilia time (GMT-3)
+      const brasiliaOffset = -3 * 60; // -3 hours in minutes
+      const localOffset = now.getTimezoneOffset(); // Get local offset in minutes
+      
+      // Calculate the time difference between local time and Brasilia time
+      const offsetDiff = localOffset + brasiliaOffset;
+      
+      // Apply the offset to get Brasilia time
+      return new Date(now.getTime() + offsetDiff * 60 * 1000);
     }
-
-    function atualizarRelogio() {
-      const agora = obterHoraBrasilia(), horas = agora.getHours(), minutos = agora.getMinutes(), segundos = agora.getSeconds();
-      document.querySelector(".hour").style.transform = `rotate(${(horas % 12) * 30 + minutos * 0.5 - 90}deg)`;
-      document.querySelector(".minute").style.transform = `rotate(${minutos * 6 - 90}deg)`;
-      document.querySelector(".second").style.transform = `rotate(${segundos * 6 - 90}deg)`;
+    
+    function formatTime(date) {
+      return date.toLocaleTimeString('pt-BR', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: false
+      });
     }
-
-    function verificarStatus() {
-      const agora = obterHoraBrasilia();
-      const horaAtual = agora.getHours() * 60 + agora.getMinutes();
-      const diaAtual = agora.getDay();
-
-      document.getElementById("status").innerHTML = Object.entries(locais).map(([local, { open, close, days }]) => {
-        const abertura = parseInt(open.split(":")[0]) * 60 + parseInt(open.split(":")[1]);
-        const fechamento = parseInt(close.split(":")[0]) * 60 + parseInt(close.split(":")[1]);
-
-        let estaAberto = false;
-
-        if (days.includes(diaAtual)) {
-          if (fechamento > abertura) {
-            estaAberto = horaAtual >= abertura && horaAtual < fechamento;
-          } else {
-            estaAberto = horaAtual >= abertura || horaAtual < fechamento;
-          }
+    
+    function formatDate(date) {
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+    
+    function getDayOfWeek(date) {
+      return date.getDay();
+    }
+    
+    function isTimeBetween(current, startHour, startMinute, endHour, endMinute) {
+      const currentHour = current.getHours();
+      const currentMinute = current.getMinutes();
+      
+      const currentTotalMinutes = currentHour * 60 + currentMinute;
+      const startTotalMinutes = startHour * 60 + startMinute;
+      const endTotalMinutes = endHour * 60 + endMinute;
+      
+      // Handle normal case (start time is before end time)
+      if (startTotalMinutes < endTotalMinutes) {
+        return currentTotalMinutes >= startTotalMinutes && currentTotalMinutes < endTotalMinutes;
+      }
+      // Handle overnight case (end time is on the next day)
+      else {
+        return currentTotalMinutes >= startTotalMinutes || currentTotalMinutes < endTotalMinutes;
+      }
+    }
+    
+    // Get status for each group
+    function getGroupsStatus() {
+      const now = getBrasiliaTime();
+      const dayOfWeek = getDayOfWeek(now);
+      
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday=0, Saturday=6
+      const isFriday = dayOfWeek === 5;
+      const isSaturday = dayOfWeek === 6;
+      const isSunday = dayOfWeek === 0;
+      
+      const groupsWithStatus = groups.map(group => {
+        let isOpen = false;
+        let nextChange = null;
+        
+        switch (group.id) {
+          case 'biblioteca':
+            // Always open
+            isOpen = true;
+            nextChange = null;
+            break;
+            
+          case 'bar':
+            if (!isWeekend) {
+              // On weekdays (Mon-Fri), open from 23:31 to 07:00 next day
+              isOpen = isTimeBetween(now, 23, 31, 7, 0);
+              nextChange = isOpen ? "Fecha às 07:00" : "Abre às 23:31";
+            } else {
+              // On weekends, closed
+              isOpen = false;
+              nextChange = isSunday ? "Abre segunda às 23:31" : "Abre segunda às 23:31";
+            }
+            break;
+            
+          case 'cinema':
+            // Only open on Friday and Saturday at 23:31
+            if (isFriday || isSaturday) {
+              const hour = now.getHours();
+              const minute = now.getMinutes();
+              isOpen = hour === 23 && minute >= 31;
+              nextChange = isOpen ? "Fecha à meia-noite" : "Abre às 23:31";
+            } else {
+              isOpen = false;
+              nextChange = "Abre sexta às 23:31";
+            }
+            break;
+            
+          case 'house-gamer':
+            // Open on Saturday after the movie and Sunday after afternoon session
+            if (isSaturday) { // Saturday
+              const hour = now.getHours();
+              isOpen = hour >= 0 && hour < 7; // After midnight until 7am
+              nextChange = isOpen ? "Fecha às 07:00" : "Abre após o filme (00:00)";
+            } else if (isSunday) { // Sunday
+              const hour = now.getHours();
+              isOpen = hour >= 15; // After 3pm
+              nextChange = isOpen ? "Fecha à meia-noite" : "Abre após a sessão da tarde (15:00)";
+            } else {
+              isOpen = false;
+              nextChange = "Abre sábado após o filme";
+            }
+            break;
+            
+          case 'fbi':
+          case 'skur':
+          case 'discord':
+          case 'telegram':
+            // Open from 07:00 to 23:31 every day
+            isOpen = isTimeBetween(now, 7, 0, 23, 31);
+            nextChange = isOpen ? "Fecha às 23:31" : "Abre às 07:00";
+            break;
+            
+          default:
+            break;
         }
-
-        const status = estaAberto ? "Aberto" : "Fechado";
-        return `<div class="status ${estaAberto ? "aberto" : "fechado"}"><i class="fas fa-clock"></i> ${local}: ${status}</div>`;
-      }).join("");
+        
+        return {
+          ...group,
+          isOpen,
+          nextChange
+        };
+      });
+      
+      // Sort groups: open groups first, then closed groups
+      return groupsWithStatus.sort((a, b) => {
+        if (a.isOpen === b.isOpen) {
+          return a.name.localeCompare(b.name); // If same status, sort alphabetically
+        }
+        return a.isOpen ? -1 : 1; // Open groups first
+      });
     }
-
-    function preencherTabela() {
-      document.getElementById("tabelaHorarios").innerHTML = Object.entries(locais).map(([local, { open, close, days }]) => 
-        `<tr><td>${local}</td><td>${open}</td><td>${close}</td><td>${days.map(d => ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][d]).join(", ")}</td></tr>`).join("");
+    
+    // Update clock
+    function updateClock() {
+      const time = getBrasiliaTime();
+      
+      document.getElementById('clock').textContent = formatTime(time);
+      document.getElementById('date').textContent = formatDate(time);
+      
+      // Also update times in the image content
+      document.getElementById('image-current-time').textContent = formatTime(time);
+      document.getElementById('image-current-date').textContent = formatDate(time);
+      document.getElementById('image-footer-text').textContent = `Gerado em ${formatDate(time)} às ${formatTime(time)} • neextense.com`;
     }
-
-    function atualizar() { 
-      atualizarRelogio(); 
-      verificarStatus(); 
-      preencherTabela(); 
+    
+    // Update status table
+    function updateStatusTable() {
+      const groupsStatus = getGroupsStatus();
+      const tableBody = document.getElementById('status-table-body');
+      const imageTableBody = document.getElementById('image-table-body');
+      
+      // Clear existing rows
+      tableBody.innerHTML = '';
+      imageTableBody.innerHTML = '';
+      
+      // Add rows for each group
+      groupsStatus.forEach(group => {
+        // Create row for regular table
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+          <td>${group.name}</td>
+          <td>
+            <div style="display: flex; align-items: center;">
+              <span class="status-dot ${group.isOpen ? 'open' : 'closed'}"></span>
+              <span class="status-text ${group.isOpen ? 'open' : 'closed'}">${group.isOpen ? 'Aberto' : 'Fechado'}</span>
+            </div>
+          </td>
+          <td>
+            ${group.nextChange ? `
+              <div style="display: flex; align-items: center; color: #64748b; gap: 0.5rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                ${group.nextChange}
+              </div>
+            ` : '<span style="color: #64748b;">Sem alteração prevista</span>'}
+          </td>
+          <td style="color: #64748b;">${group.description}</td>
+        `;
+        
+        tableBody.appendChild(row);
+        
+        // Create row for image table
+        const imageRow = document.createElement('tr');
+        
+        imageRow.innerHTML = `
+          <td>${group.name}</td>
+          <td>
+            <div style="display: flex; align-items: center;">
+              <div style="
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                margin-right: 8px;
+                background-color: ${group.isOpen ? '#22c55e' : '#ef4444'};
+                box-shadow: 0 0 5px ${group.isOpen ? 'rgba(34, 197, 94, 0.5)' : 'rgba(239, 68, 68, 0.5)'};
+              "></div>
+              <span style="font-weight: 500; color: ${group.isOpen ? '#15803d' : '#b91c1c'}">
+                ${group.isOpen ? 'Aberto' : 'Fechado'}
+              </span>
+            </div>
+          </td>
+          <td>${group.nextChange || 'Sem alteração prevista'}</td>
+          <td>${group.description}</td>
+        `;
+        
+        imageTableBody.appendChild(imageRow);
+      });
     }
-
-    setInterval(atualizar, 1000); 
-    atualizar();
+    
+    // Tab switching
+    function initTabs() {
+      const tabs = document.querySelectorAll('.tab');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          tab.classList.add('active');
+          
+          // Show corresponding content
+          const tabId = tab.getAttribute('data-tab');
+          document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+      });
+    }
+    
+    // Show toast notification
+    function showToast(title, message, duration = 3000) {
+      const toast = document.getElementById('toast');
+      
+      toast.querySelector('.toast-title').textContent = title;
+      toast.querySelector('.toast-message').textContent = message;
+      
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+    
+    // Generate image
+    async function generateImage() {
+      const contentElement = document.getElementById('content-for-image');
+      const imageContainer = document.getElementById('image-container');
+      const generateBtn = document.getElementById('generate-btn');
+      const downloadBtn = document.getElementById('download-btn');
+      const shareBtn = document.getElementById('share-btn');
+      
+      generateBtn.disabled = true;
+      generateBtn.textContent = 'Gerando...';
+      
+      try {
+        // Generate image using html2canvas
+        const canvas = await html2canvas(contentElement, {
+          scale: 2,
+          backgroundColor: '#f8fafc',
+          logging: false,
+          useCORS: true,
+          allowTaint: true
+        });
+        
+        // Convert canvas to data URL
+        const dataUrl = canvas.toDataURL('image/png');
+        
+        // Display the generated image
+        const generatedImage = document.getElementById('generated-image');
+        generatedImage.src = dataUrl;
+        
+        // Show image container and action buttons
+        imageContainer.style.display = 'block';
+        downloadBtn.style.display = 'inline-flex';
+        shareBtn.style.display = 'inline-flex';
+        
+        // Show success toast
+        showToast('Imagem gerada com sucesso', 'Agora você pode baixá-la ou compartilhá-la');
+      } catch (error) {
+        console.error('Error generating image:', error);
+        showToast('Erro', 'Não foi possível gerar a imagem');
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Gerar Imagem';
+      }
+    }
+    
+    // Download image
+    function downloadImage() {
+      const generatedImage = document.getElementById('generated-image');
+      if (!generatedImage.src) return;
+      
+      const now = getBrasiliaTime();
+      const fileName = `neextense-status-${formatDate(now).replace(/\//g, '-')}.png`;
+      
+      const link = document.createElement('a');
+      link.href = generatedImage.src;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    // Share image
+    async function shareImage() {
+      const generatedImage = document.getElementById('generated-image');
+      if (!generatedImage.src) return;
+      
+      if (navigator.share) {
+        try {
+          // Convert data URL to Blob
+          const response = await fetch(generatedImage.src);
+          const blob = await response.blob();
+          
+          // Create file from blob
+          const file = new File([blob], 'neextense-status.png', { type: 'image/png' });
+          
+          // Share the file
+          await navigator.share({
+            title: 'Neextense - Status dos Grupos',
+            text: 'Confira o status atual dos grupos:',
+            files: [file],
+          });
+        } catch (error) {
+          console.error('Erro ao compartilhar:', error);
+          showToast('Erro', 'Não foi possível compartilhar a imagem');
+        }
+      } else {
+        // Fallback if Web Share API is not available
+        downloadImage();
+      }
+    }
+    
+    // Theme toggling
+    function toggleTheme() {
+      const body = document.body;
+      const isDarkTheme = body.classList.contains('dark-theme');
+      
+      if (isDarkTheme) {
+        body.classList.remove('dark-theme');
+        document.getElementById('theme-toggle').innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        `;
+        showToast('Modo claro ativado', '');
+      } else {
+        body.classList.add('dark-theme');
+        document.getElementById('theme-toggle').innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+        `;
+        showToast('Modo escuro ativado', '');
+      }
+    }
+    
+    // Initialize application
+    function initialize() {
+      // Update current year in footer
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      
+      // Initialize tabs
+      initTabs();
+      
+      // Initial clock and status update
+      updateClock();
+      updateStatusTable();
+      
+      // Set up interval updates
+      setInterval(updateClock, 1000);
+      setInterval(updateStatusTable, 60000);
+      
+      // Event listeners
+      document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+      document.getElementById('back-to-top').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      document.getElementById('generate-btn').addEventListener('click', generateImage);
+      document.getElementById('download-btn').addEventListener('click', downloadImage);
+      document.getElementById('share-btn').addEventListener('click', shareImage);
+    }
+    
+    // When the DOM is fully loaded, initialize the application
+    document.addEventListener('DOMContentLoaded', initialize);
+    
+    // Add dark theme styles
+    const darkThemeStyles = document.createElement('style');
+    darkThemeStyles.textContent = `
+      body.dark-theme {
+        background-color: #0f172a;
+        color: #f8fafc;
+      }
+      
+      body.dark-theme header,
+      body.dark-theme footer {
+        background-color: #1e293b;
+        border-color: #334155;
+      }
+      
+      body.dark-theme .clock-container {
+        background-color: rgba(30, 41, 59, 0.6);
+        border-color: rgba(255, 255, 255, 0.05);
+      }
+      
+      body.dark-theme .content-section {
+        background-color: rgba(15, 23, 42, 0.5);
+      }
+      
+      body.dark-theme .tabs {
+        background-color: #334155;
+      }
+      
+      body.dark-theme .tab.active {
+        background-color: #1e293b;
+        color: #f8fafc;
+      }
+      
+      body.dark-theme .status-table {
+        background-color: #1e293b;
+        border-color: #334155;
+      }
+      
+      body.dark-theme .status-table th {
+        background-color: #0f172a;
+        color: #e2e8f0;
+        border-color: #334155;
+      }
+      
+      body.dark-theme .status-table td {
+        border-color: #334155;
+      }
+      
+      body.dark-theme .status-table tr:nth-child(even) {
+        background-color: #1e293b;
+      }
+      
+      body.dark-theme .button.outline {
+        color: #60a5fa;
+        border-color: #60a5fa;
+      }
+      
+      body.dark-theme .button.outline:hover {
+        background-color: rgba(96, 165, 250, 0.1);
+      }
+      
+      body.dark-theme .toast {
+        background-color: #1e293b;
+        color: #f8fafc;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+                    0 4px 6px -4px rgba(0, 0, 0, 0.3);
+      }
+      
+      body.dark-theme .toast-message {
+        color: #94a3b8;
+      }
+    `;
+    document.head.appendChild(darkThemeStyles);
   </script>
 </body>
 </html>
