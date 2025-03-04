@@ -1,541 +1,1493 @@
+
 <!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𝗔𝗕𝗜𝗡 𝗦.𝗔</title>
-    
-    <!-- Ícone da página -->
-    <link rel="icon" href="https://i.imgur.com/nDGsGLT.png" type="image/x-icon">
-    
-    <!-- Descrição da página -->
-    <meta name="description" content="© neext ltda.">
-    
-    <!-- Links externos -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    
-    <style>
-      
-        body { font-family: Arial, sans-serif; margin: 0; }
-        header {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        header h1 {
-            font-size: 36px;
-            margin: 0;
-        }
-        #users-cards { margin: 10px auto; max-width: 500px; padding: 10px; }
-        .user-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; background: #fff; }
-        .actions { display: flex; justify-content: space-between; }
-        button { background-color: #007BFF; color: #fff; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
-        .search-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .search-container input {
-            padding: 10px;
-            width: 80%;
-            max-width: 400px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-    </style>
-</head>
-<body>
-<!-- Carregar a biblioteca Font Awesome para o ícone -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABIN - Sistema de Gestão</title>
+  <meta name="description" content="Sistema de Gestão ABIN" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- html2canvas library for report generation -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-<header style="background: linear-gradient(to right, #6a0dad, #ff69b4); padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-    <!-- Ícone de prisão SVG na navbar -->
-    <img src="svg/prisao.svg" alt="Ícone Prisão" style="width: 40px; height: 40px;">
-    <h1 style="text-align: center; margin: 0; color: white; flex: 1;">DASHBOARD</h1>
-    
-    <!-- Botões de Modo Escuro e Sair -->
-    <div style="display: flex; align-items: center; gap: 8px;">
-        <!-- Botão de Modo Escuro -->
-        <button id="dark-mode-toggle" onclick="toggleDarkMode()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">
-            <i class="fas fa-moon"></i> <!-- Ícone para o Modo Escuro -->
-        </button>
-        
-        <!-- Botão de Sair -->
-        <button onclick="logout()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">
-            <i class="fas fa-sign-out-alt"></i> <!-- Ícone para Sair -->
-        </button>
-    </div>
-</header>
-
-<!-- Segunda Navbar: ABIN Detetion FBI -->
-<nav style="background-color: #333; padding: 10px; text-align: center;">
-    <span style="color: white; font-size: 14px; font-weight: bold;">ABIN Detetion SKUR</span>
-</nav>
-
-<section id="summary-section" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin: 20px;">
-    <!-- Card para Presos -->
-    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #ff4d4d; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
-        <i class="fas fa-lock" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Preso -->
-        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Presos</h2>
-        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="total-presos">Carregando...</span></p>
-    </div>
-
-    <!-- Card para Livres -->
-    <div style="flex: 1 1 calc(50% - 10px); border-radius: 10px; padding: 10px; background-color: #33cc33; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
-        <i class="fas fa-user-check" style="font-size: 40px; color: #ffffff; margin-bottom: 10px;"></i> <!-- Ícone de Livre -->
-        <h2 style="color: #ffffff; font-size: 14px; margin-top: 10px;">Livres</h2>
-        <p style="font-size: 14px; text-align: center; color: #ffffff;"><strong>Total:</strong> <span id="total-livres">Carregando...</span></p>
-    </div>
-</section>
-
-<script>
-    // URL da API de resumo
-    const summaryApiUrl = "https://script.google.com/macros/s/AKfycbxXCg7h4oe_2BqdjkjdRpaQqdRWRekOXWPxe8zTejp6x9V1at6-hkxe7ATfV75RvOcQ/exec?action=summary";
-
-    // Função para buscar os dados do resumo
-    async function fetchSummary() {
-        try {
-            const response = await fetch(summaryApiUrl);
-            if (!response.ok) throw new Error("Erro ao buscar os dados.");
-
-            const summary = await response.json();
-            document.getElementById("total-presos").textContent = summary["Total de Presos"];
-            document.getElementById("total-livres").textContent = summary["Total de Livres"];
-        } catch (error) {
-            console.error("Erro ao carregar os dados:", error);
-        }
-    }
-
-    // Atualiza os dados em tempo real a cada 10 segundos
-    setInterval(fetchSummary, 10000);
-
-    // Carrega os dados ao abrir a página
-    fetchSummary();
-
-    // Alternar entre Modo Claro e Modo Escuro
-    function toggleDarkMode() {
-        const body = document.body;
-        body.classList.toggle("dark-mode");
-
-        // Mudar ícone de acordo com o estado
-        const icon = document.getElementById("dark-mode-toggle").querySelector("i");
-        if (body.classList.contains("dark-mode")) {
-            icon.classList.remove("fa-moon");
-            icon.classList.add("fa-sun");
-        } else {
-            icon.classList.remove("fa-sun");
-            icon.classList.add("fa-moon");
-        }
-    }
-
-    // Função de logout para redirecionar para o index.html
-    function logout() {
-        window.location.href = "index.html"; // Redireciona para o index.html
-    }
-</script>
-
-<style>
-    /* Responsividade para telas menores */
-    @media (max-width: 768px) {
-        #summary-section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        #summary-section > div {
-            flex: 1 1 48%; /* Faz os cards ficarem lado a lado em telas pequenas */
-            min-width: 120px; /* Largura mínima para os cards */
-            height: 120px;
-        }
-    }
-
-    /* Estilo para o modo escuro */
-    body.dark-mode {
-        background-color: #121212;
-        color: white;
-    }
-    
-    /* Estilo para os cards no modo escuro */
-    body.dark-mode .user-card {
-        background-color: #444; /* Cor de fundo mais escura para o card */
-        color: white; /* Texto branco no modo escuro */
-        border: 1px solid #666; /* Borda mais clara */
-    }
-    
-    /* Estilo para o modo escuro no SweetAlert2 */
-body.dark-mode .swal2-popup {
-    background-color: #333; /* Fundo escuro para o popup */
-    color: white; /* Texto branco no popup */
-    border: 1px solid #666; /* Borda mais clara */
-}
-
-body.dark-mode .swal2-title,
-body.dark-mode .swal2-html-container {
-    color: white; /* Título e conteúdo em branco */
-}
-
-body.dark-mode .swal2-styled {
-    background-color: #444; /* Cor do botão no modo escuro */
-    color: white; /* Texto do botão em branco */
-}
-
-body.dark-mode .swal2-cancel {
-    background-color: #666; /* Cor do botão de cancelamento */
-}
-
-body.dark-mode .swal2-confirm {
-    background-color: #007BFF; /* Cor do botão de confirmação */
-}
-
-    /* Mudar o fundo e texto do card para o modo escuro */
-    body.dark-mode #summary-section > div {
-        background-color: #333;
-        color: white;
-    }
-
-    body.dark-mode #summary-section > div:nth-child(1) {
-        background-color: #cc3333;
-    }
-
-    body.dark-mode #summary-section > div:nth-child(2) {
-        background-color: #339933;
-    }
-</style>
-
-
-<!-- Linha separadora antes do título -->
-<hr style="border: 1px solid #6a0dad; width: 80%; margin: 20px auto;">
-
-<!-- Título "Prisioneiro" com ícone -->
-<h2 style="text-align: center; margin-top: 20px;">
-    <i class="fas fa-user-lock" style="color: #6a0dad; margin-right: 10px;"></i>Prisioneiro
-</h2>
-
-<!-- Botão para abrir o formulário, com ícone e cor roxa -->
-<div style="text-align: center;">
-    <button onclick="openForm()" style="background-color: #6a0dad; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-        <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>Enviar
-    </button>
-</div>
-
-<script>
-    // Função fictícia para abrir o formulário (você pode ajustar conforme necessário)
-    function openForm() {
-        alert("Formulário aberto!");  // Aqui você pode colocar a lógica para abrir o formulário real
-    }
-</script>
-
-<!-- Barra de pesquisa -->
-<div class="search-container" style="text-align: center; margin: 20px 0;">
-    <div style="position: relative; display: block; margin: 0 auto; width: 100%; max-width: 250px;">
-        <!-- Ícone de pesquisa -->
-        <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6a0dad; font-size: 18px;"></i>
-        
-        <!-- Input da barra de pesquisa -->
-        <input type="text" id="search-bar" placeholder="Pesquise pelo ID ou Número" onkeyup="searchUser()"
-               style="width: 100%; padding: 10px 30px 10px 35px; border-radius: 25px; border: 1px solid #6a0dad; font-size: 16px; outline: none; transition: all 0.3s ease;">
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
-
-<style>
-    /* Responsividade para telas menores */
-    @media (max-width: 768px) {
-        .search-container {
-            margin: 10px auto;
-        }
-
-        .search-container input {
-            padding: 10px 30px 10px 35px; /* Ajustando padding para telas menores */
-            font-size: 14px; /* Ajustando o tamanho da fonte */
-            width: 80%; /* Barra de pesquisa mais compacta */
-        }
-    }
-
-    /* Responsividade para telas muito pequenas */
-    @media (max-width: 480px) {
-        .search-container input {
-            padding: 10px 25px 10px 30px; /* Ajustando padding para telas pequenas */
-            font-size: 14px;
-            width: 80%; /* Garantindo que a barra de pesquisa não ocupe toda a largura */
-        }
-    }
-</style>
-
-
-
-    <!-- Container para os Cards dos Usuários -->
-    <div id="users-cards"></div>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxXCg7h4oe_2BqdjkjdRpaQqdRWRekOXWPxe8zTejp6x9V1at6-hkxe7ATfV75RvOcQ/exec';
-
-        // Função para abrir o formulário de cadastro
-        // Array para armazenar os IDs já gerados
-let usedIds = [];
-
-function openForm() {
-    // Função para gerar um ID único de 5 dígitos
-    function generateUniqueId() {
-        let id;
-        do {
-            id = Math.floor(Math.random() * 90000) + 10000; // Gera um número aleatório entre 10000 e 99999
-        } while (usedIds.includes(id)); // Garante que o ID não foi gerado antes
-        usedIds.push(id); // Adiciona o ID à lista de usados
-        return id;
-    }
-
-    // Gerando um ID único de 5 dígitos
-    const id = generateUniqueId();
-
-    Swal.fire({
-        title: 'Cadastrar Novo Detento',
-        html: `
-            <label><i class="fas fa-id-badge"></i> ID</label>
-            <input id="swal-id" class="swal2-input" value="${id}" readonly> <!-- Exibe o ID formatado -->
-
-            <label><i class="fas fa-user"></i> Nome</label>
-            <input id="swal-name" class="swal2-input" placeholder="Nome">
-
-            <label><i class="fas fa-phone"></i> Número</label>
-            <input id="swal-number" class="swal2-input" placeholder="Número">
-
-            <label><i class="fas fa-calendar-day"></i> Dias</label>
-            <input id="swal-dias" class="swal2-input" placeholder="Dias">
-
-            <label><i class="fas fa-comment-alt"></i> Motivo</label>
-            <input id="swal-motivo" class="swal2-input" placeholder="Motivo">
-
-            <!-- Campo "Situação" com opções radio -->
-            <label><i class="fas fa-check-circle"></i> Situação</label>
-            <div>
-                <input type="radio" id="situacao-presa" name="situacao" value="Presa">
-                <label for="situacao-presa">Presa</label>
-                <input type="radio" id="situacao-livre" name="situacao" value="Livre">
-                <label for="situacao-livre">Livre</label>
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Cadastrar <i class="fas fa-check"></i>',
-        cancelButtonText: 'Cancelar <i class="fas fa-times"></i>',
-        customClass: {
-            popup: 'swal-popup-small',
-            confirmButton: 'swal-btn-cadastrar',
-            cancelButton: 'swal-btn-cancelar'
+  <script>
+    // Configure Tailwind theme
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            border: "hsl(var(--border))",
+            input: "hsl(var(--input))",
+            ring: "hsl(var(--ring))",
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            detained: "#dc2626",
+            "detained-secondary": "#ef4444",
+            free: "#16a34a",
+            "free-secondary": "#22c55e",
+            brand: "#9333ea",
+            "brand-secondary": "#a855f7",
+            primary: {
+              DEFAULT: "hsl(var(--primary))",
+              foreground: "hsl(var(--primary-foreground))",
+            },
+            secondary: {
+              DEFAULT: "hsl(var(--secondary))",
+              foreground: "hsl(var(--secondary-foreground))",
+            },
+            destructive: {
+              DEFAULT: "hsl(var(--destructive))",
+              foreground: "hsl(var(--destructive-foreground))",
+            },
+            muted: {
+              DEFAULT: "hsl(var(--muted))",
+              foreground: "hsl(var(--muted-foreground))",
+            },
+            accent: {
+              DEFAULT: "hsl(var(--accent))",
+              foreground: "hsl(var(--accent-foreground))",
+            },
+            popover: {
+              DEFAULT: "hsl(var(--popover))",
+              foreground: "hsl(var(--popover-foreground))",
+            },
+            card: {
+              DEFAULT: "hsl(var(--card))",
+              foreground: "hsl(var(--card-foreground))",
+            },
+          },
+          borderRadius: {
+            lg: "var(--radius)",
+            md: "calc(var(--radius) - 2px)",
+            sm: "calc(var(--radius) - 4px)",
+          },
         },
-        preConfirm: () => {
-            const id = document.getElementById('swal-id').value;
-            const name = document.getElementById('swal-name').value;
-            const number = document.getElementById('swal-number').value;
-            const dias = document.getElementById('swal-dias').value;
-            const motivo = document.getElementById('swal-motivo').value;
+      },
+    };
+  </script>
+  
+  <style>
+    /* CSS Variables for theming */
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 3.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 240 10% 3.9%;
+      --primary: 142.1 76.2% 36.3%;
+      --primary-foreground: 355.7 100% 97.3%;
+      --secondary: 240 4.8% 95.9%;
+      --secondary-foreground: 240 5.9% 10%;
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      --accent: 240 4.8% 95.9%;
+      --accent-foreground: 240 5.9% 10%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 240 5.9% 90%;
+      --input: 240 5.9% 90%;
+      --ring: 142.1 76.2% 36.3%;
+      --radius: 0.75rem;
+    }
 
-            // Obtendo a situação selecionada
-            const situacao = document.querySelector('input[name="situacao"]:checked')?.value;
-
-            // Verificando se todos os campos obrigatórios foram preenchidos
-            if (!name || !number || !dias || !situacao || !motivo) {
-                Swal.showValidationMessage('Por favor, preencha todos os campos.');
-                return false;
-            }
-
-            // Mostra o "Carregando..." enquanto os dados estão sendo enviados
-            Swal.showLoading();
-
-            // Envio dos dados para o Google Apps Script
-            return fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams({
-                    action: "create",
-                    id: id, // Envia o ID gerado
-                    name,
-                    number,
-                    dias,
-                    situacao,
-                    motivo
-                })
-            }).then(response => response.json())
-            .catch(() => {
-                Swal.fire('Erro', 'Erro ao cadastrar o detento.', 'error');
-            });
+    .dark {
+      --background: 20 14.3% 4.1%;
+      --foreground: 0 0% 95%;
+      --card: 24 9.8% 10%;
+      --card-foreground: 0 0% 95%;
+      --popover: 0 0% 9%;
+      --popover-foreground: 0 0% 95%;
+      --primary: 142.1 70.6% 45.3%;
+      --primary-foreground: 144.9 80.4% 10%;
+      --secondary: 240 3.7% 15.9%;
+      --secondary-foreground: 0 0% 98%;
+      --muted: 0 0% 15%;
+      --muted-foreground: 240 5% 64.9%;
+      --accent: 12 6.5% 15.1%;
+      --accent-foreground: 0 0% 98%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 85.7% 97.3%;
+      --border: 240 3.7% 15.9%;
+      --input: 240 3.7% 15.9%;
+      --ring: 142.4 71.8% 29.2%;
+    }
+    
+    /* Custom Glass effect classes */
+    .glass {
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .dark .glass {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    .glass-card {
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    .dark .glass-card {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Custom gradient classes */
+    .brand-gradient {
+      background: linear-gradient(to right, #9333ea, #a855f7);
+    }
+    
+    .detained-gradient {
+      background: linear-gradient(to right, #dc2626, #ef4444);
+      color: white;
+    }
+    
+    .free-gradient {
+      background: linear-gradient(to right, #16a34a, #22c55e);
+      color: white;
+    }
+    
+    .text-gradient {
+      background: linear-gradient(to right, #9333ea, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    /* Animations */
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    .animate-slide-in {
+      animation: slideIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* Custom styles for modal and dialogs */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      border-radius: var(--radius);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      padding: 1.5rem;
+      max-width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+    }
+    
+    /* Transitions */
+    .dark-transition {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+  </style>
+</head>
+<body class="dark-transition bg-background text-foreground">
+  <div id="app" class="min-h-screen"></div>
+  
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  
+  <script>
+    // MAIN APPLICATION
+    function App() {
+      // API Configuration
+      const API_URL = "https://script.google.com/macros/s/AKfycbxXCg7h4oe_2BqdjkjdRpaQqdRWRekOXWPxe8zTejp6x9V1at6-hkxe7ATfV75RvOcQ/exec";
+      
+      // State
+      const state = {
+        isDarkMode: localStorage.getItem("darkMode") === "true" || 
+                    window.matchMedia("(prefers-color-scheme: dark)").matches,
+        users: [],
+        filteredUsers: [],
+        summary: { totalDetained: 0, totalFree: 0 },
+        searchTerm: "",
+        isLoading: true,
+        showAddModal: false,
+        editingUser: null,
+        deleteUserId: null,
+        showReportPreview: false,
+        reportType: "summary",
+        isGeneratingReport: false
+      };
+      
+      // DOM Elements
+      const app = document.getElementById('app');
+      let toast;
+      
+      // Initialize
+      function init() {
+        // Apply theme
+        if (state.isDarkMode) {
+          document.documentElement.classList.add("dark");
         }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire('Detento cadastrado com sucesso!');
-            loadUsers(); // Recarrega a lista de detentos
-        } else {
-            Swal.fire('Cadastro cancelado', '', 'info');
-        }
-    });
-}
-
-// Adicionando as classes de estilos para os botões e espaçamento
-const style = document.createElement('style');
-style.innerHTML = `
-    .swal2-input {
-        margin-bottom: 20px; /* Aumentando o espaçamento entre os campos */
-    }
-
-    .swal-btn-cadastrar { 
-        background-color: #800080; 
-        color: white; 
-    }
-    .swal-btn-cadastrar:hover { 
-        background-color: #6a006a; 
-    }
-
-    .swal-btn-cancelar { 
-        background-color: #ff0000; 
-        color: white; 
-    }
-
-    .swal-btn-cancelar:hover { 
-        background-color: #cc0000; 
-    }
-
-    /* Estilizando os radio buttons */
-    div {
-        margin-bottom: 30px;
-    }
-
-    input[type="radio"] {
-        margin-right: 10px;
-    }
-
-    label {
-        margin-right: 20px;
-    }
-`;
-document.head.appendChild(style);
-        // Função para carregar os usuários cadastrados
-        function loadUsers() {
-    fetch(`${API_URL}?action=read`)
-        .then(response => response.text())
-        .then(data => {
-            const cardsContainer = document.getElementById("users-cards");
-            cardsContainer.innerHTML = "";
-            if (data.trim().length > 0) {
-                data.trim().split("\n").slice(1).forEach(line => {
-                    const user = line.split(",");
-                    const card = document.createElement("div");
-                    card.classList.add("user-card");
-                    card.innerHTML = `
-                        <h3><i class="fas fa-user-circle"></i> ${user[0]}</h3> <!-- ID -->
-                        <p><strong><i class="fas fa-id-badge"></i> Nome:</strong> ${user[1]}</p>
-                        <p><strong><i class="fas fa-phone"></i> Número:</strong> ${user[2]}</p>
-                        <p><strong><i class="fas fa-calendar-day"></i> Dias:</strong> ${user[3]}</p>
-                        <p><strong><i class="fas fa-clipboard-list"></i> Situação:</strong> ${user[4]}</p>
-                        <p><strong><i class="fas fa-comment-dots"></i> Motivo:</strong> ${user[5]}</p>
-                        <div class="actions">
-                            <button style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="editUser('${user[0]}', '${user[1]}', '${user[2]}', '${user[3]}', '${user[4]}', '${user[5]}')">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="deleteUser('${user[0]}')">
-                                <i class="fas fa-trash-alt"></i> Excluir
-                            </button>
-                        </div>
-                    `;
-                    cardsContainer.appendChild(card);
-                });
-            } else {
-                cardsContainer.innerHTML = "<p>Nenhum usuário encontrado.</p>";
-            }
-        })
-        .catch(error => {
-            console.error("Erro ao carregar dados:", error);
-            const cardsContainer = document.getElementById("users-cards");
-            cardsContainer.innerHTML = "<p>Erro ao carregar os usuários. Tente novamente mais tarde.</p>";
+        
+        // Load data
+        loadData();
+        
+        // Create toast container
+        createToastContainer();
+        
+        // Initial render
+        render();
+        
+        // Event listeners for theme
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches }) => {
+          if (matches) {
+            setDarkMode(true);
+          } else {
+            setDarkMode(false);
+          }
         });
-}
-        // Função para editar um usuário
-function editUser(id, name, number, dias, situacao, motivo) {
-    Swal.fire({
-        title: 'Editar Usuário',
-        html: `
-            <label><i class="fa fa-user"></i> Nome</label>
-            <input id="swal-name" class="swal2-input" value="${name}">
+      }
+      
+      // Create toast container
+      function createToastContainer() {
+        toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 z-50 max-w-md';
+        document.body.appendChild(toast);
+      }
+      
+      // Show toast notification
+      function showToast(message, type = 'success') {
+        const toastEl = document.createElement('div');
+        toastEl.className = `
+          p-4 mb-3 rounded-lg shadow-lg flex items-center justify-between
+          ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white
+          transform transition-all duration-300 opacity-0 translate-y-2
+        `;
+        
+        toastEl.innerHTML = `
+          <span>${message}</span>
+          <button class="ml-4 text-white focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        `;
+        
+        toast.appendChild(toastEl);
+        
+        // Animate in
+        setTimeout(() => {
+          toastEl.classList.remove('opacity-0', 'translate-y-2');
+        }, 10);
+        
+        // Close button
+        const closeBtn = toastEl.querySelector('button');
+        closeBtn.addEventListener('click', () => {
+          removeToast(toastEl);
+        });
+        
+        // Auto close
+        setTimeout(() => {
+          removeToast(toastEl);
+        }, 5000);
+      }
+      
+      // Remove toast
+      function removeToast(toastEl) {
+        toastEl.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => {
+          toast.removeChild(toastEl);
+        }, 300);
+      }
+      
+      // Toggle dark mode
+      function toggleDarkMode() {
+        setDarkMode(!state.isDarkMode);
+      }
+      
+      // Set dark mode
+      function setDarkMode(value) {
+        state.isDarkMode = value;
+        localStorage.setItem("darkMode", value.toString());
+        
+        if (value) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+        
+        render();
+      }
+      
+      // API Methods
+      
+      // Fetch summary data
+      async function fetchSummary() {
+        try {
+          const response = await fetch(`${API_URL}?action=summary`);
+          
+          if (!response.ok) {
+            throw new Error("Failed to fetch summary data");
+          }
+          
+          const data = await response.json();
+          
+          return {
+            totalDetained: data["Total de Presos"] || 0,
+            totalFree: data["Total de Livres"] || 0
+          };
+        } catch (error) {
+          console.error("Error fetching summary:", error);
+          return { totalDetained: 0, totalFree: 0 };
+        }
+      }
 
-            <label><i class="fa fa-phone"></i> Número</label>
-            <input id="swal-number" class="swal2-input" value="${number}">
-
-            <label><i class="fa fa-calendar"></i> Dias</label>
-            <input id="swal-dias" class="swal2-input" value="${dias}">
-
-            <label><i class="fa fa-comment"></i> Motivo</label>
-            <input id="swal-motivo" class="swal2-input" value="${motivo}">
-
-            <label><i class="fa fa-gavel"></i> Situação</label>
-            <select id="swal-situacao" class="swal2-input">
-                <option value="presa" ${situacao === 'presa' ? 'selected' : ''}>Presa</option>
-                <option value="livre" ${situacao === 'livre' ? 'selected' : ''}>Livre</option>
-            </select>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Salvar',
-        preConfirm: () => {
-            const updatedData = {
-                id,
-                name: document.getElementById('swal-name').value,
-                number: document.getElementById('swal-number').value,
-                dias: document.getElementById('swal-dias').value,
-                situacao: document.getElementById('swal-situacao').value,
-                motivo: document.getElementById('swal-motivo').value,
-                action: "update"
+      // Fetch users data
+      async function fetchUsers() {
+        try {
+          const response = await fetch(`${API_URL}?action=read`);
+          
+          if (!response.ok) {
+            throw new Error("Failed to fetch users data");
+          }
+          
+          const text = await response.text();
+          
+          if (!text.trim()) {
+            return [];
+          }
+          
+          const rows = text.trim().split("\n");
+          
+          // Skip the header row
+          const users = rows.slice(1).map(line => {
+            const [id, name, number, days, status, reason] = line.split(",");
+            return {
+              id,
+              name,
+              number,
+              days,
+              status: (status.trim() === "Presa" ? "Presa" : "Livre"),
+              reason
             };
-
-            return fetch(API_URL, {
-                method: 'POST',
-                body: new URLSearchParams(updatedData)
-            });
+          });
+          
+          return users;
+        } catch (error) {
+          console.error("Error fetching users:", error);
+          return [];
         }
-    }).then(() => loadUsers());
-}
+      }
 
-        // Função para excluir um usuário
-        function deleteUser(id) {
-            Swal.fire({
-                title: 'Tem certeza?',
-                text: 'Você não poderá reverter isso!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sim, excluir',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(API_URL, {
-                        method: 'POST',
-                        body: new URLSearchParams({ id, action: "delete" })
-                    })
-                    .then(() => {
-                        Swal.fire('Usuário excluído!', '', 'success');
-                        loadUsers();
-                    })
-                    .catch(() => Swal.fire('Erro ao excluir o usuário.', '', 'error'));
+      // Create user
+      async function createUser(userData) {
+        try {
+          const id = Math.floor(10000 + Math.random() * 90000).toString();
+          
+          const formData = new URLSearchParams({
+            action: "create",
+            id,
+            name: userData.name,
+            number: userData.number,
+            dias: userData.days,
+            situacao: userData.status,
+            motivo: userData.reason
+          });
+          
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData
+          });
+          
+          if (!response.ok) {
+            throw new Error("Failed to create user");
+          }
+          
+          return {
+            success: true,
+            data: { id, ...userData }
+          };
+        } catch (error) {
+          console.error("Error creating user:", error);
+          return {
+            success: false,
+            message: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+
+      // Update user
+      async function updateUser(userData) {
+        try {
+          const formData = new URLSearchParams({
+            action: "update",
+            id: userData.id,
+            name: userData.name,
+            number: userData.number,
+            dias: userData.days,
+            situacao: userData.status,
+            motivo: userData.reason
+          });
+          
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData
+          });
+          
+          if (!response.ok) {
+            throw new Error("Failed to update user");
+          }
+          
+          return {
+            success: true,
+            data: userData
+          };
+        } catch (error) {
+          console.error("Error updating user:", error);
+          return {
+            success: false,
+            message: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+
+      // Delete user
+      async function deleteUser(id) {
+        try {
+          const formData = new URLSearchParams({
+            action: "delete",
+            id
+          });
+          
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData
+          });
+          
+          if (!response.ok) {
+            throw new Error("Failed to delete user");
+          }
+          
+          return {
+            success: true
+          };
+        } catch (error) {
+          console.error("Error deleting user:", error);
+          return {
+            success: false,
+            message: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+      
+      // Load all data
+      async function loadData() {
+        state.isLoading = true;
+        render();
+        
+        try {
+          // Fetch summary and users data
+          const [summaryData, usersData] = await Promise.all([
+            fetchSummary(),
+            fetchUsers()
+          ]);
+          
+          state.summary = summaryData;
+          state.users = usersData;
+          state.filteredUsers = usersData;
+        } catch (error) {
+          console.error("Error loading data:", error);
+          showToast("Não foi possível carregar os dados. Tente novamente mais tarde.", "error");
+        } finally {
+          state.isLoading = false;
+          render();
+        }
+      }
+      
+      // Handle search
+      function handleSearch(term) {
+        state.searchTerm = term;
+        
+        if (!term.trim()) {
+          state.filteredUsers = state.users;
+        } else {
+          state.filteredUsers = state.users.filter(user => 
+            user.id.toLowerCase().includes(term.toLowerCase()) || 
+            user.number.toLowerCase().includes(term.toLowerCase()) ||
+            user.name.toLowerCase().includes(term.toLowerCase())
+          );
+        }
+        
+        render();
+      }
+      
+      // Add new user
+      async function handleAddUser(userData) {
+        try {
+          const response = await createUser(userData);
+          
+          if (!response.success) {
+            throw new Error(response.message || "Erro ao adicionar usuário");
+          }
+          
+          state.users = [response.data, ...state.users];
+          
+          // Filter again if search term exists
+          if (state.searchTerm) {
+            handleSearch(state.searchTerm);
+          } else {
+            state.filteredUsers = state.users;
+          }
+          
+          // Update summary counts
+          state.summary = {
+            totalDetained: userData.status === "Presa" ? state.summary.totalDetained + 1 : state.summary.totalDetained,
+            totalFree: userData.status === "Livre" ? state.summary.totalFree + 1 : state.summary.totalFree
+          };
+          
+          state.showAddModal = false;
+          showToast("Usuário adicionado com sucesso");
+          render();
+        } catch (error) {
+          console.error("Error adding user:", error);
+          showToast(error.message || "Erro ao adicionar usuário", "error");
+        }
+      }
+      
+      // Edit user
+      async function handleEditUser(userData) {
+        if (!state.editingUser) {
+          showToast("Usuário não encontrado", "error");
+          return;
+        }
+        
+        try {
+          const updatedUser = { ...userData, id: state.editingUser.id };
+          const response = await updateUser(updatedUser);
+          
+          if (!response.success) {
+            throw new Error(response.message || "Erro ao atualizar usuário");
+          }
+          
+          // Update summary counts if status changed
+          if (state.editingUser.status !== updatedUser.status) {
+            if (state.editingUser.status === "Presa" && updatedUser.status === "Livre") {
+              state.summary.totalDetained--;
+              state.summary.totalFree++;
+            } else if (state.editingUser.status === "Livre" && updatedUser.status === "Presa") {
+              state.summary.totalDetained++;
+              state.summary.totalFree--;
+            }
+          }
+          
+          // Update users list
+          state.users = state.users.map(u => u.id === state.editingUser.id ? updatedUser : u);
+          state.filteredUsers = state.filteredUsers.map(u => u.id === state.editingUser.id ? updatedUser : u);
+          state.editingUser = null;
+          
+          showToast("Usuário atualizado com sucesso");
+          render();
+        } catch (error) {
+          console.error("Error updating user:", error);
+          showToast(error.message || "Erro ao atualizar usuário", "error");
+        }
+      }
+      
+      // Delete user
+      async function handleDeleteUser(id) {
+        try {
+          // Find user to determine status for summary update
+          const userToDelete = state.users.find(u => u.id === id);
+          if (!userToDelete) return;
+          
+          const response = await deleteUser(id);
+          
+          if (!response.success) {
+            throw new Error(response.message || "Erro ao excluir usuário");
+          }
+          
+          // Update users list
+          state.users = state.users.filter(u => u.id !== id);
+          state.filteredUsers = state.filteredUsers.filter(u => u.id !== id);
+          
+          // Update summary counts
+          state.summary = {
+            totalDetained: userToDelete.status === "Presa" ? state.summary.totalDetained - 1 : state.summary.totalDetained,
+            totalFree: userToDelete.status === "Livre" ? state.summary.totalFree - 1 : state.summary.totalFree
+          };
+          
+          state.deleteUserId = null;
+          showToast("Usuário excluído com sucesso");
+          render();
+        } catch (error) {
+          console.error("Error deleting user:", error);
+          showToast(error.message || "Erro ao excluir usuário", "error");
+        }
+      }
+      
+      // Generate report
+      async function generateReport() {
+        state.isGeneratingReport = true;
+        render();
+        
+        try {
+          // Wait a bit for the report to render
+          setTimeout(async () => {
+            const reportElement = document.getElementById('report-container');
+            if (!reportElement) {
+              throw new Error("Elemento do relatório não encontrado");
+            }
+            
+            // Use width and height options to capture the entire element
+            const canvas = await html2canvas(reportElement, {
+              scale: 2,
+              backgroundColor: document.documentElement.classList.contains('dark') ? '#1a1a1a' : '#ffffff',
+              logging: false,
+              useCORS: true,
+              width: reportElement.scrollWidth,
+              height: reportElement.scrollHeight,
+              windowWidth: reportElement.scrollWidth,
+              windowHeight: reportElement.scrollHeight,
+              // Fix for capturing the entire report content
+              onclone: (clonedDoc) => {
+                const clonedElement = clonedDoc.getElementById('report-container');
+                if (clonedElement) {
+                  // Make sure the clone is visible and has correct dimensions for capturing
+                  clonedElement.style.position = 'absolute';
+                  clonedElement.style.top = '0';
+                  clonedElement.style.left = '0';
+                  clonedElement.style.width = reportElement.scrollWidth + 'px';
+                  clonedElement.style.height = reportElement.scrollHeight + 'px';
+                  clonedElement.style.transform = 'none';
+                  clonedElement.style.overflow = 'visible';
+                  clonedElement.style.maxHeight = 'none';
                 }
+              }
             });
+            
+            const dataUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            
+            link.href = dataUrl;
+            link.download = `relatorio-abin-${new Date().toISOString().slice(0, 10)}.png`;
+            link.click();
+            
+            showToast("Relatório gerado com sucesso");
+            
+            state.isGeneratingReport = false;
+            state.showReportPreview = false;
+            render();
+          }, 500);
+        } catch (error) {
+          console.error("Erro ao gerar relatório:", error);
+          showToast("Não foi possível gerar o relatório. Tente novamente.", "error");
+          state.isGeneratingReport = false;
+          render();
         }
-
-        // Função de pesquisa
-        function searchUser() {
-            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
-            const cards = document.querySelectorAll('.user-card');
-            cards.forEach(card => {
-                const id = card.querySelector('h3').textContent.toLowerCase();
-                const number = card.querySelector('p').textContent.toLowerCase();
-                if (id.includes(searchTerm) || number.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+      }
+      
+      // Render methods for different components
+      
+      // Header component
+      function renderHeader() {
+        return `
+          <div class="fixed top-0 left-0 right-0 z-50">
+            <!-- Main header with glass effect and gradient border -->
+            <header class="w-full glass transition-all duration-300 backdrop-blur-lg flex items-center justify-between px-4 sm:px-6 py-3 ${window.scrollY > 10 ? 'shadow-md border-b border-white/10' : ''}">
+              <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 brand-gradient rounded-lg flex items-center justify-center">
+                  <i data-lucide="layout" class="w-4 h-4 sm:w-5 sm:h-5 text-white"></i>
+                </div>
+                <div class="flex flex-col">
+                  <h1 class="text-lg sm:text-xl font-bold tracking-tight text-foreground">ABIN S.A.</h1>
+                  <div class="text-xs text-muted-foreground">Sistema de Gestão</div>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-1 sm:gap-2">
+                <button 
+                  class="rounded-full w-8 h-8 sm:w-10 sm:h-10 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring flex items-center justify-center"
+                  aria-label="${state.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}"
+                  id="theme-toggle"
+                >
+                  ${state.isDarkMode ? 
+                    '<i data-lucide="sun" class="w-4 h-4 sm:w-5 sm:h-5"></i>' : 
+                    '<i data-lucide="moon" class="w-4 h-4 sm:w-5 sm:h-5"></i>'}
+                </button>
+                
+                <button
+                  class="rounded-full w-8 h-8 sm:w-10 sm:h-10 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring flex items-center justify-center"
+                  aria-label="Logout"
+                  id="logout-button"
+                >
+                  <i data-lucide="log-out" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                </button>
+              </div>
+            </header>
+            
+            <!-- Secondary header/subtitle -->
+            <div class="w-full bg-background/80 backdrop-blur-md border-b border-border px-4 sm:px-6 py-2 sm:py-3">
+              <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-0">
+                <div class="text-sm font-medium flex items-center gap-2">
+                  <i data-lucide="file-bar-chart" class="w-4 h-4 text-brand"></i>
+                  <span>ABIN Detention SKUR</span>
+                </div>
+                
+                <div class="text-xs text-muted-foreground">
+                  ${new Date().toLocaleDateString('pt-BR', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Stat card component
+      function renderStatCard(icon, title, value, loading = false, className = "", variant = "default") {
+        // Choose gradient based on variant
+        let gradientClass = 'brand-gradient';
+        
+        if (variant === "detained") {
+          gradientClass = 'detained-gradient';
+        } else if (variant === "free") {
+          gradientClass = 'free-gradient';
         }
-
-        // Carregar usuários na inicialização
-        window.onload = loadUsers;
-    </script>
+          
+        return `
+          <div class="rounded-xl p-6 flex flex-col justify-between transition-all duration-300 overflow-hidden group hover:shadow-lg ${gradientClass} ${className} text-white">
+            <div class="flex items-start justify-between">
+              <div class="w-12 h-12 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
+                <i data-lucide="${icon}" class="w-6 h-6 text-white"></i>
+              </div>
+              
+              ${loading ? 
+                '<div class="h-6 w-20 bg-white/20 animate-pulse rounded"></div>' : 
+                `<p class="font-bold text-3xl tracking-tight drop-shadow-md text-white">${value}</p>`
+              }
+            </div>
+            
+            <div class="mt-4">
+              <h3 class="font-semibold text-sm drop-shadow-md text-white">${title}</h3>
+              
+              <div class="h-1 w-16 bg-white/30 rounded-full mt-2"></div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Search bar component
+      function renderSearchBar() {
+        return `
+          <div class="relative w-full max-w-lg mx-auto">
+            <div class="relative">
+              <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4"></i>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Buscar por ID, nome ou número..."
+                value="${state.searchTerm}"
+                class="w-full py-2 px-10 border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              ${state.searchTerm ? `
+                <button id="clear-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+      
+      // User card component
+      function renderUserCard(user) {
+        const statusClass = user.status === "Presa" ? 
+          "bg-detained/20 text-detained" : 
+          "bg-free/20 text-free";
+          
+        return `
+          <div class="glass-card p-5 h-full flex flex-col">
+            <div class="flex justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full brand-gradient flex items-center justify-center text-white font-bold">
+                  ${user.name.charAt(0)}
+                </div>
+                <div>
+                  <h3 class="font-semibold">${user.name}</h3>
+                  <div class="text-xs text-muted-foreground">ID: ${user.id}</div>
+                </div>
+              </div>
+              
+              <div class="flex gap-2">
+                <button class="edit-user w-8 h-8 rounded-full hover:bg-accent hover:text-accent-foreground flex items-center justify-center" data-id="${user.id}">
+                  <i data-lucide="edit" class="w-4 h-4"></i>
+                </button>
+                <button class="delete-user w-8 h-8 rounded-full hover:bg-accent hover:text-accent-foreground flex items-center justify-center" data-id="${user.id}">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mt-4 space-y-3 flex-1">
+              <div class="flex items-center gap-2">
+                <i data-lucide="hash" class="w-4 h-4 text-muted-foreground"></i>
+                <div>Número: <span class="font-medium">${user.number}</span></div>
+              </div>
+              
+              <div class="flex items-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-muted-foreground"></i>
+                <div>Dias: <span class="font-medium">${user.days}</span></div>
+              </div>
+              
+              <div class="flex items-start gap-2">
+                <i data-lucide="file-text" class="w-4 h-4 text-muted-foreground mt-1"></i>
+                <div>
+                  <div>Motivo:</div> 
+                  <div class="font-medium text-sm mt-1">${user.reason}</div>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-2 mt-3">
+                <div class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">
+                  ${user.status}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Add/Edit user modal
+      function renderAddEditModal() {
+        if (!state.showAddModal && !state.editingUser) return '';
+        
+        const isEditing = !!state.editingUser;
+        const user = isEditing ? state.editingUser : { name: '', number: '', days: '', reason: '', status: 'Presa' };
+        
+        // Generate a random ID for new users
+        const generatedId = isEditing ? user.id : Math.floor(10000 + Math.random() * 90000).toString();
+        
+        return `
+          <div class="modal-overlay">
+            <div class="modal-content w-full max-w-md">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold tracking-tight">
+                  ${isEditing ? 'Editar' : 'Adicionar'} Usuário
+                </h2>
+                <button id="close-modal" class="hover:bg-accent hover:text-accent-foreground p-1.5 rounded-full">
+                  <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+              </div>
+              
+              <form id="user-form" class="space-y-4">
+                <div>
+                  <label for="user-id" class="block text-sm font-medium mb-1">
+                    ID
+                  </label>
+                  <input 
+                    type="text" 
+                    id="user-id" 
+                    value="${generatedId}"
+                    class="w-full rounded-md border border-input px-3 py-2 bg-muted/50 text-muted-foreground"
+                    readonly
+                  />
+                  <p class="text-xs text-muted-foreground mt-1">
+                    ${isEditing ? 'ID não pode ser alterado' : 'ID gerado automaticamente'}
+                  </p>
+                </div>
+                
+                <div>
+                  <label for="user-name" class="block text-sm font-medium mb-1">
+                    Nome
+                  </label>
+                  <input 
+                    type="text" 
+                    id="user-name" 
+                    value="${user.name}"
+                    class="w-full rounded-md border border-input px-3 py-2 bg-background"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label for="user-number" class="block text-sm font-medium mb-1">
+                    Número
+                  </label>
+                  <input 
+                    type="text" 
+                    id="user-number" 
+                    value="${user.number}"
+                    class="w-full rounded-md border border-input px-3 py-2 bg-background"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label for="user-days" class="block text-sm font-medium mb-1">
+                    Dias
+                  </label>
+                  <input 
+                    type="number" 
+                    id="user-days" 
+                    value="${user.days}"
+                    class="w-full rounded-md border border-input px-3 py-2 bg-background"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label for="user-reason" class="block text-sm font-medium mb-1">
+                    Motivo
+                  </label>
+                  <textarea 
+                    id="user-reason" 
+                    class="w-full rounded-md border border-input px-3 py-2 bg-background"
+                    required
+                    rows="3"
+                  >${user.reason}</textarea>
+                </div>
+                
+                <div>
+                  <label for="user-status" class="block text-sm font-medium mb-1">
+                    Status
+                  </label>
+                  <select 
+                    id="user-status" 
+                    class="w-full rounded-md border border-input px-3 py-2 bg-background"
+                    required
+                  >
+                    <option value="Presa" ${user.status === 'Presa' ? 'selected' : ''}>Presa</option>
+                    <option value="Livre" ${user.status === 'Livre' ? 'selected' : ''}>Livre</option>
+                  </select>
+                </div>
+                
+                <div class="flex justify-end gap-2 mt-6">
+                  <button 
+                    type="button"
+                    id="cancel-form"
+                    class="px-4 py-2 border border-input rounded-md hover:bg-accent hover:text-accent-foreground"
+                  >
+                    Cancelar
+                  </button>
+                  
+                  <button 
+                    type="submit"
+                    class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                  >
+                    ${isEditing ? 'Salvar Alterações' : 'Adicionar Usuário'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Delete confirmation dialog
+      function renderDeleteConfirmation() {
+        if (!state.deleteUserId) return '';
+        
+        return `
+          <div class="modal-overlay">
+            <div class="modal-content w-full max-w-md">
+              <div class="mb-6">
+                <h2 class="text-xl font-bold tracking-tight">
+                  Confirmar exclusão
+                </h2>
+                <p class="text-muted-foreground mt-2">
+                  Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.
+                </p>
+              </div>
+              
+              <div class="flex justify-end gap-2">
+                <button 
+                  id="cancel-delete"
+                  class="px-4 py-2 border border-input rounded-md hover:bg-accent hover:text-accent-foreground"
+                >
+                  Cancelar
+                </button>
+                
+                <button 
+                  id="confirm-delete"
+                  class="px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90"
+                >
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Report generator dialog
+      function renderReportGenerator() {
+        return `
+          <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 items-center">
+            <div class="w-full sm:w-48">
+              <div class="relative">
+                <select
+                  id="report-type"
+                  class="w-full appearance-none rounded-md border border-input px-3 py-2 bg-background pr-8"
+                >
+                  <option value="summary" ${state.reportType === 'summary' ? 'selected' : ''}>Resumo Geral</option>
+                  <option value="detained" ${state.reportType === 'detained' ? 'selected' : ''}>Detentos</option>
+                  <option value="free" ${state.reportType === 'free' ? 'selected' : ''}>Libertos</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none"></i>
+              </div>
+            </div>
+            
+            <button 
+              id="preview-report"
+              class="w-full sm:w-auto px-4 py-2 border border-input rounded-md hover:bg-accent hover:text-accent-foreground flex items-center justify-center"
+            >
+              <i data-lucide="file-text" class="mr-2 h-4 w-4"></i>
+              Visualizar Relatório
+            </button>
+          </div>
+        `;
+      }
+      
+      // Report preview dialog
+      function renderReportPreviewDialog() {
+        if (!state.showReportPreview) return '';
+        
+        return `
+          <div class="modal-overlay">
+            <div class="modal-content w-full max-w-3xl">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold tracking-tight">
+                  Prévia do Relatório
+                </h2>
+                <button id="close-report-preview" class="hover:bg-accent hover:text-accent-foreground p-1.5 rounded-full">
+                  <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+              </div>
+              
+              <div id="report-container" class="p-6 rounded-lg border border-border bg-card text-card-foreground">
+                <div class="text-center mb-6">
+                  <h2 class="text-3xl font-bold text-gradient">ABIN S.A.</h2>
+                  <p class="text-muted-foreground">Relatório de Detenção - ${new Date().toLocaleDateString()}</p>
+                  
+                  <div class="brand-gradient h-1 w-32 mx-auto my-4"></div>
+                </div>
+                
+                ${state.reportType === "summary" ? `
+                  <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                      <div class="p-4 rounded-lg bg-detained/20 flex flex-col items-center">
+                        <h3 class="font-semibold text-detained">Total de Presos</h3>
+                        <p class="text-3xl font-bold">${state.summary.totalDetained}</p>
+                      </div>
+                      <div class="p-4 rounded-lg bg-free/20 flex flex-col items-center">
+                        <h3 class="font-semibold text-free">Total de Livres</h3>
+                        <p class="text-3xl font-bold">${state.summary.totalFree}</p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 class="font-semibold mb-3 flex items-center">
+                        <i data-lucide="bar-chart" class="w-5 h-5 mr-2"></i>
+                        Distribuição de Status
+                      </h3>
+                      <div class="h-8 w-full rounded-full overflow-hidden bg-muted">
+                        <div 
+                          class="h-full bg-detained transition-all duration-500"
+                          style="width: ${
+                            state.summary.totalDetained + state.summary.totalFree === 0 ? 
+                              0 : 
+                              (state.summary.totalDetained / (state.summary.totalDetained + state.summary.totalFree)) * 100
+                          }%"
+                        ></div>
+                      </div>
+                      <div class="flex justify-between mt-2 text-sm">
+                        <span>Presos: ${state.summary.totalDetained}</span>
+                        <span>Livres: ${state.summary.totalFree}</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 class="font-semibold mb-3">Informações Gerais</h3>
+                      <ul class="space-y-2">
+                        <li>Total de Registros: ${state.summary.totalDetained + state.summary.totalFree}</li>
+                        <li>Última Atualização: ${new Date().toLocaleString()}</li>
+                      </ul>
+                    </div>
+                  </div>
+                ` : `
+                  <div>
+                    <h3 class="font-semibold mb-3 flex items-center">
+                      <i data-lucide="file-text" class="w-5 h-5 mr-2"></i>
+                      Lista de ${state.reportType === "detained" ? "Detentos" : "Libertos"}
+                    </h3>
+                    
+                    <div class="overflow-auto">
+                      <table class="w-full border-collapse">
+                        <thead>
+                          <tr class="border-b">
+                            <th class="text-left p-2">ID</th>
+                            <th class="text-left p-2">Nome</th>
+                            <th class="text-left p-2">Número</th>
+                            <th class="text-left p-2">Dias</th>
+                            <th class="text-left p-2">Motivo</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          ${state.users
+                            .filter(user => state.reportType === "detained" 
+                              ? user.status === "Presa" 
+                              : user.status === "Livre")
+                            .map(user => `
+                              <tr class="border-b">
+                                <td class="p-2">${user.id}</td>
+                                <td class="p-2">${user.name}</td>
+                                <td class="p-2">${user.number}</td>
+                                <td class="p-2">${user.days}</td>
+                                <td class="p-2">${user.reason}</td>
+                              </tr>
+                            `).join('')}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                `}
+                
+                <div class="mt-6 text-xs text-muted-foreground text-center">
+                  <p>Relatório gerado pelo Sistema ABIN Detetion SKUR</p>
+                  <p>© ${new Date().getFullYear()} - ABIN S.A.</p>
+                </div>
+              </div>
+              
+              <div class="flex justify-end space-x-2 mt-4">
+                <button 
+                  id="close-report-btn"
+                  class="px-4 py-2 border border-input rounded-md hover:bg-accent hover:text-accent-foreground"
+                  ${state.isGeneratingReport ? 'disabled' : ''}
+                >
+                  Cancelar
+                </button>
+                
+                <button 
+                  id="generate-report-btn"
+                  class="px-4 py-2 brand-gradient text-white rounded-md hover:opacity-90 transition-opacity flex items-center"
+                  ${state.isGeneratingReport ? 'disabled' : ''}
+                >
+                  ${state.isGeneratingReport ? `
+                    Gerando...
+                  ` : `
+                    <i data-lucide="download" class="mr-2 h-4 w-4"></i>
+                    Baixar como Imagem
+                  `}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Main render function
+      function render() {
+        app.innerHTML = `
+          ${renderHeader()}
+          
+          <!-- Main content -->
+          <main class="container mx-auto px-4 pt-32">
+            <!-- Stats section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12 animate-slide-in">
+              ${renderStatCard("lock", "Presos", state.isLoading ? "..." : state.summary.totalDetained, state.isLoading, "h-[140px]", "detained")}
+              
+              ${renderStatCard("user-check", "Livres", state.isLoading ? "..." : state.summary.totalFree, state.isLoading, "h-[140px]", "free")}
+            </section>
+            
+            <!-- Report generator section -->
+            <section class="mb-8 animate-fade-in">
+              <div class="flex flex-col sm:flex-row items-center justify-between gap-4 glass p-4 rounded-xl">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="file-bar-chart-2" class="w-5 h-5 text-brand"></i>
+                  <h2 class="text-xl font-bold tracking-tight">Relatórios</h2>
+                </div>
+                
+                ${renderReportGenerator()}
+              </div>
+            </section>
+            
+            <div class="h-px bg-border my-8"></div>
+            
+            <!-- Title section -->
+            <section class="flex flex-col items-center mb-8 animate-fade-in">
+              <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="users" class="w-6 h-6 text-brand"></i>
+                <h2 class="text-2xl font-bold tracking-tight">Prisioneiros</h2>
+              </div>
+              
+              <button 
+                id="add-user-btn"
+                class="brand-gradient text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity mt-3 flex items-center"
+              >
+                <i data-lucide="badge-plus" class="mr-2 h-4 w-4"></i>
+                Cadastrar
+              </button>
+            </section>
+            
+            <!-- Search bar -->
+            ${renderSearchBar()}
+            
+            <!-- Users grid -->
+            ${state.isLoading ? `
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                ${Array.from({ length: 6 }).map(() => `
+                  <div class="glass-card p-5 h-64 animate-pulse">
+                    <div class="flex justify-between">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-muted"></div>
+                        <div>
+                          <div class="h-4 w-24 bg-muted rounded"></div>
+                          <div class="h-3 w-16 bg-muted rounded mt-2"></div>
+                        </div>
+                      </div>
+                      <div class="flex gap-2">
+                        <div class="w-8 h-8 rounded-full bg-muted"></div>
+                        <div class="w-8 h-8 rounded-full bg-muted"></div>
+                      </div>
+                    </div>
+                    <div class="mt-4 space-y-3">
+                      ${Array.from({ length: 4 }).map(() => `
+                        <div class="flex items-center gap-2">
+                          <div class="w-4 h-4 rounded-full bg-muted"></div>
+                          <div class="h-3 w-full bg-muted rounded"></div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : state.filteredUsers.length > 0 ? `
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                ${state.filteredUsers.map(user => renderUserCard(user)).join('')}
+              </div>
+            ` : `
+              <div class="text-center py-12">
+                <h3 class="text-xl font-medium text-muted-foreground">
+                  ${state.searchTerm ? "Nenhum resultado encontrado" : "Nenhum usuário cadastrado"}
+                </h3>
+                <p class="text-muted-foreground mt-2">
+                  ${state.searchTerm 
+                    ? "Tente usar termos diferentes na busca." 
+                    : "Clique em 'Cadastrar' para adicionar um novo usuário."}
+                </p>
+              </div>
+            `}
+          </main>
+          
+          <!-- Modals -->
+          ${renderAddEditModal()}
+          ${renderDeleteConfirmation()}
+          ${renderReportPreviewDialog()}
+        `;
+        
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Add event listeners
+        addEventListeners();
+      }
+      
+      // Add event listeners to rendered elements
+      function addEventListeners() {
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', toggleDarkMode);
+        }
+        
+        // Search input
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          searchInput.addEventListener('input', (e) => {
+            handleSearch(e.target.value);
+          });
+        }
+        
+        // Clear search
+        const clearSearch = document.getElementById('clear-search');
+        if (clearSearch) {
+          clearSearch.addEventListener('click', () => {
+            handleSearch('');
+          });
+        }
+        
+        // Add user button
+        const addUserBtn = document.getElementById('add-user-btn');
+        if (addUserBtn) {
+          addUserBtn.addEventListener('click', () => {
+            state.showAddModal = true;
+            render();
+          });
+        }
+        
+        // Edit user buttons
+        const editButtons = document.querySelectorAll('.edit-user');
+        editButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const userId = button.getAttribute('data-id');
+            state.editingUser = state.users.find(u => u.id === userId) || null;
+            render();
+          });
+        });
+        
+        // Delete user buttons
+        const deleteButtons = document.querySelectorAll('.delete-user');
+        deleteButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const userId = button.getAttribute('data-id');
+            state.deleteUserId = userId;
+            render();
+          });
+        });
+        
+        // Close modal
+        const closeModal = document.getElementById('close-modal');
+        const cancelForm = document.getElementById('cancel-form');
+        if (closeModal) {
+          closeModal.addEventListener('click', () => {
+            state.showAddModal = false;
+            state.editingUser = null;
+            render();
+          });
+        }
+        if (cancelForm) {
+          cancelForm.addEventListener('click', () => {
+            state.showAddModal = false;
+            state.editingUser = null;
+            render();
+          });
+        }
+        
+        // Handle form submission
+        const userForm = document.getElementById('user-form');
+        if (userForm) {
+          userForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const userData = {
+              name: document.getElementById('user-name').value,
+              number: document.getElementById('user-number').value,
+              days: document.getElementById('user-days').value,
+              reason: document.getElementById('user-reason').value,
+              status: document.getElementById('user-status').value
+            };
+            
+            if (state.editingUser) {
+              handleEditUser(userData);
+            } else {
+              handleAddUser(userData);
+            }
+          });
+        }
+        
+        // Delete confirmation
+        const cancelDelete = document.getElementById('cancel-delete');
+        const confirmDelete = document.getElementById('confirm-delete');
+        if (cancelDelete) {
+          cancelDelete.addEventListener('click', () => {
+            state.deleteUserId = null;
+            render();
+          });
+        }
+        if (confirmDelete) {
+          confirmDelete.addEventListener('click', () => {
+            if (state.deleteUserId) {
+              handleDeleteUser(state.deleteUserId);
+            }
+          });
+        }
+        
+        // Report generator
+        const reportTypeSelect = document.getElementById('report-type');
+        if (reportTypeSelect) {
+          reportTypeSelect.addEventListener('change', (e) => {
+            state.reportType = e.target.value;
+          });
+        }
+        
+        const previewReportBtn = document.getElementById('preview-report');
+        if (previewReportBtn) {
+          previewReportBtn.addEventListener('click', () => {
+            state.showReportPreview = true;
+            render();
+          });
+        }
+        
+        const closeReportPreview = document.getElementById('close-report-preview');
+        const closeReportBtn = document.getElementById('close-report-btn');
+        if (closeReportPreview) {
+          closeReportPreview.addEventListener('click', () => {
+            state.showReportPreview = false;
+            render();
+          });
+        }
+        if (closeReportBtn) {
+          closeReportBtn.addEventListener('click', () => {
+            state.showReportPreview = false;
+            render();
+          });
+        }
+        
+        const generateReportBtn = document.getElementById('generate-report-btn');
+        if (generateReportBtn) {
+          generateReportBtn.addEventListener('click', generateReport);
+        }
+      }
+      
+      // Start the app
+      init();
+    }
+    
+    // Run the app
+    document.addEventListener('DOMContentLoaded', App);
+  </script>
 </body>
 </html>
+
