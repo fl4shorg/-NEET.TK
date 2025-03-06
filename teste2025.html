@@ -1,1549 +1,471 @@
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enterprise Dashboard</title>
-  <meta name="description" content="Painel administrativo profissional" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>" />
-  
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEEXTCINE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
+          colors: {
+            'cinema-black': '#121212',
+            'cinema-gray': '#1e1e1e',
+            'cinema-light-gray': '#2a2a2a',
+            'cinema-red': '#e50914',
+            'cinema-text-white': '#ffffff'
+          },
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
-            display: ['Poppins', 'sans-serif']
           },
-          colors: {
-            primary: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              200: '#bae6fd',
-              300: '#7dd3fc',
-              400: '#38bdf8',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              800: '#075985',
-              900: '#0c4a6e',
-              950: '#082f49',
-            },
-            secondary: {
-              50: '#f5f3ff',
-              100: '#ede9fe',
-              200: '#ddd6fe',
-              300: '#c4b5fd',
-              400: '#a78bfa',
-              500: '#8b5cf6',
-              600: '#7c3aed',
-              700: '#6d28d9',
-              800: '#5b21b6',
-              900: '#4c1d95',
-              950: '#2e1065',
-            },
-          },
-          animation: {
-            'fade-in': 'fadeIn 0.5s ease-in-out',
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: 0, transform: 'translateY(10px)' },
-              '100%': { opacity: 1, transform: 'translateY(0)' }
-            }
-          }
         }
       }
-    };
+    }
   </script>
-  
-  <!-- Custom Styles -->
   <style>
     body {
+      background-color: #121212;
+      color: #ffffff;
       font-family: 'Inter', sans-serif;
-      transition: background-color 0.3s, color 0.3s;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
     }
     
-    .dashboard-card {
-      transition: all 0.3s ease;
+    .backdrop-blur {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     
-    .dashboard-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    .glass-effect {
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
-    .gradient-text {
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      background-image: linear-gradient(90deg, #0ea5e9, #8b5cf6);
+    .movie-poster-hover {
+      transition: all 0.3s ease-out;
     }
     
-    .gradient-bg {
-      background-image: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+    .movie-poster-hover:hover {
+      transform: scale(1.05);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      z-index: 10;
     }
     
-    .card-transition {
-      transition: all 0.3s ease;
-    }
-    
-    .card-transition:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Loading bar animation */
-    @keyframes progress {
-      0% { width: 0; }
-      100% { width: 100%; }
-    }
-    
-    .animate-progress {
-      animation: progress 0.8s ease-in-out;
-    }
-    
-    /* Dark mode toggle styles */
-    .dark-mode-toggle {
-      width: 50px;
-      height: 25px;
-      background-color: #e2e8f0;
-      border-radius: 25px;
-      padding: 2px;
-      position: relative;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .dark-mode-toggle.dark {
-      background-color: #4c1d95;
-    }
-    
-    .toggle-circle {
-      width: 21px;
-      height: 21px;
-      background-color: white;
-      border-radius: 50%;
-      position: absolute;
-      left: 2px;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #f59e0b;
-    }
-    
-    .dark .toggle-circle {
-      left: calc(100% - 23px);
-      color: #6366f1;
-    }
-    
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 8px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 0, 0, 0.3);
-    }
-    
-    .dark ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .dark ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .dark ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-    
-    /* Toast Notification Styles */
-    .toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      max-width: 350px;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      z-index: 9999;
-      transform: translateY(-20px);
+    .movie-info-fade {
       opacity: 0;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transform: translateY(10px);
+      transition: all 0.3s ease;
     }
     
-    .toast.show {
-      transform: translateY(0);
+    .movie-poster-hover:hover .movie-info-fade {
       opacity: 1;
+      transform: translateY(0);
     }
     
-    .toast-success {
-      background-color: #10b981;
-      color: white;
-      border-left: 5px solid #059669;
+    .hero-overlay {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, transparent 100%),
+                  linear-gradient(to top, #121212, transparent 60%);
     }
     
-    .toast-error {
-      background-color: #ef4444;
-      color: white;
-      border-left: 5px solid #b91c1c;
+    .movie-slider {
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
     
-    .toast-info {
-      background-color: #3b82f6;
-      color: white;
-      border-left: 5px solid #1d4ed8;
+    .movie-slider::-webkit-scrollbar {
+      display: none;
     }
     
-    .toast-icon {
-      margin-right: 12px;
-    }
-    
-    .toast-close {
-      cursor: pointer;
-      padding: 2px 6px;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-    
-    .toast-close:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    /* Loading skeleton animation */
-    @keyframes skeleton-loading {
-      0% {
-        background-color: rgba(206, 212, 218, 0.5);
+    @keyframes pulse-soft {
+      0%, 100% {
+        opacity: 1;
       }
-      100% {
-        background-color: rgba(229, 232, 235, 0.5);
+      50% {
+        opacity: 0.7;
       }
     }
     
-    .skeleton {
-      animation: skeleton-loading 1.5s ease-in-out infinite alternate;
+    .animate-pulse-soft {
+      animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     
-    .dark .skeleton {
-      animation-name: skeleton-loading-dark;
-    }
-    
-    @keyframes skeleton-loading-dark {
-      0% {
-        background-color: rgba(48, 52, 63, 0.5);
-      }
-      100% {
-        background-color: rgba(68, 72, 83, 0.5);
-      }
+    .modal-backdrop-fade {
+      transition: opacity 0.3s ease;
     }
   </style>
 </head>
-
-<body class="min-h-screen bg-gray-50 text-gray-900 transition-colors">
-  <div id="app" class="min-h-screen flex flex-col">
-    <!-- Header/Navbar -->
-    <header class="sticky top-0 z-50 gradient-bg text-white shadow-md">
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex justify-between items-center">
-          <!-- Logo & Title -->
-          <div class="flex items-center gap-3">
-            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-white/20 text-white">
-              <i class="fas fa-chart-line"></i>
-            </div>
-            <h1 class="text-xl font-display font-bold hidden sm:block">Enterprise Dashboard</h1>
-          </div>
-          
-          <!-- Controls -->
-          <div class="flex items-center gap-4">
-            <!-- Dark Mode Toggle -->
-            <div id="darkModeToggle" class="dark-mode-toggle">
-              <div class="toggle-circle">
-                <i class="fas fa-sun text-xs"></i>
-              </div>
-            </div>
-            
-            <!-- User Profile -->
-            <div class="relative group">
-              <div class="flex items-center gap-2 cursor-pointer">
-                <div id="profilePic" class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
-                  <i class="fas fa-user text-white"></i>
-                </div>
-                <div class="hidden sm:block">
-                  <p class="text-sm font-medium leading-none">Admin</p>
-                  <p class="text-xs text-white/70">Administrator</p>
-                </div>
-                <i class="fas fa-chevron-down text-xs ml-1"></i>
-              </div>
-              
-              <!-- Dropdown Menu -->
-              <div class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <i class="fas fa-user-circle mr-2"></i> Perfil
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <i class="fas fa-cog mr-2"></i> Configurações
-                </a>
-                <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <i class="fas fa-sign-out-alt mr-2"></i> Sair
-                </a>
-              </div>
-            </div>
-          </div>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4 flex justify-between items-center transition-all duration-300 bg-transparent">
+      <a href="#" class="text-cinema-red text-2xl font-bold tracking-tighter z-10">
+        NEEXTCINE
+      </a>
+      
+      <nav class="hidden md:flex space-x-6">
+        <a href="#" class="text-white hover:text-cinema-red transition-colors duration-300 flex items-center text-sm">
+          Início
+        </a>
+        <a href="#" class="text-white hover:text-cinema-red transition-colors duration-300 flex items-center text-sm">
+          Filmes
+        </a>
+        <a href="#" class="text-white hover:text-cinema-red transition-colors duration-300 flex items-center text-sm">
+          Séries
+        </a>
+        <a href="#" class="text-white hover:text-cinema-red transition-colors duration-300 flex items-center text-sm">
+          Populares
+        </a>
+        <a href="#" class="text-white hover:text-cinema-red transition-colors duration-300 flex items-center text-sm">
+          Lançamentos
+        </a>
+      </nav>
+      
+      <div class="flex items-center space-x-4">
+        <form class="relative hidden md:block">
+          <input
+            type="search"
+            placeholder="Buscar filmes e séries..."
+            class="bg-black/30 border border-white/10 text-white px-4 py-2 pl-9 rounded-md text-sm w-[240px] focus:w-[280px] transition-all duration-300 focus:outline-none focus:border-cinema-red"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </div>
+        
+        <div class="flex items-center cursor-pointer">
+          <div class="w-8 h-8 bg-cinema-red rounded flex items-center justify-center text-white font-medium">
+            U
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white ml-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        
+        <button class="md:hidden text-white p-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
       </div>
     </header>
     
-    <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-6">
-      <!-- Dashboard Header -->
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold font-display gradient-text mb-2">Painel de Controle</h2>
-        <p class="text-gray-500 dark:text-gray-400">Gerenciamento completo do sistema administrativo</p>
-      </div>
+    <!-- Hero Section -->
+    <section class="h-[70vh] mt-[60px] bg-cinema-gray relative flex items-end bg-cover bg-center" style="background-image: url('https://image.tmdb.org/t/p/original/zAvsXLZZ6mb5gPEZHcDrHVr5JGF.jpg')">
+      <div class="absolute inset-0 hero-overlay"></div>
       
-      <!-- Summary Section -->
-      <section id="summarySection" class="mb-10">
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="text-xl font-display font-semibold">Resumo do Sistema</h3>
-          <div class="flex space-x-2">
-            <button id="generateReportBtn" class="inline-flex items-center px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">
-              <i class="fas fa-file-pdf mr-2"></i>
-              <span class="hidden sm:inline">Gerar Relatório</span>
-            </button>
-            <button id="downloadVcfBtn" class="inline-flex items-center px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">
-              <i class="fas fa-address-book mr-2"></i>
-              <span class="hidden sm:inline">Baixar Contatos</span>
-            </button>
-          </div>
+      <div class="relative z-10 p-4 md:p-8 w-full md:w-3/5">
+        <h1 class="text-2xl md:text-4xl font-bold mb-2 md:mb-4 text-white">Godzilla: Minus One</h1>
+        <p class="text-sm md:text-base text-white/90 mb-6 max-w-[90%] line-clamp-3">
+          Após a guerra, o Japão enfrenta um novo terror: a aparição de Godzilla. A ameaça do monstro coloca os japoneses em perigo, especialmente um homem com passado traumático que agora precisa enfrentar seus demônios.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <button class="flex items-center justify-center bg-cinema-red text-white font-medium py-2 px-4 md:py-3 md:px-6 rounded transition-colors hover:bg-red-700 text-sm md:text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Assistir Trailer
+          </button>
+          <button class="flex items-center justify-center bg-white/10 text-white border border-white/30 font-medium py-2 px-4 md:py-3 md:px-6 rounded transition-colors hover:bg-white/20 text-sm md:text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            Mais Informações
+          </button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Movie Carousels -->
+    <main>
+      <!-- Recent Releases -->
+      <section class="py-8 px-4 md:px-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Lançamentos Recentes</h2>
+          <button class="text-cinema-red hover:text-red-700 flex items-center text-sm">
+            Ver Mais <span class="ml-1">→</span>
+          </button>
         </div>
         
-        <!-- Loading Skeleton -->
-        <div id="summaryLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-32 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-        </div>
-        
-        <!-- Summary Cards -->
-        <div id="summaryCards" class="hidden">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <!-- Status Card (Dynamic color based on data) -->
-            <div id="statusCard" class="dashboard-card rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i id="statusIcon" class="text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Situação do Grupo</h3>
-              <p id="statusText" class="text-xl font-bold"></p>
-            </div>
-            
-            <!-- Group Number Card -->
-            <div class="dashboard-card bg-blue-500 rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i class="fas fa-users text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Número do Grupo</h3>
-              <p id="groupNumber" class="text-xl font-bold">-</p>
-            </div>
-            
-            <!-- Admins Count Card -->
-            <div class="dashboard-card bg-red-500 rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i class="fas fa-user-shield text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Total de Administradores</h3>
-              <p id="adminCount" class="text-xl font-bold">-</p>
-            </div>
-            
-            <!-- Young Users Card -->
-            <div class="dashboard-card bg-green-500 rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i class="fas fa-child text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Jovens</h3>
-              <p id="youngCount" class="text-xl font-bold">-</p>
-            </div>
-            
-            <!-- Teens Card -->
-            <div class="dashboard-card bg-purple-500 rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i class="fas fa-user-graduate text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Adolescentes</h3>
-              <p id="teenCount" class="text-xl font-bold">-</p>
-            </div>
-            
-            <!-- Adults Card -->
-            <div class="dashboard-card bg-yellow-500 rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i class="fas fa-user text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Adultos</h3>
-              <p id="adultCount" class="text-xl font-bold">-</p>
-            </div>
-            
-            <!-- Last ID Card -->
-            <div class="dashboard-card bg-teal-500 rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i class="fas fa-id-card text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Último ID</h3>
-              <p id="lastId" class="text-xl font-bold">-</p>
-            </div>
-            
-            <!-- Growth Rate Card -->
-            <div class="dashboard-card bg-amber-500 rounded-xl p-4 flex flex-col items-center justify-center text-white">
-              <i class="fas fa-chart-line text-3xl mb-2"></i>
-              <h3 class="text-sm font-medium text-white/80">Taxa de Crescimento</h3>
-              <p id="growthRate" class="text-xl font-bold">-</p>
-            </div>
-          </div>
-          
-          <!-- Charts -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <!-- CTS Score Chart -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
-              <h3 class="text-lg font-semibold mb-4">Pontuação de CTS</h3>
-              <div class="h-64">
-                <canvas id="ctsChart"></canvas>
+        <div class="relative">
+          <div class="flex space-x-4 overflow-x-auto pb-4 movie-slider">
+            <!-- Movie Cards -->
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/e7Jvsoy5wZaP6ojH5C5oNBKvN8A.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Garfield: Fora de Casa</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>7.2</span>
+                    </div>
+                    <div>2024</div>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <!-- Progress Chart -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
-              <h3 class="text-lg font-semibold mb-4">Progresso para Meta</h3>
-              <div class="h-64">
-                <canvas id="progressChart"></canvas>
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/7qV8S7qMSV5To1dwDJfbyLfV4WW.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Planeta dos Macacos: O Reinado</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>6.8</span>
+                    </div>
+                    <div>2024</div>
+                  </div>
+                </div>
               </div>
             </div>
+            
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/jO9gU77HtZtUXCN2KgKJZLXYz39.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Furiosa: Uma Saga Mad Max</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>7.5</span>
+                    </div>
+                    <div>2024</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/2wUQbYQwR9EZEUJLUFgKQiwJMm1.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Godzilla e Kong: O Novo Império</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>7.0</span>
+                    </div>
+                    <div>2024</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/ArT9vGgL7iB7nTdQ1y0XzqHjnY9.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Duna: Parte Dois</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>8.3</span>
+                    </div>
+                    <div>2024</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
       
-      <!-- Users Management Section -->
-      <section class="mb-6">
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="text-xl font-display font-semibold">Gerenciamento de Administradores</h3>
+      <!-- Action Movies -->
+      <section class="py-8 px-4 md:px-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Filmes de Ação</h2>
+          <button class="text-cinema-red hover:text-red-700 flex items-center text-sm">
+            Ver Mais <span class="ml-1">→</span>
+          </button>
         </div>
         
-        <!-- Search & Actions Bar -->
-        <div class="mb-6 flex flex-col sm:flex-row gap-4">
-          <!-- Search Input -->
-          <div class="flex-1 relative">
-            <div class="relative">
-              <input 
-                id="searchInput" 
-                type="text" 
-                placeholder="Pesquisar por ID, nome, número..."
-                class="w-full pl-10 py-2 pr-4 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
-              />
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <i class="fas fa-search text-gray-400"></i>
+        <div class="relative">
+          <div class="flex space-x-4 overflow-x-auto pb-4 movie-slider">
+            <!-- Action Movie Cards -->
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/uQkiDKPeb8RdwJtZ4F3pFHj6V0Z.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Os Mercenários 4</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>6.3</span>
+                    </div>
+                    <div>2023</div>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <!-- Loading Progress Bar (hidden by default) -->
-            <div id="searchProgress" class="mt-2 h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden hidden">
-              <div class="h-full bg-primary-500 rounded-full animate-progress"></div>
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/tdBqgxsAhELK3rjDBUBZtSWOhbV.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Velozes e Furiosos 10</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>7.1</span>
+                    </div>
+                    <div>2023</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          
-          <!-- Action Buttons -->
-          <div class="flex flex-wrap gap-2">
-            <button id="registerBtn" class="gradient-bg text-white px-4 py-2 rounded-md shadow-sm hover:opacity-90 transition flex items-center gap-2">
-              <i class="fas fa-user-plus"></i>
-              <span>Cadastrar Novo</span>
-            </button>
             
-            <button id="blacklistBtn" class="bg-red-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-red-700 transition flex items-center gap-2">
-              <i class="fas fa-ban"></i>
-              <span>Verificar Lista Negra</span>
-            </button>
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/gPbM0MK8CP8A174rmUwGsADNYKD.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">Missão: Impossível - Acerto de Contas</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>7.6</span>
+                    </div>
+                    <div>2023</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex-none w-[140px] md:w-[240px] rounded-md overflow-hidden movie-poster-hover cursor-pointer">
+              <div class="relative">
+                <img src="https://image.tmdb.org/t/p/w500/kYf5e3R6GXQnAHRsanwq2YZRfMV.jpg" alt="Filme" class="w-full h-[210px] md:h-[360px] object-cover rounded-md">
+                <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 movie-info-fade">
+                  <h3 class="text-sm md:text-base font-medium mb-1 line-clamp-1">John Wick 4: Baba Yaga</h3>
+                  <div class="flex items-center text-xs md:text-sm text-gray-300">
+                    <div class="flex items-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mr-1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span>7.8</span>
+                    </div>
+                    <div>2023</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </div>
-        
-        <!-- Users Loading Skeleton -->
-        <div id="usersLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div class="h-64 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-64 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-64 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-64 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-64 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
-          <div class="h-64 bg-white dark:bg-gray-800 rounded-xl shadow-sm skeleton"></div>
+      </section>
+      
+      <!-- Streaming Services -->
+      <section class="py-8 px-4 md:px-8 bg-cinema-gray border-t border-b border-white/10">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold">Disponível em</h2>
+          <a href="#" class="text-cinema-red flex items-center text-sm hover:underline">
+            Ver todos <span class="ml-1">→</span>
+          </a>
         </div>
         
-        <!-- Users Grid -->
-        <div id="usersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
-          <!-- User cards will be dynamically inserted here -->
-        </div>
-        
-        <!-- Empty State (No Users Found) -->
-        <div id="emptyState" class="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm hidden">
-          <i class="fas fa-search text-4xl text-gray-400 mb-3"></i>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-200 mb-1">Nenhum administrador encontrado</h3>
-          <p class="text-gray-500 dark:text-gray-400">Tente uma pesquisa diferente ou cadastre um novo administrador</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 md:gap-4">
+          <a href="https://www.netflix.com/" target="_blank" rel="noopener noreferrer" class="h-20 md:h-24 bg-black/30 rounded-lg flex flex-col items-center justify-center p-4 transition-all hover:bg-cinema-red/20 border border-transparent hover:border-cinema-red/30">
+            <img src="https://www.freepnglogos.com/uploads/netflix-logo-app-png-16.png" alt="Netflix" class="max-w-full max-h-12 object-contain mb-2 brightness-90 hover:brightness-100 transition-all">
+            <span class="text-gray-400 text-xs flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+            </span>
+          </a>
+          
+          <a href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer" class="h-20 md:h-24 bg-black/30 rounded-lg flex flex-col items-center justify-center p-4 transition-all hover:bg-cinema-red/20 border border-transparent hover:border-cinema-red/30">
+            <img src="https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png" alt="Amazon Prime" class="max-w-full max-h-12 object-contain mb-2 brightness-90 hover:brightness-100 transition-all">
+            <span class="text-gray-400 text-xs flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+            </span>
+          </a>
+          
+          <a href="https://www.disneyplus.com/" target="_blank" rel="noopener noreferrer" class="h-20 md:h-24 bg-black/30 rounded-lg flex flex-col items-center justify-center p-4 transition-all hover:bg-cinema-red/20 border border-transparent hover:border-cinema-red/30">
+            <img src="https://static-assets.bamgrid.com/product/disneyplus/images/logo.1a56f51c764022ee769c91d894d44326.svg" alt="Disney+" class="max-w-full max-h-12 object-contain mb-2 brightness-90 hover:brightness-100 transition-all">
+            <span class="text-gray-400 text-xs flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+            </span>
+          </a>
+          
+          <a href="https://www.hbomax.com/" target="_blank" rel="noopener noreferrer" class="h-20 md:h-24 bg-black/30 rounded-lg flex flex-col items-center justify-center p-4 transition-all hover:bg-cinema-red/20 border border-transparent hover:border-cinema-red/30">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/HBO_Max_Logo.svg/1200px-HBO_Max_Logo.svg.png" alt="HBO Max" class="max-w-full max-h-12 object-contain mb-2 brightness-90 hover:brightness-100 transition-all">
+            <span class="text-gray-400 text-xs flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+            </span>
+          </a>
         </div>
       </section>
     </main>
     
     <!-- Footer -->
-    <footer class="mt-auto bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-6">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <div class="text-center md:text-left mb-4 md:mb-0">
-            <p class="text-sm text-gray-600 dark:text-gray-400">&copy; 2023 Enterprise Dashboard. Todos os direitos reservados.</p>
+    <footer class="bg-cinema-black py-8 px-4 md:px-8 border-t border-white/10">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:justify-between mb-8">
+          <div class="mb-6 md:mb-0">
+            <h3 class="text-cinema-red text-2xl font-bold tracking-tighter mb-4">NEEXTCINE</h3>
+            <p class="text-gray-400 text-sm max-w-md">
+              Seu portal completo para descobrir filmes e séries. Encontre os melhores títulos e saiba onde assistir.
+            </p>
           </div>
+          
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+            <div>
+              <h4 class="text-white font-medium mb-4">Navegação</h4>
+              <ul class="space-y-2">
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Início</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Filmes</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Séries</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Populares</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-white font-medium mb-4">Categorias</h4>
+              <ul class="space-y-2">
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Ação</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Comédia</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Drama</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Ficção Científica</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-white font-medium mb-4">Suporte</h4>
+              <ul class="space-y-2">
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Sobre Nós</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Contato</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">FAQ</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white text-sm">Política de Privacidade</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row md:justify-between items-center">
+          <p class="text-gray-500 text-sm mb-4 md:mb-0">
+            &copy; 2024 NEEXTCINE. Todos os direitos reservados.
+          </p>
+          
           <div class="flex space-x-4">
-            <a href="#" class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
-              <i class="fab fa-twitter"></i>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
+              </svg>
             </a>
-            <a href="#" class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
-              <i class="fab fa-linkedin"></i>
+            
+            <a href="#" class="text-gray-400 hover:text-white">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+              </svg>
             </a>
-            <a href="#" class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
-              <i class="fab fa-github"></i>
+            
+            <a href="#" class="text-gray-400 hover:text-white">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"></path>
+              </svg>
             </a>
           </div>
         </div>
       </div>
     </footer>
-    
-    <!-- Toast Container -->
-    <div id="toastContainer"></div>
   </div>
-  
-  <!-- Dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  
-  <!-- Main Application Script -->
-  <script>
-    // ===== CONSTANTS =====
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwEDfU3AOA1dfU_muZSr6TGjF7UNQNlBgHByQeyTUiABCS0YzXD-IV-RL8upQPbvzYSzA/exec';
-    const SUMMARY_API_URL = `${API_URL}?action=summary`;
-    const BLACKLIST_API_URL = 'https://script.google.com/macros/s/AKfycbxIG53Hskr69iwx5OREGTqEHYkBCIQYwZr820x2gU7AJ2Fvd2b82iOszZMU0nQ5hQ/exec';
-    
-    // ===== DOM ELEMENTS =====
-    // Summary Elements
-    const summaryLoading = document.getElementById('summaryLoading');
-    const summaryCards = document.getElementById('summaryCards');
-    const statusCard = document.getElementById('statusCard');
-    const statusIcon = document.getElementById('statusIcon');
-    const statusText = document.getElementById('statusText');
-    const groupNumber = document.getElementById('groupNumber');
-    const adminCount = document.getElementById('adminCount');
-    const youngCount = document.getElementById('youngCount');
-    const teenCount = document.getElementById('teenCount');
-    const adultCount = document.getElementById('adultCount');
-    const lastId = document.getElementById('lastId');
-    const growthRate = document.getElementById('growthRate');
-    
-    // Users Elements
-    const searchInput = document.getElementById('searchInput');
-    const searchProgress = document.getElementById('searchProgress');
-    const usersLoading = document.getElementById('usersLoading');
-    const usersGrid = document.getElementById('usersGrid');
-    const emptyState = document.getElementById('emptyState');
-    
-    // Buttons
-    const registerBtn = document.getElementById('registerBtn');
-    const blacklistBtn = document.getElementById('blacklistBtn');
-    const generateReportBtn = document.getElementById('generateReportBtn');
-    const downloadVcfBtn = document.getElementById('downloadVcfBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const profilePic = document.getElementById('profilePic');
-    
-    // Charts
-    let ctsChart = null;
-    let progressChart = null;
-    
-    // ===== STATE VARIABLES =====
-    let summaryData = null;
-    let users = [];
-    let filteredUsers = [];
-    let isDarkMode = false;
-    
-    // ===== INITIALIZATION =====
-    document.addEventListener('DOMContentLoaded', () => {
-      initializeApp();
-    });
-    
-    function initializeApp() {
-      loadSummaryData();
-      loadUsers();
-      setupEventListeners();
-      checkDarkMode();
-      loadProfilePicture();
-      
-      // Auto-refresh summary data every 60 seconds
-      setInterval(loadSummaryData, 60000);
-    }
-    
-    function setupEventListeners() {
-      // Search functionality
-      searchInput.addEventListener('input', debounce(handleSearch, 300));
-      
-      // Button click handlers
-      registerBtn.addEventListener('click', openRegisterDialog);
-      blacklistBtn.addEventListener('click', openBlacklistDialog);
-      generateReportBtn.addEventListener('click', generateReport);
-      downloadVcfBtn.addEventListener('click', generateVCF);
-      logoutBtn.addEventListener('click', confirmLogout);
-      darkModeToggle.addEventListener('click', toggleDarkMode);
-      
-      // Profile pic click handler for upload
-      profilePic.addEventListener('click', uploadProfilePicture);
-    }
-    
-    // ===== DARK MODE MANAGEMENT =====
-    function checkDarkMode() {
-      // Check if dark mode is enabled in localStorage
-      const darkModeStatus = localStorage.getItem('darkMode');
-      if (darkModeStatus === 'enabled') {
-        enableDarkMode();
-      }
-    }
-    
-    function toggleDarkMode() {
-      if (isDarkMode) {
-        disableDarkMode();
-      } else {
-        enableDarkMode();
-      }
-    }
-    
-    function enableDarkMode() {
-      document.documentElement.classList.add('dark');
-      document.body.classList.add('bg-gray-900', 'text-white');
-      document.body.classList.remove('bg-gray-50', 'text-gray-900');
-      darkModeToggle.classList.add('dark');
-      isDarkMode = true;
-      localStorage.setItem('darkMode', 'enabled');
-      
-      // Update charts if they exist
-      if (summaryData) {
-        updateCharts(summaryData);
-      }
-    }
-    
-    function disableDarkMode() {
-      document.documentElement.classList.remove('dark');
-      document.body.classList.remove('bg-gray-900', 'text-white');
-      document.body.classList.add('bg-gray-50', 'text-gray-900');
-      darkModeToggle.classList.remove('dark');
-      isDarkMode = false;
-      localStorage.setItem('darkMode', 'disabled');
-      
-      // Update charts if they exist
-      if (summaryData) {
-        updateCharts(summaryData);
-      }
-    }
-    
-    // ===== PROFILE PICTURE =====
-    function loadProfilePicture() {
-      const savedProfilePic = localStorage.getItem('profilePic');
-      if (savedProfilePic) {
-        profilePic.innerHTML = `<img src="${savedProfilePic}" alt="Profile" class="w-full h-full object-cover" />`;
-      }
-    }
-    
-    function uploadProfilePicture() {
-      // Create a file input element
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.style.display = 'none';
-      document.body.appendChild(fileInput);
-      
-      // Listen for file selection
-      fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            const imageUrl = event.target.result;
-            profilePic.innerHTML = `<img src="${imageUrl}" alt="Profile" class="w-full h-full object-cover" />`;
-            localStorage.setItem('profilePic', imageUrl);
-            showToast('Foto de perfil atualizada com sucesso!', 'success');
-          };
-          reader.readAsDataURL(file);
-        }
-        document.body.removeChild(fileInput);
-      });
-      
-      // Trigger file selection dialog
-      fileInput.click();
-    }
-    
-    // ===== DATA LOADING =====
-    async function loadSummaryData() {
-      try {
-        summaryLoading.classList.remove('hidden');
-        summaryCards.classList.add('hidden');
-        
-        const response = await fetch(SUMMARY_API_URL);
-        const data = await response.json();
-        summaryData = data;
-        
-        updateSummaryUI(data);
-        updateCharts(data);
-        
-        summaryLoading.classList.add('hidden');
-        summaryCards.classList.remove('hidden');
-      } catch (error) {
-        console.error('Error loading summary data:', error);
-        showToast('Erro ao carregar dados de resumo', 'error');
-        summaryLoading.classList.add('hidden');
-      }
-    }
-    
-    async function loadUsers() {
-      try {
-        usersLoading.classList.remove('hidden');
-        usersGrid.classList.add('hidden');
-        emptyState.classList.add('hidden');
-        
-        const response = await fetch(`${API_URL}?action=read`);
-        const data = await response.text();
-        
-        if (data.trim().length > 0) {
-          const lines = data.trim().split('\n');
-          users = lines.slice(1).map(line => {
-            const [id, name, age, number, instagram, email] = line.split(',');
-            return { id, name, age, number, instagram, email };
-          });
-          
-          filteredUsers = [...users];
-          renderUsers(filteredUsers);
-          
-          usersLoading.classList.add('hidden');
-          
-          if (filteredUsers.length > 0) {
-            usersGrid.classList.remove('hidden');
-          } else {
-            emptyState.classList.remove('hidden');
-          }
-        } else {
-          users = [];
-          filteredUsers = [];
-          usersLoading.classList.add('hidden');
-          emptyState.classList.remove('hidden');
-        }
-      } catch (error) {
-        console.error('Error loading users:', error);
-        showToast('Erro ao carregar dados dos usuários', 'error');
-        usersLoading.classList.add('hidden');
-        emptyState.classList.remove('hidden');
-      }
-    }
-    
-    // ===== UI UPDATES =====
-    function updateSummaryUI(data) {
-      // Update summary card values
-      groupNumber.textContent = data['Número do Grupo'];
-      adminCount.textContent = data['Total de Administradores'];
-      youngCount.textContent = data['Faixa Etária'].Jovens;
-      teenCount.textContent = data['Faixa Etária'].Adolescentes;
-      adultCount.textContent = data['Faixa Etária'].Adultos;
-      lastId.textContent = data['Último ID Enviado'];
-      growthRate.textContent = data['Taxa de Crescimento'];
-      
-      // Update status card
-      const statusInfo = getStatusInfo(data['Total de Administradores']);
-      statusCard.style.backgroundColor = statusInfo.color;
-      statusIcon.className = `${statusInfo.icon} text-3xl mb-2`;
-      statusText.textContent = statusInfo.status;
-    }
-    
-    function updateCharts(data) {
-      const totalAdmins = data['Total de Administradores'];
-      const growthRateValue = parseFloat(data['Taxa de Crescimento'].replace('%', '').trim()) / 100;
-      const ctsScore = Math.min(Math.max((totalAdmins + growthRateValue * 100) / 10, 0), 10);
-      
-      // Destroy previous charts if they exist
-      if (ctsChart) {
-        ctsChart.destroy();
-      }
-      
-      if (progressChart) {
-        progressChart.destroy();
-      }
-      
-      // Chart colors based on theme
-      const textColor = isDarkMode ? '#e5e7eb' : '#374151';
-      const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-      
-      // Create CTS Score chart
-      const ctxBar = document.getElementById('ctsChart');
-      if (ctxBar) {
-        ctsChart = new Chart(ctxBar, {
-          type: 'bar',
-          data: {
-            labels: ['Pontuação de CTS'],
-            datasets: [{
-              label: 'Pontuação',
-              data: [ctsScore],
-              backgroundColor: '#3b82f6',
-              borderColor: '#2563eb',
-              borderWidth: 1,
-              borderRadius: 8,
-              barThickness: 50
-            }]
-          },
-          options: {
-            responsive: true,
-            animation: {
-              duration: 1000,
-              easing: 'easeOutQuart'
-            },
-            scales: {
-              y: {
-                min: 0,
-                max: 10,
-                grid: {
-                  display: true,
-                  color: gridColor
-                },
-                ticks: {
-                  color: textColor,
-                  stepSize: 1,
-                  font: {
-                    family: "'Inter', sans-serif"
-                  }
-                }
-              },
-              x: {
-                grid: {
-                  display: false
-                },
-                ticks: {
-                  color: textColor,
-                  font: {
-                    family: "'Inter', sans-serif"
-                  }
-                }
-              }
-            },
-            plugins: {
-              legend: {
-                labels: {
-                  color: textColor,
-                  font: {
-                    family: "'Inter', sans-serif",
-                    size: 12
-                  }
-                }
-              },
-              tooltip: {
-                backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
-                titleColor: isDarkMode ? '#fff' : '#000',
-                bodyColor: isDarkMode ? '#e5e7eb' : '#374151',
-                padding: 12,
-                titleFont: {
-                  family: "'Inter', sans-serif",
-                  size: 14
-                },
-                bodyFont: {
-                  family: "'Inter', sans-serif",
-                  size: 13
-                },
-                displayColors: false,
-                borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                borderWidth: 1,
-                cornerRadius: 8
-              }
-            }
-          }
-        });
-      }
-      
-      // Create Progress Donut chart
-      const remainingAdmins = Math.max(0, 50 - totalAdmins);
-      const ctxDonut = document.getElementById('progressChart');
-      if (ctxDonut) {
-        progressChart = new Chart(ctxDonut, {
-          type: 'doughnut',
-          data: {
-            labels: ['Administradores atuais', 'Meta a atingir'],
-            datasets: [{
-              data: [totalAdmins, remainingAdmins],
-              backgroundColor: [
-                '#3b82f6',
-                isDarkMode ? '#374151' : '#e5e7eb'
-              ],
-              borderColor: [
-                '#2563eb',
-                isDarkMode ? '#1f2937' : '#d1d5db'
-              ],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            cutout: '65%',
-            animation: {
-              animateRotate: true,
-              animateScale: true,
-              duration: 1000,
-              easing: 'easeOutQuart'
-            },
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
-                  color: textColor,
-                  padding: 20,
-                  font: {
-                    family: "'Inter', sans-serif",
-                    size: 12
-                  },
-                  generateLabels: function(chart) {
-                    const data = chart.data;
-                    if (data.labels.length && data.datasets.length) {
-                      return data.labels.map(function(label, i) {
-                        const meta = chart.getDatasetMeta(0);
-                        const style = meta.controller.getStyle(i);
-                        
-                        return {
-                          text: `${label}: ${data.datasets[0].data[i]} (${(data.datasets[0].data[i] / (totalAdmins + remainingAdmins) * 100).toFixed(1)}%)`,
-                          fillStyle: data.datasets[0].backgroundColor[i],
-                          strokeStyle: data.datasets[0].borderColor[i],
-                          lineWidth: data.datasets[0].borderWidth,
-                          hidden: !chart.getDataVisibility(i),
-                          index: i
-                        };
-                      });
-                    }
-                    return [];
-                  }
-                }
-              },
-              tooltip: {
-                backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
-                titleColor: isDarkMode ? '#fff' : '#000',
-                bodyColor: isDarkMode ? '#e5e7eb' : '#374151',
-                padding: 12,
-                titleFont: {
-                  family: "'Inter', sans-serif",
-                  size: 14
-                },
-                bodyFont: {
-                  family: "'Inter', sans-serif",
-                  size: 13
-                },
-                displayColors: false,
-                borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                borderWidth: 1,
-                cornerRadius: 8,
-                callbacks: {
-                  label: function(context) {
-                    return `${context.label}: ${context.raw} (${(context.raw / (totalAdmins + remainingAdmins) * 100).toFixed(1)}%)`;
-                  }
-                }
-              }
-            }
-          }
-        });
-      }
-    }
-    
-    function renderUsers(usersList) {
-      usersGrid.innerHTML = '';
-      
-      if (usersList.length === 0) {
-        usersGrid.classList.add('hidden');
-        emptyState.classList.remove('hidden');
-        return;
-      }
-      
-      usersGrid.classList.remove('hidden');
-      emptyState.classList.add('hidden');
-      
-      usersList.forEach(user => {
-        const userCard = document.createElement('div');
-        userCard.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 dashboard-card';
-        userCard.innerHTML = `
-          <div class="flex justify-between items-start mb-3">
-            <div class="flex items-center">
-              <i class="fas fa-user text-primary-500 mr-2"></i>
-              <h3 class="font-semibold text-gray-900 dark:text-gray-100">${user.name}</h3>
-            </div>
-            <span class="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium">
-              ID: ${user.id}
-            </span>
-          </div>
-          
-          <div class="space-y-2 mb-4">
-            <div class="flex items-center text-gray-700 dark:text-gray-300">
-              <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
-              <span class="text-sm">${user.age} anos</span>
-            </div>
-            <div class="flex items-center text-gray-700 dark:text-gray-300">
-              <i class="fas fa-phone-alt w-5 text-gray-400"></i>
-              <span class="text-sm">${user.number}</span>
-            </div>
-            <div class="flex items-center text-gray-700 dark:text-gray-300">
-              <i class="fab fa-instagram w-5 text-gray-400"></i>
-              <span class="text-sm">${user.instagram}</span>
-            </div>
-            <div class="flex items-center text-gray-700 dark:text-gray-300">
-              <i class="fas fa-envelope w-5 text-gray-400"></i>
-              <span class="text-sm">${user.email || 'N/A'}</span>
-            </div>
-          </div>
-          
-          <div class="flex justify-end space-x-2">
-            <button class="edit-btn px-3 py-1.5 bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-300 border border-primary-200 dark:border-primary-800 rounded hover:bg-primary-100 dark:hover:bg-primary-800/50 transition-colors text-sm" data-id="${user.id}">
-              <i class="fas fa-edit mr-1"></i>
-              Editar
-            </button>
-            <button class="delete-btn px-3 py-1.5 bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-300 border border-red-200 dark:border-red-800 rounded hover:bg-red-100 dark:hover:bg-red-800/50 transition-colors text-sm" data-id="${user.id}">
-              <i class="fas fa-trash-alt mr-1"></i>
-              Excluir
-            </button>
-          </div>
-        `;
-        
-        // Add event listeners to the buttons
-        userCard.querySelector('.edit-btn').addEventListener('click', () => editUser(user));
-        userCard.querySelector('.delete-btn').addEventListener('click', () => deleteUser(user.id));
-        
-        usersGrid.appendChild(userCard);
-      });
-    }
-    
-    // ===== SEARCH FUNCTIONALITY =====
-    function handleSearch() {
-      const query = searchInput.value.trim().toLowerCase();
-      
-      // Show loading progress bar
-      searchProgress.classList.remove('hidden');
-      
-      // Simulate a delay for better UX
-      setTimeout(() => {
-        if (!query) {
-          filteredUsers = [...users];
-        } else {
-          filteredUsers = users.filter(user => 
-            user.id.toLowerCase().includes(query) ||
-            user.name.toLowerCase().includes(query) ||
-            user.age.toLowerCase().includes(query) ||
-            user.number.toLowerCase().includes(query) ||
-            (user.instagram && user.instagram.toLowerCase().includes(query)) ||
-            (user.email && user.email.toLowerCase().includes(query))
-          );
-        }
-        
-        renderUsers(filteredUsers);
-        searchProgress.classList.add('hidden');
-      }, 300);
-    }
-    
-    // ===== USER MANAGEMENT =====
-    function openRegisterDialog() {
-      // Get suggested ID
-      const newId = users.length > 0 ? (parseInt(users[users.length - 1].id) + 1).toString() : '1';
-      
-      Swal.fire({
-        title: 'Cadastrar Novo Administrador',
-        html: `
-          <div class="mb-4">
-            <label for="swal-name" class="block text-sm font-medium mb-1">Nome</label>
-            <input id="swal-name" class="w-full px-3 py-2 border rounded-md" placeholder="Nome completo">
-          </div>
-          <div class="mb-4">
-            <label for="swal-age" class="block text-sm font-medium mb-1">Idade</label>
-            <input id="swal-age" type="number" class="w-full px-3 py-2 border rounded-md" placeholder="Idade">
-          </div>
-          <div class="mb-4">
-            <label for="swal-number" class="block text-sm font-medium mb-1">Número</label>
-            <input id="swal-number" class="w-full px-3 py-2 border rounded-md" placeholder="Formato: 11999999999">
-          </div>
-          <div class="mb-4">
-            <label for="swal-instagram" class="block text-sm font-medium mb-1">Instagram</label>
-            <input id="swal-instagram" class="w-full px-3 py-2 border rounded-md" placeholder="@usuario">
-          </div>
-          <div class="mb-4">
-            <label for="swal-email" class="block text-sm font-medium mb-1">E-mail</label>
-            <input id="swal-email" type="email" class="w-full px-3 py-2 border rounded-md" placeholder="email@exemplo.com">
-          </div>
-          <div class="mb-4">
-            <p class="text-sm font-medium mb-1">ID Disponível: ${newId}</p>
-            <input id="swal-id" type="hidden" value="${newId}">
-          </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Cadastrar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#3b82f6',
-        cancelButtonColor: '#64748b',
-        focusConfirm: false,
-        preConfirm: () => {
-          const name = document.getElementById('swal-name').value;
-          const age = document.getElementById('swal-age').value;
-          const number = document.getElementById('swal-number').value;
-          const instagram = document.getElementById('swal-instagram').value;
-          const email = document.getElementById('swal-email').value;
-          const id = document.getElementById('swal-id').value;
-          
-          // Validation
-          if (!name) {
-            Swal.showValidationMessage('Nome é obrigatório');
-            return false;
-          }
-          
-          if (!age || isNaN(age) || parseInt(age) <= 0) {
-            Swal.showValidationMessage('Idade válida é obrigatória');
-            return false;
-          }
-          
-          if (!number) {
-            Swal.showValidationMessage('Número é obrigatório');
-            return false;
-          }
-          
-          return { id, name, age, number, instagram, email, action: 'create' };
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          registerUser(result.value);
-        }
-      });
-    }
-    
-    async function registerUser(userData) {
-      try {
-        const formData = new URLSearchParams(userData);
-        
-        showToast('Registrando novo administrador...', 'info');
-        
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (response.ok) {
-          showToast('Administrador cadastrado com sucesso!', 'success');
-          await loadUsers();
-          await loadSummaryData();
-        } else {
-          showToast('Erro ao cadastrar administrador', 'error');
-        }
-      } catch (error) {
-        console.error('Error registering user:', error);
-        showToast('Erro ao cadastrar administrador', 'error');
-      }
-    }
-    
-    function editUser(user) {
-      Swal.fire({
-        title: 'Editar Administrador',
-        html: `
-          <div class="mb-4">
-            <label for="swal-name" class="block text-sm font-medium mb-1"><i class="fas fa-user"></i> Nome</label>
-            <input id="swal-name" class="w-full px-3 py-2 border rounded-md" value="${user.name}">
-          </div>
-          <div class="mb-4">
-            <label for="swal-age" class="block text-sm font-medium mb-1"><i class="fas fa-birthday-cake"></i> Idade</label>
-            <input id="swal-age" type="number" class="w-full px-3 py-2 border rounded-md" value="${user.age}">
-          </div>
-          <div class="mb-4">
-            <label for="swal-number" class="block text-sm font-medium mb-1"><i class="fas fa-phone-alt"></i> Número</label>
-            <input id="swal-number" class="w-full px-3 py-2 border rounded-md" value="${user.number}">
-          </div>
-          <div class="mb-4">
-            <label for="swal-instagram" class="block text-sm font-medium mb-1"><i class="fab fa-instagram"></i> Instagram</label>
-            <input id="swal-instagram" class="w-full px-3 py-2 border rounded-md" value="${user.instagram}">
-          </div>
-          <div class="mb-4">
-            <label for="swal-email" class="block text-sm font-medium mb-1"><i class="fas fa-envelope"></i> E-mail</label>
-            <input id="swal-email" type="email" class="w-full px-3 py-2 border rounded-md" value="${user.email || ''}">
-          </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Salvar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#3b82f6',
-        cancelButtonColor: '#64748b',
-        preConfirm: () => {
-          return {
-            id: user.id,
-            name: document.getElementById('swal-name').value,
-            age: document.getElementById('swal-age').value,
-            number: document.getElementById('swal-number').value,
-            instagram: document.getElementById('swal-instagram').value,
-            email: document.getElementById('swal-email').value,
-            action: 'update'
-          };
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          updateUser(result.value);
-        }
-      });
-    }
-    
-    async function updateUser(userData) {
-      try {
-        const formData = new URLSearchParams(userData);
-        
-        showToast('Atualizando administrador...', 'info');
-        
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (response.ok) {
-          showToast('Administrador atualizado com sucesso!', 'success');
-          await loadUsers();
-        } else {
-          showToast('Erro ao atualizar administrador', 'error');
-        }
-      } catch (error) {
-        console.error('Error updating user:', error);
-        showToast('Erro ao atualizar administrador', 'error');
-      }
-    }
-    
-    function deleteUser(id) {
-      Swal.fire({
-        title: 'Tem certeza?',
-        text: 'Você não poderá reverter isso!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sim, excluir',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#64748b',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          removeUser(id);
-        }
-      });
-    }
-    
-    async function removeUser(id) {
-      try {
-        showToast('Excluindo administrador...', 'info');
-        
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          body: new URLSearchParams({ id, action: 'delete' })
-        });
-        
-        if (response.ok) {
-          showToast('Administrador excluído com sucesso', 'success');
-          await loadUsers();
-          await loadSummaryData();
-        } else {
-          showToast('Erro ao excluir administrador', 'error');
-        }
-      } catch (error) {
-        console.error('Error deleting user:', error);
-        showToast('Erro ao excluir administrador', 'error');
-      }
-    }
-    
-    function openBlacklistDialog() {
-      Swal.fire({
-        title: 'Verificar Número na Lista Negra',
-        input: 'text',
-        inputPlaceholder: 'Digite o número para verificar',
-        inputAttributes: {
-          autocapitalize: 'off',
-          autocorrect: 'off'
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Verificar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#3b82f6',
-        cancelButtonColor: '#64748b',
-        showLoaderOnConfirm: true,
-        preConfirm: async (number) => {
-          if (!number) {
-            Swal.showValidationMessage('Digite um número para pesquisa!');
-            return false;
-          }
-          
-          try {
-            const response = await fetch(BLACKLIST_API_URL);
-            
-            if (!response.ok) {
-              throw new Error('Erro ao carregar os números.');
-            }
-            
-            const data = await response.text();
-            const regex = /\d{11,}/g;
-            const numbers = data.match(regex);
-            
-            return {
-              number,
-              isBlacklisted: numbers && numbers.includes(number)
-            };
-          } catch (error) {
-            Swal.showValidationMessage(`Erro: ${error}`);
-            return false;
-          }
-        },
-        allowOutsideClick: () => !Swal.isLoading()
-      }).then((result) => {
-        if (result.isConfirmed && result.value) {
-          const { number, isBlacklisted } = result.value;
-          
-          if (isBlacklisted) {
-            Swal.fire({
-              title: 'Número Encontrado',
-              text: `O número ${number} está na lista negra!`,
-              icon: 'warning',
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#3b82f6',
-            });
-          } else {
-            Swal.fire({
-              title: 'Número Não Encontrado',
-              text: `O número ${number} não foi encontrado na lista negra.`,
-              icon: 'success',
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#3b82f6',
-            });
-          }
-        }
-      });
-    }
-    
-    // ===== UTILITY FUNCTIONS =====
-    function generateVCF() {
-      if (users.length === 0) {
-        showToast('Não há usuários para gerar contatos', 'error');
-        return;
-      }
-      
-      let vcfContent = '';
-      
-      users.forEach(user => {
-        // Format the phone number correctly
-        const phoneNumber = user.number.replace(/\D/g, '');
-        
-        // Create VCF entry for each user
-        vcfContent += 'BEGIN:VCARD\r\n';
-        vcfContent += 'VERSION:3.0\r\n';
-        vcfContent += `FN:${user.name}\r\n`;
-        vcfContent += `TEL;TYPE=CELL:${phoneNumber}\r\n`;
-        if (user.email) {
-          vcfContent += `EMAIL:${user.email}\r\n`;
-        }
-        vcfContent += `NOTE:ID: ${user.id}, Idade: ${user.age}, Instagram: ${user.instagram}\r\n`;
-        vcfContent += 'END:VCARD\r\n';
-      });
-      
-      // Create a download link and trigger it
-      const blob = new Blob([vcfContent], { type: 'text/vcard' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'administradores_contatos.vcf';
-      document.body.appendChild(a);
-      a.click();
-      
-      // Clean up
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 100);
-      
-      showToast('Contatos baixados com sucesso!', 'success');
-    }
-    
-    async function generateReport() {
-      if (!summaryData) {
-        showToast('Não foi possível gerar o relatório. Dados não carregados.', 'error');
-        return;
-      }
-      
-      try {
-        showToast('Gerando relatório...', 'info');
-        
-        // Select the elements to capture
-        const reportSection = document.getElementById('summarySection');
-        
-        // Generate screenshot using html2canvas
-        const canvas = await html2canvas(reportSection, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: isDarkMode ? '#1f2937' : '#ffffff'
-        });
-        
-        // Convert to image and download
-        const imageUrl = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = `relatorio_dashboard_${new Date().toISOString().slice(0, 10)}.png`;
-        link.href = imageUrl;
-        link.click();
-        
-        showToast('Relatório gerado com sucesso!', 'success');
-      } catch (error) {
-        console.error('Error generating report:', error);
-        showToast('Erro ao gerar relatório', 'error');
-      }
-    }
-    
-    function confirmLogout() {
-      Swal.fire({
-        title: 'Tem certeza?',
-        text: 'Você deseja encerrar a sessão?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#3b82f6',
-        cancelButtonColor: '#64748b',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Clear preferences
-          localStorage.removeItem('darkMode');
-          localStorage.removeItem('profilePic');
-          
-          // Redirect to login page
-          window.location.href = 'https://neetk.onrender.com/login';
-          showToast('Logout realizado com sucesso', 'success');
-        }
-      });
-    }
-    
-    function getStatusInfo(totalAdmins) {
-      if (totalAdmins <= 20) {
-        return {
-          status: 'Situação Péssima',
-          color: '#e74c3c',
-          icon: 'fas fa-angry'
-        };
-      } else if (totalAdmins <= 40) {
-        return {
-          status: 'Situação Muito Ruim',
-          color: '#e67e22',
-          icon: 'fas fa-frown'
-        };
-      } else if (totalAdmins <= 49) {
-        return {
-          status: 'Situação Estável',
-          color: '#f1c40f',
-          icon: 'fas fa-meh'
-        };
-      } else if (totalAdmins === 50) {
-        return {
-          status: 'Situação Boa',
-          color: '#27ae60',
-          icon: 'fas fa-smile'
-        };
-      } else if (totalAdmins <= 60) {
-        return {
-          status: 'Situação Muito Boa',
-          color: '#2ecc71',
-          icon: 'fas fa-laugh'
-        };
-      } else {
-        return {
-          status: 'Situação Ultra Boa',
-          color: '#9b59b6',
-          icon: 'fas fa-grin-stars'
-        };
-      }
-    }
-    
-    // ===== TOAST NOTIFICATIONS =====
-    function showToast(message, type = 'info') {
-      const toastContainer = document.getElementById('toastContainer');
-      
-      // Create toast element
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type} flex items-center justify-between`;
-      
-      let icon = '';
-      switch (type) {
-        case 'success':
-          icon = '<i class="fas fa-check-circle toast-icon"></i>';
-          break;
-        case 'error':
-          icon = '<i class="fas fa-exclamation-circle toast-icon"></i>';
-          break;
-        case 'info':
-        default:
-          icon = '<i class="fas fa-info-circle toast-icon"></i>';
-          break;
-      }
-      
-      toast.innerHTML = `
-        <div class="flex items-center">
-          ${icon}
-          <span>${message}</span>
-        </div>
-        <span class="toast-close">&times;</span>
-      `;
-      
-      // Add close button functionality
-      const closeBtn = toast.querySelector('.toast-close');
-      closeBtn.addEventListener('click', () => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-          toastContainer.removeChild(toast);
-        }, 300);
-      });
-      
-      // Add to container
-      toastContainer.appendChild(toast);
-      
-      // Trigger animation after a brief delay for proper rendering
-      setTimeout(() => {
-        toast.classList.add('show');
-      }, 10);
-      
-      // Auto-remove after 5 seconds
-      setTimeout(() => {
-        if (toastContainer.contains(toast)) {
-          toast.classList.remove('show');
-          setTimeout(() => {
-            if (toastContainer.contains(toast)) {
-              toastContainer.removeChild(toast);
-            }
-          }, 300);
-        }
-      }, 5000);
-    }
-    
-    // ===== UTILITY FUNCTIONS =====
-    function debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    }
-  </script>
+
+  <!-- Required script for GPT Engineer's "Pick and Edit" functionality -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
 </body>
 </html>
