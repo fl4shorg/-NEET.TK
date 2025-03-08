@@ -1,0 +1,1742 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Amber Link Manager</title>
+  <meta name="description" content="Painel de Gerenciamento de Links da Amber" />
+  
+  <!-- Font imports -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- React and ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Additional libraries -->
+  <script src="https://unpkg.com/sonner@1.5.0/dist/index.js"></script>
+  <script src="https://unpkg.com/lucide-react@0.462.0/dist/umd/lucide-react.js"></script>
+  <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+  
+  <style>
+    /* Tailwind-like utility classes */
+    :root {
+      --background: 210 40% 98%;
+      --foreground: 222.2 84% 4.9%;
+  
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+  
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+  
+      --primary: 196 84% 57%;
+      --primary-foreground: 210 40% 98%;
+  
+      --secondary: 210 40% 96.1%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+  
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+  
+      --accent: 196 84% 57%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+  
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+  
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 222.2 84% 4.9%;
+  
+      --radius: 1rem;
+  
+      --sidebar-background: 0 0% 98%;
+      --sidebar-foreground: 240 5.3% 26.1%;
+      --sidebar-primary: 240 5.9% 10%;
+      --sidebar-primary-foreground: 0 0% 98%;
+      --sidebar-accent: 240 4.8% 95.9%;
+      --sidebar-accent-foreground: 240 5.9% 10%;
+      --sidebar-border: 220 13% 91%;
+      --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+  
+    .dark {
+      --background: 222 47% 11%;
+      --foreground: 213 31% 91%;
+      
+      --card: 222 47% 13%;
+      --card-foreground: 213 31% 91%;
+      
+      --popover: 222 47% 13%;
+      --popover-foreground: 213 31% 91%;
+      
+      --primary: 196 84% 57%;
+      --primary-foreground: 222.2 47.4% 11.2%;
+      
+      --secondary: 223 47% 16%;
+      --secondary-foreground: 213 31% 91%;
+      
+      --muted: 223 47% 16%;
+      --muted-foreground: 215.4 16.3% 66.9%;
+      
+      --accent: 196 84% 57%;
+      --accent-foreground: 210 40% 98%;
+      
+      --destructive: 0 63% 31%;
+      --destructive-foreground: 210 40% 98%;
+      
+      --border: 217.2 32.6% 17.5%;
+      --input: 217.2 32.6% 17.5%;
+      --ring: 212.7 26.8% 83.9%;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border-color: hsl(var(--border));
+    }
+    
+    html {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    body {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    /* Layout */
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .justify-end { justify-content: flex-end; }
+    .flex-col { flex-direction: column; }
+    .flex-row { flex-direction: row; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    .h-4 { height: 1rem; }
+    .h-5 { height: 1.25rem; }
+    .h-6 { height: 1.5rem; }
+    .h-8 { height: 2rem; }
+    .h-12 { height: 3rem; }
+    .h-16 { height: 4rem; }
+    .h-64 { height: 16rem; }
+    .w-4 { width: 1rem; }
+    .w-5 { width: 1.25rem; }
+    .w-6 { width: 1.5rem; }
+    .w-8 { width: 2rem; }
+    .w-12 { width: 3rem; }
+    .w-16 { width: 4rem; }
+    .w-full { width: 100%; }
+    .max-w-xs { max-width: 20rem; }
+    .max-w-md { max-width: 28rem; }
+    .min-h-screen { min-height: 100vh; }
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rounded-md { border-radius: 0.375rem; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-2xl { border-radius: 1rem; }
+    .rounded-full { border-radius: 9999px; }
+    .border { border-width: 1px; }
+    .border-b { border-bottom-width: 1px; }
+    .border-border { border-color: hsl(var(--border)); }
+    .bg-background { background-color: hsl(var(--background)); }
+    .bg-card { background-color: hsl(var(--card)); }
+    .bg-primary { background-color: hsl(var(--primary)); }
+    .bg-secondary { background-color: hsl(var(--secondary)); }
+    .bg-blue-100 { background-color: rgba(219, 234, 254, 1); }
+    .bg-green-100 { background-color: rgba(220, 252, 231, 1); }
+    .bg-red-100 { background-color: rgba(254, 226, 226, 1); }
+    .bg-gray-100 { background-color: rgba(243, 244, 246, 1); }
+    .text-foreground { color: hsl(var(--foreground)); }
+    .text-card-foreground { color: hsl(var(--card-foreground)); }
+    .text-primary { color: hsl(var(--primary)); }
+    .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+    .text-secondary-foreground { color: hsl(var(--secondary-foreground)); }
+    .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+    .text-blue-600 { color: rgba(37, 99, 235, 1); }
+    .text-green-600 { color: rgba(22, 163, 74, 1); }
+    .text-red-600 { color: rgba(220, 38, 38, 1); }
+    .text-gray-600 { color: rgba(75, 85, 99, 1); }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .text-xs { font-size: 0.75rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-base { font-size: 1rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .p-1 { padding: 0.25rem; }
+    .p-2 { padding: 0.5rem; }
+    .p-3 { padding: 0.75rem; }
+    .p-4 { padding: 1rem; }
+    .p-5 { padding: 1.25rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+    .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+    .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+    .pt-4 { padding-top: 1rem; }
+    .pb-4 { padding-bottom: 1rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .ml-1 { margin-left: 0.25rem; }
+    .ml-2 { margin-left: 0.5rem; }
+    .mr-1 { margin-right: 0.25rem; }
+    .mr-2 { margin-right: 0.5rem; }
+    .space-x-2 > * + * { margin-left: 0.5rem; }
+    .space-y-1 > * + * { margin-top: 0.25rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+    .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    .truncate {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hidden { display: none; }
+    .block { display: block; }
+    .inline-flex { display: inline-flex; }
+    .sticky { position: sticky; }
+    .top-0 { top: 0; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .top-16 { top: 4rem; }
+    .left-0 { left: 0; }
+    .right-0 { right: 0; }
+    .z-50 { z-index: 50; }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-x-auto { overflow-x: auto; }
+    
+    /* Utility */
+    .backdrop-blur-sm { backdrop-filter: blur(4px); }
+    .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms; }
+    .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms; }
+    .hover\:bg-secondary:hover { background-color: hsl(var(--secondary)); }
+    .hover\:bg-secondary\/80:hover { background-color: hsla(var(--secondary), 0.8); }
+    .hover\:opacity-90:hover { opacity: 0.9; }
+    .hover\:shadow:hover { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+    .hover\:shadow-md:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    .hover\:scale-\[1\.01\]:hover { transform: scale(1.01); }
+    .hover\:scale-\[1\.02\]:hover { transform: scale(1.02); }
+    .hover\:text-primary:hover { color: hsl(var(--primary)); }
+    .dark .dark\:bg-blue-900 { background-color: rgba(30, 58, 138, 1); }
+    .dark .dark\:bg-green-900 { background-color: rgba(20, 83, 45, 1); }
+    .dark .dark\:bg-red-900 { background-color: rgba(127, 29, 29, 1); }
+    .dark .dark\:bg-gray-800 { background-color: rgba(31, 41, 55, 1); }
+    .dark .dark\:text-blue-300 { color: rgba(147, 197, 253, 1); }
+    .dark .dark\:text-green-300 { color: rgba(134, 239, 172, 1); }
+    .dark .dark\:text-red-300 { color: rgba(252, 165, 165, 1); }
+    .dark .dark\:text-gray-300 { color: rgba(209, 213, 219, 1); }
+    .animate-spin { animation: spin 1s linear infinite; }
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+    .animate-slide-in-up { animation: slideInUp 0.4s ease-out; }
+    .animate-scale-in { animation: scaleIn 0.3s ease-out; }
+    
+    /* Component Classes */
+    .dashboard-card {
+      background-color: hsl(var(--card));
+      color: hsl(var(--card-foreground));
+      border-radius: 1rem;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      padding: 1.25rem;
+      border: 1px solid hsl(var(--border));
+      transition: all 300ms;
+    }
+    .dashboard-card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .metrics-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      background-color: hsl(var(--card));
+      color: hsl(var(--card-foreground));
+      border-radius: 1rem;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      padding: 1.25rem;
+      border: 1px solid hsl(var(--border));
+      transition: transform 300ms;
+    }
+    .metrics-card:hover {
+      transform: scale(1.01);
+    }
+    
+    .dashboard-button {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-radius: 0.75rem;
+      transition: all 300ms;
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+    .dashboard-button:hover {
+      opacity: 0.9;
+    }
+    .dashboard-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px hsla(var(--primary), 0.5);
+    }
+    
+    .dashboard-button-secondary {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-radius: 0.75rem;
+      transition: all 300ms;
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+    }
+    .dashboard-button-secondary:hover {
+      background-color: hsla(var(--secondary), 0.8);
+    }
+    .dashboard-button-secondary:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px hsla(var(--secondary), 0.5);
+    }
+    
+    .action-button {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 200ms;
+    }
+    
+    .icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 9999px;
+      background-color: hsl(var(--card));
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: all 300ms;
+    }
+    .icon-button:hover {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Dialog */
+    .dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dialog-content {
+      background-color: hsl(var(--background));
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      max-width: 28rem;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      position: relative;
+    }
+    
+    /* Animations */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes scaleIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Media Queries */
+    @media (min-width: 640px) {
+      .sm\:inline { display: inline; }
+      .sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .sm\:max-w-md { max-width: 28rem; }
+    }
+    
+    @media (min-width: 768px) {
+      .md\:flex { display: flex; }
+      .md\:flex-row { flex-direction: row; }
+      .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .md\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .md\:gap-4 { gap: 1rem; }
+      .md\:gap-6 { gap: 1.5rem; }
+      .md\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .md\:py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+      .md\:mt-0 { margin-top: 0; }
+      .md\:mb-8 { margin-bottom: 2rem; }
+      .md\:text-3xl { font-size: 1.875rem; }
+    }
+    
+    @media (min-width: 1024px) {
+      .lg\:flex { display: flex; }
+      .lg\:hidden { display: none; }
+      .lg\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .lg\:block { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  
+  <script type="text/babel">
+    // Create React components
+    const { useState, useEffect, useRef, createRoot } = React;
+    const {
+      Menu,
+      RefreshCw,
+      BarChart,
+      Link: LinkIcon,
+      Goal,
+      Archive,
+      Package,
+      Moon,
+      Sun,
+      Plus,
+      Power,
+      ToggleLeft,
+      ToggleRight,
+      Edit2,
+      Trash2,
+      Loader2,
+      ExternalLink,
+      Copy
+    } = LucideReact;
+    
+    // Utils
+    const cn = (...classes) => classes.filter(Boolean).join(' ');
+    
+    // Toast component (simplified version of sonner)
+    const Toast = {
+      success: (message) => {
+        const toastElement = document.createElement('div');
+        toastElement.className = 'fixed top-4 right-4 bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md z-50 animate-fade-in';
+        toastElement.innerHTML = `
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>${message}</span>
+          </div>
+        `;
+        document.body.appendChild(toastElement);
+        setTimeout(() => {
+          toastElement.style.opacity = '0';
+          setTimeout(() => {
+            document.body.removeChild(toastElement);
+          }, 300);
+        }, 3000);
+      },
+      error: (message) => {
+        const toastElement = document.createElement('div');
+        toastElement.className = 'fixed top-4 right-4 bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md z-50 animate-fade-in';
+        toastElement.innerHTML = `
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            <span>${message}</span>
+          </div>
+        `;
+        document.body.appendChild(toastElement);
+        setTimeout(() => {
+          toastElement.style.opacity = '0';
+          setTimeout(() => {
+            document.body.removeChild(toastElement);
+          }, 300);
+        }, 3000);
+      }
+    };
+    
+    // Components
+    const DashboardNavbar = () => {
+      const [isMenuOpen, setIsMenuOpen] = useState(false);
+      
+      return (
+        <header className="sticky top-0 z-50 w-full backdrop-blur-sm bg-background/80 border-b border-border">
+          <div className="container flex h-16 items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                className="lg:hidden p-2 rounded-md hover:bg-secondary"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <span className="font-bold text-xl text-primary">Dashboard</span>
+            </div>
+            
+            <nav className="hidden lg:flex items-center gap-6">
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Home</a>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Links</a>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Analytics</a>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Settings</a>
+            </nav>
+            
+            {isMenuOpen && (
+              <div className="absolute top-16 left-0 right-0 animate-fade-in bg-background border-b border-border lg:hidden">
+                <nav className="flex flex-col p-4">
+                  <a href="#" className="py-2 text-foreground hover:text-primary transition-colors">Home</a>
+                  <a href="#" className="py-2 text-foreground hover:text-primary transition-colors">Links</a>
+                  <a href="#" className="py-2 text-foreground hover:text-primary transition-colors">Analytics</a>
+                  <a href="#" className="py-2 text-foreground hover:text-primary transition-colors">Settings</a>
+                </nav>
+              </div>
+            )}
+          </div>
+        </header>
+      );
+    };
+    
+    const MetricsCard = ({ title, value, icon, loading = false, description, trend, className, ...props }) => {
+      return (
+        <div
+          className={cn(
+            "metrics-card",
+            loading && "animate-pulse",
+            className
+          )}
+          {...props}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-muted-foreground">{title}</span>
+            {icon && <div className="text-primary">{icon}</div>}
+          </div>
+          
+          <div className="flex flex-col gap-1">
+            {loading ? (
+              <div className="flex items-center space-x-2">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                <span className="text-sm text-muted-foreground">Carregando...</span>
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-foreground">{value}</div>
+                {(description || trend) && (
+                  <div className="flex items-center gap-2">
+                    {description && (
+                      <span className="text-xs text-muted-foreground">{description}</span>
+                    )}
+                    {trend && (
+                      <span
+                        className={cn(
+                          "text-xs font-medium",
+                          trend.positive ? "text-green-500 dark:text-green-400" : "text-red-500 dark:text-red-400"
+                        )}
+                      >
+                        {trend.positive ? "+" : "-"}{trend.value}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      );
+    };
+    
+    const StatsBarChart = ({ data, color = "#33C3F0", title, className }) => {
+      return (
+        <div className={cn("dashboard-card space-y-4", className)}>
+          {title && (
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+              <div className="flex items-center gap-2">
+                <span className="text-xs py-1 px-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300">7 dias</span>
+              </div>
+            </div>
+          )}
+          
+          <div className="h-64">
+            <Recharts.ResponsiveContainer width="100%" height="100%">
+              <Recharts.BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <Recharts.XAxis 
+                  dataKey="name" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: 'var(--foreground)' }}
+                  dy={10}
+                />
+                <Recharts.Tooltip
+                  contentStyle={{
+                    backgroundColor: 'var(--background)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                    padding: '8px 12px',
+                    color: 'var(--foreground)'
+                  }}
+                  cursor={{ fill: 'rgba(51, 195, 240, 0.1)' }}
+                />
+                <Recharts.Bar 
+                  dataKey="value" 
+                  fill={color} 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={30}
+                  animationDuration={1500}
+                />
+              </Recharts.BarChart>
+            </Recharts.ResponsiveContainer>
+          </div>
+        </div>
+      );
+    };
+    
+    const ClicksDonutChart = ({ data, colors = ["#33C3F0", "#999999"], title, className }) => {
+      const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+    
+      return (
+        <div className={cn("dashboard-card space-y-4", className)}>
+          {title && (
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+            </div>
+          )}
+          
+          <div className="h-64">
+            {totalValue > 0 ? (
+              <Recharts.ResponsiveContainer width="100%" height="100%">
+                <Recharts.PieChart>
+                  <Recharts.Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
+                  >
+                    {data.map((entry, index) => (
+                      <Recharts.Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                    ))}
+                  </Recharts.Pie>
+                  <Recharts.Tooltip
+                    formatter={(value) => [value, 'Quantidade']}
+                    contentStyle={{
+                      backgroundColor: 'var(--background)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                      padding: '8px 12px',
+                      color: 'var(--foreground)'
+                    }}
+                  />
+                  <Recharts.Legend />
+                </Recharts.PieChart>
+              </Recharts.ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-muted-foreground">Sem dados disponíveis</p>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+    
+    const OptionCard = ({ icon, label, onClick, className, style }) => {
+      return (
+        <button
+          onClick={onClick}
+          className={cn(
+            "flex flex-col items-center justify-center p-4 rounded-xl bg-card text-card-foreground shadow-sm border border-border",
+            "hover:shadow-md transition-all duration-300 hover:scale-[1.02]",
+            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50",
+            className
+          )}
+          style={style}
+        >
+          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-primary/10 text-primary mb-2">
+            {icon}
+          </div>
+          <span className="text-sm font-medium text-foreground">{label}</span>
+        </button>
+      );
+    };
+    
+    const LinkTable = ({ links, isLoading, onEdit, onDelete, onToggleStatus, className }) => {
+      const [expandedRow, setExpandedRow] = useState(null);
+    
+      const toggleRow = (id) => {
+        setExpandedRow(expandedRow === id ? null : id);
+      };
+    
+      const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        Toast.success("Link copiado para a área de transferência");
+      };
+    
+      if (isLoading) {
+        return (
+          <div className={cn("dashboard-card flex flex-col items-center justify-center py-12", className)}>
+            <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+            <p className="text-muted-foreground">Carregando links...</p>
+          </div>
+        );
+      }
+    
+      if (links.length === 0) {
+        return (
+          <div className={cn("dashboard-card flex flex-col items-center justify-center py-12", className)}>
+            <LinkIcon className="h-16 w-16 text-muted-foreground mb-4" />
+            <h3 className="text-xl font-medium text-foreground mb-2">Nenhum link encontrado</h3>
+            <p className="text-muted-foreground mb-6">Crie seu primeiro link encurtado para começar</p>
+          </div>
+        );
+      }
+    
+      // Mobile view for small screens
+      const renderMobileLinks = () => (
+        <div className="space-y-4 lg:hidden">
+          {links.map((link) => (
+            <div 
+              key={link.id}
+              className="bg-card text-card-foreground p-4 rounded-xl border border-border"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="font-medium text-foreground text-base">{link.nome}</h3>
+                <span 
+                  className={cn(
+                    "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium", 
+                    link.status === 'ativado' 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                      : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
+                  )}
+                >
+                  {link.status === 'ativado' ? 'Ativado' : 'Desativado'}
+                </span>
+              </div>
+              
+              <div className="mb-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs text-muted-foreground">URL Original:</span>
+                  <button 
+                    onClick={() => copyToClipboard(link.url_original)}
+                    className="p-1 rounded-md hover:bg-secondary text-muted-foreground"
+                    aria-label="Copiar URL"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <p className="text-sm text-foreground truncate">{link.url_original}</p>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <BarChart className="h-4 w-4 text-primary mr-1" />
+                  <span className="text-sm font-semibold">{link.cliques} cliques</span>
+                </div>
+                
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => onEdit(link.id, link.nome, link.url_original)}
+                    className="p-2.5 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
+                    aria-label="Editar"
+                  >
+                    <Edit2 className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => onDelete(link.id)}
+                    className="p-2.5 rounded-lg bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"
+                    aria-label="Excluir"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => onToggleStatus(
+                      link.id,
+                      link.status === 'ativado' ? 'desativado' : 'ativado'
+                    )}
+                    className={cn(
+                      "p-2.5 rounded-lg",
+                      link.status === 'ativado' 
+                        ? 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300' 
+                        : 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300'
+                    )}
+                    aria-label={link.status === 'ativado' ? 'Desativar' : 'Ativar'}
+                  >
+                    {link.status === 'ativado' ? (
+                      <ToggleRight className="h-5 w-5" />
+                    ) : (
+                      <ToggleLeft className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    
+      // Desktop view for larger screens
+      const renderDesktopTable = () => (
+        <div className="hidden lg:block overflow-hidden dashboard-card">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-4 px-4 font-medium text-muted-foreground text-sm">Nome</th>
+                  <th className="text-left py-4 px-4 font-medium text-muted-foreground text-sm">URL Original</th>
+                  <th className="text-left py-4 px-4 font-medium text-muted-foreground text-sm">Cliques</th>
+                  <th className="text-left py-4 px-4 font-medium text-muted-foreground text-sm">Status</th>
+                  <th className="text-right py-4 px-4 font-medium text-muted-foreground text-sm">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {links.map((link) => (
+                  <tr 
+                    key={link.id} 
+                    className="border-b border-border hover:bg-secondary/50 transition-colors"
+                    onClick={() => toggleRow(link.id)}
+                  >
+                    <td className="py-4 px-4">
+                      <div className="font-medium text-foreground">{link.nome}</div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center max-w-xs">
+                        <span className="truncate text-muted-foreground">{link.url_original}</span>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyToClipboard(link.url_original);
+                          }}
+                          className="ml-2 p-1 rounded-md hover:bg-secondary text-muted-foreground"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="font-semibold text-foreground">{link.cliques}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span 
+                        className={cn(
+                          "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+                          link.status === 'ativado' 
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                            : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
+                        )}
+                      >
+                        {link.status === 'ativado' ? 'Ativado' : 'Desativado'}
+                      </span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEdit(link.id, link.nome, link.url_original);
+                          }}
+                          className="p-2.5 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
+                          aria-label="Editar"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete(link.id);
+                          }}
+                          className="p-2.5 rounded-lg bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"
+                          aria-label="Excluir"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleStatus(
+                              link.id,
+                              link.status === 'ativado' ? 'desativado' : 'ativado'
+                            );
+                          }}
+                          className={cn(
+                            "p-2.5 rounded-lg",
+                            link.status === 'ativado' 
+                              ? 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300' 
+                              : 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300'
+                          )}
+                          aria-label={link.status === 'ativado' ? 'Desativar' : 'Ativar'}
+                        >
+                          {link.status === 'ativado' ? (
+                            <ToggleRight className="h-4 w-4" />
+                          ) : (
+                            <ToggleLeft className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    
+      return (
+        <div className={cn("space-y-4", className)}>
+          {renderMobileLinks()}
+          {renderDesktopTable()}
+        </div>
+      );
+    };
+    
+    const LinkDialog = ({ isOpen, onClose, onSubmit, isSubmitting, title, initialData, submitButtonText }) => {
+      const [nome, setNome] = useState("");
+      const [urlOriginal, setUrlOriginal] = useState("");
+      
+      useEffect(() => {
+        if (isOpen) {
+          if (initialData) {
+            setNome(initialData.nome);
+            setUrlOriginal(initialData.url_original);
+          } else {
+            setNome("");
+            setUrlOriginal("");
+          }
+        }
+      }, [isOpen, initialData]);
+      
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!nome.trim()) {
+          Toast.error("O nome do link é obrigatório");
+          return;
+        }
+        
+        if (!urlOriginal.trim()) {
+          Toast.error("A URL original é obrigatória");
+          return;
+        }
+        
+        try {
+          await onSubmit(nome, urlOriginal);
+          onClose();
+        } catch (error) {
+          console.error("Erro ao processar link:", error);
+        }
+      };
+      
+      if (!isOpen) return null;
+      
+      return (
+        <div className="dialog-overlay" onClick={onClose}>
+          <div className="dialog-content animate-scale-in" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-bold mb-4">{title}</h2>
+            
+            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <label htmlFor="nome" className="text-sm font-medium text-muted-foreground">
+                  Nome
+                </label>
+                <input
+                  id="nome"
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-background"
+                  placeholder="Ex: Meu Website"
+                  disabled={isSubmitting}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="urlOriginal" className="text-sm font-medium text-muted-foreground">
+                  URL Original
+                </label>
+                <input
+                  id="urlOriginal"
+                  type="url"
+                  value={urlOriginal}
+                  onChange={(e) => setUrlOriginal(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-background"
+                  placeholder="https://exemplo.com"
+                  disabled={isSubmitting}
+                />
+              </div>
+              
+              <div className="flex justify-end gap-2 mt-6">
+                <button 
+                  type="button"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                  className="px-4 py-2 rounded-lg border border-border bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="dashboard-button flex items-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Processando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <LinkIcon className="h-4 w-4" />
+                      <span>{submitButtonText}</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    };
+    
+    const ReportGenerator = ({ metrics, chartData, donutData, links }) => {
+      const generateReport = async () => {
+        Toast.success("Gerando relatório...");
+        
+        // Create a report container
+        const reportContainer = document.createElement('div');
+        reportContainer.className = 'fixed inset-0 bg-background z-[1000] overflow-auto p-6';
+        reportContainer.innerHTML = `
+          <div class="max-w-4xl mx-auto bg-card rounded-2xl shadow-lg p-8 border border-border">
+            <div class="flex justify-between items-center mb-8">
+              <h1 class="text-2xl font-bold text-foreground">Relatório de Desempenho - Amber Links</h1>
+              <div class="flex items-center gap-2">
+                <span>${new Date().toLocaleDateString()}</span>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 mb-8">
+              <div class="bg-primary/10 rounded-xl p-4">
+                <h3 class="text-sm font-medium text-muted-foreground mb-1">Total de Cliques</h3>
+                <p class="text-2xl font-bold">${metrics?.totalCliques || 0}</p>
+              </div>
+              <div class="bg-primary/10 rounded-xl p-4">
+                <h3 class="text-sm font-medium text-muted-foreground mb-1">Total de Links</h3>
+                <p class="text-2xl font-bold">${metrics?.totalLinks || 0}</p>
+              </div>
+              <div class="bg-primary/10 rounded-xl p-4">
+                <h3 class="text-sm font-medium text-muted-foreground mb-1">Taxa de Conversão</h3>
+                <p class="text-2xl font-bold">${metrics?.taxaConversao || "0%"}</p>
+              </div>
+            </div>
+            
+            <div id="report-charts" class="grid grid-cols-2 gap-6 mb-8">
+              <div class="bg-card rounded-xl p-6 shadow-sm border border-border">
+                <h3 class="text-lg font-semibold mb-4">Atividade de Cliques</h3>
+                <div id="bar-chart-container" class="h-64"></div>
+              </div>
+              <div class="bg-card rounded-xl p-6 shadow-sm border border-border">
+                <h3 class="text-lg font-semibold mb-4">Distribuição de Links</h3>
+                <div id="donut-chart-container" class="h-64"></div>
+              </div>
+            </div>
+            
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold mb-4">Links de Maior Desempenho</h3>
+              <div class="bg-card rounded-xl p-6 shadow-sm border border-border">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-border">
+                      <th class="text-left py-3 px-4 font-medium text-muted-foreground text-sm">Nome</th>
+                      <th class="text-left py-3 px-4 font-medium text-muted-foreground text-sm">URL</th>
+                      <th class="text-left py-3 px-4 font-medium text-muted-foreground text-sm">Cliques</th>
+                      <th class="text-left py-3 px-4 font-medium text-muted-foreground text-sm">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${links.slice(0, 5).map(link => `
+                      <tr class="border-b border-border">
+                        <td class="py-3 px-4 font-medium">${link.nome}</td>
+                        <td class="py-3 px-4 text-muted-foreground truncate max-w-[200px]">${link.url_original}</td>
+                        <td class="py-3 px-4 font-semibold">${link.cliques}</td>
+                        <td class="py-3 px-4">
+                          <span class="${link.status === 'ativado' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                            ${link.status === 'ativado' ? 'Ativado' : 'Desativado'}
+                          </span>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-sm text-muted-foreground">Gerado automaticamente pelo Dashboard da Amber</p>
+              </div>
+              <button id="download-report" class="dashboard-button flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Baixar Relatório</span>
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(reportContainer);
+        
+        // Close button
+        const closeButton = document.createElement('button');
+        closeButton.className = 'fixed top-4 right-4 bg-card p-2 rounded-full shadow-md z-[1001]';
+        closeButton.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        `;
+        closeButton.onclick = () => {
+          document.body.removeChild(reportContainer);
+          document.body.removeChild(closeButton);
+        };
+        document.body.appendChild(closeButton);
+        
+        // Render charts on the report
+        setTimeout(() => {
+          // Bar Chart
+          const barChartContainer = document.getElementById('bar-chart-container');
+          if (barChartContainer) {
+            const barChartRoot = createRoot(barChartContainer);
+            barChartRoot.render(
+              <Recharts.ResponsiveContainer width="100%" height="100%">
+                <Recharts.BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <Recharts.XAxis dataKey="name" axisLine={false} tickLine={false} />
+                  <Recharts.Tooltip />
+                  <Recharts.Bar dataKey="value" fill="#33C3F0" radius={[4, 4, 0, 0]} barSize={30} />
+                </Recharts.BarChart>
+              </Recharts.ResponsiveContainer>
+            );
+          }
+          
+          // Donut Chart
+          const donutChartContainer = document.getElementById('donut-chart-container');
+          if (donutChartContainer) {
+            const donutChartRoot = createRoot(donutChartContainer);
+            donutChartRoot.render(
+              <Recharts.ResponsiveContainer width="100%" height="100%">
+                <Recharts.PieChart>
+                  <Recharts.Pie
+                    data={donutData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
+                  >
+                    {donutData.map((entry, index) => (
+                      <Recharts.Cell key={`cell-${index}`} fill={index === 0 ? "#33C3F0" : "#E0E0E0"} />
+                    ))}
+                  </Recharts.Pie>
+                  <Recharts.Tooltip />
+                  <Recharts.Legend />
+                </Recharts.PieChart>
+              </Recharts.ResponsiveContainer>
+            );
+          }
+          
+          // Download report button
+          const downloadButton = document.getElementById('download-report');
+          if (downloadButton) {
+            downloadButton.addEventListener('click', async () => {
+              try {
+                const reportElement = reportContainer.querySelector('.max-w-4xl');
+                if (reportElement) {
+                  const canvas = await html2canvas(reportElement);
+                  const imageData = canvas.toDataURL('image/png');
+                  
+                  const link = document.createElement('a');
+                  link.href = imageData;
+                  link.download = `amber-report-${new Date().toISOString().split('T')[0]}.png`;
+                  link.click();
+                }
+              } catch (error) {
+                console.error('Error generating report:', error);
+                Toast.error('Erro ao gerar o relatório');
+              }
+            });
+          }
+        }, 100);
+      };
+      
+      return (
+        <button
+          onClick={generateReport}
+          className="dashboard-button-secondary flex items-center gap-2"
+          aria-label="Gerar Relatório"
+        >
+          <BarChart className="h-4 w-4" />
+          <span className="hidden sm:inline">Relatório</span>
+        </button>
+      );
+    };
+    
+    // Main App
+    const App = () => {
+      // API endpoint
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVDclY83XkeJ2FJue9eAVgrH3BeTKhxt8o61XKpd1IPNsHRzcIiQ4tq1YaTccKsoHIFA/exec';
+      
+      // States
+      const [links, setLinks] = useState([]);
+      const [metrics, setMetrics] = useState(null);
+      const [chartData, setChartData] = useState([
+        { name: "Seg", value: 40 },
+        { name: "Ter", value: 30 },
+        { name: "Qua", value: 20 },
+        { name: "Qui", value: 27 },
+        { name: "Sex", value: 18 },
+        { name: "Sab", value: 23 },
+        { name: "Dom", value: 34 }
+      ]);
+      const [donutData, setDonutData] = useState([]);
+      
+      // Loading states
+      const [isLoadingLinks, setIsLoadingLinks] = useState(true);
+      const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
+      const [isCreatingLink, setIsCreatingLink] = useState(false);
+      const [isTogglingProtocol, setIsTogglingProtocol] = useState(false);
+      
+      // Theme state
+      const [darkMode, setDarkMode] = useState(false);
+      
+      // Modal states
+      const [showCreateModal, setShowCreateModal] = useState(false);
+      const [editingLink, setEditingLink] = useState(null);
+      
+      // Toggle theme function
+      const toggleTheme = () => {
+        setDarkMode(!darkMode);
+        if (!darkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      };
+      
+      // Apply dark theme if activated
+      useEffect(() => {
+        // Check saved preference in localStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          setDarkMode(true);
+          document.documentElement.classList.add('dark');
+        }
+      }, []);
+      
+      // Save theme preference to localStorage
+      useEffect(() => {
+        localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+      }, [darkMode]);
+      
+      // Load links
+      const loadLinks = async () => {
+        setIsLoadingLinks(true);
+        try {
+          const response = await fetch(`${SCRIPT_URL}?action=getAllLinks`);
+          if (!response.ok) throw new Error('Erro ao carregar links');
+          
+          const data = await response.json();
+          
+          // Filter valid links (remove headers if any)
+          const validLinks = data.filter((link) => 
+            link.id && link.nome && link.url_original
+          );
+          
+          setLinks(validLinks);
+        } catch (error) {
+          console.error('Erro ao carregar links:', error);
+          Toast.error('Não foi possível carregar os links');
+        } finally {
+          setIsLoadingLinks(false);
+        }
+      };
+      
+      // Load metrics
+      const loadMetrics = async () => {
+        setIsLoadingMetrics(true);
+        try {
+          const response = await fetch(`${SCRIPT_URL}?action=estatisticas`);
+          if (!response.ok) throw new Error('Erro ao carregar métricas');
+          
+          const data = await response.json();
+          setMetrics(data);
+          
+          // Generate random data for charts based on total clicks
+          if (data.totalCliques > 0) {
+            generateChartData(data.totalCliques);
+            generateDonutData(data);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar métricas:', error);
+          Toast.error('Não foi possível carregar as métricas');
+        } finally {
+          setIsLoadingMetrics(false);
+        }
+      };
+      
+      // Generate chart data
+      const generateChartData = (totalClicks) => {
+        // Generate random data for chart based on total clicks
+        const days = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
+        const newData = days.map(day => {
+          return {
+            name: day,
+            value: Math.floor(Math.random() * (totalClicks / 2))
+          };
+        });
+        setChartData(newData);
+      };
+      
+      // Generate donut chart data
+      const generateDonutData = (metrics) => {
+        // Generate data for donut chart
+        setDonutData([
+          { name: "Links Ativados", value: metrics.totalAtivados },
+          { name: "Links Desativados", value: metrics.totalDesativados }
+        ]);
+      };
+      
+      // Create link
+      const createLink = async (nome, urlOriginal) => {
+        setIsCreatingLink(true);
+        try {
+          const formData = new FormData();
+          formData.append('action', 'create');
+          formData.append('nome', nome);
+          formData.append('urlOriginal', urlOriginal);
+          
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (!response.ok) throw new Error('Erro ao criar link');
+          
+          const data = await response.json();
+          Toast.success(`Link criado com sucesso: ${data.link_encurtado}`);
+          
+          // Reload links and metrics
+          await Promise.all([loadLinks(), loadMetrics()]);
+        } catch (error) {
+          console.error('Erro ao criar link:', error);
+          Toast.error('Não foi possível criar o link');
+        } finally {
+          setIsCreatingLink(false);
+        }
+      };
+      
+      // Edit link
+      const editLink = async (nome, urlOriginal) => {
+        if (!editingLink) return;
+        
+        try {
+          const formData = new FormData();
+          formData.append('action', 'edit');
+          formData.append('id', editingLink.id);
+          formData.append('nome', nome);
+          formData.append('urlOriginal', urlOriginal);
+          
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (!response.ok) throw new Error('Erro ao editar link');
+          
+          const data = await response.json();
+          if (data.success) {
+            Toast.success('Link editado com sucesso');
+            await Promise.all([loadLinks(), loadMetrics()]);
+          } else {
+            Toast.error(`Erro ao editar o link: ${data.error}`);
+          }
+        } catch (error) {
+          console.error('Erro ao editar link:', error);
+          Toast.error('Não foi possível editar o link');
+        } finally {
+          setEditingLink(null);
+        }
+      };
+      
+      // Delete link
+      const deleteLink = async (id) => {
+        if (!confirm('Tem certeza que deseja excluir este link?')) return;
+        
+        try {
+          const formData = new FormData();
+          formData.append('action', 'delete');
+          formData.append('id', id);
+          
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (!response.ok) throw new Error('Erro ao excluir link');
+          
+          const data = await response.json();
+          if (data.success) {
+            Toast.success('Link excluído com sucesso');
+            await Promise.all([loadLinks(), loadMetrics()]);
+          } else {
+            Toast.error(`Erro ao excluir o link: ${data.error}`);
+          }
+        } catch (error) {
+          console.error('Erro ao excluir link:', error);
+          Toast.error('Não foi possível excluir o link');
+        }
+      };
+      
+      // Toggle link status
+      const toggleStatus = async (id, novoStatus) => {
+        try {
+          const formData = new FormData();
+          formData.append('action', 'status');
+          formData.append('id', id);
+          formData.append('status', novoStatus);
+          
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (!response.ok) throw new Error('Erro ao alterar status');
+          
+          const data = await response.json();
+          if (data.success) {
+            Toast.success(`Link ${novoStatus === 'ativado' ? 'ativado' : 'desativado'} com sucesso`);
+            await Promise.all([loadLinks(), loadMetrics()]);
+          } else {
+            Toast.error(`Erro ao alterar o status: ${data.error}`);
+          }
+        } catch (error) {
+          console.error('Erro ao alterar status:', error);
+          Toast.error('Não foi possível alterar o status do link');
+        }
+      };
+      
+      // Enable all links
+      const enableAllLinks = async () => {
+        setIsTogglingProtocol(true);
+        try {
+          const promises = links
+            .filter(link => link.status === 'desativado')
+            .map(link => toggleStatus(link.id, 'ativado'));
+          
+          await Promise.all(promises);
+          Toast.success('Protocolo de ativação executado com sucesso');
+        } catch (error) {
+          console.error('Erro ao ativar todos os links:', error);
+          Toast.error('Não foi possível ativar todos os links');
+        } finally {
+          setIsTogglingProtocol(false);
+        }
+      };
+      
+      // Disable all links
+      const disableAllLinks = async () => {
+        setIsTogglingProtocol(true);
+        try {
+          const promises = links
+            .filter(link => link.status === 'ativado')
+            .map(link => toggleStatus(link.id, 'desativado'));
+          
+          await Promise.all(promises);
+          Toast.success('Protocolo de desativação executado com sucesso');
+        } catch (error) {
+          console.error('Erro ao desativar todos os links:', error);
+          Toast.error('Não foi possível desativar todos os links');
+        } finally {
+          setIsTogglingProtocol(false);
+        }
+      };
+      
+      // Load links and metrics when component mounts
+      useEffect(() => {
+        Promise.all([loadLinks(), loadMetrics()]);
+      }, []);
+      
+      // Open edit modal
+      const handleEditLink = (id, name, url) => {
+        setEditingLink({ id, nome: name, url_original: url });
+      };
+      
+      // Close edit modal
+      const handleCloseEditModal = () => {
+        setEditingLink(null);
+      };
+      
+      return (
+        <div className="min-h-screen">
+          <div className="bg-background text-foreground min-h-screen">
+            <DashboardNavbar />
+            
+            <main className="container py-6 px-4 md:py-8 md:px-6">
+              <div className="flex flex-col md:flex-row justify-between items-start mb-8">
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-foreground animate-fade-in">
+                    Painel de Gerenciamento de Divulgação da Amber
+                  </h1>
+                  <p className="text-muted-foreground mt-1">
+                    Monitore, gerencie e otimize suas campanhas de divulgação
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-3 mt-4 md:mt-0">
+                  <button 
+                    onClick={toggleTheme}
+                    className="p-3 rounded-full bg-secondary text-foreground transition-colors"
+                    aria-label="Alternar tema"
+                  >
+                    {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  </button>
+                  
+                  <ReportGenerator 
+                    metrics={metrics} 
+                    chartData={chartData} 
+                    donutData={donutData} 
+                    links={links} 
+                  />
+                  
+                  <button 
+                    onClick={() => Promise.all([loadLinks(), loadMetrics()])}
+                    className="dashboard-button-secondary flex items-center gap-2 text-foreground py-3 px-4 rounded-xl"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    <span className="hidden sm:inline">Atualizar</span>
+                  </button>
+                </div>
+              </div>
+              
+              {/* Metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
+                <MetricsCard 
+                  title="Total de Cliques" 
+                  value={metrics?.totalCliques || 0}
+                  loading={isLoadingMetrics}
+                  icon={<BarChart className="h-5 w-5" />}
+                />
+                <MetricsCard 
+                  title="Total de Links" 
+                  value={metrics?.totalLinks || 0}
+                  loading={isLoadingMetrics}
+                  icon={<LinkIcon className="h-5 w-5" />}
+                />
+                <MetricsCard 
+                  title="Links Ativados" 
+                  value={metrics?.totalAtivados || 0}
+                  loading={isLoadingMetrics}
+                  icon={<Goal className="h-5 w-5" />}
+                />
+                <MetricsCard 
+                  title="Links Desativados" 
+                  value={metrics?.totalDesativados || 0}
+                  loading={isLoadingMetrics}
+                  icon={<Archive className="h-5 w-5" />}
+                />
+                <MetricsCard 
+                  title="Taxa de Conversão" 
+                  value={metrics?.taxaConversao || "0%"}
+                  loading={isLoadingMetrics}
+                  icon={<BarChart className="h-5 w-5" />}
+                />
+              </div>
+              
+              {/* Options */}
+              <div className="mb-6 md:mb-8">
+                <h2 className="text-lg font-semibold text-foreground mb-4">Dashboard</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
+                  <OptionCard 
+                    icon={<Plus className="h-6 w-6" />} 
+                    label="Novo Link"
+                    onClick={() => setShowCreateModal(true)}
+                  />
+                  <OptionCard 
+                    icon={<ToggleRight className="h-6 w-6" />} 
+                    label="Ativar Todos"
+                    onClick={enableAllLinks}
+                  />
+                  <OptionCard 
+                    icon={<ToggleLeft className="h-6 w-6" />} 
+                    label="Desativar Todos"
+                    onClick={disableAllLinks}
+                  />
+                  <OptionCard 
+                    icon={<Power className="h-6 w-6" />} 
+                    label="Protocolo"
+                    onClick={() => {
+                      const doContinue = confirm("Executar protocolo de segurança? Isso alternará o status de todos os links.");
+                      if (doContinue) {
+                        // If there are more active links than inactive ones, disable all; otherwise, enable all
+                        if ((metrics?.totalAtivados || 0) > (metrics?.totalDesativados || 0)) {
+                          disableAllLinks();
+                        } else {
+                          enableAllLinks();
+                        }
+                      }
+                    }}
+                  />
+                  <OptionCard 
+                    icon={<BarChart className="h-6 w-6" />} 
+                    label="Estatísticas" 
+                  />
+                </div>
+              </div>
+              
+              {/* Charts */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+                <div className="animate-fade-in">
+                  <StatsBarChart 
+                    data={chartData} 
+                    title="Atividade de Cliques"
+                  />
+                </div>
+                <div className="animate-fade-in" style={{ animationDelay: "100ms" }}>
+                  <ClicksDonutChart 
+                    data={donutData}
+                    title="Distribuição de Links"
+                    colors={["#33C3F0", "#E0E0E0"]}
+                  />
+                </div>
+              </div>
+              
+              {/* Links Table */}
+              <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold text-foreground">Seus Links</h2>
+                  <button 
+                    onClick={() => setShowCreateModal(true)}
+                    className="dashboard-button flex items-center gap-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Novo Link</span>
+                  </button>
+                </div>
+                <LinkTable 
+                  links={links}
+                  isLoading={isLoadingLinks}
+                  onEdit={handleEditLink}
+                  onDelete={deleteLink}
+                  onToggleStatus={toggleStatus}
+                />
+              </div>
+            </main>
+          </div>
+    
+          {/* Create Link Modal */}
+          {showCreateModal && (
+            <LinkDialog
+              isOpen={showCreateModal}
+              onClose={() => setShowCreateModal(false)}
+              onSubmit={createLink}
+              isSubmitting={isCreatingLink}
+              title="Criar Novo Link"
+              submitButtonText="Criar Link"
+            />
+          )}
+    
+          {/* Edit Link Modal */}
+          {editingLink && (
+            <LinkDialog
+              isOpen={!!editingLink}
+              onClose={handleCloseEditModal}
+              onSubmit={editLink}
+              isSubmitting={false}
+              title="Editar Link"
+              initialData={editingLink}
+              submitButtonText="Salvar Alterações"
+            />
+          )}
+        </div>
+      );
+    };
+    
+    // Render the app
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
+
