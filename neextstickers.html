@@ -1,396 +1,391 @@
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de divulgação</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>© 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+    <link rel="icon" href="https://i.imgur.com/nTqoKxv.png" type="image/png">
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
+      body {
+        background: linear-gradient(to bottom right, #000000, #1a1a2e);
+        color: #ffffff;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+      
+      .link-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 0.75rem;
+        text-align: center;
+        font-weight: 500;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        animation: fadeIn 0.3s ease-out forwards;
+        animation-fill-mode: both;
+      }
+
+      .link-card:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: scale(1.02);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .link-card:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #9b87f5;
+      }
+
+      .link-card:nth-child(1) { animation-delay: 0.1s; }
+      .link-card:nth-child(2) { animation-delay: 0.2s; }
+      .link-card:nth-child(3) { animation-delay: 0.3s; }
+      .link-card:nth-child(4) { animation-delay: 0.4s; }
+      .link-card:nth-child(5) { animation-delay: 0.5s; }
+      .link-card:nth-child(6) { animation-delay: 0.6s; }
+      .link-card:nth-child(7) { animation-delay: 0.7s; }
+      .link-card:nth-child(8) { animation-delay: 0.8s; }
+      .link-card:nth-child(9) { animation-delay: 0.9s; }
+      .link-card:nth-child(10) { animation-delay: 1s; }
+
+      .gradient-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(155, 135, 245, 0.2), rgba(219, 39, 119, 0.2));
+        opacity: 0;
+        transition: opacity 0.3s;
+        border-radius: 0.5rem;
+      }
+
+      .link-card:hover .gradient-overlay {
+        opacity: 1;
+      }
+
+      .link-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        position: relative;
+        z-index: 10;
+      }
+
+      .avatar {
+        width: 6rem;
+        height: 6rem;
+        border-radius: 9999px;
+        border: 2px solid #9b87f5;
+        margin-bottom: 1rem;
+        background-color: #6E59A5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        overflow: hidden;
+      }
+
+      .loading-spinner {
+        width: 4rem;
+        height: 4rem;
+        position: relative;
+      }
+
+      .spinner-background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 4px solid rgba(155, 135, 245, 0.3);
+        border-radius: 50%;
+      }
+
+      .spinner-foreground {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 4px solid #9b87f5;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        padding: 1rem;
+        background-color: #2D3748;
+        color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        max-width: 24rem;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        transform: translateY(1rem);
+        opacity: 0;
+        transition: transform 0.3s, opacity 0.3s;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .toast-title {
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+      }
+
+      .toast-description {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.875rem;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 30px;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
         }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
+        to {
+          transform: rotate(360deg);
         }
-        input:checked + .slider {
-            background-color: #4CAF50;
-        }
-        input:checked + .slider:before {
-            transform: translateX(30px);
-        }
+      }
+
+      .icon {
+        width: 1rem;
+        height: 1rem;
+        margin-left: 0.5rem;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+      }
+
+      .link-card:hover .icon {
+        opacity: 1;
+      }
+
+      .admin-link {
+        margin-top: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        color: #9b87f5;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: color 0.3s;
+      }
+
+      .admin-link:hover {
+        color: #a899f8;
+      }
+
+      .admin-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+        margin-right: 0.25rem;
+      }
     </style>
-</head>
-<body class="bg-gray-900 text-white">
-    <div class="p-4">
-        <div class="flex items-center mb-6">
-            <i class="fas fa-bars text-xl"></i>
-            <h1 class="ml-4 text-xl font-bold text-blue-400">Dashboard</h1>
+  </head>
+  <body>
+    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-10 max-w-md mx-auto">
+      <div class="w-full flex flex-col items-center">
+        <!-- Profile Header -->
+        <div class="flex flex-col items-center mb-6">
+          <div class="avatar">
+            <img src="https://i.imgur.com/nTqoKxv.png" alt="Profile" onerror="this.style.display='none'; this.parentNode.textContent='LB'" />
+          </div>
+          <h1 class="text-2xl font-bold text-white">@neextchat</h1>
+          <p class="text-gray-400 mt-1 text-center max-w-sm">
+            .......
+          </p>
         </div>
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold">Painel de Gerenciamento de Divulgação da Amber</h2>
-            <p class="text-gray-400">Monitore, gerencie e otimize suas campanhas de divulgação</p>
+        
+        <!-- Links Container -->
+        <div class="w-full" id="linksContainer">
+          <!-- Loading Spinner (will be shown initially) -->
+          <div id="loadingSpinner" class="flex flex-col items-center justify-center py-10">
+            <div class="loading-spinner">
+              <div class="spinner-background"></div>
+              <div class="spinner-foreground"></div>
+            </div>
+            <p class="mt-4 text-white/80 font-medium" id="loadingMessage">Carregando links...</p>
+          </div>
+          
+          <!-- Links will be injected here -->
+          <div id="links" class="space-y-3" style="display: none;"></div>
+          
+          <!-- Empty state message -->
+          <div id="emptyState" class="text-center py-6 text-gray-400" style="display: none;">
+            Nenhum link disponível no momento.
+          </div>
         </div>
-        <div class="flex space-x-4 mb-6">
-            <button class="flex items-center bg-gray-800 px-4 py-2 rounded-md">
-                <i class="fas fa-sun text-xl"></i>
-            </button>
-            <button class="flex items-center bg-gray-800 px-4 py-2 rounded-md">
-                <i class="fas fa-file-alt text-xl mr-2"></i> Gerar Relatório
-            </button>
-            <button class="flex items-center bg-gray-800 px-4 py-2 rounded-md">
-                <i class="fas fa-sync-alt text-xl"></i>
-            </button>
+        
+        <!-- Footer -->
+        <div class="mt-8 py-4 text-center text-sm text-gray-500">
+          <p>© <span id="currentYear"></span> - Todos os direitos reservados</p>
+          <a 
+            href="https://neetk.onrender.com/login" 
+            class="admin-link"
+          >
+            <svg class="admin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Admin Dashboard
+          </a>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mb-6">
-            <div class="bg-gray-800 p-4 rounded-md">
-                <div class="flex items-center justify-between mb-2">
-                    <span>Total de Cliques</span>
-                    <i class="fas fa-chart-line text-blue-400"></i>
-                </div>
-                <p class="text-2xl font-bold" id="totalCliques">0</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-md">
-                <div class="flex items-center justify-between mb-2">
-                    <span>Total de Links</span>
-                    <i class="fas fa-link text-blue-400"></i>
-                </div>
-                <p class="text-2xl font-bold" id="totalLinks">0</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-md">
-                <div class="flex items-center justify-between mb-2">
-                    <span>Links Ativados</span>
-                    <i class="fas fa-toggle-on text-blue-400"></i>
-                </div>
-                <p class="text-2xl font-bold" id="totalAtivados">0</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-md">
-                <div class="flex items-center justify-between mb-2">
-                    <span>Links Desativados</span>
-                    <i class="fas fa-trash text-blue-400"></i>
-                </div>
-                <p class="text-2xl font-bold" id="totalDesativados">0</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-md">
-                <div class="flex items-center justify-between mb-2">
-                    <span>Taxa de Conversão</span>
-                    <i class="fas fa-chart-line text-blue-400"></i>
-                </div>
-                <p class="text-2xl font-bold" id="taxaConversao">0%</p>
-            </div>
-        </div>
-        <div class="mb-6">
-            <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="abrirModal()">Adicionar Link</button>
-        </div>
-        <div id="myModal" class="modal fixed z-10 inset-0 overflow-y-auto hidden">
-            <div class="modal-content bg-white p-6 rounded-md mx-auto mt-20 max-w-lg">
-                <span class="close text-gray-500 text-2xl cursor-pointer float-right" onclick="fecharModal()">&times;</span>
-                <h2 class="text-xl font-bold mb-4">Adicionar Link</h2>
-                <form id="linkForm">
-                    <label for="nome" class="block mb-2">Nome:</label>
-                    <input type="text" id="nome" name="nome" class="w-full p-2 mb-4 border rounded-md" required>
-                    <label for="urlOriginal" class="block mb-2">URL Original:</label>
-                    <input type="url" id="urlOriginal" name="urlOriginal" class="w-full p-2 mb-4 border rounded-md" required>
-                    <button type="button" class="bg-blue-500 px-4 py-2 rounded-md text-white" onclick="criarLink()">Criar Link</button>
-                </form>
-            </div>
-        </div>
-        <div class="mb-6">
-            <h2 class="text-xl font-bold">Links</h2>
-            <div class="flex space-x-4 mb-4">
-                <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="ativarTodosLinks()">Ativar Todos</button>
-                <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="desativarTodosLinks()">Desativar Todos</button>
-                <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="protocolo()">Protocolo</button>
-            </div>
-            <div class="space-y-4" id="linksContainer">
-                <!-- Links serão preenchidos dinamicamente -->
-            </div>
-        </div>
+      </div>
+    </div>
+
+    <!-- Toast for notifications -->
+    <div id="toast" class="toast">
+      <div id="toastTitle" class="toast-title"></div>
+      <div id="toastDescription" class="toast-description"></div>
     </div>
 
     <script>
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwVDclY83XkeJ2FJue9eAVgrH3BeTKhxt8o61XKpd1IPNsHRzcIiQ4tq1YaTccKsoHIFA/exec';
+      // Set current year in footer
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+      
+      // Toast functionality
+      const toast = document.getElementById('toast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastDescription = document.getElementById('toastDescription');
+      
+      function showToast(title, description, variant = 'default', duration = 3000) {
+        toastTitle.textContent = title;
+        toastDescription.textContent = description;
+        
+        // Handle variant styling
+        toast.style.backgroundColor = variant === 'destructive' ? '#E53E3E' : '#2D3748';
+        
+        // Show toast
+        toast.classList.add('show');
+        
+        // Auto hide after duration
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, duration);
+      }
+      
+      // Load links from API
+      async function carregarLinks() {
+        const apiUrl = "https://script.google.com/macros/s/AKfycbwVDclY83XkeJ2FJue9eAVgrH3BeTKhxt8o61XKpd1IPNsHRzcIiQ4tq1YaTccKsoHIFA/exec?action=listarAtivados";
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const linksContainer = document.getElementById('links');
+        const emptyState = document.getElementById('emptyState');
+        
+        try {
+          const resposta = await fetch(apiUrl);
+          const dados = await resposta.json();
 
-        // Função para abrir o modal
-        function abrirModal() {
-            document.getElementById('myModal').classList.remove('hidden');
-        }
-
-        // Função para fechar o modal
-        function fecharModal() {
-            document.getElementById('myModal').classList.add('hidden');
-        }
-
-        // Função para carregar métricas
-        function carregarMetricas() {
-            fetch(scriptUrl + '?action=estatisticas')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('totalCliques').textContent = data.totalCliques;
-                document.getElementById('totalLinks').textContent = data.totalLinks;
-                document.getElementById('totalAtivados').textContent = data.totalAtivados;
-                document.getElementById('totalDesativados').textContent = data.totalDesativados;
-                document.getElementById('taxaConversao').textContent = data.taxaConversao;
-            })
-            .catch(error => console.error('Erro ao carregar métricas:', error));
-        }
-
-        // Função para criar um link
-        function criarLink() {
-            const nome = document.getElementById('nome').value;
-            const urlOriginal = document.getElementById('urlOriginal').value;
-
-            const formData = new FormData();
-            formData.append('action', 'create');
-            formData.append('nome', nome);
-            formData.append('urlOriginal', urlOriginal);
-
-            fetch(scriptUrl, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Link criado com sucesso: ' + data.link_encurtado);
-                fecharModal();
-                carregarLinks();
-                carregarMetricas();
-            })
-            .catch(error => console.error('Erro:', error));
-        }
-
-        // Função para carregar todos os links
-        function carregarLinks() {
-            fetch(scriptUrl + '?action=getAllLinks')
-            .then(response => response.json())
-            .then(data => {
-                const linksContainer = document.getElementById('linksContainer');
-                linksContainer.innerHTML = '';
-
-                if (data.length === 0) {
-                    linksContainer.innerHTML = '<div class="text-center p-4">Nenhum link encontrado.</div>';
-                    return;
-                }
-
-                data.forEach(link => {
-                    if (link.id && link.nome && link.url_original) {
-                        const linkElement = document.createElement('div');
-                        linkElement.classList.add('bg-gray-800', 'p-4', 'rounded-lg');
-                        linkElement.innerHTML = `
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-lg font-semibold">${link.nome}</h2>
-                                <span class="bg-gray-600 text-gray-300 px-2 py-1 rounded">${link.status === 'ativado' ? 'Ativado' : 'Desativado'}</span>
-                            </div>
-                            <p class="text-gray-400 text-sm mb-2">URL Original:</p>
-                            <p class="text-blue-400 mb-2">${link.url_original}</p>
-                            <div class="flex items-center mb-2">
-                                <i class="fas fa-chart-line text-blue-400 mr-2"></i>
-                                <span class="text-gray-400">${link.cliques} cliques</span>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button class="bg-blue-600 text-white p-2 rounded-full" onclick="editarLink('${link.id}', '${link.nome}', '${link.url_original}')">
-                                    <i class="fas fa-pen"></i>
-                                </button>
-                                <button class="bg-red-600 text-white p-2 rounded-full" onclick="apagarLink('${link.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <button class="bg-green-600 text-white p-2 rounded-full" onclick="alterarStatus('${link.id}', '${link.status === 'ativado' ? 'desativado' : 'ativado'}')">
-                                    <i class="fas fa-toggle-${link.status === 'ativado' ? 'on' : 'off'}"></i>
-                                </button>
-                            </div>
-                        `;
-                        linksContainer.appendChild(linkElement);
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                const linksContainer = document.getElementById('linksContainer');
-                linksContainer.innerHTML = '<div class="text-center p-4">Erro ao carregar os links.</div>';
+          loadingSpinner.style.display = 'none';
+          
+          if (dados.length > 0) {
+            linksContainer.style.display = 'block';
+            
+            dados.forEach((item, index) => {
+              const linkCard = document.createElement('button');
+              linkCard.className = 'link-card';
+              linkCard.style.animationDelay = `${(index + 1) * 0.1}s`;
+              linkCard.onclick = () => redirecionar(item.link_encurtado, item.nome);
+              
+              linkCard.innerHTML = `
+                <div class="gradient-overlay"></div>
+                <span class="link-content">
+                  <span class="font-medium">${item.nome}</span>
+                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </span>
+              `;
+              
+              linksContainer.appendChild(linkCard);
             });
+          } else {
+            emptyState.style.display = 'block';
+          }
+        } catch (erro) {
+          console.error("Erro ao carregar os links:", erro);
+          loadingSpinner.style.display = 'none';
+          showToast(
+            "Erro ao carregar",
+            "Não foi possível carregar os links. Tente novamente.",
+            "destructive"
+          );
         }
+      }
 
-        // Função para editar um link
-        function editarLink(id, nomeAtual, urlAtual) {
-            const novoNome = prompt('Novo nome:', nomeAtual);
-            const novoLink = prompt('Novo URL original:', urlAtual);
-            if (novoNome && novoLink) {
-                const formData = new FormData();
-                formData.append('action', 'edit');
-                formData.append('id', id);
-                formData.append('nome', novoNome);
-                formData.append('urlOriginal', novoLink);
+      async function redirecionar(linkEncurtado, nome) {
+        // Show redirection loading state
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const linksContainer = document.getElementById('links');
+        const loadingMessage = document.getElementById('loadingMessage');
+        
+        loadingMessage.textContent = `Redirecionando para ${nome}...`;
+        linksContainer.style.display = 'none';
+        loadingSpinner.style.display = 'flex';
+        
+        showToast(
+          "Redirecionando...",
+          `Aguarde enquanto você é redirecionado para ${nome}`,
+          "default",
+          3000
+        );
+        
+        try {
+          const resposta = await fetch(linkEncurtado);
+          const dados = await resposta.json();
 
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Link editado com sucesso');
-                        carregarLinks();
-                        carregarMetricas();
-                    } else {
-                        alert('Erro ao editar o link: ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Erro:', error));
-            }
+          if (dados.link_original) {
+            setTimeout(() => {
+              window.location.href = dados.link_original;
+            }, 1000);
+          } else {
+            showToast(
+              "Link inválido",
+              "Não foi possível encontrar o destino deste link.",
+              "destructive"
+            );
+            linksContainer.style.display = 'block';
+            loadingSpinner.style.display = 'none';
+          }
+        } catch (erro) {
+          console.error("Erro ao redirecionar:", erro);
+          showToast(
+            "Erro ao acessar",
+            "Não foi possível acessar este link. Tente novamente.",
+            "destructive"
+          );
+          linksContainer.style.display = 'block';
+          loadingSpinner.style.display = 'none';
         }
+      }
 
-        // Função para excluir um link
-        function apagarLink(id) {
-            if (confirm('Tem certeza que deseja excluir este link?')) {
-                const formData = new FormData();
-                formData.append('action', 'delete');
-                formData.append('id', id);
-
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Link excluído com sucesso');
-                        carregarLinks();
-                        carregarMetricas();
-                    } else {
-                        alert('Erro ao excluir o link: ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Erro:', error));
-            }
-        }
-
-        // Função para alterar o status de um link
-        function alterarStatus(id, novoStatus) {
-            const formData = new FormData();
-            formData.append('action', 'status');
-            formData.append('id', id);
-            formData.append('status', novoStatus);
-
-            fetch(scriptUrl, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Status alterado com sucesso');
-                    carregarLinks();
-                    carregarMetricas();
-                } else {
-                    alert('Erro ao alterar o status: ' + data.error);
-                }
-            })
-            .catch(error => console.error('Erro:', error));
-        }
-
-        // Função para desativar todos os links (Protocolo)
-        function protocolo() {
-            if (confirm('Tem certeza que deseja desativar todos os links?')) {
-                const formData = new FormData();
-                formData.append('action', 'desativarTodos');
-
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Todos os links foram desativados');
-                        carregarLinks();
-                        carregarMetricas();
-                    } else {
-                        alert('Erro ao desativar todos os links: ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Erro:', error));
-            }
-        }
-
-        // Função para ativar todos os links
-        function ativarTodosLinks() {
-            if (confirm('Tem certeza que deseja ativar todos os links?')) {
-                const formData = new FormData();
-                formData.append('action', 'ativarTodos');
-
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Todos os links foram ativados');
-                        carregarLinks();
-                        carregarMetricas();
-                    } else {
-                        alert('Erro ao ativar todos os links: ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Erro:', error));
-            }
-        }
-
-        // Função para desativar todos os links
-        function desativarTodosLinks() {
-            if (confirm('Tem certeza que deseja desativar todos os links?')) {
-                const formData = new FormData();
-                formData.append('action', 'desativarTodos');
-
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Todos os links foram desativados');
-                        carregarLinks();
-                        carregarMetricas();
-                    } else {
-                        alert('Erro ao desativar todos os links: ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Erro:', error));
-            }
-        }
-
-        // Carrega os links e métricas ao carregar a página
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarLinks();
-            carregarMetricas();
-        });
+      // Load links when page loads
+      window.onload = carregarLinks;
     </script>
-</body>
+  </body>
 </html>
