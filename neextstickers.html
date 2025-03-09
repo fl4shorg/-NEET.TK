@@ -1,0 +1,396 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de divulgação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="p-4">
+        <div class="flex items-center mb-6">
+            <i class="fas fa-bars text-xl"></i>
+            <h1 class="ml-4 text-xl font-bold text-blue-400">Dashboard</h1>
+        </div>
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold">Painel de Gerenciamento de Divulgação da Amber</h2>
+            <p class="text-gray-400">Monitore, gerencie e otimize suas campanhas de divulgação</p>
+        </div>
+        <div class="flex space-x-4 mb-6">
+            <button class="flex items-center bg-gray-800 px-4 py-2 rounded-md">
+                <i class="fas fa-sun text-xl"></i>
+            </button>
+            <button class="flex items-center bg-gray-800 px-4 py-2 rounded-md">
+                <i class="fas fa-file-alt text-xl mr-2"></i> Gerar Relatório
+            </button>
+            <button class="flex items-center bg-gray-800 px-4 py-2 rounded-md">
+                <i class="fas fa-sync-alt text-xl"></i>
+            </button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mb-6">
+            <div class="bg-gray-800 p-4 rounded-md">
+                <div class="flex items-center justify-between mb-2">
+                    <span>Total de Cliques</span>
+                    <i class="fas fa-chart-line text-blue-400"></i>
+                </div>
+                <p class="text-2xl font-bold" id="totalCliques">0</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-md">
+                <div class="flex items-center justify-between mb-2">
+                    <span>Total de Links</span>
+                    <i class="fas fa-link text-blue-400"></i>
+                </div>
+                <p class="text-2xl font-bold" id="totalLinks">0</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-md">
+                <div class="flex items-center justify-between mb-2">
+                    <span>Links Ativados</span>
+                    <i class="fas fa-toggle-on text-blue-400"></i>
+                </div>
+                <p class="text-2xl font-bold" id="totalAtivados">0</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-md">
+                <div class="flex items-center justify-between mb-2">
+                    <span>Links Desativados</span>
+                    <i class="fas fa-trash text-blue-400"></i>
+                </div>
+                <p class="text-2xl font-bold" id="totalDesativados">0</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-md">
+                <div class="flex items-center justify-between mb-2">
+                    <span>Taxa de Conversão</span>
+                    <i class="fas fa-chart-line text-blue-400"></i>
+                </div>
+                <p class="text-2xl font-bold" id="taxaConversao">0%</p>
+            </div>
+        </div>
+        <div class="mb-6">
+            <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="abrirModal()">Adicionar Link</button>
+        </div>
+        <div id="myModal" class="modal fixed z-10 inset-0 overflow-y-auto hidden">
+            <div class="modal-content bg-white p-6 rounded-md mx-auto mt-20 max-w-lg">
+                <span class="close text-gray-500 text-2xl cursor-pointer float-right" onclick="fecharModal()">&times;</span>
+                <h2 class="text-xl font-bold mb-4">Adicionar Link</h2>
+                <form id="linkForm">
+                    <label for="nome" class="block mb-2">Nome:</label>
+                    <input type="text" id="nome" name="nome" class="w-full p-2 mb-4 border rounded-md" required>
+                    <label for="urlOriginal" class="block mb-2">URL Original:</label>
+                    <input type="url" id="urlOriginal" name="urlOriginal" class="w-full p-2 mb-4 border rounded-md" required>
+                    <button type="button" class="bg-blue-500 px-4 py-2 rounded-md text-white" onclick="criarLink()">Criar Link</button>
+                </form>
+            </div>
+        </div>
+        <div class="mb-6">
+            <h2 class="text-xl font-bold">Links</h2>
+            <div class="flex space-x-4 mb-4">
+                <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="ativarTodosLinks()">Ativar Todos</button>
+                <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="desativarTodosLinks()">Desativar Todos</button>
+                <button class="bg-blue-500 px-4 py-2 rounded-md" onclick="protocolo()">Protocolo</button>
+            </div>
+            <div class="space-y-4" id="linksContainer">
+                <!-- Links serão preenchidos dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwVDclY83XkeJ2FJue9eAVgrH3BeTKhxt8o61XKpd1IPNsHRzcIiQ4tq1YaTccKsoHIFA/exec';
+
+        // Função para abrir o modal
+        function abrirModal() {
+            document.getElementById('myModal').classList.remove('hidden');
+        }
+
+        // Função para fechar o modal
+        function fecharModal() {
+            document.getElementById('myModal').classList.add('hidden');
+        }
+
+        // Função para carregar métricas
+        function carregarMetricas() {
+            fetch(scriptUrl + '?action=estatisticas')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalCliques').textContent = data.totalCliques;
+                document.getElementById('totalLinks').textContent = data.totalLinks;
+                document.getElementById('totalAtivados').textContent = data.totalAtivados;
+                document.getElementById('totalDesativados').textContent = data.totalDesativados;
+                document.getElementById('taxaConversao').textContent = data.taxaConversao;
+            })
+            .catch(error => console.error('Erro ao carregar métricas:', error));
+        }
+
+        // Função para criar um link
+        function criarLink() {
+            const nome = document.getElementById('nome').value;
+            const urlOriginal = document.getElementById('urlOriginal').value;
+
+            const formData = new FormData();
+            formData.append('action', 'create');
+            formData.append('nome', nome);
+            formData.append('urlOriginal', urlOriginal);
+
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Link criado com sucesso: ' + data.link_encurtado);
+                fecharModal();
+                carregarLinks();
+                carregarMetricas();
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+
+        // Função para carregar todos os links
+        function carregarLinks() {
+            fetch(scriptUrl + '?action=getAllLinks')
+            .then(response => response.json())
+            .then(data => {
+                const linksContainer = document.getElementById('linksContainer');
+                linksContainer.innerHTML = '';
+
+                if (data.length === 0) {
+                    linksContainer.innerHTML = '<div class="text-center p-4">Nenhum link encontrado.</div>';
+                    return;
+                }
+
+                data.forEach(link => {
+                    if (link.id && link.nome && link.url_original) {
+                        const linkElement = document.createElement('div');
+                        linkElement.classList.add('bg-gray-800', 'p-4', 'rounded-lg');
+                        linkElement.innerHTML = `
+                            <div class="flex justify-between items-center mb-2">
+                                <h2 class="text-lg font-semibold">${link.nome}</h2>
+                                <span class="bg-gray-600 text-gray-300 px-2 py-1 rounded">${link.status === 'ativado' ? 'Ativado' : 'Desativado'}</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-2">URL Original:</p>
+                            <p class="text-blue-400 mb-2">${link.url_original}</p>
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-chart-line text-blue-400 mr-2"></i>
+                                <span class="text-gray-400">${link.cliques} cliques</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="bg-blue-600 text-white p-2 rounded-full" onclick="editarLink('${link.id}', '${link.nome}', '${link.url_original}')">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button class="bg-red-600 text-white p-2 rounded-full" onclick="apagarLink('${link.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="bg-green-600 text-white p-2 rounded-full" onclick="alterarStatus('${link.id}', '${link.status === 'ativado' ? 'desativado' : 'ativado'}')">
+                                    <i class="fas fa-toggle-${link.status === 'ativado' ? 'on' : 'off'}"></i>
+                                </button>
+                            </div>
+                        `;
+                        linksContainer.appendChild(linkElement);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                const linksContainer = document.getElementById('linksContainer');
+                linksContainer.innerHTML = '<div class="text-center p-4">Erro ao carregar os links.</div>';
+            });
+        }
+
+        // Função para editar um link
+        function editarLink(id, nomeAtual, urlAtual) {
+            const novoNome = prompt('Novo nome:', nomeAtual);
+            const novoLink = prompt('Novo URL original:', urlAtual);
+            if (novoNome && novoLink) {
+                const formData = new FormData();
+                formData.append('action', 'edit');
+                formData.append('id', id);
+                formData.append('nome', novoNome);
+                formData.append('urlOriginal', novoLink);
+
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Link editado com sucesso');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        alert('Erro ao editar o link: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            }
+        }
+
+        // Função para excluir um link
+        function apagarLink(id) {
+            if (confirm('Tem certeza que deseja excluir este link?')) {
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('id', id);
+
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Link excluído com sucesso');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        alert('Erro ao excluir o link: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            }
+        }
+
+        // Função para alterar o status de um link
+        function alterarStatus(id, novoStatus) {
+            const formData = new FormData();
+            formData.append('action', 'status');
+            formData.append('id', id);
+            formData.append('status', novoStatus);
+
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Status alterado com sucesso');
+                    carregarLinks();
+                    carregarMetricas();
+                } else {
+                    alert('Erro ao alterar o status: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+
+        // Função para desativar todos os links (Protocolo)
+        function protocolo() {
+            if (confirm('Tem certeza que deseja desativar todos os links?')) {
+                const formData = new FormData();
+                formData.append('action', 'desativarTodos');
+
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Todos os links foram desativados');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        alert('Erro ao desativar todos os links: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            }
+        }
+
+        // Função para ativar todos os links
+        function ativarTodosLinks() {
+            if (confirm('Tem certeza que deseja ativar todos os links?')) {
+                const formData = new FormData();
+                formData.append('action', 'ativarTodos');
+
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Todos os links foram ativados');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        alert('Erro ao ativar todos os links: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            }
+        }
+
+        // Função para desativar todos os links
+        function desativarTodosLinks() {
+            if (confirm('Tem certeza que deseja desativar todos os links?')) {
+                const formData = new FormData();
+                formData.append('action', 'desativarTodos');
+
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Todos os links foram desativados');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        alert('Erro ao desativar todos os links: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            }
+        }
+
+        // Carrega os links e métricas ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarLinks();
+            carregarMetricas();
+        });
+    </script>
+</body>
+</html>
