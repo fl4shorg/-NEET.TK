@@ -1,900 +1,1483 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Link Manager Dashboard</title>
-  <meta name="description" content="Modern Visual Link Manager" />
-  <meta name="author" content="Lovable" />
-  <meta property="og:image" content="/og-image.png" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --background: 0 0% 100%;
-      --foreground: 222.2 84% 4.9%;
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
-      --primary: 221.2 83.2% 53.3%;
-      --primary-foreground: 210 40% 98%;
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 221.2 83.2% 53.3%;
-      --radius: 0.5rem;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gerenciamento Premium 3D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <style>
+        /* Base Styles */
+        :root {
+            /* Light mode variables */
+            --background: 0 0% 100%;
+            --foreground: 224 71% 4%;
+            --card: 0 0% 100%;
+            --card-foreground: 224 71% 4%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 224 71% 4%;
+            --primary: 210 100% 50%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 220 14% 96%;
+            --secondary-foreground: 224 71% 4%;
+            --muted: 220 14% 96%;
+            --muted-foreground: 220 8% 56%;
+            --accent: 210 100% 50%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 84% 60%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 220 13% 91%;
+            --input: 220 13% 91%;
+            --ring: 224 71% 4%;
+            --radius: 0.75rem;
+        }
 
-    .dark {
-      --background: 222.2 84% 4.9%;
-      --foreground: 210 40% 98%;
-      --card: 222.2 84% 4.9%;
-      --card-foreground: 210 40% 98%;
-      --popover: 222.2 84% 4.9%;
-      --popover-foreground: 210 40% 98%;
-      --primary: 217.2 91.2% 59.8%;
-      --primary-foreground: 222.2 47.4% 11.2%;
-      --secondary: 217.2 32.6% 17.5%;
-      --secondary-foreground: 210 40% 98%;
-      --muted: 217.2 32.6% 17.5%;
-      --muted-foreground: 215 20.2% 65.1%;
-      --accent: 217.2 32.6% 17.5%;
-      --accent-foreground: 210 40% 98%;
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
-      --border: 217.2 32.6% 17.5%;
-      --input: 217.2 32.6% 17.5%;
-      --ring: 224.3 76.3% 48%;
-    }
-    
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: hsl(var(--background));
-      color: hsl(var(--foreground));
-    }
-    
-    .toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 12px 20px;
-      border-radius: 4px;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .toast.success {
-      background-color: hsl(var(--primary));
-      color: hsl(var(--primary-foreground));
-    }
-    
-    .toast.error {
-      background-color: hsl(var(--destructive));
-      color: hsl(var(--destructive-foreground));
-    }
-    
-    .toast.visible {
-      opacity: 1;
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .modal-content {
-      background-color: hsl(var(--background));
-      color: hsl(var(--foreground));
-      border-radius: var(--radius);
-      padding: 20px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    input, select, textarea {
-      background-color: hsl(var(--background));
-      color: hsl(var(--foreground));
-      border: 1px solid hsl(var(--border));
-      border-radius: var(--radius);
-      padding: 8px 12px;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    
-    button {
-      cursor: pointer;
-      border-radius: var(--radius);
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-    }
-    
-    button.primary {
-      background-color: hsl(var(--primary));
-      color: hsl(var(--primary-foreground));
-      border: none;
-      padding: 8px 16px;
-    }
-    
-    button.primary:hover {
-      opacity: 0.9;
-    }
-    
-    button.secondary {
-      background-color: hsl(var(--secondary));
-      color: hsl(var(--secondary-foreground));
-      border: none;
-      padding: 8px 16px;
-    }
-    
-    button.secondary:hover {
-      opacity: 0.9;
-    }
-    
-    button.destructive {
-      background-color: hsl(var(--destructive));
-      color: hsl(var(--destructive-foreground));
-      border: none;
-      padding: 8px 16px;
-    }
-    
-    button.destructive:hover {
-      opacity: 0.9;
-    }
-    
-    .card {
-      background-color: hsl(var(--card));
-      color: hsl(var(--card-foreground));
-      border-radius: var(--radius);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    
-    .toggle {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 24px;
-    }
-    
-    .toggle input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: hsl(var(--muted));
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-    
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-    
-    input:checked + .slider {
-      background-color: hsl(var(--primary));
-    }
-    
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-  </style>
+        .dark {
+            /* Dark mode variables */
+            --background: 224 71% 4%;
+            --foreground: 213 31% 91%;
+            --card: 224 71% 8%;
+            --card-foreground: 213 31% 91%;
+            --popover: 224 71% 4%;
+            --popover-foreground: 215 20% 65%;
+            --primary: 210 100% 50%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 215 27% 16%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 215 27% 16%;
+            --muted-foreground: 215 20% 65%;
+            --accent: 210 100% 50%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62% 45%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 215 28% 17%;
+            --input: 215 27% 18%;
+            --ring: 224 76% 48%;
+            --radius: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 3D Effects and Animations */
+        .card-3d {
+            position: relative;
+            transition: all 0.3s ease-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-5px) scale(1.01);
+        }
+
+        .card-3d::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+            border-radius: 0.75rem;
+            z-index: -1;
+        }
+
+        .button-3d {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15), 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-3d:active {
+            transform: translateY(1px);
+        }
+
+        .button-3d::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .button-3d:hover::before {
+            opacity: 1;
+        }
+
+        /* Glass Effects */
+        .glass-card {
+            background-color: rgba(var(--card), 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark .glass-card {
+            background-color: rgba(36, 39, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .animate-fade-in {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .animate-delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .animate-delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .animate-delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .animate-delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+        }
+
+        .modal-content {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: hsla(215, 27%, 16%, 1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 26px;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #fff;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background-color: hsla(210, 100%, 50%, 0.8);
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Light mode switch */
+        html:not(.dark) .slider {
+            background-color: #e2e8f0;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Custom Toast */
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10B981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #EF4444;
+        }
+
+        .toast-icon {
+            margin-right: 0.75rem;
+        }
+
+        .toast-close {
+            margin-left: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .button-3d {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .card-3d {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        // Configure Tailwind
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        card: 'hsl(var(--card))',
+                        'card-foreground': 'hsl(var(--card-foreground))',
+                        primary: 'hsl(var(--primary))',
+                        'primary-foreground': 'hsl(var(--primary-foreground))',
+                        secondary: 'hsl(var(--secondary))',
+                        'secondary-foreground': 'hsl(var(--secondary-foreground))',
+                        muted: 'hsl(var(--muted))',
+                        'muted-foreground': 'hsl(var(--muted-foreground))',
+                        accent: 'hsl(var(--accent))',
+                        'accent-foreground': 'hsl(var(--accent-foreground))',
+                        destructive: 'hsl(var(--destructive))',
+                        'destructive-foreground': 'hsl(var(--destructive-foreground))',
+                        border: 'hsl(var(--border))',
+                        input: 'hsl(var(--input))',
+                        ring: 'hsl(var(--ring))',
+                    },
+                    boxShadow: {
+                        '3d': '0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 5px 15px -5px rgba(0, 0, 0, 0.2)',
+                        'neo': '8px 8px 15px rgba(0, 0, 0, 0.2), -8px -8px 15px rgba(255, 255, 255, 0.05)',
+                        'inner-neo': 'inset 4px 4px 8px rgba(0, 0, 0, 0.25), inset -4px -4px 8px rgba(255, 255, 255, 0.05)',
+                        'button': '0 5px 15px rgba(0, 0, 0, 0.15), 0 3px 8px rgba(0, 0, 0, 0.1)'
+                    },
+                    borderRadius: {
+                        'lg': 'var(--radius)',
+                        'md': 'calc(var(--radius) - 2px)',
+                        'sm': 'calc(var(--radius) - 4px)'
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body>
-  <div id="app" class="container mx-auto p-4"></div>
-
-  <div id="toast" class="toast"></div>
-  
-  <!-- Add Link Modal -->
-  <div id="addLinkModal" class="modal">
-    <div class="modal-content">
-      <h2 class="text-xl font-bold mb-4">Add Link</h2>
-      <form id="addLinkForm">
-        <div class="mb-4">
-          <label class="block mb-2">Title</label>
-          <input type="text" id="addTitle" required>
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2">URL</label>
-          <input type="url" id="addUrl" required>
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2">Category</label>
-          <select id="addCategory">
-            <option value="social">Social</option>
-            <option value="business">Business</option>
-            <option value="personal">Personal</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2">Description</label>
-          <textarea id="addDescription" rows="3"></textarea>
-        </div>
-        <div class="flex justify-end gap-2">
-          <button type="button" class="secondary" onclick="closeModal('addLinkModal')">Cancel</button>
-          <button type="submit" class="primary">Add</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  
-  <!-- Edit Link Modal -->
-  <div id="editLinkModal" class="modal">
-    <div class="modal-content">
-      <h2 class="text-xl font-bold mb-4">Edit Link</h2>
-      <form id="editLinkForm">
-        <input type="hidden" id="editId">
-        <div class="mb-4">
-          <label class="block mb-2">Title</label>
-          <input type="text" id="editTitle" required>
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2">URL</label>
-          <input type="url" id="editUrl" required>
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2">Category</label>
-          <select id="editCategory">
-            <option value="social">Social</option>
-            <option value="business">Business</option>
-            <option value="personal">Personal</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block mb-2">Description</label>
-          <textarea id="editDescription" rows="3"></textarea>
-        </div>
-        <div class="flex justify-end gap-2">
-          <button type="button" class="secondary" onclick="closeModal('editLinkModal')">Cancel</button>
-          <button type="submit" class="primary">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  
-  <!-- Confirm Dialog -->
-  <div id="confirmDialog" class="modal">
-    <div class="modal-content">
-      <h2 class="text-xl font-bold mb-4" id="confirmTitle">Confirm</h2>
-      <p id="confirmMessage" class="mb-4">Are you sure you want to proceed?</p>
-      <div class="flex justify-end gap-2">
-        <button class="secondary" onclick="closeModal('confirmDialog')">Cancel</button>
-        <button id="confirmButton" class="destructive">Confirm</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Report Modal -->
-  <div id="reportModal" class="modal">
-    <div class="modal-content">
-      <h2 class="text-xl font-bold mb-4">Link Report</h2>
-      <div id="reportContent" class="mb-4 p-4 border rounded">
-        <h3 class="text-lg font-bold mb-2">Link Statistics</h3>
-        <div id="reportStats" class="mb-4"></div>
-        <h3 class="text-lg font-bold mb-2">Active Links</h3>
-        <div id="reportLinks" class="mb-4"></div>
-      </div>
-      <div class="flex justify-end gap-2">
-        <button class="secondary" onclick="closeModal('reportModal')">Close</button>
-        <button class="primary" onclick="printReport()">Print</button>
-        <button class="primary" onclick="downloadReportPDF()">Download PDF</button>
-        <button class="primary" onclick="shareReport()">Share</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // State
-    const state = {
-      links: [],
-      statistics: {
-        totalLinks: 0,
-        activeLinks: 0,
-        totalClicks: 0,
-        categories: {}
-      },
-      theme: localStorage.getItem('theme') || 'light'
-    };
-
-    // Set initial theme
-    if (state.theme === 'dark' || (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme'))) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    // API Functions
-    async function getStatistics() {
-      try {
-        // In a real app, this would be an API call
-        // For demo, we'll calculate based on current links
-        state.statistics.totalLinks = state.links.length;
-        state.statistics.activeLinks = state.links.filter(link => link.active).length;
-        state.statistics.totalClicks = state.links.reduce((sum, link) => sum + (link.clicks || 0), 0);
-        
-        // Calculate category statistics
-        const categories = {};
-        state.links.forEach(link => {
-          if (!categories[link.category]) {
-            categories[link.category] = 0;
-          }
-          categories[link.category]++;
-        });
-        state.statistics.categories = categories;
-        
-        return state.statistics;
-      } catch (error) {
-        console.error('Failed to fetch statistics:', error);
-        showToast('Failed to fetch statistics', 'error');
-        return state.statistics;
-      }
-    }
-
-    async function getLinks() {
-      try {
-        // In a real app, this would be an API call
-        // For demo, we'll use localStorage
-        const storedLinks = localStorage.getItem('links');
-        if (storedLinks) {
-          state.links = JSON.parse(storedLinks);
-        }
-        return state.links;
-      } catch (error) {
-        console.error('Failed to fetch links:', error);
-        showToast('Failed to fetch links', 'error');
-        return [];
-      }
-    }
-
-    async function createLink(link) {
-      try {
-        // In a real app, this would be an API call
-        const newLink = {
-          id: Date.now().toString(),
-          ...link,
-          active: true,
-          created: new Date().toISOString(),
-          clicks: 0
-        };
-        state.links.push(newLink);
-        localStorage.setItem('links', JSON.stringify(state.links));
-        showToast('Link added successfully', 'success');
-        return newLink;
-      } catch (error) {
-        console.error('Failed to create link:', error);
-        showToast('Failed to create link', 'error');
-        throw error;
-      }
-    }
-
-    async function updateLink(id, linkData) {
-      try {
-        // In a real app, this would be an API call
-        const index = state.links.findIndex(link => link.id === id);
-        if (index !== -1) {
-          state.links[index] = { ...state.links[index], ...linkData };
-          localStorage.setItem('links', JSON.stringify(state.links));
-          showToast('Link updated successfully', 'success');
-          return state.links[index];
-        }
-        throw new Error('Link not found');
-      } catch (error) {
-        console.error('Failed to update link:', error);
-        showToast('Failed to update link', 'error');
-        throw error;
-      }
-    }
-
-    async function deleteLink(id) {
-      try {
-        // In a real app, this would be an API call
-        const index = state.links.findIndex(link => link.id === id);
-        if (index !== -1) {
-          state.links.splice(index, 1);
-          localStorage.setItem('links', JSON.stringify(state.links));
-          showToast('Link deleted successfully', 'success');
-          return true;
-        }
-        throw new Error('Link not found');
-      } catch (error) {
-        console.error('Failed to delete link:', error);
-        showToast('Failed to delete link', 'error');
-        throw error;
-      }
-    }
-
-    async function updateLinkStatus(id, active) {
-      try {
-        // In a real app, this would be an API call
-        const index = state.links.findIndex(link => link.id === id);
-        if (index !== -1) {
-          state.links[index].active = active;
-          localStorage.setItem('links', JSON.stringify(state.links));
-          showToast(`Link ${active ? 'activated' : 'deactivated'} successfully`, 'success');
-          return state.links[index];
-        }
-        throw new Error('Link not found');
-      } catch (error) {
-        console.error('Failed to update link status:', error);
-        showToast('Failed to update link status', 'error');
-        throw error;
-      }
-    }
-
-    async function activateAllLinks() {
-      try {
-        // In a real app, this would be an API call
-        state.links.forEach(link => {
-          link.active = true;
-        });
-        localStorage.setItem('links', JSON.stringify(state.links));
-        showToast('All links activated successfully', 'success');
-        return state.links;
-      } catch (error) {
-        console.error('Failed to activate all links:', error);
-        showToast('Failed to activate all links', 'error');
-        throw error;
-      }
-    }
-
-    async function deactivateAllLinks() {
-      try {
-        // In a real app, this would be an API call
-        state.links.forEach(link => {
-          link.active = false;
-        });
-        localStorage.setItem('links', JSON.stringify(state.links));
-        showToast('All links deactivated successfully', 'success');
-        return state.links;
-      } catch (error) {
-        console.error('Failed to deactivate all links:', error);
-        showToast('Failed to deactivate all links', 'error');
-        throw error;
-      }
-    }
-
-    // Icon Components
-    const icons = {
-      edit: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`,
-      delete: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`,
-      copy: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`,
-      moon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
-      sun: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
-      link: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`,
-      report: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
-      plus: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`,
-      click: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path><circle cx="12" cy="12" r="3"></circle></svg>`,
-      category: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM21 9H3M21 15H3M12 3v18"></path></svg>`,
-      social: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>`,
-      business: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`,
-      personal: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
-      other: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>`,
-      open: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`
-    };
-
-    // Utility Functions
-    function showToast(message, type = 'success') {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = `toast ${type} visible`;
-      setTimeout(() => {
-        toast.className = 'toast';
-      }, 3000);
-    }
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text)
-        .then(() => {
-          showToast('Copied to clipboard!', 'success');
-        })
-        .catch(err => {
-          console.error('Failed to copy text: ', err);
-          showToast('Failed to copy to clipboard', 'error');
-        });
-    }
-
-    // Data Functions
-    async function refreshData() {
-      await getLinks();
-      await getStatistics();
-      renderApp();
-    }
-
-    async function addLink(event) {
-      event.preventDefault();
-      const title = document.getElementById('addTitle').value;
-      const url = document.getElementById('addUrl').value;
-      const category = document.getElementById('addCategory').value;
-      const description = document.getElementById('addDescription').value;
-      
-      await createLink({ title, url, category, description });
-      closeModal('addLinkModal');
-      refreshData();
-    }
-
-    async function editLink(event) {
-      event.preventDefault();
-      const id = document.getElementById('editId').value;
-      const title = document.getElementById('editTitle').value;
-      const url = document.getElementById('editUrl').value;
-      const category = document.getElementById('editCategory').value;
-      const description = document.getElementById('editDescription').value;
-      
-      await updateLink(id, { title, url, category, description });
-      closeModal('editLinkModal');
-      refreshData();
-    }
-
-    async function removeLink(id) {
-      showConfirmDialog(
-        'Delete Link',
-        'Are you sure you want to delete this link?',
-        async () => {
-          await deleteLink(id);
-          refreshData();
-        }
-      );
-    }
-
-    async function toggleLinkStatus(id, currentStatus) {
-      await updateLinkStatus(id, !currentStatus);
-      refreshData();
-    }
-
-    async function activateAll() {
-      showConfirmDialog(
-        'Activate All Links',
-        'Are you sure you want to activate all links?',
-        async () => {
-          await activateAllLinks();
-          refreshData();
-        }
-      );
-    }
-
-    async function deactivateAll() {
-      showConfirmDialog(
-        'Deactivate All Links',
-        'Are you sure you want to deactivate all links?',
-        async () => {
-          await deactivateAllLinks();
-          refreshData();
-        }
-      );
-    }
-
-    // UI Functions
-    function openModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.style.display = 'none';
-    }
-
-    function showAddLinkModal() {
-      document.getElementById('addLinkForm').reset();
-      openModal('addLinkModal');
-    }
-
-    function showEditLinkModal(link) {
-      document.getElementById('editId').value = link.id;
-      document.getElementById('editTitle').value = link.title;
-      document.getElementById('editUrl').value = link.url;
-      document.getElementById('editCategory').value = link.category;
-      document.getElementById('editDescription').value = link.description || '';
-      openModal('editLinkModal');
-    }
-
-    function showConfirmDialog(title, message, onConfirm) {
-      document.getElementById('confirmTitle').textContent = title;
-      document.getElementById('confirmMessage').textContent = message;
-      
-      const confirmButton = document.getElementById('confirmButton');
-      // Remove previous event listeners
-      const newConfirmButton = confirmButton.cloneNode(true);
-      confirmButton.parentNode.replaceChild(newConfirmButton, confirmButton);
-      
-      newConfirmButton.addEventListener('click', () => {
-        onConfirm();
-        closeModal('confirmDialog');
-      });
-      
-      openModal('confirmDialog');
-    }
-
-    function toggleTheme() {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        state.theme = 'light';
-      } else {
-        document.documentElement.classList.add('dark');
-        state.theme = 'dark';
-      }
-      localStorage.setItem('theme', state.theme);
-      renderApp();
-    }
-
-    // Report functions
-    function showReportModal() {
-      const reportStats = document.getElementById('reportStats');
-      const reportLinks = document.getElementById('reportLinks');
-      
-      // Generate statistics summary
-      reportStats.innerHTML = `
-        <p><strong>Total Links:</strong> ${state.statistics.totalLinks}</p>
-        <p><strong>Active Links:</strong> ${state.statistics.activeLinks}</p>
-        <p><strong>Total Clicks:</strong> ${state.statistics.totalClicks}</p>
-        <p><strong>Categories:</strong></p>
-        <ul>
-          ${Object.entries(state.statistics.categories).map(([category, count]) => 
-            `<li>${category}: ${count}</li>`
-          ).join('')}
-        </ul>
-      `;
-      
-      // Generate links list
-      reportLinks.innerHTML = state.links
-        .filter(link => link.active)
-        .map(link => `
-          <div class="mb-2">
-            <p><strong>${link.title}</strong> (${link.category})</p>
-            <p><small>${link.url}</small></p>
-            <p>Clicks: ${link.clicks || 0}</p>
-          </div>
-        `).join('') || '<p>No active links found.</p>';
-      
-      openModal('reportModal');
-    }
-
-    function printReport() {
-      const reportContent = document.getElementById('reportContent').innerHTML;
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Link Report</title>
-            <style>
-              body { font-family: Arial, sans-serif; padding: 20px; }
-              h1 { text-align: center; }
-            </style>
-          </head>
-          <body>
-            <h1>Link Report</h1>
-            ${reportContent}
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }
-
-    async function downloadReportPDF() {
-      try {
-        const { jsPDF } = window.jspdf;
-        const reportElement = document.getElementById('reportContent');
-        
-        html2canvas(reportElement).then(canvas => {
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-          });
-          const imgProps = pdf.getImageProperties(imgData);
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-          pdf.save('link-report.pdf');
-        });
-      } catch (error) {
-        console.error('Failed to generate PDF:', error);
-        showToast('Failed to generate PDF', 'error');
-      }
-    }
-
-    function shareReport() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Link Manager Report',
-          text: `Total Links: ${state.statistics.totalLinks}, Active Links: ${state.statistics.activeLinks}, Total Clicks: ${state.statistics.totalClicks}`,
-          url: window.location.href,
-        })
-        .then(() => showToast('Report shared successfully', 'success'))
-        .catch((error) => {
-          console.error('Error sharing:', error);
-          showToast('Failed to share report', 'error');
-        });
-      } else {
-        copyToClipboard(`Link Manager Report:
-          Total Links: ${state.statistics.totalLinks}
-          Active Links: ${state.statistics.activeLinks}
-          Total Clicks: ${state.statistics.totalClicks}`);
-      }
-    }
-
-    // Rendering Functions
-    function renderStatistics() {
-      return `
-        <div class="mb-6">
-          <h2 class="text-2xl font-bold mb-4">Statistics</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            ${renderStatCard('Total Links', state.statistics.totalLinks, 'link')}
-            ${renderStatCard('Active Links', state.statistics.activeLinks, 'link')}
-            ${renderStatCard('Total Clicks', state.statistics.totalClicks, 'click')}
-            ${renderStatCard('Categories', Object.keys(state.statistics.categories).length, 'category')}
-          </div>
-        </div>
-      `;
-    }
-
-    function renderStatCard(title, value, iconKey) {
-      return `
-        <div class="card flex items-center">
-          <div class="mr-4 p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
-            ${icons[iconKey]}
-          </div>
-          <div>
-            <h3 class="font-medium">${title}</h3>
-            <p class="text-2xl font-bold">${value}</p>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderLinksList() {
-      return `
-        <div>
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold">Links</h2>
-            <div class="flex gap-2">
-              <button class="primary flex items-center" onclick="showAddLinkModal()">
-                ${icons.plus} <span class="ml-1">Add Link</span>
-              </button>
-              <button class="secondary flex items-center" onclick="showReportModal()">
-                ${icons.report} <span class="ml-1">Report</span>
-              </button>
-            </div>
-          </div>
-          
-          <div class="mb-4">
-            <button class="secondary mr-2" onclick="activateAll()">Activate All</button>
-            <button class="secondary" onclick="deactivateAll()">Deactivate All</button>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            ${state.links.length > 0 
-              ? state.links.map(link => renderLinkCard(link)).join('') 
-              : '<p class="col-span-3 text-center py-8">No links found. Add your first link!</p>'}
-          </div>
-        </div>
-      `;
-    }
-
-    function renderLinkCard(link) {
-      const categoryIcon = icons[link.category] || icons.other;
-      
-      return `
-        <div class="card">
-          <div class="flex justify-between items-start">
-            <h3 class="font-bold text-lg mb-2">${link.title}</h3>
-            <div class="flex">
-              <button class="p-1" onclick="showEditLinkModal(${JSON.stringify(link).replace(/"/g, '&quot;')})">
-                ${icons.edit}
-              </button>
-              <button class="p-1" onclick="removeLink('${link.id}')">
-                ${icons.delete}
-              </button>
-            </div>
-          </div>
-          
-          <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-            ${categoryIcon}
-            <span class="ml-1 capitalize">${link.category}</span>
-          </div>
-          
-          <p class="mb-2 text-sm truncate">
-            <a href="${link.url}" target="_blank" class="text-blue-500 hover:underline flex items-center">
-              ${link.url} ${icons.open}
-            </a>
-          </p>
-          
-          ${link.description ? `<p class="mb-4 text-sm">${link.description}</p>` : ''}
-          
-          <div class="flex justify-between items-center mt-2">
-            <div class="flex items-center">
-              <span class="mr-2">Active</span>
-              <label class="toggle">
-                <input type="checkbox" ${link.active ? 'checked' : ''} onchange="toggleLinkStatus('${link.id}', ${link.active})">
-                <span class="slider"></span>
-              </label>
+    <div id="scene-container" class="fixed inset-0 -z-10 opacity-60 transition-all duration-500"></div>
+    
+    <div class="min-h-screen backdrop-blur-sm transition-all duration-300">
+        <div class="container px-4 py-6 mx-auto max-w-6xl">
+            <!-- Header -->
+            <header class="flex items-center justify-between mb-10 animate-fade-in">
+                <div class="flex items-center gap-4">
+                    <button class="button-3d p-2 rounded-full bg-secondary dark:bg-secondary shadow-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">
+                        Dashboard
+                    </h1>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <button class="button-3d p-2 rounded-full bg-secondary dark:bg-secondary shadow-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </button>
+                    <button 
+                        id="theme-toggle"
+                        class="button-3d p-2 rounded-full bg-secondary dark:bg-secondary shadow-button"
+                        aria-label="Toggle theme"
+                    >
+                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Page Title -->
+            <div class="mb-10 text-center animate-fade-in animate-delay-1">
+                <div class="inline-block px-3 py-1 mb-3 text-xs font-medium tracking-wider bg-primary/10 text-primary rounded-full">
+                    PAINEL DE GERENCIAMENTO
+                </div>
+                <h2 class="mb-2 text-3xl font-bold md:text-4xl tracking-tight">
+                    Painel de Gerenciamento de Divulgação da Amber
+                </h2>
+                <p class="max-w-2xl mx-auto text-muted-foreground">
+                    Monitore, gerencie e otimize suas campanhas de divulgação com precisão e facilidade
+                </p>
             </div>
             
-            <div class="flex items-center">
-              ${icons.click}
-              <span class="ml-1">${link.clicks || 0}</span>
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-10 animate-fade-in animate-delay-2">
+                <button 
+                    id="theme-toggle-btn"
+                    class="button-3d flex items-center gap-2 px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-full transition-all hover:bg-secondary/80 shadow-button"
+                >
+                    <span id="theme-icon" class="w-5 h-5"></span>
+                    <span id="theme-text">Tema</span>
+                </button>
+                
+                <button 
+                    id="generate-report"
+                    class="button-3d flex items-center gap-2 px-4 py-2 font-medium bg-primary rounded-full text-primary-foreground transition-all hover:bg-primary/90 shadow-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Gerar Relatório</span>
+                </button>
+                
+                <button 
+                    id="refresh-btn"
+                    class="button-3d flex items-center gap-2 px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-full transition-all hover:bg-secondary/80 shadow-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Atualizar</span>
+                </button>
             </div>
-          </div>
+            
+            <!-- Metrics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
+                <!-- Total Clicks -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-2 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Total de Cliques</span>
+                        <div class="p-2 rounded-full bg-blue-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalCliques" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-green-400">+12%</span>
+                    </div>
+                </div>
+                
+                <!-- Total Links -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-2 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Total de Links</span>
+                        <div class="p-2 rounded-full bg-purple-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalLinks" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-green-400">+5%</span>
+                    </div>
+                </div>
+                
+                <!-- Activated Links -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-3 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Links Ativados</span>
+                        <div class="p-2 rounded-full bg-green-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalAtivados" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-green-400">+8%</span>
+                    </div>
+                </div>
+                
+                <!-- Deactivated Links -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-3 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Links Desativados</span>
+                        <div class="p-2 rounded-full bg-amber-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalDesativados" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-red-400">-3%</span>
+                    </div>
+                </div>
+                
+                <!-- Conversion Rate -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-4 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Taxa de Conversão</span>
+                        <div class="p-2 rounded-full bg-blue-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="taxaConversao" class="text-3xl font-bold">0%</p>
+                        <span class="text-xs text-green-400">+4%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Link Button -->
+            <div class="mb-8 text-center animate-fade-in animate-delay-4">
+                <button 
+                    id="add-link-btn"
+                    class="button-3d inline-flex items-center gap-2 px-6 py-3 font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-full hover:from-blue-500 hover:to-blue-400 transition-all shadow-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>Adicionar Link</span>
+                </button>
+            </div>
+            
+            <!-- Links Management -->
+            <div class="relative dark:bg-card/30 bg-white/30 backdrop-blur-md dark:border dark:border-white/5 border border-black/5 rounded-xl p-6 mb-10 animate-fade-in animate-delay-4">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-xl -z-10"></div>
+                
+                <!-- Links Header -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        Links
+                    </h2>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button 
+                            id="activate-all"
+                            class="button-3d flex items-center gap-2 px-4 py-2 text-sm font-medium bg-green-600/80 rounded-full text-white transition-all hover:bg-green-600 shadow-button"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Ativar Todos</span>
+                        </button>
+                        
+                        <button 
+                            id="deactivate-all"
+                            class="button-3d flex items-center gap-2 px-4 py-2 text-sm font-medium bg-amber-600/80 rounded-full text-white transition-all hover:bg-amber-600 shadow-button"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span>Desativar Todos</span>
+                        </button>
+                        
+                        <button 
+                            id="protocol-btn"
+                            class="button-3d flex items-center gap-2 px-4 py-2 text-sm font-medium bg-red-600/80 rounded-full text-white transition-all hover:bg-red-600 shadow-button"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span>Protocolo</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Links Grid -->
+                <div id="linksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Links will be dynamically populated here -->
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="py-6 text-center text-muted-foreground text-sm">
+                <p>© <span id="current-year"></span> Amber Divulgação. Todos os direitos reservados.</p>
+            </footer>
         </div>
-      `;
-    }
+    </div>
+    
+    <!-- Add Link Modal -->
+    <div 
+        id="add-link-modal"
+        class="modal-overlay fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center hidden"
+    >
+        <div class="modal-content w-full max-w-md mx-4">
+            <div class="dark:bg-card bg-white border dark:border-white/10 border-black/10 rounded-2xl shadow-3d overflow-hidden">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 -z-10"></div>
+                    <div class="p-5 border-b dark:border-white/10 border-black/10 flex justify-between items-center">
+                        <h2 class="text-lg font-medium">Adicionar Link</h2>
+                        <button 
+                            class="text-muted-foreground hover:text-foreground transition-colors modal-close"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-5">
+                    <form id="link-form">
+                        <div class="mb-4">
+                            <label for="nome" class="block mb-2 text-sm font-medium">
+                                Nome
+                            </label>
+                            <input
+                                type="text"
+                                id="nome"
+                                name="nome"
+                                class="w-full px-4 py-3 dark:bg-secondary bg-gray-100 dark:border-white/10 border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                placeholder="Nome do link"
+                                required
+                            />
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="urlOriginal" class="block mb-2 text-sm font-medium">
+                                URL Original
+                            </label>
+                            <input
+                                type="url"
+                                id="urlOriginal"
+                                name="urlOriginal"
+                                class="w-full px-4 py-3 dark:bg-secondary bg-gray-100 dark:border-white/10 border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                placeholder="https://exemplo.com"
+                                required
+                            />
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            class="button-3d w-full py-3 font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg hover:from-blue-500 hover:to-blue-400 transition-all shadow-button"
+                        >
+                            Criar Link
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Report Modal -->
+    <div 
+        id="report-modal"
+        class="modal-overlay fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center hidden"
+    >
+        <div class="modal-content w-full max-w-2xl mx-4">
+            <div class="dark:bg-card bg-white border dark:border-white/10 border-black/10 rounded-2xl shadow-3d overflow-hidden">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 -z-10"></div>
+                    <div class="p-5 border-b dark:border-white/10 border-black/10 flex justify-between items-center">
+                        <h2 class="text-lg font-medium">Relatório de Desempenho</h2>
+                        <button 
+                            class="text-muted-foreground hover:text-foreground transition-colors modal-close"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="report-content" class="p-6">
+                    <!-- Report content will be dynamically generated -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-    function renderApp() {
-      const app = document.getElementById('app');
-      
-      app.innerHTML = `
-        <header class="flex justify-between items-center mb-8">
-          <h1 class="text-3xl font-bold">Link Manager</h1>
-          <button class="p-2 rounded-full bg-gray-200 dark:bg-gray-700" onclick="toggleTheme()">
-            ${state.theme === 'dark' ? icons.sun : icons.moon}
-          </button>
-        </header>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // API URL
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwVDclY83XkeJ2FJue9eAVgrH3BeTKhxt8o61XKpd1IPNsHRzcIiQ4tq1YaTccKsoHIFA/exec';
         
-        ${renderStatistics()}
-        ${renderLinksList()}
-      `;
-      
-      // Setup event listeners
-      document.getElementById('addLinkForm').addEventListener('submit', addLink);
-      document.getElementById('editLinkForm').addEventListener('submit', editLink);
-      
-      // Close modals when clicking outside
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
-        modal.addEventListener('click', event => {
-          if (event.target === modal) {
-            modal.style.display = 'none';
-          }
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        const addLinkBtn = document.getElementById('add-link-btn');
+        const addLinkModal = document.getElementById('add-link-modal');
+        const reportModal = document.getElementById('report-modal');
+        const modalCloseButtons = document.querySelectorAll('.modal-close');
+        const linkForm = document.getElementById('link-form');
+        const activateAllBtn = document.getElementById('activate-all');
+        const deactivateAllBtn = document.getElementById('deactivate-all');
+        const protocolBtn = document.getElementById('protocol-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const generateReportBtn = document.getElementById('generate-report');
+        const currentYearEl = document.getElementById('current-year');
+        
+        // Set current year in footer
+        currentYearEl.textContent = new Date().getFullYear();
+        
+        // Initialize Three.js scene
+        let scene, camera, renderer, particlesMesh;
+        
+        function initThreeScene() {
+            const container = document.getElementById('scene-container');
+            
+            // Scene setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040, 2);
+            scene.add(ambientLight);
+            
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            const directionalLight = new THREE.DirectionalLight(isDarkMode ? 0x4a88ff : 0x1e40af, 2);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Create particle system
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            
+            const posArray = new Float32Array(particlesCount * 3);
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 20;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                transparent: true,
+                color: isDarkMode ? 0x4a88ff : 0x1e40af,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+            });
+            
+            particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            // Position camera
+            camera.position.z = 5;
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            // Animation function
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particlesMesh.rotation.x += 0.0003;
+                particlesMesh.rotation.y += 0.0005;
+                
+                renderer.render(scene, camera);
+            }
+            
+            // Start animation
+            animate();
+        }
+        
+        // Update particles color based on theme
+        function updateParticlesColor() {
+            if (particlesMesh) {
+                const isDarkMode = document.documentElement.classList.contains('dark');
+                particlesMesh.material.color.set(isDarkMode ? 0x4a88ff : 0x1e40af);
+            }
+        }
+        
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (savedTheme === null && prefersDark);
+            
+            setTheme(isDark);
+            updateThemeUI(isDark);
+        }
+        
+        function setTheme(isDark) {
+            document.documentElement.classList.toggle('dark', isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateParticlesColor();
+        }
+        
+        function updateThemeUI(isDark) {
+            sunIcon.classList.toggle('hidden', isDark);
+            moonIcon.classList.toggle('hidden', !isDark);
+            
+            // Update the theme toggle button
+            themeIcon.innerHTML = isDark 
+                ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>'
+                : '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>';
+            
+            themeText.textContent = isDark ? 'Modo Claro' : 'Modo Escuro';
+        }
+        
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(!isDark);
+            updateThemeUI(!isDark);
+        }
+        
+        // Toast notification system
+        function showToast(message, type = 'success', duration = 3000) {
+            const toastContainer = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' 
+                ? '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+                : '<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icon}</div>
+                <div>${message}</div>
+                <div class="toast-close">×</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Show the toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Auto remove the toast
+            const timeout = setTimeout(() => {
+                removeToast(toast);
+            }, duration);
+            
+            // Allow manual close
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                clearTimeout(timeout);
+                removeToast(toast);
+            });
+        }
+        
+        function removeToast(toast) {
+            toast.classList.remove('show');
+            
+            // Remove the element after animation
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+        
+        // Modal management
+        function openModal(modal) {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+        }
+        
+        function closeModal(modal) {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+        
+        // API functions
+        
+        // Load metrics
+        function carregarMetricas() {
+            fetch(`${scriptUrl}?action=estatisticas`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('totalCliques').textContent = data.totalCliques;
+                    document.getElementById('totalLinks').textContent = Math.max(0, data.totalLinks - 1); // Ignore header row
+                    document.getElementById('totalAtivados').textContent = data.totalAtivados;
+                    document.getElementById('totalDesativados').textContent = data.totalDesativados;
+                    document.getElementById('taxaConversao').textContent = data.taxaConversao;
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar métricas:', error);
+                    showToast('Não foi possível carregar as métricas', 'error');
+                });
+        }
+        
+        // Load links
+        function carregarLinks() {
+            fetch(`${scriptUrl}?action=getAllLinks`)
+                .then(response => response.json())
+                .then(data => {
+                    const linksContainer = document.getElementById('linksContainer');
+                    linksContainer.innerHTML = '';
+                    
+                    // Filter out the first row (header row)
+                    const filteredLinks = data.filter((link, index) => {
+                        // Skip the first row or rows without proper ids
+                        return index !== 0 && link.id && link.id !== "ID";
+                    });
+                    
+                    if (filteredLinks.length === 0) {
+                        linksContainer.innerHTML = `
+                            <div class="col-span-3 py-10 text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                <p class="text-muted-foreground">Nenhum link encontrado.</p>
+                                <button 
+                                    id="empty-add-link"
+                                    class="mt-4 inline-flex items-center gap-2 px-4 py-2 font-medium text-blue-400 border border-blue-400/30 rounded-full hover:bg-blue-400/10 transition-all"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    <span>Adicionar seu primeiro link</span>
+                                </button>
+                            </div>
+                        `;
+                        
+                        document.getElementById('empty-add-link').addEventListener('click', () => {
+                            openModal(addLinkModal);
+                        });
+                        
+                        return;
+                    }
+                    
+                    filteredLinks.forEach(link => {
+                        if (link.id && link.nome && link.url_original) {
+                            const linkElement = document.createElement('div');
+                            linkElement.className = 'card-3d glass-card p-5 rounded-xl hover:shadow-3d transition-all dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10';
+                            linkElement.innerHTML = `
+                                <div class="flex justify-between items-center mb-3">
+                                    <h3 class="font-medium truncate">${link.nome}</h3>
+                                    <span class="text-xs px-2 py-1 rounded-full ${link.status === 'ativado' ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'}">
+                                        ${link.status === 'ativado' ? 'Ativado' : 'Desativado'}
+                                    </span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <p class="text-xs text-muted-foreground mb-1">URL Original:</p>
+                                    <p class="text-sm text-blue-400 break-all">${link.url_original}</p>
+                                </div>
+                                
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-2 text-muted-foreground">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                                        </svg>
+                                        <span class="text-xs">${link.cliques} cliques</span>
+                                    </div>
+                                    
+                                    <label class="toggle-switch">
+                                        <input 
+                                            type="checkbox" 
+                                            ${link.status === 'ativado' ? 'checked' : ''}
+                                            data-id="${link.id}"
+                                            class="status-toggle"
+                                        />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex gap-2">
+                                    <button 
+                                        class="edit-link button-3d flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium bg-secondary dark:bg-secondary rounded-lg transition-all hover:bg-secondary/80 shadow-button"
+                                        data-id="${link.id}"
+                                        data-nome="${link.nome}"
+                                        data-url="${link.url_original}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                        <span>Editar</span>
+                                    </button>
+                                    
+                                    <button 
+                                        class="delete-link button-3d flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium bg-red-500/20 text-red-400 rounded-lg transition-all hover:bg-red-500/30 shadow-button"
+                                        data-id="${link.id}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        <span>Excluir</span>
+                                    </button>
+                                </div>
+                            `;
+                            linksContainer.appendChild(linkElement);
+                        }
+                    });
+                    
+                    // Attach event listeners for the newly created elements
+                    attachLinkEventListeners();
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar links:', error);
+                    showToast('Não foi possível carregar os links', 'error');
+                });
+        }
+        
+        // Link status toggle
+        function attachLinkEventListeners() {
+            // Status toggle
+            document.querySelectorAll('.status-toggle').forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const id = this.dataset.id;
+                    const novoStatus = this.checked ? 'ativado' : 'desativado';
+                    alterarStatus(id, novoStatus);
+                });
+            });
+            
+            // Edit link
+            document.querySelectorAll('.edit-link').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const nome = this.dataset.nome;
+                    const url = this.dataset.url;
+                    editarLink(id, nome, url);
+                });
+            });
+            
+            // Delete link
+            document.querySelectorAll('.delete-link').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    apagarLink(id);
+                });
+            });
+        }
+        
+        // Create link
+        function criarLink(nome, urlOriginal) {
+            const formData = new FormData();
+            formData.append('action', 'create');
+            formData.append('nome', nome);
+            formData.append('urlOriginal', urlOriginal);
+            
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast('Link criado com sucesso: ' + data.link_encurtado);
+                closeModal(addLinkModal);
+                document.getElementById('link-form').reset();
+                carregarLinks();
+                carregarMetricas();
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showToast('Erro ao criar link', 'error');
+            });
+        }
+        
+        // Edit link
+        function editarLink(id, nomeAtual, urlAtual) {
+            const novoNome = prompt('Novo nome:', nomeAtual);
+            const novoLink = prompt('Novo URL original:', urlAtual);
+            
+            if (novoNome && novoLink) {
+                const formData = new FormData();
+                formData.append('action', 'edit');
+                formData.append('id', id);
+                formData.append('nome', novoNome);
+                formData.append('urlOriginal', novoLink);
+                
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Link editado com sucesso');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        showToast('Erro ao editar o link: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    showToast('Erro ao editar link', 'error');
+                });
+            }
+        }
+        
+        // Delete link
+        function apagarLink(id) {
+            if (confirm('Tem certeza que deseja excluir este link?')) {
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('id', id);
+                
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Link excluído com sucesso');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        showToast('Erro ao excluir o link: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    showToast('Erro ao excluir link', 'error');
+                });
+            }
+        }
+        
+        // Change link status
+        function alterarStatus(id, novoStatus) {
+            const formData = new FormData();
+            formData.append('action', 'status');
+            formData.append('id', id);
+            formData.append('status', novoStatus);
+            
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Status alterado com sucesso');
+                    carregarLinks();
+                    carregarMetricas();
+                } else {
+                    showToast('Erro ao alterar o status: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showToast('Erro ao alterar status', 'error');
+            });
+        }
+        
+        // Activate all links (one by one)
+        async function ativarTodosLinks() {
+            if (confirm('Tem certeza que deseja ativar todos os links?')) {
+                showToast('Ativando todos os links...', 'success');
+                
+                const links = await fetch(`${scriptUrl}?action=getAllLinks`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Filter out the first row (header row)
+                        return data.filter((link, index) => {
+                            // Skip the first row or rows without proper ids
+                            return index !== 0 && link.id && link.id !== "ID";
+                        });
+                    });
+                
+                let successes = 0;
+                let failures = 0;
+                
+                // Process links sequentially
+                for (const link of links) {
+                    if (link.status !== 'ativado') {
+                        try {
+                            const formData = new FormData();
+                            formData.append('action', 'status');
+                            formData.append('id', link.id);
+                            formData.append('status', 'ativado');
+                            
+                            const response = await fetch(scriptUrl, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            const data = await response.json();
+                            if (data.success) {
+                                successes++;
+                            } else {
+                                failures++;
+                            }
+                        } catch (error) {
+                            failures++;
+                            console.error('Erro ao ativar link:', error);
+                        }
+                    }
+                }
+                
+                if (failures === 0) {
+                    showToast(`${successes} links foram ativados com sucesso`);
+                } else {
+                    showToast(`${successes} links ativados, ${failures} links com erro`, 'error');
+                }
+                
+                carregarLinks();
+                carregarMetricas();
+            }
+        }
+        
+        // Deactivate all links (one by one)
+        async function desativarTodosLinks() {
+            if (confirm('Tem certeza que deseja desativar todos os links?')) {
+                showToast('Desativando todos os links...', 'success');
+                
+                const links = await fetch(`${scriptUrl}?action=getAllLinks`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Filter out the first row (header row)
+                        return data.filter((link, index) => {
+                            // Skip the first row or rows without proper ids
+                            return index !== 0 && link.id && link.id !== "ID";
+                        });
+                    });
+                
+                let successes = 0;
+                let failures = 0;
+                
+                // Process links sequentially
+                for (const link of links) {
+                    if (link.status !== 'desativado') {
+                        try {
+                            const formData = new FormData();
+                            formData.append('action', 'status');
+                            formData.append('id', link.id);
+                            formData.append('status', 'desativado');
+                            
+                            const response = await fetch(scriptUrl, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            const data = await response.json();
+                            if (data.success) {
+                                successes++;
+                            } else {
+                                failures++;
+                            }
+                        } catch (error) {
+                            failures++;
+                            console.error('Erro ao desativar link:', error);
+                        }
+                    }
+                }
+                
+                if (failures === 0) {
+                    showToast(`${successes} links foram desativados com sucesso`);
+                } else {
+                    showToast(`${successes} links desativados, ${failures} links com erro`, 'error');
+                }
+                
+                carregarLinks();
+                carregarMetricas();
+            }
+        }
+        
+        // Protocol (deactivate all links one by one)
+        async function protocolo() {
+            if (confirm('PROTOCOLO: Tem certeza que deseja desativar todos os links?')) {
+                showToast('PROTOCOLO ATIVADO: Desativando todos os links...', 'error');
+                
+                const links = await fetch(`${scriptUrl}?action=getAllLinks`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Filter out the first row (header row)
+                        return data.filter((link, index) => {
+                            // Skip the first row or rows without proper ids
+                            return index !== 0 && link.id && link.id !== "ID";
+                        });
+                    });
+                
+                let successes = 0;
+                let failures = 0;
+                
+                // Process links sequentially
+                for (const link of links) {
+                    if (link.status !== 'desativado') {
+                        try {
+                            const formData = new FormData();
+                            formData.append('action', 'status');
+                            formData.append('id', link.id);
+                            formData.append('status', 'desativado');
+                            
+                            const response = await fetch(scriptUrl, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            const data = await response.json();
+                            if (data.success) {
+                                successes++;
+                            } else {
+                                failures++;
+                            }
+                        } catch (error) {
+                            failures++;
+                            console.error('Erro ao desativar link no protocolo:', error);
+                        }
+                    }
+                }
+                
+                if (failures === 0) {
+                    showToast(`PROTOCOLO CONCLUÍDO: ${successes} links foram desativados com sucesso`);
+                } else {
+                    showToast(`PROTOCOLO CONCLUÍDO COM ERROS: ${successes} links desativados, ${failures} links com erro`, 'error');
+                }
+                
+                carregarLinks();
+                carregarMetricas();
+            }
+        }
+        
+        // Generate report
+        function generateReport() {
+            // Get metrics data
+            fetch(`${scriptUrl}?action=estatisticas`)
+                .then(response => response.json())
+                .then(metrics => {
+                    const reportDate = new Date().toLocaleDateString('pt-BR');
+                    const reportTime = new Date().toLocaleTimeString('pt-BR');
+                    
+                    // Create report content
+                    const reportContent = document.getElementById('report-content');
+                    reportContent.innerHTML = `
+                        <div class="text-center mb-6">
+                            <div class="text-2xl font-bold mb-2">Amber Divulgação</div>
+                            <div class="text-sm text-muted-foreground">
+                                Relatório gerado em ${reportDate} às ${reportTime}
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-6 mb-8">
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Total de Cliques</div>
+                                <div class="text-2xl font-bold">${metrics.totalCliques}</div>
+                            </div>
+                            
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Taxa de Conversão</div>
+                                <div class="text-2xl font-bold">${metrics.taxaConversao}</div>
+                            </div>
+                            
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Links Ativos</div>
+                                <div class="text-2xl font-bold">${metrics.totalAtivados}</div>
+                            </div>
+                            
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Links Inativos</div>
+                                <div class="text-2xl font-bold">${metrics.totalDesativados}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5 mb-8">
+                            <div class="text-center mb-3">
+                                <div class="text-lg font-medium">Desempenho de Campanha</div>
+                            </div>
+                            
+                            <div class="h-40 relative">
+                                <div class="absolute bottom-0 left-0 w-full h-full flex items-end">
+                                    <div class="w-1/5 h-20 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-28 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-24 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-32 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-36 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between mt-2 text-xs text-muted-foreground">
+                                <div>Segunda</div>
+                                <div>Terça</div>
+                                <div>Quarta</div>
+                                <div>Quinta</div>
+                                <div>Sexta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center space-x-3">
+                            <button id="download-report" class="button-3d px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-lg transition-all hover:bg-secondary/80 shadow-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                            </button>
+                            
+                            <button id="print-report" class="button-3d px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-lg transition-all hover:bg-secondary/80 shadow-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Open report modal
+                    openModal(reportModal);
+                    
+                    // Add event listeners for report actions
+                    document.getElementById('download-report').addEventListener('click', () => {
+                        showToast('Função de download em desenvolvimento');
+                    });
+                    
+                    document.getElementById('print-report').addEventListener('click', () => {
+                        showToast('Função de impressão em desenvolvimento');
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao gerar relatório:', error);
+                    showToast('Erro ao gerar relatório', 'error');
+                });
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme
+            initTheme();
+            
+            // Initialize 3D scene
+            initThreeScene();
+            
+            // Load data
+            carregarLinks();
+            carregarMetricas();
+            
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            
+            // Add link button
+            addLinkBtn.addEventListener('click', () => {
+                openModal(addLinkModal);
+            });
+            
+            // Close modals
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = button.closest('.modal-overlay');
+                    closeModal(modal);
+                });
+            });
+            
+            // Modal backdrop click to close
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', event => {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+            
+            // Add link form submission
+            linkForm.addEventListener('submit', event => {
+                event.preventDefault();
+                const nome = document.getElementById('nome').value;
+                const urlOriginal = document.getElementById('urlOriginal').value;
+                criarLink(nome, urlOriginal);
+            });
+            
+            // Action buttons
+            activateAllBtn.addEventListener('click', ativarTodosLinks);
+            deactivateAllBtn.addEventListener('click', desativarTodosLinks);
+            protocolBtn.addEventListener('click', protocolo);
+            refreshBtn.addEventListener('click', () => {
+                carregarLinks();
+                carregarMetricas();
+                showToast('Dados atualizados com sucesso');
+            });
+            generateReportBtn.addEventListener('click', generateReport);
         });
-      });
-    }
-
-    // Initialize app
-    document.addEventListener('DOMContentLoaded', () => {
-      refreshData();
-    });
-  </script>
+    </script>
 </body>
 </html>
