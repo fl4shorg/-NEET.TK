@@ -1,0 +1,1483 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gerenciamento Premium 3D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <style>
+        /* Base Styles */
+        :root {
+            /* Light mode variables */
+            --background: 0 0% 100%;
+            --foreground: 224 71% 4%;
+            --card: 0 0% 100%;
+            --card-foreground: 224 71% 4%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 224 71% 4%;
+            --primary: 210 100% 50%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 220 14% 96%;
+            --secondary-foreground: 224 71% 4%;
+            --muted: 220 14% 96%;
+            --muted-foreground: 220 8% 56%;
+            --accent: 210 100% 50%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 84% 60%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 220 13% 91%;
+            --input: 220 13% 91%;
+            --ring: 224 71% 4%;
+            --radius: 0.75rem;
+        }
+
+        .dark {
+            /* Dark mode variables */
+            --background: 224 71% 4%;
+            --foreground: 213 31% 91%;
+            --card: 224 71% 8%;
+            --card-foreground: 213 31% 91%;
+            --popover: 224 71% 4%;
+            --popover-foreground: 215 20% 65%;
+            --primary: 210 100% 50%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 215 27% 16%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 215 27% 16%;
+            --muted-foreground: 215 20% 65%;
+            --accent: 210 100% 50%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62% 45%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 215 28% 17%;
+            --input: 215 27% 18%;
+            --ring: 224 76% 48%;
+            --radius: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 3D Effects and Animations */
+        .card-3d {
+            position: relative;
+            transition: all 0.3s ease-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-5px) scale(1.01);
+        }
+
+        .card-3d::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+            border-radius: 0.75rem;
+            z-index: -1;
+        }
+
+        .button-3d {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15), 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-3d:active {
+            transform: translateY(1px);
+        }
+
+        .button-3d::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .button-3d:hover::before {
+            opacity: 1;
+        }
+
+        /* Glass Effects */
+        .glass-card {
+            background-color: rgba(var(--card), 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark .glass-card {
+            background-color: rgba(36, 39, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .animate-fade-in {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .animate-delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .animate-delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .animate-delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .animate-delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+        }
+
+        .modal-content {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: hsla(215, 27%, 16%, 1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 26px;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #fff;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background-color: hsla(210, 100%, 50%, 0.8);
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Light mode switch */
+        html:not(.dark) .slider {
+            background-color: #e2e8f0;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Custom Toast */
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10B981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #EF4444;
+        }
+
+        .toast-icon {
+            margin-right: 0.75rem;
+        }
+
+        .toast-close {
+            margin-left: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .button-3d {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .card-3d {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        // Configure Tailwind
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        card: 'hsl(var(--card))',
+                        'card-foreground': 'hsl(var(--card-foreground))',
+                        primary: 'hsl(var(--primary))',
+                        'primary-foreground': 'hsl(var(--primary-foreground))',
+                        secondary: 'hsl(var(--secondary))',
+                        'secondary-foreground': 'hsl(var(--secondary-foreground))',
+                        muted: 'hsl(var(--muted))',
+                        'muted-foreground': 'hsl(var(--muted-foreground))',
+                        accent: 'hsl(var(--accent))',
+                        'accent-foreground': 'hsl(var(--accent-foreground))',
+                        destructive: 'hsl(var(--destructive))',
+                        'destructive-foreground': 'hsl(var(--destructive-foreground))',
+                        border: 'hsl(var(--border))',
+                        input: 'hsl(var(--input))',
+                        ring: 'hsl(var(--ring))',
+                    },
+                    boxShadow: {
+                        '3d': '0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 5px 15px -5px rgba(0, 0, 0, 0.2)',
+                        'neo': '8px 8px 15px rgba(0, 0, 0, 0.2), -8px -8px 15px rgba(255, 255, 255, 0.05)',
+                        'inner-neo': 'inset 4px 4px 8px rgba(0, 0, 0, 0.25), inset -4px -4px 8px rgba(255, 255, 255, 0.05)',
+                        'button': '0 5px 15px rgba(0, 0, 0, 0.15), 0 3px 8px rgba(0, 0, 0, 0.1)'
+                    },
+                    borderRadius: {
+                        'lg': 'var(--radius)',
+                        'md': 'calc(var(--radius) - 2px)',
+                        'sm': 'calc(var(--radius) - 4px)'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="scene-container" class="fixed inset-0 -z-10 opacity-60 transition-all duration-500"></div>
+    
+    <div class="min-h-screen backdrop-blur-sm transition-all duration-300">
+        <div class="container px-4 py-6 mx-auto max-w-6xl">
+            <!-- Header -->
+            <header class="flex items-center justify-between mb-10 animate-fade-in">
+                <div class="flex items-center gap-4">
+                    <button class="button-3d p-2 rounded-full bg-secondary dark:bg-secondary shadow-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">
+                        Dashboard
+                    </h1>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <button class="button-3d p-2 rounded-full bg-secondary dark:bg-secondary shadow-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </button>
+                    <button 
+                        id="theme-toggle"
+                        class="button-3d p-2 rounded-full bg-secondary dark:bg-secondary shadow-button"
+                        aria-label="Toggle theme"
+                    >
+                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Page Title -->
+            <div class="mb-10 text-center animate-fade-in animate-delay-1">
+                <div class="inline-block px-3 py-1 mb-3 text-xs font-medium tracking-wider bg-primary/10 text-primary rounded-full">
+                    PAINEL DE GERENCIAMENTO
+                </div>
+                <h2 class="mb-2 text-3xl font-bold md:text-4xl tracking-tight">
+                    Painel de Gerenciamento de Divulgação da Amber
+                </h2>
+                <p class="max-w-2xl mx-auto text-muted-foreground">
+                    Monitore, gerencie e otimize suas campanhas de divulgação com precisão e facilidade
+                </p>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-10 animate-fade-in animate-delay-2">
+                <button 
+                    id="theme-toggle-btn"
+                    class="button-3d flex items-center gap-2 px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-full transition-all hover:bg-secondary/80 shadow-button"
+                >
+                    <span id="theme-icon" class="w-5 h-5"></span>
+                    <span id="theme-text">Tema</span>
+                </button>
+                
+                <button 
+                    id="generate-report"
+                    class="button-3d flex items-center gap-2 px-4 py-2 font-medium bg-primary rounded-full text-primary-foreground transition-all hover:bg-primary/90 shadow-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Gerar Relatório</span>
+                </button>
+                
+                <button 
+                    id="refresh-btn"
+                    class="button-3d flex items-center gap-2 px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-full transition-all hover:bg-secondary/80 shadow-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Atualizar</span>
+                </button>
+            </div>
+            
+            <!-- Metrics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
+                <!-- Total Clicks -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-2 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Total de Cliques</span>
+                        <div class="p-2 rounded-full bg-blue-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalCliques" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-green-400">+12%</span>
+                    </div>
+                </div>
+                
+                <!-- Total Links -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-2 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Total de Links</span>
+                        <div class="p-2 rounded-full bg-purple-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalLinks" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-green-400">+5%</span>
+                    </div>
+                </div>
+                
+                <!-- Activated Links -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-3 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Links Ativados</span>
+                        <div class="p-2 rounded-full bg-green-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalAtivados" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-green-400">+8%</span>
+                    </div>
+                </div>
+                
+                <!-- Deactivated Links -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-3 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Links Desativados</span>
+                        <div class="p-2 rounded-full bg-amber-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="totalDesativados" class="text-3xl font-bold">0</p>
+                        <span class="text-xs text-red-400">-3%</span>
+                    </div>
+                </div>
+                
+                <!-- Conversion Rate -->
+                <div class="card-3d glass-card p-6 rounded-2xl animate-fade-in animate-delay-4 dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-muted-foreground">Taxa de Conversão</span>
+                        <div class="p-2 rounded-full bg-blue-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <p id="taxaConversao" class="text-3xl font-bold">0%</p>
+                        <span class="text-xs text-green-400">+4%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Link Button -->
+            <div class="mb-8 text-center animate-fade-in animate-delay-4">
+                <button 
+                    id="add-link-btn"
+                    class="button-3d inline-flex items-center gap-2 px-6 py-3 font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-full hover:from-blue-500 hover:to-blue-400 transition-all shadow-button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>Adicionar Link</span>
+                </button>
+            </div>
+            
+            <!-- Links Management -->
+            <div class="relative dark:bg-card/30 bg-white/30 backdrop-blur-md dark:border dark:border-white/5 border border-black/5 rounded-xl p-6 mb-10 animate-fade-in animate-delay-4">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-xl -z-10"></div>
+                
+                <!-- Links Header -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        Links
+                    </h2>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button 
+                            id="activate-all"
+                            class="button-3d flex items-center gap-2 px-4 py-2 text-sm font-medium bg-green-600/80 rounded-full text-white transition-all hover:bg-green-600 shadow-button"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Ativar Todos</span>
+                        </button>
+                        
+                        <button 
+                            id="deactivate-all"
+                            class="button-3d flex items-center gap-2 px-4 py-2 text-sm font-medium bg-amber-600/80 rounded-full text-white transition-all hover:bg-amber-600 shadow-button"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span>Desativar Todos</span>
+                        </button>
+                        
+                        <button 
+                            id="protocol-btn"
+                            class="button-3d flex items-center gap-2 px-4 py-2 text-sm font-medium bg-red-600/80 rounded-full text-white transition-all hover:bg-red-600 shadow-button"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span>Protocolo</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Links Grid -->
+                <div id="linksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Links will be dynamically populated here -->
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="py-6 text-center text-muted-foreground text-sm">
+                <p>© <span id="current-year"></span> Amber Divulgação. Todos os direitos reservados.</p>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Add Link Modal -->
+    <div 
+        id="add-link-modal"
+        class="modal-overlay fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center hidden"
+    >
+        <div class="modal-content w-full max-w-md mx-4">
+            <div class="dark:bg-card bg-white border dark:border-white/10 border-black/10 rounded-2xl shadow-3d overflow-hidden">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 -z-10"></div>
+                    <div class="p-5 border-b dark:border-white/10 border-black/10 flex justify-between items-center">
+                        <h2 class="text-lg font-medium">Adicionar Link</h2>
+                        <button 
+                            class="text-muted-foreground hover:text-foreground transition-colors modal-close"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-5">
+                    <form id="link-form">
+                        <div class="mb-4">
+                            <label for="nome" class="block mb-2 text-sm font-medium">
+                                Nome
+                            </label>
+                            <input
+                                type="text"
+                                id="nome"
+                                name="nome"
+                                class="w-full px-4 py-3 dark:bg-secondary bg-gray-100 dark:border-white/10 border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                placeholder="Nome do link"
+                                required
+                            />
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="urlOriginal" class="block mb-2 text-sm font-medium">
+                                URL Original
+                            </label>
+                            <input
+                                type="url"
+                                id="urlOriginal"
+                                name="urlOriginal"
+                                class="w-full px-4 py-3 dark:bg-secondary bg-gray-100 dark:border-white/10 border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                placeholder="https://exemplo.com"
+                                required
+                            />
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            class="button-3d w-full py-3 font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg hover:from-blue-500 hover:to-blue-400 transition-all shadow-button"
+                        >
+                            Criar Link
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Report Modal -->
+    <div 
+        id="report-modal"
+        class="modal-overlay fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center hidden"
+    >
+        <div class="modal-content w-full max-w-2xl mx-4">
+            <div class="dark:bg-card bg-white border dark:border-white/10 border-black/10 rounded-2xl shadow-3d overflow-hidden">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 -z-10"></div>
+                    <div class="p-5 border-b dark:border-white/10 border-black/10 flex justify-between items-center">
+                        <h2 class="text-lg font-medium">Relatório de Desempenho</h2>
+                        <button 
+                            class="text-muted-foreground hover:text-foreground transition-colors modal-close"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="report-content" class="p-6">
+                    <!-- Report content will be dynamically generated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // API URL
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwVDclY83XkeJ2FJue9eAVgrH3BeTKhxt8o61XKpd1IPNsHRzcIiQ4tq1YaTccKsoHIFA/exec';
+        
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        const addLinkBtn = document.getElementById('add-link-btn');
+        const addLinkModal = document.getElementById('add-link-modal');
+        const reportModal = document.getElementById('report-modal');
+        const modalCloseButtons = document.querySelectorAll('.modal-close');
+        const linkForm = document.getElementById('link-form');
+        const activateAllBtn = document.getElementById('activate-all');
+        const deactivateAllBtn = document.getElementById('deactivate-all');
+        const protocolBtn = document.getElementById('protocol-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const generateReportBtn = document.getElementById('generate-report');
+        const currentYearEl = document.getElementById('current-year');
+        
+        // Set current year in footer
+        currentYearEl.textContent = new Date().getFullYear();
+        
+        // Initialize Three.js scene
+        let scene, camera, renderer, particlesMesh;
+        
+        function initThreeScene() {
+            const container = document.getElementById('scene-container');
+            
+            // Scene setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040, 2);
+            scene.add(ambientLight);
+            
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            const directionalLight = new THREE.DirectionalLight(isDarkMode ? 0x4a88ff : 0x1e40af, 2);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Create particle system
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            
+            const posArray = new Float32Array(particlesCount * 3);
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 20;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                transparent: true,
+                color: isDarkMode ? 0x4a88ff : 0x1e40af,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+            });
+            
+            particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            // Position camera
+            camera.position.z = 5;
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            // Animation function
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particlesMesh.rotation.x += 0.0003;
+                particlesMesh.rotation.y += 0.0005;
+                
+                renderer.render(scene, camera);
+            }
+            
+            // Start animation
+            animate();
+        }
+        
+        // Update particles color based on theme
+        function updateParticlesColor() {
+            if (particlesMesh) {
+                const isDarkMode = document.documentElement.classList.contains('dark');
+                particlesMesh.material.color.set(isDarkMode ? 0x4a88ff : 0x1e40af);
+            }
+        }
+        
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (savedTheme === null && prefersDark);
+            
+            setTheme(isDark);
+            updateThemeUI(isDark);
+        }
+        
+        function setTheme(isDark) {
+            document.documentElement.classList.toggle('dark', isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateParticlesColor();
+        }
+        
+        function updateThemeUI(isDark) {
+            sunIcon.classList.toggle('hidden', isDark);
+            moonIcon.classList.toggle('hidden', !isDark);
+            
+            // Update the theme toggle button
+            themeIcon.innerHTML = isDark 
+                ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>'
+                : '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>';
+            
+            themeText.textContent = isDark ? 'Modo Claro' : 'Modo Escuro';
+        }
+        
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(!isDark);
+            updateThemeUI(!isDark);
+        }
+        
+        // Toast notification system
+        function showToast(message, type = 'success', duration = 3000) {
+            const toastContainer = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' 
+                ? '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+                : '<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icon}</div>
+                <div>${message}</div>
+                <div class="toast-close">×</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Show the toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Auto remove the toast
+            const timeout = setTimeout(() => {
+                removeToast(toast);
+            }, duration);
+            
+            // Allow manual close
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                clearTimeout(timeout);
+                removeToast(toast);
+            });
+        }
+        
+        function removeToast(toast) {
+            toast.classList.remove('show');
+            
+            // Remove the element after animation
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+        
+        // Modal management
+        function openModal(modal) {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+        }
+        
+        function closeModal(modal) {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+        
+        // API functions
+        
+        // Load metrics
+        function carregarMetricas() {
+            fetch(`${scriptUrl}?action=estatisticas`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('totalCliques').textContent = data.totalCliques;
+                    document.getElementById('totalLinks').textContent = Math.max(0, data.totalLinks - 1); // Ignore header row
+                    document.getElementById('totalAtivados').textContent = data.totalAtivados;
+                    document.getElementById('totalDesativados').textContent = data.totalDesativados;
+                    document.getElementById('taxaConversao').textContent = data.taxaConversao;
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar métricas:', error);
+                    showToast('Não foi possível carregar as métricas', 'error');
+                });
+        }
+        
+        // Load links
+        function carregarLinks() {
+            fetch(`${scriptUrl}?action=getAllLinks`)
+                .then(response => response.json())
+                .then(data => {
+                    const linksContainer = document.getElementById('linksContainer');
+                    linksContainer.innerHTML = '';
+                    
+                    // Filter out the first row (header row)
+                    const filteredLinks = data.filter((link, index) => {
+                        // Skip the first row or rows without proper ids
+                        return index !== 0 && link.id && link.id !== "ID";
+                    });
+                    
+                    if (filteredLinks.length === 0) {
+                        linksContainer.innerHTML = `
+                            <div class="col-span-3 py-10 text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                <p class="text-muted-foreground">Nenhum link encontrado.</p>
+                                <button 
+                                    id="empty-add-link"
+                                    class="mt-4 inline-flex items-center gap-2 px-4 py-2 font-medium text-blue-400 border border-blue-400/30 rounded-full hover:bg-blue-400/10 transition-all"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    <span>Adicionar seu primeiro link</span>
+                                </button>
+                            </div>
+                        `;
+                        
+                        document.getElementById('empty-add-link').addEventListener('click', () => {
+                            openModal(addLinkModal);
+                        });
+                        
+                        return;
+                    }
+                    
+                    filteredLinks.forEach(link => {
+                        if (link.id && link.nome && link.url_original) {
+                            const linkElement = document.createElement('div');
+                            linkElement.className = 'card-3d glass-card p-5 rounded-xl hover:shadow-3d transition-all dark:bg-card/80 bg-white/80 backdrop-blur-md dark:border dark:border-white/10 border border-black/10';
+                            linkElement.innerHTML = `
+                                <div class="flex justify-between items-center mb-3">
+                                    <h3 class="font-medium truncate">${link.nome}</h3>
+                                    <span class="text-xs px-2 py-1 rounded-full ${link.status === 'ativado' ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'}">
+                                        ${link.status === 'ativado' ? 'Ativado' : 'Desativado'}
+                                    </span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <p class="text-xs text-muted-foreground mb-1">URL Original:</p>
+                                    <p class="text-sm text-blue-400 break-all">${link.url_original}</p>
+                                </div>
+                                
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-2 text-muted-foreground">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                                        </svg>
+                                        <span class="text-xs">${link.cliques} cliques</span>
+                                    </div>
+                                    
+                                    <label class="toggle-switch">
+                                        <input 
+                                            type="checkbox" 
+                                            ${link.status === 'ativado' ? 'checked' : ''}
+                                            data-id="${link.id}"
+                                            class="status-toggle"
+                                        />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex gap-2">
+                                    <button 
+                                        class="edit-link button-3d flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium bg-secondary dark:bg-secondary rounded-lg transition-all hover:bg-secondary/80 shadow-button"
+                                        data-id="${link.id}"
+                                        data-nome="${link.nome}"
+                                        data-url="${link.url_original}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                        <span>Editar</span>
+                                    </button>
+                                    
+                                    <button 
+                                        class="delete-link button-3d flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium bg-red-500/20 text-red-400 rounded-lg transition-all hover:bg-red-500/30 shadow-button"
+                                        data-id="${link.id}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        <span>Excluir</span>
+                                    </button>
+                                </div>
+                            `;
+                            linksContainer.appendChild(linkElement);
+                        }
+                    });
+                    
+                    // Attach event listeners for the newly created elements
+                    attachLinkEventListeners();
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar links:', error);
+                    showToast('Não foi possível carregar os links', 'error');
+                });
+        }
+        
+        // Link status toggle
+        function attachLinkEventListeners() {
+            // Status toggle
+            document.querySelectorAll('.status-toggle').forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const id = this.dataset.id;
+                    const novoStatus = this.checked ? 'ativado' : 'desativado';
+                    alterarStatus(id, novoStatus);
+                });
+            });
+            
+            // Edit link
+            document.querySelectorAll('.edit-link').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const nome = this.dataset.nome;
+                    const url = this.dataset.url;
+                    editarLink(id, nome, url);
+                });
+            });
+            
+            // Delete link
+            document.querySelectorAll('.delete-link').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    apagarLink(id);
+                });
+            });
+        }
+        
+        // Create link
+        function criarLink(nome, urlOriginal) {
+            const formData = new FormData();
+            formData.append('action', 'create');
+            formData.append('nome', nome);
+            formData.append('urlOriginal', urlOriginal);
+            
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast('Link criado com sucesso: ' + data.link_encurtado);
+                closeModal(addLinkModal);
+                document.getElementById('link-form').reset();
+                carregarLinks();
+                carregarMetricas();
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showToast('Erro ao criar link', 'error');
+            });
+        }
+        
+        // Edit link
+        function editarLink(id, nomeAtual, urlAtual) {
+            const novoNome = prompt('Novo nome:', nomeAtual);
+            const novoLink = prompt('Novo URL original:', urlAtual);
+            
+            if (novoNome && novoLink) {
+                const formData = new FormData();
+                formData.append('action', 'edit');
+                formData.append('id', id);
+                formData.append('nome', novoNome);
+                formData.append('urlOriginal', novoLink);
+                
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Link editado com sucesso');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        showToast('Erro ao editar o link: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    showToast('Erro ao editar link', 'error');
+                });
+            }
+        }
+        
+        // Delete link
+        function apagarLink(id) {
+            if (confirm('Tem certeza que deseja excluir este link?')) {
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('id', id);
+                
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Link excluído com sucesso');
+                        carregarLinks();
+                        carregarMetricas();
+                    } else {
+                        showToast('Erro ao excluir o link: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    showToast('Erro ao excluir link', 'error');
+                });
+            }
+        }
+        
+        // Change link status
+        function alterarStatus(id, novoStatus) {
+            const formData = new FormData();
+            formData.append('action', 'status');
+            formData.append('id', id);
+            formData.append('status', novoStatus);
+            
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Status alterado com sucesso');
+                    carregarLinks();
+                    carregarMetricas();
+                } else {
+                    showToast('Erro ao alterar o status: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showToast('Erro ao alterar status', 'error');
+            });
+        }
+        
+        // Activate all links (one by one)
+        async function ativarTodosLinks() {
+            if (confirm('Tem certeza que deseja ativar todos os links?')) {
+                showToast('Ativando todos os links...', 'success');
+                
+                const links = await fetch(`${scriptUrl}?action=getAllLinks`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Filter out the first row (header row)
+                        return data.filter((link, index) => {
+                            // Skip the first row or rows without proper ids
+                            return index !== 0 && link.id && link.id !== "ID";
+                        });
+                    });
+                
+                let successes = 0;
+                let failures = 0;
+                
+                // Process links sequentially
+                for (const link of links) {
+                    if (link.status !== 'ativado') {
+                        try {
+                            const formData = new FormData();
+                            formData.append('action', 'status');
+                            formData.append('id', link.id);
+                            formData.append('status', 'ativado');
+                            
+                            const response = await fetch(scriptUrl, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            const data = await response.json();
+                            if (data.success) {
+                                successes++;
+                            } else {
+                                failures++;
+                            }
+                        } catch (error) {
+                            failures++;
+                            console.error('Erro ao ativar link:', error);
+                        }
+                    }
+                }
+                
+                if (failures === 0) {
+                    showToast(`${successes} links foram ativados com sucesso`);
+                } else {
+                    showToast(`${successes} links ativados, ${failures} links com erro`, 'error');
+                }
+                
+                carregarLinks();
+                carregarMetricas();
+            }
+        }
+        
+        // Deactivate all links (one by one)
+        async function desativarTodosLinks() {
+            if (confirm('Tem certeza que deseja desativar todos os links?')) {
+                showToast('Desativando todos os links...', 'success');
+                
+                const links = await fetch(`${scriptUrl}?action=getAllLinks`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Filter out the first row (header row)
+                        return data.filter((link, index) => {
+                            // Skip the first row or rows without proper ids
+                            return index !== 0 && link.id && link.id !== "ID";
+                        });
+                    });
+                
+                let successes = 0;
+                let failures = 0;
+                
+                // Process links sequentially
+                for (const link of links) {
+                    if (link.status !== 'desativado') {
+                        try {
+                            const formData = new FormData();
+                            formData.append('action', 'status');
+                            formData.append('id', link.id);
+                            formData.append('status', 'desativado');
+                            
+                            const response = await fetch(scriptUrl, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            const data = await response.json();
+                            if (data.success) {
+                                successes++;
+                            } else {
+                                failures++;
+                            }
+                        } catch (error) {
+                            failures++;
+                            console.error('Erro ao desativar link:', error);
+                        }
+                    }
+                }
+                
+                if (failures === 0) {
+                    showToast(`${successes} links foram desativados com sucesso`);
+                } else {
+                    showToast(`${successes} links desativados, ${failures} links com erro`, 'error');
+                }
+                
+                carregarLinks();
+                carregarMetricas();
+            }
+        }
+        
+        // Protocol (deactivate all links one by one)
+        async function protocolo() {
+            if (confirm('PROTOCOLO: Tem certeza que deseja desativar todos os links?')) {
+                showToast('PROTOCOLO ATIVADO: Desativando todos os links...', 'error');
+                
+                const links = await fetch(`${scriptUrl}?action=getAllLinks`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Filter out the first row (header row)
+                        return data.filter((link, index) => {
+                            // Skip the first row or rows without proper ids
+                            return index !== 0 && link.id && link.id !== "ID";
+                        });
+                    });
+                
+                let successes = 0;
+                let failures = 0;
+                
+                // Process links sequentially
+                for (const link of links) {
+                    if (link.status !== 'desativado') {
+                        try {
+                            const formData = new FormData();
+                            formData.append('action', 'status');
+                            formData.append('id', link.id);
+                            formData.append('status', 'desativado');
+                            
+                            const response = await fetch(scriptUrl, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            const data = await response.json();
+                            if (data.success) {
+                                successes++;
+                            } else {
+                                failures++;
+                            }
+                        } catch (error) {
+                            failures++;
+                            console.error('Erro ao desativar link no protocolo:', error);
+                        }
+                    }
+                }
+                
+                if (failures === 0) {
+                    showToast(`PROTOCOLO CONCLUÍDO: ${successes} links foram desativados com sucesso`);
+                } else {
+                    showToast(`PROTOCOLO CONCLUÍDO COM ERROS: ${successes} links desativados, ${failures} links com erro`, 'error');
+                }
+                
+                carregarLinks();
+                carregarMetricas();
+            }
+        }
+        
+        // Generate report
+        function generateReport() {
+            // Get metrics data
+            fetch(`${scriptUrl}?action=estatisticas`)
+                .then(response => response.json())
+                .then(metrics => {
+                    const reportDate = new Date().toLocaleDateString('pt-BR');
+                    const reportTime = new Date().toLocaleTimeString('pt-BR');
+                    
+                    // Create report content
+                    const reportContent = document.getElementById('report-content');
+                    reportContent.innerHTML = `
+                        <div class="text-center mb-6">
+                            <div class="text-2xl font-bold mb-2">Amber Divulgação</div>
+                            <div class="text-sm text-muted-foreground">
+                                Relatório gerado em ${reportDate} às ${reportTime}
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-6 mb-8">
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Total de Cliques</div>
+                                <div class="text-2xl font-bold">${metrics.totalCliques}</div>
+                            </div>
+                            
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Taxa de Conversão</div>
+                                <div class="text-2xl font-bold">${metrics.taxaConversao}</div>
+                            </div>
+                            
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Links Ativos</div>
+                                <div class="text-2xl font-bold">${metrics.totalAtivados}</div>
+                            </div>
+                            
+                            <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5">
+                                <div class="text-sm text-muted-foreground mb-1">Links Inativos</div>
+                                <div class="text-2xl font-bold">${metrics.totalDesativados}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="dark:bg-secondary/50 bg-gray-100/50 p-4 rounded-lg border dark:border-white/5 border-black/5 mb-8">
+                            <div class="text-center mb-3">
+                                <div class="text-lg font-medium">Desempenho de Campanha</div>
+                            </div>
+                            
+                            <div class="h-40 relative">
+                                <div class="absolute bottom-0 left-0 w-full h-full flex items-end">
+                                    <div class="w-1/5 h-20 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-28 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-24 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-32 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                    <div class="w-1/5 h-36 bg-blue-500/70 rounded-t-md mx-1"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between mt-2 text-xs text-muted-foreground">
+                                <div>Segunda</div>
+                                <div>Terça</div>
+                                <div>Quarta</div>
+                                <div>Quinta</div>
+                                <div>Sexta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center space-x-3">
+                            <button id="download-report" class="button-3d px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-lg transition-all hover:bg-secondary/80 shadow-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                            </button>
+                            
+                            <button id="print-report" class="button-3d px-4 py-2 font-medium bg-secondary dark:bg-secondary rounded-lg transition-all hover:bg-secondary/80 shadow-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Open report modal
+                    openModal(reportModal);
+                    
+                    // Add event listeners for report actions
+                    document.getElementById('download-report').addEventListener('click', () => {
+                        showToast('Função de download em desenvolvimento');
+                    });
+                    
+                    document.getElementById('print-report').addEventListener('click', () => {
+                        showToast('Função de impressão em desenvolvimento');
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao gerar relatório:', error);
+                    showToast('Erro ao gerar relatório', 'error');
+                });
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme
+            initTheme();
+            
+            // Initialize 3D scene
+            initThreeScene();
+            
+            // Load data
+            carregarLinks();
+            carregarMetricas();
+            
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            
+            // Add link button
+            addLinkBtn.addEventListener('click', () => {
+                openModal(addLinkModal);
+            });
+            
+            // Close modals
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = button.closest('.modal-overlay');
+                    closeModal(modal);
+                });
+            });
+            
+            // Modal backdrop click to close
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', event => {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+            
+            // Add link form submission
+            linkForm.addEventListener('submit', event => {
+                event.preventDefault();
+                const nome = document.getElementById('nome').value;
+                const urlOriginal = document.getElementById('urlOriginal').value;
+                criarLink(nome, urlOriginal);
+            });
+            
+            // Action buttons
+            activateAllBtn.addEventListener('click', ativarTodosLinks);
+            deactivateAllBtn.addEventListener('click', desativarTodosLinks);
+            protocolBtn.addEventListener('click', protocolo);
+            refreshBtn.addEventListener('click', () => {
+                carregarLinks();
+                carregarMetricas();
+                showToast('Dados atualizados com sucesso');
+            });
+            generateReportBtn.addEventListener('click', generateReport);
+        });
+    </script>
+</body>
+</html>
