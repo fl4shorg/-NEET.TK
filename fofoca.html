@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Notícia - Focalizando Neext</title>
+    <title>Gerador de Notícia - FOCALIZANDO NEEXT</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -40,19 +40,26 @@
         .news-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 28px;
+            justify-content: space-between;
+            font-size: 26px;
             font-weight: bold;
             color: #fff;
-            padding: 20px;
-            background: linear-gradient(90deg, #6a0dad, #1e90ff);
+            padding: 15px 20px;
+            background: linear-gradient(90deg, #6a0dad, #ff69b4);
             width: 100%;
             box-sizing: border-box;
-            position: relative;
         }
-        .news-header .menu-icon {
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header-center {
             position: absolute;
-            right: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        .menu-icon {
             font-size: 22px;
             cursor: pointer;
         }
@@ -94,14 +101,15 @@
         .btn {
             padding: 10px 20px;
             margin-top: 20px;
-            background-color: #333;
+            background: linear-gradient(90deg, #6a0dad, #ff69b4);
             color: #fff;
             border: none;
             cursor: pointer;
             font-size: 16px;
         }
         .gossip-icon {
-            margin-right: 10px;
+            margin-right: 15px;
+            font-size: 20px;
         }
         .advertisement {
             position: absolute;
@@ -113,6 +121,19 @@
         }
         .advertisement i {
             margin-right: 5px;
+        }
+        .instagram-handle {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+        }
+        .instagram-icon {
+            margin-right: 5px;
+            color: #000; /* Alterado para preto */
         }
     </style>
 </head>
@@ -127,9 +148,11 @@
 
         <div class="preview-container" id="newsPreview">
             <div class="news-header">
-                <i class="fas fa-comment-dots gossip-icon"></i>
-                Fofocalizando Neext
-                <span class="menu-icon">☰</span>
+                <div class="header-left">
+                    <i class="fas fa-theater-masks gossip-icon"></i>
+                </div>
+                <div class="header-center">FOCALIZANDO NEEXT</div>
+                <div class="menu-icon">☰</div>
             </div>
             <div class="news-title" id="newsTitle">Título da Notícia</div>
             <div style="display: flex; align-items: flex-start; margin-top: 10px;">
@@ -138,6 +161,9 @@
             </div>
             <div class="advertisement">
                 <i class="fas fa-calendar-alt"></i> Informe Publicitário - Data: <span id="currentDate"></span>
+            </div>
+            <div class="instagram-handle">
+                <i class="fab fa-instagram instagram-icon"></i> @neet.tk
             </div>
         </div>
 
@@ -171,6 +197,7 @@
             });
         }
 
+        // Exibe a data atual no formato desejado
         function displayCurrentDate() {
             const today = new Date();
             const day = String(today.getDate()).padStart(2, '0');
@@ -179,6 +206,7 @@
             document.getElementById('currentDate').innerText = `${day}/${month}/${year}`;
         }
 
+        // Chama a função para exibir a data ao carregar a página
         window.onload = displayCurrentDate;
     </script>
 </body>
