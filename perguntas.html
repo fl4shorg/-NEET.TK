@@ -11,6 +11,45 @@
   <!-- Tailwind CDN para estilização -->
   <script src="https://cdn.tailwindcss.com"></script>
   
+  <script>
+    // Configure Tailwind with custom colors and theme
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#a855f7',
+              foreground: '#ffffff'
+            },
+            background: {
+              DEFAULT: '#ffffff',
+              dark: '#111827'
+            },
+            foreground: {
+              DEFAULT: '#111827',
+              dark: '#f9fafb'
+            },
+            card: {
+              DEFAULT: '#ffffff',
+              dark: '#1f2937'
+            },
+            border: {
+              DEFAULT: '#e5e7eb',
+              dark: '#374151'
+            },
+            muted: {
+              DEFAULT: '#f3f4f6',
+              foreground: '#6b7280',
+              dark: '#374151',
+              'dark-foreground': '#9ca3af'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  
   <style>
     /* Animações e estilos personalizados */
     @keyframes fadeIn {
@@ -52,18 +91,24 @@
     /* Estilo de mensagens e cartões */
     .message-card {
       background-color: white;
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      margin-bottom: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 0.5rem;
       overflow: hidden;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .dark .message-card {
+      background-color: #1f2937;
+      border-color: #374151;
     }
     
     .message-header {
-      background-color: #a855f7; /* Cor primária (roxo) */
-      color: white;
       padding: 1rem;
       font-weight: 500;
       text-align: center;
+      color: white;
+      background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);
     }
     
     .message-content {
@@ -71,6 +116,10 @@
       text-align: center;
       font-size: 1.25rem;
       font-weight: 500;
+    }
+    
+    .dark .message-content {
+      color: #f9fafb;
     }
     
     .message-actions {
@@ -90,8 +139,12 @@
       transition: all 0.2s;
     }
     
+    .action-button:hover {
+      transform: scale(1.05);
+    }
+    
     .info-button {
-      background-color: #a855f7;
+      background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);
       color: white;
     }
     
@@ -104,98 +157,365 @@
       background-color: #f3f4f6;
       color: #6b7280;
     }
+    
+    .dark .arrow-button {
+      background-color: #374151;
+      color: #d1d5db;
+    }
+    
+    /* Modo escuro */
+    .dark {
+      background-color: #111827;
+      color: #f9fafb;
+    }
+    
+    .dark header,
+    .dark .toast {
+      background-color: #1f2937;
+      border-color: #374151;
+    }
+    
+    .dark footer {
+      border-color: #374151;
+    }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="w-full py-6 px-8 flex flex-col items-center justify-center sticky top-0 z-40 animate-fade-in bg-white">
-    <div class="flex flex-col items-center gap-2">
-      <div class="h-20 w-20 rounded-full bg-purple-500 flex items-center justify-center mb-4 animate-fade-in">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-        </svg>
+<body class="min-h-screen flex flex-col transition-colors duration-300">
+  <!-- Barra de navegação e pesquisa -->
+  <header class="border-b border-border sticky top-0 z-10 bg-white dark:bg-gray-900 dark:border-gray-700">
+    <div class="container px-4 sm:px-6 lg:px-8 mx-auto">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-full flex items-center justify-center text-white" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-semibold tracking-tight">Mensagens Anônimas</h1>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="relative hidden sm:block">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-2.5 top-2.5 text-gray-400">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+            <input 
+              type="text" 
+              id="searchInput"
+              placeholder="Buscar mensagens..." 
+              class="w-64 pl-9 pr-4 py-2 text-sm rounded-md border bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+            />
+          </div>
+          <button
+            id="themeToggle"
+            class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Alternar tema"
+          >
+            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2"/>
+              <path d="M12 20v2"/>
+              <path d="m4.93 4.93 1.41 1.41"/>
+              <path d="m17.66 17.66 1.41 1.41"/>
+              <path d="M2 12h2"/>
+              <path d="M20 12h2"/>
+              <path d="m6.34 17.66-1.41 1.41"/>
+              <path d="m19.07 4.93-1.41 1.41"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      <h1 class="text-4xl font-bold tracking-tight text-center opacity-0 animate-slide-down" style="animation-delay: 0.1s; animation-fill-mode: forwards;">
-        Mensagens Anônimas
-      </h1>
-      <p class="text-xl text-gray-500 mt-2 text-center max-w-md opacity-0 animate-slide-up" style="animation-delay: 0.2s; animation-fill-mode: forwards;">
-        Leia as mensagens anônimas e salve-as quando quiser.
-      </p>
     </div>
   </header>
-  
-  <!-- Main Content -->
-  <main class="flex-1 container max-w-2xl px-4 py-8 mx-auto">
-    <div class="bg-purple-100 text-purple-700 py-2 px-6 rounded-full inline-block mx-auto mb-8 opacity-0 animate-fade-in" style="animation-delay: 0.3s; animation-fill-mode: forwards;">
-      <span class="text-base font-medium">Mensagens recentes</span>
-    </div>
-    
-    <section class="mb-8 opacity-0 animate-fade-in" style="animation-delay: 0.4s; animation-fill-mode: forwards;">
-      <h2 class="text-3xl font-bold tracking-tight mb-2 text-center">Leia as mensagens anônimas</h2>
-    </section>
-    
-    <!-- Loading state -->
-    <div id="loadingState" class="flex flex-col items-center justify-center py-20">
-      <div class="flex items-center justify-center space-x-2">
-        <div class="h-3 w-3 rounded-full bg-purple-500/80 animate-pulse"></div>
-        <div class="h-3 w-3 rounded-full bg-purple-500/60 animate-pulse" style="animation-delay: 0.2s"></div>
-        <div class="h-3 w-3 rounded-full bg-purple-500/40 animate-pulse" style="animation-delay: 0.4s"></div>
+
+  <!-- Layout principal - Sidebar e conteúdo -->
+  <div class="flex-1 flex">
+    <!-- Sidebar -->
+    <aside class="w-64 border-r border-border hidden md:block p-4 bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
+      <div class="space-y-1">
+        <button class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-100 text-gray-900 font-medium dark:bg-gray-800 dark:text-gray-100">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <span>Caixa de entrada</span>
+          <span id="messageCount" class="ml-auto text-xs rounded-full px-2 py-0.5 text-white" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);">
+            0
+          </span>
+        </button>
+        <button class="flex items-center gap-2 w-full p-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors dark:text-gray-300 dark:hover:bg-gray-800">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Enviadas</span>
+        </button>
       </div>
-      <p class="text-gray-500 mt-4 animate-pulse-subtle">Carregando mensagens...</p>
-    </div>
-    
-    <!-- Error state -->
-    <div id="errorState" class="flex flex-col items-center justify-center py-16 text-center hidden">
-      <div class="rounded-full bg-red-100 p-3 text-red-500 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" x2="12" y1="8" y2="12"/>
-          <line x1="12" x2="12.01" y1="16" y2="16"/>
-        </svg>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-1 overflow-auto bg-white dark:bg-gray-900">
+      <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Cabeçalho da caixa de entrada -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight dark:text-white">Caixa de entrada</h2>
+            <p class="text-gray-500 mt-1 dark:text-gray-400">
+              <span id="messageCountText">0</span> mensagens anônimas recebidas
+            </p>
+          </div>
+          
+          <!-- Barra de pesquisa visível apenas em mobile -->
+          <div class="relative block sm:hidden w-full">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-2.5 top-2.5 text-gray-400">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+            <input 
+              type="text" 
+              id="mobileSearchInput"
+              placeholder="Buscar mensagens..." 
+              class="w-full pl-9 pr-4 py-2 text-sm rounded-md border bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+            />
+          </div>
+          
+          <!-- Botões de navegação e filtro -->
+          <div class="flex items-center gap-2 self-end sm:self-auto">
+            <button 
+              id="filterButton"
+              class="p-2 rounded-md hover:bg-gray-100 transition-colors relative dark:hover:bg-gray-800"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" x2="4" y1="21" y2="14"/>
+                <line x1="4" x2="4" y1="10" y2="3"/>
+                <line x1="12" x2="12" y1="21" y2="12"/>
+                <line x1="12" x2="12" y1="8" y2="3"/>
+                <line x1="20" x2="20" y1="21" y2="16"/>
+                <line x1="20" x2="20" y1="12" y2="3"/>
+                <line x1="2" x2="6" y1="14" y2="14"/>
+                <line x1="10" x2="14" y1="8" y2="8"/>
+                <line x1="18" x2="22" y1="16" y2="16"/>
+              </svg>
+              <span id="filterIndicator" class="absolute -top-1 -right-1 h-2 w-2 rounded-full hidden" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);"></span>
+            </button>
+            <button class="p-2 rounded-md hover:bg-gray-100 transition-colors dark:hover:bg-gray-800">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+            </button>
+            <button class="p-2 rounded-md hover:bg-gray-100 transition-colors dark:hover:bg-gray-800">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Menu de filtros -->
+        <div id="filterMenu" class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-3 mb-4 shadow-sm animate-fade-in hidden">
+          <h3 class="text-sm font-medium mb-2 dark:text-gray-200">Filtrar mensagens por:</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <button 
+              data-filter="all"
+              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-purple-500 text-white"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span>Todas</span>
+            </button>
+            <button 
+              data-filter="today"
+              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span>Hoje</span>
+            </button>
+            <button 
+              data-filter="week"
+              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                <line x1="16" x2="16" y1="2" y2="6"/>
+                <line x1="8" x2="8" y1="2" y2="6"/>
+                <line x1="3" x2="21" y1="10" y2="10"/>
+              </svg>
+              <span>Esta semana</span>
+            </button>
+            <button 
+              data-filter="month"
+              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                <line x1="16" x2="16" y1="2" y2="6"/>
+                <line x1="8" x2="8" y1="2" y2="6"/>
+                <line x1="3" x2="21" y1="10" y2="10"/>
+              </svg>
+              <span>Este mês</span>
+            </button>
+            <button 
+              data-filter="new"
+              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m5 12 7-7 7 7"/>
+                <path d="M12 19V5"/>
+              </svg>
+              <span>Novas</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Carregando mensagens -->
+        <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+          <div class="flex items-center justify-center space-x-2">
+            <div class="h-3 w-3 rounded-full animate-pulse" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%); opacity: 0.8;"></div>
+            <div class="h-3 w-3 rounded-full animate-pulse" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%); opacity: 0.6; animation-delay: 0.2s;"></div>
+            <div class="h-3 w-3 rounded-full animate-pulse" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%); opacity: 0.4; animation-delay: 0.4s;"></div>
+          </div>
+          <p class="text-gray-500 mt-4 animate-pulse-subtle dark:text-gray-400">Carregando mensagens...</p>
+        </div>
+
+        <!-- Estado de erro -->
+        <div id="errorState" class="flex flex-col items-center justify-center py-16 text-center hidden">
+          <div class="rounded-full bg-red-100 p-3 text-red-500 mb-4 dark:bg-red-900/30 dark:text-red-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" x2="12" y1="8" y2="12"/>
+              <line x1="12" x2="12.01" y1="16" y2="16"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium mb-2 dark:text-white">Não foi possível carregar as mensagens</h3>
+          <p class="text-gray-500 max-w-md dark:text-gray-400">
+            Ocorreu um erro ao tentar buscar as mensagens. Por favor, verifique sua conexão e tente novamente.
+          </p>
+        </div>
+
+        <!-- Estado vazio (depois de pesquisa/filtro) -->
+        <div id="emptyFilterState" class="flex flex-col items-center justify-center py-16 text-center hidden">
+          <div class="rounded-full bg-gray-100 p-3 text-gray-500 mb-4 dark:bg-gray-800 dark:text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.3-4.3"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium mb-2 dark:text-white">Nenhuma mensagem encontrada</h3>
+          <p class="text-gray-500 max-w-md dark:text-gray-400">
+            Nenhuma mensagem corresponde aos seus critérios de pesquisa ou filtro.
+            <span id="searchTerm"></span>
+          </p>
+        </div>
+
+        <!-- Estado vazio (sem mensagens) -->
+        <div id="emptyState" class="flex flex-col items-center justify-center py-16 text-center hidden">
+          <div class="rounded-full bg-gray-100 p-3 text-gray-500 mb-4 dark:bg-gray-800 dark:text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.3-4.3"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium mb-2 dark:text-white">Nenhuma mensagem encontrada</h3>
+          <p class="text-gray-500 max-w-md dark:text-gray-400">
+            Não há mensagens registradas no momento. Volte mais tarde para verificar novamente.
+          </p>
+        </div>
+
+        <!-- Lista de mensagens -->
+        <div id="questionsList" class="space-y-4 hidden"></div>
       </div>
-      <h3 class="text-xl font-medium mb-2">Não foi possível carregar as mensagens</h3>
-      <p class="text-gray-500 max-w-md">
-        Ocorreu um erro ao tentar buscar as mensagens. Por favor, verifique sua conexão e tente novamente.
-      </p>
-    </div>
-    
-    <!-- Empty state -->
-    <div id="emptyState" class="flex flex-col items-center justify-center py-16 text-center hidden">
-      <div class="rounded-full bg-gray-100 p-3 text-gray-500 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m13.5 8.5-5 5"/>
-          <path d="m8.5 8.5 5 5"/>
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.3-4.3"/>
-        </svg>
-      </div>
-      <h3 class="text-xl font-medium mb-2">Nenhuma mensagem encontrada</h3>
-      <p class="text-gray-500 max-w-md">
-        Não há mensagens registradas no momento. Volte mais tarde para verificar novamente.
-      </p>
-    </div>
-    
-    <!-- Questions list -->
-    <div id="questionsList" class="flex flex-col gap-4 hidden"></div>
-  </main>
-  
-  <!-- Footer -->
-  <footer class="py-6 px-4 text-center text-sm text-gray-500 border-t">
+    </main>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="py-6 px-4 text-center text-sm text-gray-500 border-t dark:text-gray-400 dark:border-gray-700">
     <p>© <span id="currentYear"></span> NEEXT LTDA. Todos os direitos reservados.</p>
   </footer>
-  
-  <!-- Toast notification container -->
+
+  <!-- Container de toast -->
   <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   
   <script>
     // Configurar o ano atual no footer
     document.getElementById('currentYear').textContent = new Date().getFullYear();
     
+    // Estado global
+    const state = {
+      questions: [],
+      filteredQuestions: [],
+      searchQuery: "",
+      filterType: "all", // "all", "today", "week", "month", "new"
+      loading: true,
+      error: false,
+      showFilters: false
+    };
+    
+    // Elementos DOM
+    const elements = {
+      loadingState: document.getElementById('loadingState'),
+      errorState: document.getElementById('errorState'),
+      emptyState: document.getElementById('emptyState'),
+      emptyFilterState: document.getElementById('emptyFilterState'),
+      questionsList: document.getElementById('questionsList'),
+      messageCount: document.getElementById('messageCount'),
+      messageCountText: document.getElementById('messageCountText'),
+      searchInput: document.getElementById('searchInput'),
+      mobileSearchInput: document.getElementById('mobileSearchInput'),
+      filterButton: document.getElementById('filterButton'),
+      filterMenu: document.getElementById('filterMenu'),
+      filterIndicator: document.getElementById('filterIndicator'),
+      filterButtons: document.querySelectorAll('.filter-button'),
+      searchTerm: document.getElementById('searchTerm'),
+      themeToggle: document.getElementById('themeToggle'),
+      moonIcon: document.getElementById('moonIcon'),
+      sunIcon: document.getElementById('sunIcon')
+    };
+    
+    // Função para alternar tema claro/escuro
+    function setupThemeToggle() {
+      // Verificar tema inicial
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const storedTheme = localStorage.getItem('theme');
+      
+      // Definir tema inicial
+      if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        elements.moonIcon.classList.add('hidden');
+        elements.sunIcon.classList.remove('hidden');
+      }
+      
+      // Alternar tema ao clicar no botão
+      elements.themeToggle.addEventListener('click', () => {
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+          elements.moonIcon.classList.remove('hidden');
+          elements.sunIcon.classList.add('hidden');
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+          elements.moonIcon.classList.add('hidden');
+          elements.sunIcon.classList.remove('hidden');
+        }
+      });
+    }
+    
     // Função para mostrar toast de notificação
     function showToast(title, description, variant = 'default') {
       const toast = document.createElement('div');
       toast.className = `p-4 rounded-lg shadow-lg max-w-md animate-slide-up flex gap-3 items-start ${
-        variant === 'destructive' ? 'bg-red-100 text-red-800' : 'bg-white text-gray-800'
+        variant === 'destructive' 
+          ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200' 
+          : 'bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700'
       }`;
       
       toast.innerHTML = `
@@ -243,8 +563,8 @@
           <button class="action-button info-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
-              <path d="M12 16v-4"/>
-              <path d="M12 8h.01"/>
+              <line x1="12" x2="12" y1="8" y2="12"/>
+              <line x1="12" x2="12.01" y1="16" y2="16"/>
             </svg>
           </button>
           <button class="action-button share-button">
@@ -264,9 +584,8 @@
       return card;
     }
     
-    // Função para alterar a visibilidade dos estados
-    function showElement(elementId, show = true) {
-      const element = document.getElementById(elementId);
+    // Função para mostrar/ocultar elementos
+    function showElement(element, show = true) {
       if (show) {
         element.classList.remove('hidden');
       } else {
@@ -274,13 +593,128 @@
       }
     }
     
+    // Função para atualizar a exibição com base no estado atual
+    function updateDisplay() {
+      // Atualizar contadores de mensagens
+      elements.messageCount.textContent = state.filteredQuestions.length;
+      elements.messageCountText.textContent = state.filteredQuestions.length;
+      
+      // Limpar a lista de perguntas
+      elements.questionsList.innerHTML = '';
+      
+      // Esconder todos os estados
+      showElement(elements.loadingState, false);
+      showElement(elements.errorState, false);
+      showElement(elements.emptyState, false);
+      showElement(elements.emptyFilterState, false);
+      showElement(elements.questionsList, false);
+      
+      // Mostrar o estado apropriado
+      if (state.loading) {
+        showElement(elements.loadingState, true);
+        return;
+      }
+      
+      if (state.error) {
+        showElement(elements.errorState, true);
+        return;
+      }
+      
+      if (state.questions.length === 0) {
+        showElement(elements.emptyState, true);
+        return;
+      }
+      
+      if (state.filteredQuestions.length === 0) {
+        // Atualizar a mensagem de busca
+        if (state.searchQuery) {
+          elements.searchTerm.textContent = ` Tente outra palavra-chave.`;
+        } else {
+          elements.searchTerm.textContent = '';
+        }
+        showElement(elements.emptyFilterState, true);
+        return;
+      }
+      
+      // Adicionar cada pergunta à lista
+      state.filteredQuestions.forEach((question, index) => {
+        const card = createQuestionCard(question, index);
+        elements.questionsList.appendChild(card);
+      });
+      
+      showElement(elements.questionsList, true);
+    }
+    
+    // Função para aplicar filtros e pesquisa
+    function applyFilters() {
+      if (state.questions.length === 0) return;
+      
+      let result = [...state.questions];
+      
+      // Aplicar filtro de tempo
+      if (state.filterType !== "all") {
+        // Como não temos data nas perguntas, vamos simular com slices
+        if (state.filterType === "today") {
+          // Simular perguntas de hoje (primeiras 3)
+          result = result.slice(0, Math.min(3, result.length));
+        } else if (state.filterType === "week") {
+          // Simular perguntas da semana (primeiras 7)
+          result = result.slice(0, Math.min(7, result.length));
+        } else if (state.filterType === "month") {
+          // Simular perguntas do mês (primeiras 15)
+          result = result.slice(0, Math.min(15, result.length));
+        } else if (state.filterType === "new") {
+          // Simular novas perguntas (primeiras 5)
+          result = result.slice(0, Math.min(5, result.length));
+        }
+      }
+      
+      // Aplicar pesquisa
+      if (state.searchQuery.trim() !== "") {
+        const query = state.searchQuery.toLowerCase();
+        result = result.filter(q => 
+          q.pergunta.toLowerCase().includes(query)
+        );
+      }
+      
+      state.filteredQuestions = result;
+      updateDisplay();
+    }
+    
+    // Função para definir o tipo de filtro
+    function setFilterType(type) {
+      state.filterType = type;
+      
+      // Atualizar indicador de filtro ativo
+      if (type === "all") {
+        showElement(elements.filterIndicator, false);
+      } else {
+        showElement(elements.filterIndicator, true);
+      }
+      
+      // Atualizar aparência dos botões de filtro
+      elements.filterButtons.forEach(button => {
+        const buttonType = button.getAttribute('data-filter');
+        
+        if (buttonType === type) {
+          button.style.background = 'linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%)';
+          button.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:hover:bg-gray-600');
+          button.classList.add('text-white');
+        } else {
+          button.style.background = '';
+          button.classList.remove('text-white');
+          button.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:hover:bg-gray-600');
+        }
+      });
+      
+      applyFilters();
+    }
+    
     // Função para buscar as perguntas
     async function fetchQuestions() {
-      // Mostrar estado de carregamento
-      showElement('loadingState', true);
-      showElement('errorState', false);
-      showElement('emptyState', false);
-      showElement('questionsList', false);
+      state.loading = true;
+      state.error = false;
+      updateDisplay();
       
       try {
         const response = await fetch('https://script.google.com/macros/s/AKfycbyMh9YnzKtxF9Nc_awc9w8KSPyXa4OzXf0iiW748b8-dY4W0SxkoYy77Wcudn7ky9xUJg/exec');
@@ -291,45 +725,69 @@
         
         const data = await response.json();
         
-        // Ocultar estado de carregamento
-        showElement('loadingState', false);
-        
         // Verificar se há perguntas
         if (!data.perguntas || data.perguntas.length === 0) {
-          showElement('emptyState', true);
-          return;
+          state.questions = [];
+          state.filteredQuestions = [];
+        } else {
+          // Inverter a ordem das perguntas para mostrar as mais recentes primeiro
+          state.questions = [...data.perguntas].reverse();
+          state.filteredQuestions = [...state.questions];
         }
-        
-        // Inverter a ordem das perguntas para mostrar as mais recentes primeiro
-        const reversedQuestions = [...data.perguntas].reverse();
-        
-        // Limpar a lista de perguntas
-        const questionsList = document.getElementById('questionsList');
-        questionsList.innerHTML = '';
-        
-        // Adicionar cada pergunta à lista
-        reversedQuestions.forEach((question, index) => {
-          const card = createQuestionCard(question, index);
-          questionsList.appendChild(card);
-        });
-        
-        // Mostrar a lista de perguntas
-        showElement('questionsList', true);
-        
       } catch (error) {
         console.error('Error fetching questions:', error);
-        showElement('loadingState', false);
-        showElement('errorState', true);
+        state.error = true;
         showToast(
           "Erro ao carregar mensagens", 
           "Houve um problema ao carregar as mensagens. Tente novamente mais tarde.",
           "destructive"
         );
+      } finally {
+        state.loading = false;
+        applyFilters();
       }
     }
     
-    // Carregar perguntas ao iniciar a página
-    document.addEventListener('DOMContentLoaded', fetchQuestions);
+    // Configurar manipuladores de eventos
+    function setupEventHandlers() {
+      // Pesquisa (desktop)
+      elements.searchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        elements.mobileSearchInput.value = e.target.value; // Sincronizar com mobile
+        applyFilters();
+      });
+      
+      // Pesquisa (mobile)
+      elements.mobileSearchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        elements.searchInput.value = e.target.value; // Sincronizar com desktop
+        applyFilters();
+      });
+      
+      // Botão de filtro
+      elements.filterButton.addEventListener('click', () => {
+        state.showFilters = !state.showFilters;
+        showElement(elements.filterMenu, state.showFilters);
+      });
+      
+      // Botões de tipo de filtro
+      elements.filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const filterType = button.getAttribute('data-filter');
+          setFilterType(filterType);
+        });
+      });
+    }
+    
+    // Inicializar aplicação
+    function init() {
+      setupThemeToggle();
+      setupEventHandlers();
+      fetchQuestions();
+    }
+    
+    // Iniciar quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
