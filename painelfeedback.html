@@ -1,0 +1,940 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualizador de Feedback</title>
+  <meta name="description" content="Visualização de feedback dos usuários com design minimalista e elegante" />
+  <meta name="author" content="Lovable" />
+  <meta property="og:image" content="/og-image.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  
+  <!-- Import Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            card: "hsl(var(--card))",
+            "card-foreground": "hsl(var(--card-foreground))",
+            popover: "hsl(var(--popover))",
+            "popover-foreground": "hsl(var(--popover-foreground))",
+            primary: "hsl(var(--primary))",
+            "primary-foreground": "hsl(var(--primary-foreground))",
+            secondary: "hsl(var(--secondary))",
+            "secondary-foreground": "hsl(var(--secondary-foreground))",
+            muted: "hsl(var(--muted))",
+            "muted-foreground": "hsl(var(--muted-foreground))",
+            accent: "hsl(var(--accent))",
+            "accent-foreground": "hsl(var(--accent-foreground))",
+            destructive: "hsl(var(--destructive))",
+            "destructive-foreground": "hsl(var(--destructive-foreground))",
+            border: "hsl(var(--border))",
+            input: "hsl(var(--input))",
+            ring: "hsl(var(--ring))",
+          },
+          borderRadius: {
+            lg: "var(--radius)",
+            md: "calc(var(--radius) - 2px)",
+            sm: "calc(var(--radius) - 4px)",
+          },
+          animation: {
+            "fade-up": "fadeUp 0.5s ease-out forwards",
+            shimmer: "shimmer 2s infinite",
+          },
+          keyframes: {
+            fadeUp: {
+              "0%": { opacity: 0, transform: "translateY(10px)" },
+              "100%": { opacity: 1, transform: "translateY(0)" },
+            },
+            shimmer: {
+              "0%": { backgroundPosition: "200% 0" },
+              "100%": { backgroundPosition: "0 0" },
+            },
+          },
+        },
+      },
+    };
+  </script>
+  
+  <!-- Import Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --background: 210 40% 98%;
+      --foreground: 210 20% 20%;
+      --card: 0 0% 100%;
+      --card-foreground: 210 20% 20%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 210 20% 20%;
+      --primary: 222 89% 58%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 210 40% 96%;
+      --secondary-foreground: 222 89% 58%;
+      --muted: 210 40% 96%;
+      --muted-foreground: 210 20% 40%;
+      --accent: 222 89% 96%;
+      --accent-foreground: 222 89% 58%;
+      --destructive: 0 84% 60%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 215 30% 90%;
+      --input: 215 30% 90%;
+      --ring: 222 89% 58%;
+      --radius: 0.8rem;
+    }
+
+    .dark {
+      --background: 215 30% 10%;
+      --foreground: 210 40% 98%;
+      --card: 215 30% 13%;
+      --card-foreground: 210 40% 98%;
+      --popover: 215 30% 13%;
+      --popover-foreground: 210 40% 98%;
+      --primary: 222 89% 65%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 215 30% 18%;
+      --secondary-foreground: 222 89% 65%;
+      --muted: 215 30% 18%;
+      --muted-foreground: 210 40% 70%;
+      --accent: 215 30% 18%;
+      --accent-foreground: 222 89% 65%;
+      --destructive: 0 63% 31%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 215 30% 18%;
+      --input: 215 30% 20%;
+      --ring: 222 89% 65%;
+    }
+
+    * {
+      border-color: hsl(var(--border));
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      transition: colors 0.3s ease;
+      font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+      margin: 0;
+      padding: 0;
+    }
+    
+    ::selection {
+      background-color: hsl(var(--primary) / 0.2);
+      color: hsl(var(--primary));
+    }
+
+    .glassmorphism {
+      background-color: hsl(0 0% 100% / 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid hsl(0 0% 100% / 0.2);
+    }
+
+    .dark .glassmorphism {
+      background-color: hsl(0 0% 0% / 0.7);
+      border-color: hsl(0 0% 0% / 0.2);
+    }
+
+    .shimmer-effect {
+      background: linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.1), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
+
+    .spinner {
+      border: 3px solid hsl(var(--muted));
+      border-top: 3px solid hsl(var(--primary));
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 40px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: hsl(var(--muted));
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: hsl(var(--muted-foreground) / 0.3);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: hsl(var(--muted-foreground) / 0.5);
+    }
+
+    /* Toast Styles */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+
+    .toast {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: flex-start;
+      max-width: 350px;
+      animation: toastIn 0.3s ease-out forwards;
+    }
+
+    .toast-error {
+      border-left: 4px solid hsl(var(--destructive));
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .toast-description {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: hsl(var(--muted-foreground));
+      padding: 4px;
+      margin-left: 8px;
+    }
+
+    @keyframes toastIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Custom Dropdown Styles */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: hsl(var(--background));
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+      border-radius: var(--radius);
+      border: 1px solid hsl(var(--border));
+      z-index: 1;
+      right: 0;
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      color: hsl(var(--foreground));
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .dropdown-item:hover {
+      background-color: hsl(var(--accent));
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Toast Container for Notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <div id="app" class="min-h-screen bg-background">
+    <!-- Header will be rendered here -->
+    <header class="w-full py-6 mb-8 border-b border-border">
+      <div class="container px-4 mx-auto">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-primary">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            <h1 class="text-2xl font-bold">
+              FeedbackMail
+            </h1>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <div class="rounded-full bg-muted px-4 py-1.5 flex items-center text-sm">
+              <span class="text-muted-foreground mr-1">Mensagens:</span>
+              <span id="total-users" class="font-medium">
+                <span class="inline-block w-4 h-4 shimmer-effect rounded"></span>
+              </span>
+            </div>
+            <button id="theme-toggle" class="rounded-full w-9 h-9 flex items-center justify-center bg-transparent hover:bg-accent">
+              <!-- Moon icon for light mode -->
+              <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[1.2rem] w-[1.2rem] text-slate-700">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              </svg>
+              <!-- Sun icon for dark mode (hidden by default) -->
+              <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[1.2rem] w-[1.2rem] text-yellow-200 hidden">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="mt-6 text-center md:text-left">
+          <p class="text-muted-foreground">
+            Explore as opiniões e sugestões da nossa comunidade
+          </p>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Main content -->
+    <main class="container mx-auto py-6 px-4">
+      <div class="mb-6 space-y-4 sm:space-y-0 sm:flex sm:flex-row sm:gap-4 sm:justify-between sm:items-center">
+        <div class="relative w-full sm:w-80">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Pesquisar mensagens..."
+            class="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background"
+          />
+        </div>
+        
+        <div class="flex justify-between items-center gap-2">
+          <!-- Filter Dropdown for Mobile -->
+          <div id="filter-dropdown-mobile" class="dropdown sm:hidden">
+            <button class="flex items-center gap-2 text-sm bg-secondary px-3 py-2 rounded-md">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              <span>Filtrar</span>
+            </button>
+            <div id="filter-dropdown-content-mobile" class="dropdown-content">
+              <div class="dropdown-item" data-filter="all">Todas as mensagens</div>
+              <div class="dropdown-item" data-filter="today">Hoje</div>
+              <div class="dropdown-item" data-filter="week">Esta semana</div>
+              <div class="dropdown-item" data-filter="month">Este mês</div>
+              <div class="dropdown-item" data-filter="new">Novas mensagens</div>
+            </div>
+          </div>
+          
+          <!-- Filter Select for Desktop -->
+          <div class="hidden sm:block relative">
+            <select id="filter-select" class="bg-background border border-input rounded-md h-10 pl-3 pr-10 py-2 text-sm appearance-none">
+              <option value="all">Todas as mensagens</option>
+              <option value="today">Hoje</option>
+              <option value="week">Esta semana</option>
+              <option value="month">Este mês</option>
+              <option value="new">Novas mensagens</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <button id="refresh-button" class="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+              <path d="M21 3v5h-5"></path>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+              <path d="M8 16H3v5"></path>
+            </svg>
+            <span class="hidden sm:inline">Atualizar</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Filter indicator -->
+      <div id="filter-indicator" class="mb-4 flex items-center gap-2 text-sm text-muted-foreground hidden">
+        <svg id="filter-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-primary"></svg>
+        <span id="filter-text">Filtrando mensagens</span>
+        <button id="clear-filter" class="text-xs text-primary ml-2 hover:underline">
+          Limpar filtro
+        </button>
+      </div>
+      
+      <!-- Loading Spinner -->
+      <div id="loading-spinner" class="spinner"></div>
+      
+      <!-- Error Message -->
+      <div id="error-message" class="text-center p-8 my-8 bg-destructive/10 rounded-lg border border-destructive/20 hidden">
+        <p class="text-foreground">Não foi possível carregar os dados. Por favor, tente novamente mais tarde.</p>
+        <button id="try-again-button" class="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+          Tentar novamente
+        </button>
+      </div>
+      
+      <!-- User Cards Container -->
+      <div id="cards-container" class="h-[calc(100vh-220px)] overflow-y-auto pr-4 animate-fade-up hidden">
+        <!-- Cards will be inserted here by JavaScript -->
+      </div>
+      
+      <!-- No Results Message -->
+      <div id="no-results" class="text-center p-8 my-4 bg-muted rounded-lg hidden">
+        <p class="text-muted-foreground">
+          Nenhum resultado encontrado.
+        </p>
+      </div>
+    </main>
+  </div>
+  
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+
+  <script>
+    // Theme management
+    const themeSwitcher = document.getElementById('theme-toggle');
+    const moonIcon = document.getElementById('moon-icon');
+    const sunIcon = document.getElementById('sun-icon');
+    
+    // Check for saved theme preference or use system preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+      moonIcon.classList.add('hidden');
+      sunIcon.classList.remove('hidden');
+    }
+    
+    themeSwitcher.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      
+      if (isDark) {
+        moonIcon.classList.add('hidden');
+        sunIcon.classList.remove('hidden');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        moonIcon.classList.remove('hidden');
+        sunIcon.classList.add('hidden');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+    
+    // Toast notifications
+    const toastContainer = document.getElementById('toast-container');
+    
+    function showToast(title, description, variant = 'default') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${variant === 'destructive' ? 'toast-error' : ''}`;
+      
+      toast.innerHTML = `
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-description">${description}</div>
+        </div>
+        <button class="toast-close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      `;
+      
+      toastContainer.appendChild(toast);
+      
+      // Add close event
+      const closeButton = toast.querySelector('.toast-close');
+      closeButton.addEventListener('click', () => {
+        toast.remove();
+      });
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        toast.remove();
+      }, 5000);
+    }
+    
+    // Check if viewport is mobile
+    function isMobile() {
+      return window.innerWidth < 640;
+    }
+    
+    // Media query for responsive design
+    const mobileQuery = window.matchMedia('(max-width: 639px)');
+    let isMobileView = isMobile();
+    
+    // Mobile dropdown for filter
+    const filterDropdownMobile = document.getElementById('filter-dropdown-mobile');
+    const filterDropdownContent = document.getElementById('filter-dropdown-content-mobile');
+    
+    filterDropdownMobile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      filterDropdownContent.classList.toggle('show');
+    });
+    
+    // Close dropdown when clicking outside
+    window.addEventListener('click', () => {
+      const dropdowns = document.getElementsByClassName('dropdown-content');
+      for (const dropdown of dropdowns) {
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+        }
+      }
+    });
+    
+    // API data fetching
+    const API_URL = "https://script.google.com/macros/s/AKfycbwH2LvroJKkfGqbUlH2XPK0WUGd1rIYPHqTYFICZQaYnOAmRlRz6JxE4WuB-tvOLz-J/exec?getData";
+    
+    // DOM elements
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const errorMessage = document.getElementById('error-message');
+    const cardsContainer = document.getElementById('cards-container');
+    const noResults = document.getElementById('no-results');
+    const totalUsersDisplay = document.getElementById('total-users');
+    const searchInput = document.getElementById('search-input');
+    const filterSelectDesktop = document.getElementById('filter-select');
+    const filterIndicator = document.getElementById('filter-indicator');
+    const filterText = document.getElementById('filter-text');
+    const filterIcon = document.getElementById('filter-icon');
+    const clearFilterButton = document.getElementById('clear-filter');
+    const refreshButton = document.getElementById('refresh-button');
+    const tryAgainButton = document.getElementById('try-again-button');
+    
+    // State
+    let userData = [];
+    let searchTerm = '';
+    let filterPeriod = 'all';
+    
+    // Fetch data from API
+    async function fetchUserData() {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'GET',
+          mode: 'cors'
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API request failed with status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        throw error;
+      }
+    }
+    
+    // Load user data
+    async function loadData() {
+      showLoading();
+      
+      try {
+        const data = await fetchUserData();
+        
+        // Add mock timestamps for demonstration
+        userData = data.map((item) => {
+          const daysAgo = Math.floor(Math.random() * 30);
+          const date = new Date();
+          date.setDate(date.getDate() - daysAgo);
+          
+          return {
+            ...item,
+            timestamp: date.toISOString(),
+          };
+        });
+        
+        totalUsersDisplay.textContent = userData.length;
+        
+        hideLoading();
+        renderUserCards();
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+        hideLoading();
+        showError();
+        showToast("Erro ao carregar dados", "Houve um problema ao carregar os dados dos usuários.", "destructive");
+      }
+    }
+    
+    // Filter data by period
+    function filterByPeriod(data, period) {
+      if (period === 'all') return data;
+      
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay());
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      
+      return data.filter(item => {
+        if (!item.timestamp) return period === 'all';
+        
+        const itemDate = new Date(item.timestamp);
+        
+        switch (period) {
+          case 'today':
+            return itemDate >= today;
+          case 'week':
+            return itemDate >= weekStart;
+          case 'month':
+            return itemDate >= monthStart;
+          case 'new':
+            // For demonstration, consider items from last 3 days as "new"
+            const threeDaysAgo = new Date(today);
+            threeDaysAgo.setDate(today.getDate() - 3);
+            return itemDate >= threeDaysAgo;
+          default:
+            return true;
+        }
+      });
+    }
+    
+    // Get filtered data
+    function getFilteredData() {
+      if (!userData || userData.length === 0) return [];
+      
+      // First filter by period
+      const periodFiltered = filterByPeriod(userData, filterPeriod);
+      
+      // Then filter by search term
+      return periodFiltered.filter(user => 
+        user.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.feedback.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    // Render user cards
+    function renderUserCards() {
+      const filteredData = getFilteredData();
+      
+      // Show/hide elements based on data
+      if (filteredData.length === 0) {
+        cardsContainer.classList.add('hidden');
+        noResults.classList.remove('hidden');
+      } else {
+        cardsContainer.classList.remove('hidden');
+        noResults.classList.add('hidden');
+        
+        // Clear container
+        cardsContainer.innerHTML = '';
+        
+        // Add cards
+        filteredData.forEach((user, index) => {
+          const card = createUserCard(user);
+          cardsContainer.appendChild(card);
+        });
+      }
+      
+      // Update filter indicator
+      updateFilterIndicator();
+    }
+    
+    // Update filter indicator
+    function updateFilterIndicator() {
+      if (filterPeriod === 'all') {
+        filterIndicator.classList.add('hidden');
+      } else {
+        filterIndicator.classList.remove('hidden');
+        
+        // Update text
+        switch (filterPeriod) {
+          case 'today':
+            filterText.textContent = 'Mensagens de hoje';
+            filterIcon.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-primary">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                <line x1="16" x2="16" y1="2" y2="6"></line>
+                <line x1="8" x2="8" y1="2" y2="6"></line>
+                <line x1="3" x2="21" y1="10" y2="10"></line>
+              </svg>
+            `;
+            break;
+          case 'week':
+          case 'month':
+            filterText.textContent = filterPeriod === 'week' ? 'Mensagens desta semana' : 'Mensagens deste mês';
+            filterIcon.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-primary">
+                <path d="M8 2v4"></path>
+                <path d="M16 2v4"></path>
+                <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                <path d="M3 10h18"></path>
+                <path d="M8 14h.01"></path>
+                <path d="M12 14h.01"></path>
+                <path d="M16 14h.01"></path>
+                <path d="M8 18h.01"></path>
+                <path d="M12 18h.01"></path>
+                <path d="M16 18h.01"></path>
+              </svg>
+            `;
+            break;
+          case 'new':
+            filterText.textContent = 'Novas mensagens';
+            filterIcon.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-primary">
+                <path d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"></path>
+                <path d="M14 2h6v6"></path>
+                <path d="m10 14 10-10"></path>
+              </svg>
+            `;
+            break;
+        }
+      }
+    }
+    
+    // Create a user card element
+    function createUserCard(user) {
+      const card = document.createElement('div');
+      card.className = 'border-l-4 hover:shadow-lg transition-all duration-300 cursor-pointer border-l-muted rounded-lg border bg-card text-card-foreground shadow-sm mb-3';
+      card.setAttribute('data-expanded', 'false');
+      
+      // Get initials for avatar fallback
+      const initials = user.nome
+        .split(' ')
+        .map(n => n[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+      
+      // Function to censor email with asterisks when expanded
+      const censorEmail = (email, isExpanded) => {
+        if (!isExpanded) return email;
+        
+        const [username, domain] = email.split('@');
+        if (!username || !domain) return email;
+        
+        const censoredUsername = username.length > 3 
+          ? `${username.slice(0, 2)}${'*'.repeat(username.length - 3)}${username.slice(-1)}`
+          : username;
+          
+        const [domainName, extension] = domain.split('.');
+        if (!domainName || !extension) return `${censoredUsername}@${domain}`;
+        
+        const censoredDomain = `${domainName[0]}${'*'.repeat(domainName.length - 1)}.${extension}`;
+        
+        return `${censoredUsername}@${censoredDomain}`;
+      };
+      
+      const updateCardContent = (isExpanded) => {
+        const expandClass = isExpanded ? 'border-l-primary shadow-primary/10 bg-accent/30' : 'border-l-muted';
+        const badgeClass = isExpanded ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground';
+        const badgeText = isExpanded ? 'Expandido' : 'Novo';
+        const maxHeightClass = isExpanded ? 'max-h-[400px]' : 'max-h-6';
+        const feedbackClass = isExpanded ? '' : 'truncate';
+        
+        card.className = `border-l-4 hover:shadow-lg transition-all duration-300 cursor-pointer rounded-lg border bg-card text-card-foreground shadow-sm mb-3 ${expandClass}`;
+        
+        cardContent.innerHTML = `
+          <div class="${isMobileView ? 'flex-col' : 'flex-row'} flex items-start gap-4 sm:gap-6">
+            ${!isMobileView ? `
+              <div class="pt-1 flex-shrink-0">
+                <div class="relative flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-sm">
+                  <img 
+                    src="${user.foto}" 
+                    alt="${user.nome}"
+                    class="aspect-square h-full w-full transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}"
+                  />
+                  <div class="flex h-full w-full items-center justify-center rounded-full bg-muted absolute ${imageLoaded ? 'hidden' : ''}">
+                    ${initials}
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+            
+            <div class="flex-1 space-y-2 w-full">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-3">
+                  ${isMobileView ? `
+                    <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-sm flex-shrink-0">
+                      <img 
+                        src="${user.foto}" 
+                        alt="${user.nome}"
+                        class="aspect-square h-full w-full transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}"
+                      />
+                      <div class="flex h-full w-full items-center justify-center rounded-full bg-muted absolute ${imageLoaded ? 'hidden' : ''}">
+                        ${initials}
+                      </div>
+                    </div>
+                  ` : ''}
+                  <h3 class="font-medium text-base sm:text-lg line-clamp-1">${user.nome}</h3>
+                </div>
+                
+                <div class="flex-shrink-0">
+                  <span class="text-xs px-2 py-1 rounded-full ${badgeClass}">
+                    ${badgeText}
+                  </span>
+                </div>
+              </div>
+              
+              <p class="text-sm text-muted-foreground">
+                ${censorEmail(user.email, isExpanded)}
+              </p>
+              
+              <div class="overflow-hidden transition-all duration-300 ${maxHeightClass}">
+                <p class="text-sm sm:text-base ${feedbackClass}">
+                  ${user.feedback}
+                </p>
+              </div>
+              
+              ${isExpanded ? `
+                <div class="pt-3 text-xs text-muted-foreground italic">
+                  Clique para recolher
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      };
+      
+      const cardContent = document.createElement('div');
+      cardContent.className = 'p-4 sm:p-6';
+      card.appendChild(cardContent);
+      
+      // Image loaded state
+      let imageLoaded = false;
+      
+      // Add image load event
+      const img = new Image();
+      img.onload = () => {
+        imageLoaded = true;
+        updateCardContent(card.getAttribute('data-expanded') === 'true');
+      };
+      img.src = user.foto;
+      
+      // Initial render
+      updateCardContent(false);
+      
+      // Toggle expand functionality
+      card.addEventListener('click', () => {
+        const currentExpanded = card.getAttribute('data-expanded') === 'true';
+        card.setAttribute('data-expanded', (!currentExpanded).toString());
+        updateCardContent(!currentExpanded);
+      });
+      
+      return card;
+    }
+    
+    // UI state functions
+    function showLoading() {
+      loadingSpinner.classList.remove('hidden');
+      cardsContainer.classList.add('hidden');
+      errorMessage.classList.add('hidden');
+      noResults.classList.add('hidden');
+    }
+    
+    function hideLoading() {
+      loadingSpinner.classList.add('hidden');
+    }
+    
+    function showError() {
+      errorMessage.classList.remove('hidden');
+    }
+    
+    // Event Listeners
+    searchInput.addEventListener('input', (e) => {
+      searchTerm = e.target.value;
+      renderUserCards();
+    });
+    
+    // Desktop filter select
+    filterSelectDesktop.addEventListener('change', (e) => {
+      filterPeriod = e.target.value;
+      renderUserCards();
+    });
+    
+    // Mobile filter dropdown items
+    const filterItems = document.querySelectorAll('.dropdown-item');
+    filterItems.forEach(item => {
+      item.addEventListener('click', () => {
+        filterPeriod = item.getAttribute('data-filter') || 'all';
+        renderUserCards();
+        
+        // Update mobile dropdown label
+        filterDropdownContent.classList.remove('show');
+      });
+    });
+    
+    // Clear filter button
+    clearFilterButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      filterPeriod = 'all';
+      filterSelectDesktop.value = 'all';
+      renderUserCards();
+    });
+    
+    // Refresh button
+    refreshButton.addEventListener('click', loadData);
+    
+    // Try again button
+    tryAgainButton.addEventListener('click', loadData);
+    
+    // Handle window resize (responsive)
+    window.addEventListener('resize', () => {
+      const wasMobile = isMobileView;
+      isMobileView = isMobile();
+      
+      // Re-render cards if breakpoint changed
+      if (wasMobile !== isMobileView) {
+        renderUserCards();
+      }
+    });
+    
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
+  </script>
+</body>
+</html>
