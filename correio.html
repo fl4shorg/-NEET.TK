@@ -1,0 +1,555 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Correio Anônimo Neext</title>
+  <meta name="description" content="Envie mensagens anônimas de forma moderna e segura">
+  <meta name="author" content="Neext">
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/framer-motion@12.5.0/dist/framer-motion.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #EBF2FF, #EDF0FF);
+      color: #1E293B;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    .glass {
+      background-color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .shadow-crisp {
+      box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    }
+    
+    .text-gradient {
+      background: linear-gradient(to right, #3B82F6, #60A5FA);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .shine {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .shine::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+      transform: rotate(30deg);
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      pointer-events: none;
+    }
+    
+    .shine:hover::after {
+      transform: rotate(30deg) translate(100%, -100%);
+    }
+    
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+    
+    .animate-pulse-soft {
+      animation: pulse-soft 3s infinite ease-in-out;
+    }
+    
+    @keyframes floating {
+      0% { transform: translate(0, 0px) rotate(0deg); }
+      50% { transform: translate(0, -15px) rotate(2deg); }
+      100% { transform: translate(0, 0px) rotate(0deg); }
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    #three-container {
+      width: 100%;
+      height: 400px;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .fadeIn {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInAnimation 0.5s forwards;
+    }
+    
+    @keyframes fadeInAnimation {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .scaleIn {
+      opacity: 0;
+      transform: scale(0.95);
+      animation: scaleInAnimation 0.5s forwards;
+    }
+    
+    @keyframes scaleInAnimation {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    .success-checkmark {
+      position: relative;
+      animation: checkmarkAnimation 0.5s ease-out forwards;
+      transform: scale(0);
+    }
+    
+    @keyframes checkmarkAnimation {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#EBF2FF',
+              100: '#E1EFFE',
+              500: '#3B82F6',
+              600: '#2563EB'
+            },
+            indigo: {
+              50: '#EDF0FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5'
+            },
+            gray: {
+              100: '#F3F4F6',
+              200: '#E5E7EB',
+              500: '#6B7280',
+              600: '#4B5563',
+              700: '#374151',
+              800: '#1F2937'
+            }
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="py-6 px-6 md:px-10">
+      <div class="container mx-auto">
+        <div class="flex items-center space-x-2" id="logo">
+          <div class="relative z-10">
+            <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg flex items-center justify-center">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                class="h-6 w-6 text-white"
+              >
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+            </div>
+            <div class="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-300 animate-pulse-soft"></div>
+            <div class="absolute -bottom-1 -left-1 h-2 w-2 rounded-full bg-indigo-300 animate-pulse-soft" style="animation-delay: 1s"></div>
+          </div>
+          <div class="font-bold text-2xl tracking-tight">
+            <span class="text-gradient">Neext</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="container mx-auto px-6 md:px-10 pb-12 pt-4">
+      <div class="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
+        <div class="flex flex-col justify-center fadeIn" style="animation-delay: 0.1s">
+          <span class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2 fadeIn" style="animation-delay: 0.2s">
+            Correio Anônimo
+          </span>
+
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight fadeIn" style="animation-delay: 0.3s">
+            Envie mensagens <span class="text-gradient">anônimas</span> para qualquer pessoa
+          </h1>
+
+          <p class="text-lg text-gray-600 mb-8 fadeIn" style="animation-delay: 0.4s">
+            Compartilhe pensamentos, elogios ou declarações sem revelar sua identidade. 
+            Simples, seguro e totalmente anônimo.
+          </p>
+
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-crisp">
+            <div id="content-container">
+              <!-- Message form will be rendered here -->
+            </div>
+          </div>
+        </div>
+
+        <div class="relative order-first md:order-last scaleIn" style="animation-delay: 0.2s">
+          <div class="relative aspect-square max-w-md mx-auto">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-[80%] h-[80%] rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 opacity-70 animate-pulse-soft"></div>
+            </div>
+            <div class="relative z-10 h-full">
+              <div id="three-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 px-6 md:px-10 border-t border-gray-100">
+      <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+        <div>
+          <p>© <span id="current-year"></span> Correio Anônimo Neext. Todos os direitos reservados.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <p>Suas mensagens. Sua privacidade. Sua liberdade.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // State management
+    let showSuccess = false;
+    
+    // Render the message form
+    function renderMessageForm() {
+      const formHtml = `
+        <div class="w-full fadeIn">
+          <form id="messageForm" class="space-y-4">
+            <div class="space-y-2 fadeIn" style="animation-delay: 0.1s">
+              <label for="nome" class="block text-sm font-medium text-gray-700">
+                Nome do destinatário
+              </label>
+              <div class="relative">
+                <input
+                  id="nome"
+                  type="text"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 transition-all duration-300 shadow-sm"
+                  placeholder="Para quem deseja enviar esta mensagem?"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2 fadeIn" style="animation-delay: 0.2s">
+              <label for="mensagem" class="block text-sm font-medium text-gray-700">
+                Sua mensagem anônima
+              </label>
+              <div class="relative">
+                <textarea
+                  id="mensagem"
+                  rows="5"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 transition-all duration-300 shadow-sm resize-none"
+                  placeholder="Escreva sua mensagem anônima aqui..."
+                  required
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="fadeIn" style="animation-delay: 0.3s">
+              <button
+                type="submit"
+                id="submitButton"
+                class="shine w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg"
+              >
+                Enviar mensagem anônima
+              </button>
+            </div>
+          </form>
+        </div>
+      `;
+      
+      document.getElementById('content-container').innerHTML = formHtml;
+      
+      // Add event listener to the form
+      document.getElementById('messageForm').addEventListener('submit', handleSubmit);
+    }
+    
+    // Render the success message
+    function renderSuccessMessage() {
+      const successHtml = `
+        <div class="flex flex-col items-center justify-center py-10 px-6 text-center fadeIn">
+          <div class="mb-6 success-checkmark">
+            <div class="relative">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9 12l2 2 4-4"></path>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center" style="animation-delay: 0.6s">
+                <div class="h-8 w-8 bg-green-500 rounded-full"></div>
+              </div>
+              <div class="absolute inset-0 flex items-center justify-center" style="animation-delay: 0.8s">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="text-2xl font-bold mb-3 text-gray-800 fadeIn" style="animation-delay: 0.3s">
+            Mensagem enviada com sucesso!
+          </h2>
+
+          <p class="text-gray-600 mb-8 max-w-md fadeIn" style="animation-delay: 0.4s">
+            Sua mensagem anônima foi enviada com sucesso. O destinatário receberá sua mensagem sem saber quem a enviou.
+          </p>
+
+          <button
+            id="resetButton"
+            class="shine bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg fadeIn"
+            style="animation-delay: 0.5s"
+          >
+            Enviar nova mensagem
+          </button>
+        </div>
+      `;
+      
+      document.getElementById('content-container').innerHTML = successHtml;
+      
+      // Add event listener to the reset button
+      document.getElementById('resetButton').addEventListener('click', handleReset);
+    }
+    
+    // Handle form submission
+    function handleSubmit(e) {
+      e.preventDefault();
+      
+      const nome = document.getElementById('nome').value;
+      const mensagem = document.getElementById('mensagem').value;
+      
+      if (!nome.trim() || !mensagem.trim()) {
+        showToast("Por favor, preencha todos os campos.", "error");
+        return;
+      }
+      
+      // Change button state to loading
+      const submitButton = document.getElementById('submitButton');
+      const originalButtonText = submitButton.innerHTML;
+      submitButton.innerHTML = `
+        <span class="flex items-center justify-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Enviando...
+        </span>
+      `;
+      submitButton.disabled = true;
+      
+      // Prepare form data
+      const formData = new FormData();
+      formData.append('nome', nome);
+      formData.append('mensagem', mensagem);
+      
+      // Send the data
+      fetch('https://script.google.com/macros/s/AKfycbz1ftxB9DiRF8Ju0ecbAxE2tCzxGKRkTOciD5xLRklsJli8rMzfSuY5liwrTwFBJ_q8/exec', {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+      })
+      .then(() => {
+        // Show success message
+        showSuccess = true;
+        renderSuccessMessage();
+        showToast("Mensagem enviada com sucesso!", "success");
+      })
+      .catch(error => {
+        console.error("Erro ao enviar mensagem:", error);
+        showToast("Ocorreu um erro ao enviar sua mensagem. Tente novamente.", "error");
+        
+        // Restore button state
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+      });
+    }
+    
+    // Handle reset
+    function handleReset() {
+      showSuccess = false;
+      renderMessageForm();
+    }
+    
+    // Toast notification
+    function showToast(message, type) {
+      // Create toast element
+      const toast = document.createElement('div');
+      toast.className = `fixed top-4 right-4 z-50 min-w-[250px] max-w-sm p-4 rounded-lg shadow-lg glass ${type === 'success' ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500'} transform transition-all duration-500 translate-y-[-100%] opacity-0`;
+      
+      // Toast content
+      toast.innerHTML = `
+        <div class="flex items-center">
+          <div class="shrink-0">
+            ${type === 'success' 
+              ? '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' 
+              : '<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            }
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium ${type === 'success' ? 'text-green-800' : 'text-red-800'}">${message}</p>
+          </div>
+          <div class="ml-auto pl-3">
+            <button class="inline-flex text-gray-500 focus:outline-none focus:text-gray-700">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Add to DOM
+      document.body.appendChild(toast);
+      
+      // Animate in
+      setTimeout(() => {
+        toast.classList.remove('translate-y-[-100%]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      }, 10);
+      
+      // Animate out and remove
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-100%]', 'opacity-0');
+        
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 500);
+      }, 5000);
+      
+      // Add click listener to close button
+      toast.querySelector('button').addEventListener('click', () => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-100%]', 'opacity-0');
+        
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 500);
+      });
+    }
+    
+    // Initialize Three.js scene
+    function initThreeScene() {
+      const container = document.getElementById('three-container');
+      
+      // Scene setup
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setClearColor(0x000000, 0);
+      container.appendChild(renderer.domElement);
+      
+      // Ambient light
+      const ambientLight = new THREE.AmbientLight(0x404040, 2);
+      scene.add(ambientLight);
+      
+      // Directional light
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+      directionalLight.position.set(1, 1, 1);
+      scene.add(directionalLight);
+      
+      // Create envelope
+      const envelopeGroup = new THREE.Group();
+      
+      // Base of envelope (slightly larger rectangle)
+      const baseGeometry = new THREE.BoxGeometry(3, 2, 0.1);
+      const baseMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0x3b82f6,
+        flatShading: true,
+        shininess: 100
+      });
+      const base = new THREE.Mesh(baseGeometry, baseMaterial);
+      envelopeGroup.add(base);
+      
+      // Flap of envelope (triangle)
+      const flapShape = new THREE.Shape();
+      flapShape.moveTo(-1.5, 1);
+      flapShape.lineTo(1.5, 1);
+      flapShape.lineTo(0, 1.8);
+      flapShape.lineTo(-1.5, 1);
+      
+      const flapGeometry = new THREE.ShapeGeometry(flapShape);
+      const flapMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0x2563eb,
+        flatShading: true,
+        shininess: 100
+      });
+      const flap = new THREE.Mesh(flapGeometry, flapMaterial);
+      flap.position.z = 0.05;
+      flap.rotation.x = Math.PI * 0.1;
+      envelopeGroup.add(flap);
+      
+      // Letter peeking out
+      const letterGeometry = new THREE.PlaneGeometry(2.8, 0.5);
+      const letterMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const letter = new THREE.Mesh(letterGeometry, letterMaterial);
+      letter.position.z = 0.06;
+      letter.position.y = -0.5;
+      envelopeGroup.add(letter);
+      
+      scene.add(envelopeGroup);
+      
+      // Create particles
+      const particles = [];
+      const particleCount = 10;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const size = Math.random() * 0.2 + 0.1;
+        const geometry = new THREE.SphereGeometry(size, 16, 16);
+        const material = new THREE.MeshPhongMaterial({ 
+          color: new THREE.Color().setHSL(Math.random() * 0.1 + 0.6, 0.8, 
