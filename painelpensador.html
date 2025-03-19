@@ -1,0 +1,124 @@
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizar Frases</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script>
+    // Função para alternar entre tema claro e escuro
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      }
+    }
+
+    // Carrega o tema salvo no localStorage
+    window.onload = function() {
+      const themeIcon = document.getElementById('theme-icon');
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      }
+      carregarFrases();
+    }
+
+    let frases = [];
+
+    // Função para carregar as frases
+    function carregarFrases() {
+      fetch("https://script.google.com/macros/s/AKfycbwAoW6fsKrbVMamsdgDMs__nbogAjXoxkGQLpy7-zk6TSZ8_RUjjbQ75-OBwTYTRhal/exec")
+        .then(response => response.json())
+        .then(data => {
+          frases = data.reverse(); // Inverte a ordem das frases
+          exibirFrases(frases);
+        })
+        .catch(error => {
+          console.error('Erro ao carregar as frases:', error);
+        });
+    }
+
+    // Função para exibir as frases
+    function exibirFrases(frases) {
+      var container = document.getElementById("frases-container");
+      var contador = document.getElementById("contador");
+      container.innerHTML = ''; // Limpa as frases anteriores
+
+      // Exibe as frases
+      if (frases.length > 0) {
+        frases.forEach(fraseObj => {
+          var card = document.createElement("div");
+          card.className = "bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-4";
+
+          var quote = document.createElement("div");
+          quote.className = "text-gray-600 dark:text-gray-300 text-2xl mb-4";
+          quote.innerHTML = `<i class="fas fa-quote-left"></i><span class="ml-2">${fraseObj.frase}</span>`;
+          card.appendChild(quote);
+
+          var author = document.createElement("div");
+          author.className = "text-blue-600 dark:text-blue-400 text-lg mb-4";
+          author.textContent = fraseObj.autor;
+          card.appendChild(author);
+
+          var footer = document.createElement("div");
+          footer.className = "flex items-center justify-between text-gray-500 dark:text-gray-400 text-sm border-t pt-4";
+
+          var share = document.createElement("div");
+          share.className = "flex items-center";
+          share.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="ml-2">neext pensador</span>`;
+          footer.appendChild(share);
+
+          var icons = document.createElement("div");
+          icons.className = "flex items-center space-x-4";
+          icons.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chrome"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" x2="12" y1="8" y2="8"/><line x1="3.95" x2="8.54" y1="6.06" y2="14"/><line x1="10.88" x2="15.46" y1="21.94" y2="14"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cannabis"><path d="M12 22v-4"/><path d="M7 12c-1.5 0-4.5 1.5-5 3 3.5 1.5 6 1 6 1-1.5 1.5-2 3.5-2 5 2.5 0 4.5-1.5 6-3 1.5 1.5 3.5 3 6 3 0-1.5-.5-3.5-2-5 0 0 2.5.5 6-1-.5-1.5-3.5-3-5-3 1.5-1 4-4 4-6-2.5 0-5.5 1.5-7 3 0-2.5-.5-5-2-7-1.5 2-2 4.5-2 7-1.5-1.5-4.5-3-7-3 0 2 2.5 5 4 6"/></svg>
+          `;
+          footer.appendChild(icons);
+
+          card.appendChild(footer);
+          container.appendChild(card);
+        });
+        contador.textContent = `Total de mensagens: ${frases.length}`;
+      } else {
+        container.innerHTML = 'Nenhuma frase encontrada.';
+        contador.textContent = 'Total de mensagens: 0';
+      }
+    }
+
+    // Função para filtrar as frases
+    function filtrarFrases() {
+      const pesquisa = document.getElementById("pesquisa").value.toLowerCase();
+      const frasesFiltradas = frases.filter(fraseObj => {
+        return fraseObj.frase.toLowerCase().includes(pesquisa) || fraseObj.autor.toLowerCase().includes(pesquisa);
+      });
+      exibirFrases(frasesFiltradas);
+    }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white flex flex-col items-center min-h-screen p-4">
+  <nav class="w-full bg-white dark:bg-gray-800 shadow-md p-4 mb-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Frases Enviadas</h1>
+    <button onclick="toggleTheme()" class="text-gray-800 dark:text-gray-200">
+      <i id="theme-icon" class="fas fa-moon text-2xl"></i>
+    </button>
+  </nav>
+  <div id="contador" class="text-lg mb-4"></div>
+  <div class="w-full max-w-md mb-4">
+    <input id="pesquisa" type="text" placeholder="Pesquisar frases..." class="w-full p-2 rounded mb-2" oninput="filtrarFrases()">
+  </div>
+  <div id="frases-container" class="w-full max-w-md"></div>
+</body>
+</html>
