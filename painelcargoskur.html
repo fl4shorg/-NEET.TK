@@ -1,0 +1,757 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciador de Cargos</title>
+    <meta name="description" content="Sistema premium para gerenciamento de cargos e categorias" />
+    <meta name="author" content="Lovable" />
+
+    <meta property="og:title" content="Gerenciador de Cargos" />
+    <meta property="og:description" content="Sistema premium para gerenciamento de cargos e categorias" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SweetAlert2 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+      /* Tailwind Base Styles */
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+        --primary: 222.2 47.4% 11.2%;
+        --primary-foreground: 210 40% 98%;
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+        --radius: 0.5rem;
+        --sidebar-background: 0 0% 98%;
+        --sidebar-foreground: 240 5.3% 26.1%;
+        --sidebar-primary: 240 5.9% 10%;
+        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 240 4.8% 95.9%;
+        --sidebar-accent-foreground: 240 5.9% 10%;
+        --sidebar-border: 220 13% 91%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+      }
+
+      .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+        --sidebar-background: 240 5.9% 10%;
+        --sidebar-foreground: 240 4.8% 95.9%;
+        --sidebar-primary: 224.3 76.3% 48%;
+        --sidebar-primary-foreground: 0 0% 100%;
+        --sidebar-accent: 240 3.7% 15.9%;
+        --sidebar-accent-foreground: 240 4.8% 95.9%;
+        --sidebar-border: 240 3.7% 15.9%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+      }
+
+      * {
+        border-color: hsl(var(--border));
+      }
+
+      body {
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+      }
+
+      /* Button Styles */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background-color: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        color: hsl(var(--primary));
+        border: 1px solid hsl(var(--border));
+      }
+
+      .btn-destructive {
+        background-color: hsl(var(--destructive));
+        color: hsl(var(--destructive-foreground));
+      }
+
+      .btn-icon {
+        padding: 0.5rem;
+        border-radius: 9999px;
+      }
+
+      /* Card Styles */
+      .card {
+        background-color: hsl(var(--card));
+        color: hsl(var(--card-foreground));
+        border-radius: var(--radius);
+        border: 1px solid hsl(var(--border));
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-header {
+        padding: 1.5rem;
+      }
+
+      .card-content {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Input Styles */
+      .input {
+        width: 100%;
+        border-radius: var(--radius);
+        border: 1px solid hsl(var(--input));
+        background-color: transparent;
+        padding: 0.5rem 1rem;
+        color: hsl(var(--foreground));
+      }
+
+      /* Tag Styles */
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background-color: hsl(var(--primary) / 0.1);
+        color: hsl(var(--primary));
+      }
+
+      /* Utility Classes */
+      .flex { display: flex; }
+      .flex-col { flex-direction: column; }
+      .items-center { align-items: center; }
+      .justify-between { justify-content: space-between; }
+      .justify-center { justify-content: center; }
+      .space-y-4 > * + * { margin-top: 1rem; }
+      .space-x-2 > * + * { margin-left: 0.5rem; }
+      .gap-4 { gap: 1rem; }
+      .text-center { text-align: center; }
+      .relative { position: relative; }
+      .absolute { position: absolute; }
+      .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+      .top-4 { top: 1rem; }
+      .right-4 { right: 1rem; }
+      .mb-2 { margin-bottom: 0.5rem; }
+      .mb-4 { margin-bottom: 1rem; }
+      .mb-8 { margin-bottom: 2rem; }
+      .mt-2 { margin-top: 0.5rem; }
+      .mt-4 { margin-top: 1rem; }
+      .p-0 { padding: 0; }
+      .p-6 { padding: 1.5rem; }
+      .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+      .pb-2 { padding-bottom: 0.5rem; }
+      .pt-6 { padding-top: 1.5rem; }
+      .px-4 { padding-left: 1rem; padding-right: 1rem; }
+      .text-xl { font-size: 1.25rem; }
+      .text-lg { font-size: 1.125rem; }
+      .text-4xl { font-size: 2.25rem; }
+      .text-8xl { font-size: 6rem; }
+      .font-bold { font-weight: 700; }
+      .font-semibold { font-weight: 600; }
+      .font-medium { font-weight: 500; }
+      .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+      .border-b { border-bottom-width: 1px; }
+      .bg-gradient-to-br { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); }
+      .from-background { --tw-gradient-from: hsl(var(--background)); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, hsl(var(--background) / 0)); }
+      .to-muted { --tw-gradient-to: hsl(var(--muted)); }
+      .min-h-screen { min-height: 100vh; }
+      .w-full { width: 100%; }
+      .max-w-7xl { max-width: 80rem; }
+      .mx-auto { margin-left: auto; margin-right: auto; }
+      .grid { display: grid; }
+      .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+      .bg-transparent { background-color: transparent; }
+      .hidden { display: none; }
+      .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+      .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+      .bg-clip-text { -webkit-background-clip: text; background-clip: text; }
+      .text-transparent { color: transparent; }
+      .from-primary { --tw-gradient-from: hsl(var(--primary)); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, hsl(var(--primary) / 0)); }
+      .to-indigo-500 { --tw-gradient-to: #6366f1; }
+      .z-10 { z-index: 10; }
+      .rounded-full { border-radius: 9999px; }
+      .rotate-0 { --tw-rotate: 0deg; transform: rotate(var(--tw-rotate)); }
+      .scale-100 { --tw-scale-x: 1; --tw-scale-y: 1; transform: scale(var(--tw-scale-x), var(--tw-scale-y)); }
+      .dark\:rotate-0 { }
+      .dark\:scale-0 { }
+      .dark\:rotate-90 { }
+      .dark\:scale-100 { }
+      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+      .hover\:shadow-md:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+      .backdrop-blur-sm { backdrop-filter: blur(4px); }
+      .bg-card\/50 { background-color: hsl(var(--card) / 0.5); }
+      .border-card\/20 { border-color: hsl(var(--card) / 0.2); }
+      .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+      .bg-background\/70 { background-color: hsl(var(--background) / 0.7); }
+      .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+      .bg-muted { background-color: hsl(var(--muted)); }
+      .rounded-md { border-radius: 0.375rem; }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .5; }
+      }
+
+      @media (min-width: 768px) {
+        .md\:flex-row { flex-direction: row; }
+        .md\:items-center { align-items: center; }
+        .md\:px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+        .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (min-width: 1024px) {
+        .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      }
+
+      /* Dark mode theme toggle */
+      .dark .dark\:rotate-0 { --tw-rotate: 0deg; transform: rotate(var(--tw-rotate)); }
+      .dark .dark\:scale-0 { --tw-scale-x: 0; --tw-scale-y: 0; transform: scale(var(--tw-scale-x), var(--tw-scale-y)); }
+      .dark .dark\:-rotate-90 { --tw-rotate: -90deg; transform: rotate(var(--tw-rotate)); }
+      .dark .dark\:scale-100 { --tw-scale-x: 1; --tw-scale-y: 1; transform: scale(var(--tw-scale-x), var(--tw-scale-y)); }
+      .dark .dark\:bg-black\/\[0\.05\] { background-color: rgb(0 0 0 / 0.05); }
+
+      /* Custom grid background */
+      .bg-grid-white\/\[0\.02\] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.02)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+      }
+
+      /* Glassmorphism */
+      .backdrop-blur-sm {
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+
+      /* Background radial mask */
+      [mask-image\:radial-gradient\(ellipse_at_center\,transparent_20\%\,black\)] {
+        -webkit-mask-image: radial-gradient(ellipse at center, transparent 20%, black);
+        mask-image: radial-gradient(ellipse at center, transparent 20%, black);
+      }
+
+      /* Loading spinner */
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .animate-spin {
+        animation: spin 1s linear infinite;
+      }
+    </style>
+    
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+
+    <div id="app" class="min-h-screen bg-gradient-to-br from-background to-muted relative pb-10">
+      <div class="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px]"></div>
+      <div class="absolute inset-0 flex items-center justify-center bg-background [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black/[0.05]"></div>
+      
+      <div class="relative pt-6 px-4 md:px-10 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500">
+              Gerenciar Cargos
+            </h1>
+            <p class="text-muted-foreground mt-2">
+              Sistema premium para gerenciamento de cargos e categorias
+            </p>
+          </div>
+          
+          <!-- Theme Toggle Button -->
+          <button id="theme-toggle" class="btn btn-outline btn-icon rounded-full">
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="M4.93 4.93l1.41 1.41"></path>
+              <path d="M17.66 17.66l1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="M6.34 17.66l-1.41 1.41"></path>
+              <path d="M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+            <span class="sr-only">Toggle theme</span>
+          </button>
+        </div>
+        
+        <div class="card backdrop-blur-sm bg-card/50 border border-card/20 shadow-lg">
+          <div class="card-header flex flex-col md:flex-row justify-between gap-4">
+            <div class="flex-1">
+              <input id="search-input" placeholder="Pesquisar por cargo, categoria ou tag..." class="input bg-background/70" />
+            </div>
+            <button id="add-cargo-btn" class="btn btn-primary shrink-0">
+              Adicionar Cargo
+            </button>
+          </div>
+          <div class="card-content">
+            <div class="space-y-6">
+              <div class="flex justify-between items-center">
+                <h3 class="text-lg font-medium">
+                  Total de Cargos: <span id="total-count">0</span>
+                </h3>
+              </div>
+              
+              <div id="loading" class="space-y-4">
+                <div class="animate-pulse">
+                  <div class="h-7 bg-muted rounded-md w-1/5 mb-3"></div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="h-32 bg-muted rounded-md"></div>
+                    <div class="h-32 bg-muted rounded-md"></div>
+                    <div class="h-32 bg-muted rounded-md"></div>
+                  </div>
+                </div>
+                <div class="animate-pulse">
+                  <div class="h-7 bg-muted rounded-md w-1/5 mb-3"></div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="h-32 bg-muted rounded-md"></div>
+                    <div class="h-32 bg-muted rounded-md"></div>
+                    <div class="h-32 bg-muted rounded-md"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="cargos-list" class="space-y-8 hidden">
+                <!-- Cargos will be added here dynamically -->
+              </div>
+              
+              <div id="no-results" class="text-center py-8 hidden">
+                <p class="text-muted-foreground text-lg">
+                  Nenhum cargo encontrado
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // DOM Elements
+      const themeToggle = document.getElementById('theme-toggle');
+      const sunIcon = document.getElementById('sun-icon');
+      const moonIcon = document.getElementById('moon-icon');
+      const searchInput = document.getElementById('search-input');
+      const addCargoBtn = document.getElementById('add-cargo-btn');
+      const totalCountEl = document.getElementById('total-count');
+      const loadingEl = document.getElementById('loading');
+      const cargosListEl = document.getElementById('cargos-list');
+      const noResultsEl = document.getElementById('no-results');
+      
+      // Theme Management
+      const theme = {
+        get: () => localStorage.getItem('theme') || 'light',
+        set: (newTheme) => {
+          localStorage.setItem('theme', newTheme);
+          if (newTheme === 'dark' || (newTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        }
+      };
+      
+      // Initialize theme
+      const initializeTheme = () => {
+        const savedTheme = theme.get();
+        if (savedTheme === 'dark' || (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      };
+      
+      // Toggle theme
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = theme.get();
+        theme.set(currentTheme === 'light' ? 'dark' : 'light');
+      });
+      
+      // API URL
+      const API_URL = 'https://script.google.com/macros/s/AKfycbwt1ry_dhiJv6G1cjOY0EKz6h8liBjc_RsaGOuXC0oQTGR_JMQNKv1E6xpjIW7-9AvxQg/exec';
+      
+      // Global state
+      let cargos = [];
+      let filteredCargos = [];
+      
+      // Helper Functions
+      const gerarID = () => 'ID_' + Math.random().toString(36).substr(2, 9);
+      const limparEspacos = (valor) => valor.trim().replace(/\s+/g, ' ');
+      
+      // Fetch cargos from API
+      const fetchCargos = async () => {
+        try {
+          loadingEl.classList.remove('hidden');
+          cargosListEl.classList.add('hidden');
+          noResultsEl.classList.add('hidden');
+          
+          const response = await fetch(`${API_URL}?action=read`);
+          const result = await response.text();
+          const linhas = result.split('\n').slice(1);
+          
+          cargos = [];
+          
+          linhas.forEach(linha => {
+            const [id, categoria, cargoNome, tag] = linha.split(', ');
+            if (id && categoria && cargoNome && tag) {
+              cargos.push({ id, categoria, cargoNome, tag });
+            }
+          });
+          
+          filteredCargos = [...cargos];
+          totalCountEl.textContent = cargos.length;
+          
+          renderCargos();
+        } catch (error) {
+          console.error('Erro ao buscar cargos:', error);
+          showAlert('error', 'Erro', 'Não foi possível carregar os cargos');
+        } finally {
+          loadingEl.classList.add('hidden');
+        }
+      };
+      
+      // Filter cargos based on search term
+      const filtrarCargos = (term) => {
+        if (!term.trim()) {
+          filteredCargos = [...cargos];
+        } else {
+          filteredCargos = cargos.filter(cargo => 
+            cargo.cargoNome.toLowerCase().includes(term.toLowerCase()) ||
+            cargo.categoria.toLowerCase().includes(term.toLowerCase()) ||
+            cargo.tag.toLowerCase().includes(term.toLowerCase())
+          );
+        }
+        
+        renderCargos();
+      };
+      
+      // Render cargos in the UI
+      const renderCargos = () => {
+        cargosListEl.innerHTML = '';
+        
+        if (filteredCargos.length === 0) {
+          noResultsEl.classList.remove('hidden');
+          cargosListEl.classList.add('hidden');
+          return;
+        }
+        
+        noResultsEl.classList.add('hidden');
+        cargosListEl.classList.remove('hidden');
+        
+        // Group cargos by categoria
+        const cargosPorCategoria = filteredCargos.reduce((acc, cargo) => {
+          if (!acc[cargo.categoria]) {
+            acc[cargo.categoria] = [];
+          }
+          acc[cargo.categoria].push(cargo);
+          return acc;
+        }, {});
+        
+        // Render each categoria
+        Object.entries(cargosPorCategoria).forEach(([categoria, cargosLista]) => {
+          const categoriaEl = document.createElement('div');
+          categoriaEl.className = 'space-y-4';
+          
+          categoriaEl.innerHTML = `
+            <h3 class="text-xl font-semibold border-b pb-2">${categoria}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cargos-grid" data-categoria="${categoria}"></div>
+          `;
+          
+          cargosListEl.appendChild(categoriaEl);
+          
+          const gridEl = categoriaEl.querySelector('.cargos-grid');
+          
+          // Add each cargo card
+          cargosLista.forEach(cargo => {
+            const cargoEl = document.createElement('div');
+            cargoEl.className = 'card overflow-hidden group hover:shadow-md transition-all duration-300';
+            cargoEl.innerHTML = `
+              <div class="p-6">
+                <h4 class="font-medium text-lg mb-2 line-clamp-2">${cargo.cargoNome}</h4>
+                <div class="text-sm text-muted-foreground mb-4">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">${cargo.tag}</span>
+                </div>
+                <div class="flex space-x-2 mt-4">
+                  <button class="btn btn-outline edit-btn" data-id="${cargo.id}">Editar</button>
+                  <button class="btn btn-destructive delete-btn" data-id="${cargo.id}">Excluir</button>
+                </div>
+              </div>
+            `;
+            
+            gridEl.appendChild(cargoEl);
+            
+            // Add event listeners
+            cargoEl.querySelector('.edit-btn').addEventListener('click', () => editarCargo(cargo));
+            cargoEl.querySelector('.delete-btn').addEventListener('click', () => confirmarExclusao(cargo.id));
+          });
+        });
+        
+        totalCountEl.textContent = filteredCargos.length;
+      };
+      
+      // Add Cargo
+      const abrirFormulario = () => {
+        Swal.fire({
+          title: 'Adicionar Cargo',
+          html: `
+            <div class="space-y-4">
+              <div>
+                <label for="categoria" class="block text-sm font-medium">Categoria</label>
+                <input type="text" id="categoria" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" placeholder="Digite a categoria" required>
+              </div>
+              <div>
+                <label for="cargo" class="block text-sm font-medium">Cargo</label>
+                <input type="text" id="cargo" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" placeholder="Digite o cargo" required>
+              </div>
+              <div>
+                <label for="tag" class="block text-sm font-medium">Tag</label>
+                <input type="text" id="tag" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" placeholder="Digite a tag" required>
+              </div>
+            </div>
+          `,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: 'Enviar',
+          cancelButtonText: 'Cancelar',
+          preConfirm: () => {
+            const categoria = document.getElementById('categoria').value.trim();
+            const cargo = document.getElementById('cargo').value.trim();
+            const tag = document.getElementById('tag').value.trim();
+            
+            if (!categoria || !cargo || !tag) {
+              Swal.showValidationMessage('Por favor, preencha todos os campos!');
+              return false;
+            }
+            
+            return { categoria, cargo, tag };
+          }
+        }).then((result) => {
+          if (result.isConfirmed && result.value) {
+            const { categoria, cargo, tag } = result.value;
+            adicionarCargo(categoria, cargo, tag);
+          }
+        });
+      };
+      
+      // Add cargo to API
+      const adicionarCargo = async (categoria, cargo, tag) => {
+        try {
+          const id = gerarID();
+          const params = new URLSearchParams();
+          params.append('action', 'create');
+          params.append('id', id);
+          params.append('categoria', categoria);
+          params.append('cargo', cargo);
+          params.append('tag', tag);
+
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            body: params,
+          });
+          
+          const result = await response.text();
+          showAlert('success', 'Sucesso!', result);
+          fetchCargos();
+        } catch (error) {
+          showAlert('error', 'Erro!', 'Falha ao enviar os dados.');
+        }
+      };
+      
+      // Edit cargo
+      const editarCargo = (cargo) => {
+        Swal.fire({
+          title: 'Editar Cargo',
+          html: `
+            <div class="space-y-4">
+              <div>
+                <label for="categoria" class="block text-sm font-medium">Categoria</label>
+                <input type="text" id="categoria" value="${cargo.categoria}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" placeholder="Digite a categoria" required>
+              </div>
+              <div>
+                <label for="cargo" class="block text-sm font-medium">Cargo</label>
+                <input type="text" id="cargo" value="${cargo.cargoNome}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" placeholder="Digite o cargo" required>
+              </div>
+              <div>
+                <label for="tag" class="block text-sm font-medium">Tag</label>
+                <input type="text" id="tag" value="${cargo.tag}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" placeholder="Digite a tag" required>
+              </div>
+            </div>
+          `,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: 'Salvar',
+          cancelButtonText: 'Cancelar',
+          preConfirm: () => {
+            const categoria = document.getElementById('categoria').value.trim();
+            const cargoNovo = document.getElementById('cargo').value.trim();
+            const tag = document.getElementById('tag').value.trim();
+            
+            if (!categoria || !cargoNovo || !tag) {
+              Swal.showValidationMessage('Por favor, preencha todos os campos!');
+              return false;
+            }
+            
+            return { categoria, cargo: cargoNovo, tag };
+          }
+        }).then((result) => {
+          if (result.isConfirmed && result.value) {
+            const { categoria, cargo: novoCargo, tag } = result.value;
+            atualizarCargo(cargo.id, categoria, novoCargo, tag);
+          }
+        });
+      };
+      
+      // Update cargo in API
+      const atualizarCargo = async (id, categoria, cargo, tag) => {
+        try {
+          const params = new URLSearchParams();
+          params.append('action', 'update');
+          params.append('id', id);
+          params.append('categoria', categoria);
+          params.append('cargo', cargo);
+          params.append('tag', tag);
+
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            body: params,
+          });
+          
+          const result = await response.text();
+          showAlert('success', 'Sucesso!', result);
+          fetchCargos();
+        } catch (error) {
+          showAlert('error', 'Erro!', 'Falha ao editar os dados.');
+        }
+      };
+      
+      // Confirm cargo deletion
+      const confirmarExclusao = (id) => {
+        Swal.fire({
+          title: 'Tem certeza?',
+          text: 'Você não poderá reverter essa ação!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Cancelar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            excluirCargo(id);
+          }
+        });
+      };
+      
+      // Delete cargo from API
+      const excluirCargo = async (id) => {
+        try {
+          const params = new URLSearchParams();
+          params.append('action', 'delete');
+          params.append('id', id);
+
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            body: params,
+          });
+          
+          const result = await response.text();
+          showAlert('success', 'Deletado!', result);
+          fetchCargos();
+        } catch (error) {
+          showAlert('error', 'Erro!', 'Falha ao deletar o cargo.');
+        }
+      };
+      
+      // Show alert
+      const showAlert = (type, title, message) => {
+        Swal.fire({
+          title,
+          text: message,
+          icon: type,
+          confirmButtonColor: type === 'error' ? '#d33' : '#3085d6',
+        });
+      };
+      
+      // Event Listeners
+      searchInput.addEventListener('input', (e) => filtrarCargos(e.target.value));
+      addCargoBtn.addEventListener('click', abrirFormulario);
+      
+      // Initialize
+      initializeTheme();
+      fetchCargos();
+    </script>
+  </body>
+</html>
