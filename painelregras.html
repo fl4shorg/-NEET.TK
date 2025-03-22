@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Regras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            padding: 15px;
+            margin-bottom: 15px;
+            word-wrap: break-word; /* Quebra de linha para evitar transbordamento */
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+        .modal {
+            max-width: 90%; /* Ajuste para o modal ocupar até 90% da tela */
+        }
+        /* Responsividade para telas pequenas */
+        @media (max-width: 600px) {
+            .modal {
+                max-width: 100%; /* Modal ocupa 100% da largura da tela em celulares */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">Dashboard Regras</a>
+        </div>
+    </nav>
+
+    <h4 class="center-align">Regras</h4>
+    <div class="center-align">
+        <button class="btn waves-effect waves-light" onclick="openModal()">Adicionar Nova Regra</button>
+    </div>
+
+    <div class="input-field">
+        <input type="text" id="search" onkeyup="searchRegras()" placeholder="Pesquisar regras...">
+        <label for="search">Pesquisar</label>
+    </div>
+
+    <div id="total-regras" class="center-align"></div>
+
+    <div id="regras-container"></div>
+
+    <!-- Modal de Edição/Cadastro -->
+    <div id="modal-regras" class="modal">
+        <div class="modal-content">
+            <h5 id="modal-title">Editar Regra</h5>
+            <input type="hidden" id="id">
+            <div class="input-field">
+                <input type="text" id="titulo">
+                <label for="titulo">Título</label>
+            </div>
+            <div class="input-field">
+                <textarea id="descricao" class="materialize-textarea"></textarea>
+                <label for="descricao">Descrição</label>
+            </div>
+            <div class="input-field">
+                <textarea id="paragrafo01" class="materialize-textarea"></textarea>
+                <label for="paragrafo01">Parágrafo 01</label>
+            </div>
+            <div class="input-field">
+                <textarea id="paragrafo02" class="materialize-textarea"></textarea>
+                <label for="paragrafo02">Parágrafo 02</label>
+            </div>
+            <div class="input-field">
+                <textarea id="paragrafo03" class="materialize-textarea"></textarea>
+                <label for="paragrafo03">Parágrafo 03</label>
+            </div>
+            <div class="input-field">
+                <textarea id="paragrafo04" class="materialize-textarea"></textarea>
+                <label for="paragrafo04">Parágrafo 04</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn green waves-effect waves-light" onclick="saveRegra()">Salvar</button>
+            <button class="btn red waves-effect waves-light modal-close">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec";
+
+        $(document).ready(() => {
+            $('.modal').modal();
+            loadRegras();
+        });
+
+        function loadRegras() {
+            $.get(apiUrl + "?action=read", (data) => {
+                const linhas = data.split("\n").slice(1);
+                let html = "";
+                let totalRegras = 0;
+
+                linhas.forEach((linha) => {
+                    if (linha.trim()) {
+                        totalRegras++;
+                        // Substituir as barras | de volta para vírgula
+                        const [id, titulo, descricao, p1, p2, p3, p4] = linha.split(",").map(item => item.replace(/\|/g, ','));
+                        html += `
+                            <div class="card">
+                                <div class="card-content">
+                                    <span class="card-title">${titulo}</span>
+                                    <p><strong>Descrição:</strong> ${descricao}</p>
+                                    <p><strong>Parágrafo 01:</strong> ${p1}</p>
+                                    <p><strong>Parágrafo 02:</strong> ${p2}</p>
+                                    <p><strong>Parágrafo 03:</strong> ${p3}</p>
+                                    <p><strong>Parágrafo 04:</strong> ${p4}</p>
+                                </div>
+                                <div class="card-action">
+                                    <button class="btn blue waves-effect waves-light" onclick="editRegra('${id}', '${titulo}', '${descricao}', '${p1}', '${p2}', '${p3}', '${p4}')">Editar</button>
+                                    <button class="btn red waves-effect waves-light" onclick="deleteRegra('${id}')">Apagar</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                $("#regras-container").html(html);
+                $("#total-regras").text(`Total de Regras: ${totalRegras}`);
+            });
+        }
+
+        function searchRegras() {
+            const query = $("#search").val().toLowerCase();
+            $("#regras-container .card").each(function() {
+                const title = $(this).find('.card-title').text().toLowerCase();
+                $(this).toggle(title.includes(query));
+            });
+        }
+
+        function openModal() {
+            $("#modal-title").text("Adicionar Nova Regra");
+            $("#id").val("");
+            $("#titulo").val("").next().removeClass("active");
+            $("#descricao").val("").next().removeClass("active");
+            $("#paragrafo01").val("").next().removeClass("active");
+            $("#paragrafo02").val("").next().removeClass("active");
+            $("#paragrafo03").val("").next().removeClass("active");
+            $("#paragrafo04").val("").next().removeClass("active");
+            $('.modal').modal('open');
+        }
+
+        function editRegra(id, titulo, descricao, p1, p2, p3, p4) {
+            $("#modal-title").text("Editar Regra");
+            $("#id").val(id);
+            $("#titulo").val(titulo).next().addClass("active");
+            $("#descricao").val(descricao).next().addClass("active");
+            $("#paragrafo01").val(p1).next().addClass("active");
+            $("#paragrafo02").val(p2).next().addClass("active");
+            $("#paragrafo03").val(p3).next().addClass("active");
+            $("#paragrafo04").val(p4).next().addClass("active");
+            $('.modal').modal('open');
+        }
+
+        function saveRegra() {
+            const id = $("#id").val();
+            const titulo = $("#titulo").val();
+            const descricao = $("#descricao").val().replace(/,/g, '|');  // Substitui as vírgulas por |
+            const paragrafo01 = $("#paragrafo01").val().replace(/,/g, '|');
+            const paragrafo02 = $("#paragrafo02").val().replace(/,/g, '|');
+            const paragrafo03 = $("#paragrafo03").val().replace(/,/g, '|');
+            const paragrafo04 = $("#paragrafo04").val().replace(/,/g, '|');
+            
+            const action = id ? "update" : "create";
+
+            $.post(apiUrl, {
+                action,
+                id: id || new Date().getTime(),
+                titulo,
+                descricao,
+                paragrafo01,
+                paragrafo02,
+                paragrafo03,
+                paragrafo04
+            }, (response) => {
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Regra salva com sucesso!',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                });
+                $('.modal').modal('close');
+                loadRegras();
+            });
+        }
+
+        function deleteRegra(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você não poderá reverter esta ação!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, apagar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(apiUrl, { action: "delete", id }, (response) => {
+                        Swal.fire(
+                            'Apagado!',
+                            'A regra foi apagada com sucesso.',
+                            'success'
+                        );
+                        loadRegras();
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</body>
+</html>
