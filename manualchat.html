@@ -1,0 +1,841 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Cargos</title>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <style>
+        :root {
+            --background: 210 40% 98%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 212 100% 47%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --border: 214.3 31.8% 91.4%;
+        }
+
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 217 33% 17%;
+            --card-foreground: 210 40% 98%;
+            --primary: 212 100% 47%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --border: 217.2 32.6% 17.5%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            background-color: hsla(var(--background), 0.8);
+            border-bottom: 1px solid hsla(var(--border), 0.5);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            border: none;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background-color: hsla(var(--primary), 0.1);
+        }
+
+        .theme-toggle svg {
+            height: 1.25rem;
+            width: 1.25rem;
+            position: absolute;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        .moon-icon {
+            opacity: 0;
+            transform: rotate(90deg);
+        }
+
+        .dark .sun-icon {
+            opacity: 0;
+            transform: rotate(-90deg);
+        }
+
+        .dark .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        /* Search section */
+        .search-section {
+            margin: 1.5rem auto;
+            max-width: 32rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 1.25rem;
+            width: 1.25rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .search-input {
+            width: 100%;
+            height: 3rem;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid hsl(var(--border));
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 1rem;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7);
+        }
+
+        .dark .search-input {
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.05);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 2px hsla(var(--primary), 0.3);
+        }
+
+        .search-stats {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            padding: 0 0.25rem;
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5rem 0;
+        }
+
+        .spinner {
+            position: relative;
+            height: 3rem;
+            width: 3rem;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            opacity: 0.75;
+            animation: spinner-rotate 1.5s linear infinite;
+        }
+
+        .spinner-ring:nth-child(1) {
+            border-top: 2px solid hsl(var(--primary));
+            animation-delay: 0s;
+        }
+
+        .spinner-ring:nth-child(2) {
+            border-right: 2px solid transparent;
+            animation-delay: 0.2s;
+        }
+
+        .spinner-ring:nth-child(3) {
+            border-bottom: 2px solid hsla(var(--primary), 0.7);
+            opacity: 0.5;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes spinner-rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Categories */
+        .categories {
+            margin-bottom: 2.5rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 5rem 0;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .clear-search {
+            background: none;
+            border: none;
+            color: hsl(var(--primary));
+            font-size: 1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .clear-search:hover {
+            color: hsl(var(--primary-foreground));
+        }
+
+        /* Category */
+        .category {
+            margin-bottom: 2.5rem;
+            animation: fade-in 0.5s ease;
+        }
+
+        .category-header {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid hsla(var(--primary), 0.3);
+        }
+
+        .category-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 5rem;
+            height: 2px;
+            background-color: hsl(var(--primary));
+        }
+
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.25rem;
+        }
+
+        @media (min-width: 640px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Job Card */
+        .job-card {
+            position: relative;
+            height: 100%;
+            background-color: hsla(var(--card), 0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            border: 1px solid hsla(var(--border), 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            animation: fade-in 0.5s ease;
+        }
+
+        .job-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-description {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .copy-button {
+            margin-left: 0.5rem;
+            margin-top: 0.25rem;
+            padding: 0.5rem;
+            height: 2rem;
+            width: 2rem;
+            background: transparent;
+            border: none;
+            border-radius: 9999px;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-button:hover {
+            background-color: hsla(var(--primary), 0.1);
+            transform: scale(1.1);
+        }
+
+        .copy-button svg {
+            height: 1rem;
+            width: 1rem;
+        }
+
+        .card-effect {
+            position: absolute;
+            inset: 0;
+            border-radius: 0.75rem;
+            opacity: 0;
+            pointer-events: none;
+            background: linear-gradient(to top right, hsla(var(--primary), 0.2), transparent, hsla(0, 0%, 100%, 0.3));
+            transition: opacity 0.3s ease;
+            transform: translateZ(10px);
+            transform-style: preserve-3d;
+        }
+
+        .job-card:hover .card-effect {
+            opacity: 0.1;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid hsla(var(--border), 0.5);
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 90%;
+            max-width: 24rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateY(-1rem);
+            animation: toast-in 0.3s ease forwards, toast-out 0.3s ease forwards 3s;
+            border: 1px solid hsla(var(--border));
+        }
+
+        .toast-success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast-error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast-icon {
+            flex-shrink: 0;
+        }
+
+        @keyframes toast-in {
+            from {
+                opacity: 0;
+                transform: translateY(-1rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toast-out {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-1rem);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(0.5rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast container for notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="header-title">Manual de Cargos</h1>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Search section -->
+            <div class="search-section">
+                <div class="search-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        class="search-input" 
+                        placeholder="Pesquisar manual..." 
+                        aria-label="Pesquisar manual"
+                    >
+                </div>
+                <div class="search-stats">
+                    <span>
+                        Mostrando <strong id="visible-count">0</strong> de <strong id="total-count">0</strong> registros
+                    </span>
+                </div>
+            </div>
+
+            <!-- Loading spinner -->
+            <div id="loading-spinner" class="loading-spinner">
+                <div class="spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div id="categories-container" class="categories"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Manual de Cargos © <span id="current-year"></span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // Check localStorage or user preference for theme
+        function getInitialTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                return savedTheme;
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        
+        // Set initial theme
+        const initialTheme = getInitialTheme();
+        if (initialTheme === 'dark') {
+            htmlElement.classList.add('dark');
+        }
+        
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            const isDark = htmlElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+        
+        // API URL
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzubq9yPn77Dy6-AHz67CoZlYvYHPcOKjn9T1_7wiNozpRobYUI4P5j1o58IbbL81Z9TQ/exec";
+        
+        // Elements
+        const categoriesContainer = document.getElementById('categories-container');
+        const searchInput = document.getElementById('search-input');
+        const totalCountEl = document.getElementById('total-count');
+        const visibleCountEl = document.getElementById('visible-count');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const toastContainer = document.getElementById('toast-container');
+        const currentYearEl = document.getElementById('current-year');
+        
+        // Set current year in footer
+        currentYearEl.textContent = new Date().getFullYear();
+        
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const iconSvg = type === 'success' 
+                ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
+                : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${iconSvg}</span>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Remove toast after animation completes
+            setTimeout(() => {
+                toast.remove();
+            }, 3300);
+        }
+        
+        // Store categories data
+        let categoriesData = {};
+        let totalItems = 0;
+        
+        // Fetch data from API
+        async function fetchData() {
+            try {
+                loadingSpinner.style.display = 'flex';
+                categoriesContainer.style.display = 'none';
+                
+                const response = await fetch(`${apiUrl}?action=read`);
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar dados.');
+                }
+                
+                const text = await response.text();
+                const lines = text.trim().split("\n").slice(1);
+                
+                categoriesData = {};
+                totalItems = 0;
+                
+                lines.forEach(line => {
+                    const parts = line.split(", ");
+                    const categoria = parts[1];
+                    const titulo = parts[2];
+                    const descricao = parts.slice(3).join(", ");
+                    
+                    if (!categoriesData[categoria]) {
+                        categoriesData[categoria] = [];
+                    }
+                    
+                    categoriesData[categoria].push({
+                        titulo,
+                        descricao
+                    });
+                    
+                    totalItems++;
+                });
+                
+                totalCountEl.textContent = totalItems;
+                visibleCountEl.textContent = totalItems;
+                
+                renderCategories(categoriesData);
+                
+                loadingSpinner.style.display = 'none';
+                categoriesContainer.style.display = 'block';
+                
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                showToast("Erro ao carregar os dados. Tente novamente.", "error");
+                loadingSpinner.style.display = 'none';
+            }
+        }
+        
+        // Render categories and cards
+        function renderCategories(categories) {
+            categoriesContainer.innerHTML = '';
+            
+            if (Object.keys(categories).length === 0) {
+                categoriesContainer.innerHTML = `
+                    <div class="no-results">
+                        <p>Nenhum resultado encontrado.</p>
+                        <button class="clear-search">Limpar pesquisa</button>
+                    </div>
+                `;
+                
+                const clearButton = categoriesContainer.querySelector('.clear-search');
+                if (clearButton) {
+                    clearButton.addEventListener('click', () => {
+                        searchInput.value = '';
+                        filterData();
+                    });
+                }
+                
+                return;
+            }
+            
+            let categoryIndex = 0;
+            
+            for (const categoryName in categories) {
+                const categoryEntries = categories[categoryName];
+                
+                const categoryEl = document.createElement('section');
+                categoryEl.className = 'category';
+                categoryEl.style.animationDelay = `${categoryIndex * 0.1}s`;
+                
+                categoryEl.innerHTML = `
+                    <div class="category-header">
+                        <h2 class="category-title">${categoryName}</h2>
+                        <div class="category-indicator"></div>
+                    </div>
+                    <div class="cards-grid"></div>
+                `;
+                
+                const cardsGrid = categoryEl.querySelector('.cards-grid');
+                
+                // Add job cards to the category
+                categoryEntries.forEach((entry, entryIndex) => {
+                    const jobCard = createJobCard(entry, categoryIndex, entryIndex);
+                    cardsGrid.appendChild(jobCard);
+                });
+                
+                categoriesContainer.appendChild(categoryEl);
+                categoryIndex++;
+            }
+        }
+        
+        // Create job card element
+        function createJobCard(entry, categoryIndex, entryIndex) {
+            const jobCard = document.createElement('div');
+            jobCard.className = 'job-card';
+            jobCard.style.animationDelay = `${(categoryIndex * 0.1) + (entryIndex * 0.05)}s`;
+            jobCard.setAttribute('data-title', entry.titulo);
+            jobCard.setAttribute('data-description', entry.descricao);
+            
+            jobCard.innerHTML = `
+                <div class="card-header">
+                    <h3 class="card-title">${entry.titulo}</h3>
+                    <button class="copy-button" aria-label="Copiar conteúdo">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p class="card-description">${entry.descricao}</p>
+                <div class="card-effect"></div>
+            `;
+            
+            // Add 3D effect on mouse move
+            jobCard.addEventListener('mousemove', handleCardMouseMove);
+            jobCard.addEventListener('mouseleave', resetCardPosition);
+            
+            // Add copy functionality
+            const copyButton = jobCard.querySelector('.copy-button');
+            copyButton.addEventListener('click', () => {
+                const contentToCopy = `${entry.titulo}\n${entry.descricao}`;
+                copyToClipboard(contentToCopy, copyButton);
+            });
+            
+            return jobCard;
+        }
+        
+        // Handle 3D effect on cards
+        function handleCardMouseMove(e) {
+            const card = e.currentTarget;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Calculate rotation values (limited to subtle effect)
+            const rotX = ((y - rect.height / 2) / (rect.height / 2)) * 2.5;
+            const rotY = ((rect.width / 2 - x) / (rect.width / 2)) * 2.5;
+            
+            card.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.02)`;
+        }
+        
+        // Reset card position on mouse leave
+        function resetCardPosition(e) {
+            const card = e.currentTarget;
+            card.style.transform = '';
+        }
+        
+        // Copy to clipboard function
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Change icon to checkmark
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                `;
+                
+                showToast('Conteúdo copiado!');
+                
+                // Reset icon after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    `;
+                }, 2000);
+            }).catch(() => {
+                showToast('Falha ao copiar para a área de transferência.', 'error');
+            });
+        }
+        
+        // Filter data based on search term
+        function filterData() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderCategories(categoriesData);
+                visibleCountEl.textContent = totalItems;
+                return;
+            }
+            
+            const filteredCategories = {};
+            let visibleItems = 0;
+            
+            for (const category in categoriesData) {
+                const entries = categoriesData[category];
+                const filteredEntries = entries.filter(entry => 
+                    entry.titulo.toLowerCase().includes(searchTerm) || 
+                    entry.descricao.toLowerCase().includes(searchTerm)
+                );
+                
+                if (filteredEntries.length > 0) {
+                    filteredCategories[category] = filteredEntries;
+                    visibleItems += filteredEntries.length;
+                }
+            }
+            
+            visibleCountEl.textContent = visibleItems;
+            renderCategories(filteredCategories);
+        }
+        
+        // Search input event listener
+        searchInput.addEventListener('input', filterData);
+        
+        // Handle Escape key to clear search
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                filterData();
+                searchInput.blur();
+            }
+        });
+        
+        // Initial data fetch
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>
