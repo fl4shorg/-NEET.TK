@@ -921,6 +921,11 @@
       async function initApp() {
         setupEventListeners();
         await loadRules();
+        
+        // Ensure modals are hidden on load
+        elements.ruleFormModal.classList.add('hidden');
+        elements.deleteModal.classList.add('hidden');
+        elements.ruleFormDrawer.classList.remove('open');
       }
       
       initApp();
