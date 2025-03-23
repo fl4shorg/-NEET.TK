@@ -2,960 +2,809 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Regras</title>
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Adicionar ícones Lucide via CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <style>
-    /* Estilos base */
-    :root {
-      --background: 210 40% 98%;
-      --foreground: 222.2 84% 4.9%;
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
-      --primary: 222.2 47.4% 11.2%;
-      --primary-foreground: 210 40% 98%;
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 222.2 84% 4.9%;
-      --radius: 0.8rem;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Regras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.75rem;
+        }
 
-    .dark {
-      --background: 222.2 84% 4.9%;
-      --foreground: 210 40% 98%;
-      --card: 222.2 84% 4.9%;
-      --card-foreground: 210 40% 98%;
-      --popover: 222.2 84% 4.9%;
-      --popover-foreground: 210 40% 98%;
-      --primary: 210 40% 98%;
-      --primary-foreground: 222.2 47.4% 11.2%;
-      --secondary: 217.2 32.6% 17.5%;
-      --secondary-foreground: 210 40% 98%;
-      --muted: 217.2 32.6% 17.5%;
-      --muted-foreground: 215 20.2% 65.1%;
-      --accent: 217.2 32.6% 17.5%;
-      --accent-foreground: 210 40% 98%;
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
-      --border: 217.2 32.6% 17.5%;
-      --input: 217.2 32.6% 17.5%;
-      --ring: 212.7 26.8% 83.9%;
-    }
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --primary: 210 40% 98%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 212.7 26.8% 83.9%;
+        }
 
-    * {
-      border-color: hsl(var(--border));
-    }
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
 
-    body {
-      background-color: hsl(var(--background));
-      color: hsl(var(--foreground));
-      font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
-    }
+        /* Cards */
+        .rule-card {
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.75rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
 
-    html {
-      scroll-behavior: smooth;
-    }
+        .rule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Utilidades */
-    .glass {
-      background-color: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
 
-    .dark .glass {
-      background-color: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-    .premium-card {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-    }
+        .modal-content {
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            width: 100%;
+            max-width: 500px;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
 
-    .premium-card:hover {
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
+        .modal.active .modal-content {
+            animation: modalSlideIn 0.3s ease forwards;
+        }
 
-    .dark .premium-card {
-      background-color: rgba(0, 0, 0, 0.4);
-      border: 1px solid #374151;
-    }
-
-    .scrollbar-hide {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-    }
-
-    .toast {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      padding: 1rem;
-      background: white;
-      color: black;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      border-radius: 0.5rem;
-      z-index: 50;
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.3s, transform 0.3s;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .dark .toast {
-      background-color: #1F2937;
-      color: white;
-    }
-
-    .animate-fade-in {
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .animate-scale-in {
-      animation: scaleIn 0.2s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes scaleIn {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* Componentes */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      white-space: nowrap;
-      border-radius: 0.375rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition-property: color, background-color, border-color;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-      transition-duration: 150ms;
-    }
-
-    .btn-primary {
-      background-color: hsl(var(--primary));
-      color: hsl(var(--primary-foreground));
-    }
-
-    .btn-primary:hover {
-      background-color: hsl(var(--primary) / 0.9);
-    }
-
-    .btn-secondary {
-      background-color: hsl(var(--secondary));
-      color: hsl(var(--secondary-foreground));
-    }
-
-    .btn-secondary:hover {
-      background-color: hsl(var(--secondary) / 0.8);
-    }
-
-    .btn-destructive {
-      background-color: hsl(var(--destructive));
-      color: hsl(var(--destructive-foreground));
-    }
-
-    .btn-destructive:hover {
-      background-color: hsl(var(--destructive) / 0.9);
-    }
-
-    .btn-outline {
-      border: 1px solid hsl(var(--input));
-      background-color: transparent;
-    }
-
-    .btn-outline:hover {
-      background-color: hsl(var(--accent));
-      color: hsl(var(--accent-foreground));
-    }
-
-    .btn-icon {
-      height: 2.5rem;
-      width: 2.5rem;
-      padding: 0;
-    }
-
-    .btn-sm {
-      height: 2.25rem;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-      border-radius: 0.375rem;
-    }
-
-    .btn [data-lucide] {
-      height: 1rem;
-      width: 1rem;
-      pointer-events: none;
-      flex-shrink: 0;
-    }
-
-    .input {
-      display: flex;
-      height: 2.5rem;
-      width: 100%;
-      border-radius: 0.375rem;
-      border: 1px solid hsl(var(--input));
-      background-color: transparent;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-      font-size: 0.875rem;
-    }
-
-    .input:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px hsl(var(--ring));
-    }
-
-    .textarea {
-      display: flex;
-      min-height: 80px;
-      width: 100%;
-      border-radius: 0.375rem;
-      border: 1px solid hsl(var(--input));
-      background-color: transparent;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.875rem;
-    }
-
-    .textarea:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px hsl(var(--ring));
-    }
-
-    .label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-      display: block;
-    }
-
-    .dialog {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-
-    .dialog.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .dialog-content {
-      position: relative;
-      width: 100%;
-      max-width: 28rem;
-      max-height: 90vh;
-      overflow-y: auto;
-      background-color: hsl(var(--background));
-      border-radius: 0.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      padding: 1.5rem;
-      animation: dialogShow 0.3s ease-out;
-    }
-
-    @keyframes dialogShow {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-    }
-
-    .dialog-header {
-      margin-bottom: 1rem;
-    }
-
-    .dialog-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .dialog-description {
-      font-size: 0.875rem;
-      color: hsl(var(--muted-foreground));
-    }
-
-    .dialog-footer {
-      margin-top: 1.5rem;
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.5rem;
-    }
-
-    .loading-skeleton {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      background-color: hsl(var(--muted));
-      border-radius: 0.375rem;
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.5;
-      }
-    }
-  </style>
-
-  <!-- Script para configurar o Tailwind -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
-  </script>
-</head>
-<body class="min-h-screen bg-background text-foreground">
-  <div id="app" class="container py-8 mx-auto"></div>
-
-  <!-- Modal for Rule Form -->
-  <div id="ruleModal" class="dialog">
-    <div class="dialog-content">
-      <form id="ruleForm">
-        <div class="dialog-header">
-          <h2 id="modalTitle" class="dialog-title">Adicionar Nova Regra</h2>
-          <p class="dialog-description">Preencha os campos abaixo para adicionar uma nova regra.</p>
-        </div>
-        
-        <div class="space-y-6 py-4">
-          <div class="space-y-2">
-            <label for="titulo" class="label">Título</label>
-            <input type="text" id="titulo" name="titulo" class="input" required>
-          </div>
-          
-          <div class="space-y-2">
-            <label for="descricao" class="label">Descrição</label>
-            <textarea id="descricao" name="descricao" class="textarea" required></textarea>
-          </div>
-          
-          <div class="space-y-2">
-            <label for="paragrafo01" class="label">Parágrafo 01</label>
-            <textarea id="paragrafo01" name="paragrafo01" class="textarea" required></textarea>
-          </div>
-          
-          <div class="space-y-2">
-            <label for="paragrafo02" class="label">Parágrafo 02</label>
-            <textarea id="paragrafo02" name="paragrafo02" class="textarea" required></textarea>
-          </div>
-          
-          <div class="space-y-2">
-            <label for="paragrafo03" class="label">Parágrafo 03</label>
-            <textarea id="paragrafo03" name="paragrafo03" class="textarea" required></textarea>
-          </div>
-          
-          <div class="space-y-2">
-            <label for="paragrafo04" class="label">Parágrafo 04</label>
-            <textarea id="paragrafo04" name="paragrafo04" class="textarea" required></textarea>
-          </div>
-        </div>
-        
-        <div class="dialog-footer">
-          <button type="button" id="cancelButton" class="btn btn-outline">Cancelar</button>
-          <button type="submit" id="saveButton" class="btn btn-primary">Salvar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal for Rule Details -->
-  <div id="detailsModal" class="dialog">
-    <div class="dialog-content">
-      <div class="dialog-header">
-        <h2 id="detailsTitle" class="dialog-title"></h2>
-      </div>
-      
-      <div class="space-y-6 py-4">
-        <div class="space-y-2">
-          <h4 class="font-medium">Descrição:</h4>
-          <p id="detailsDescricao" class="text-sm"></p>
-        </div>
-        
-        <div class="space-y-2">
-          <h4 class="font-medium">Parágrafo 01:</h4>
-          <p id="detailsP1" class="text-sm"></p>
-        </div>
-        
-        <div class="space-y-2">
-          <h4 class="font-medium">Parágrafo 02:</h4>
-          <p id="detailsP2" class="text-sm"></p>
-        </div>
-        
-        <div class="space-y-2">
-          <h4 class="font-medium">Parágrafo 03:</h4>
-          <p id="detailsP3" class="text-sm"></p>
-        </div>
-        
-        <div class="space-y-2">
-          <h4 class="font-medium">Parágrafo 04:</h4>
-          <p id="detailsP4" class="text-sm"></p>
-        </div>
-      </div>
-      
-      <div class="dialog-footer">
-        <button type="button" id="closeDetailsButton" class="btn btn-secondary">Fechar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delete Confirmation Modal -->
-  <div id="deleteModal" class="dialog">
-    <div class="dialog-content">
-      <div class="dialog-header">
-        <h2 class="dialog-title">Confirmar exclusão</h2>
-      </div>
-      <p class="py-4">
-        Tem certeza que deseja excluir a regra <span id="deleteRuleName" class="font-medium"></span>? Esta ação não pode ser desfeita.
-      </p>
-      <div class="dialog-footer">
-        <button type="button" id="cancelDeleteButton" class="btn btn-outline">Cancelar</button>
-        <button type="button" id="confirmDeleteButton" class="btn btn-destructive">Excluir</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Container -->
-  <div id="toast" class="toast" role="alert"></div>
-
-  <!-- Aplicativo JavaScript -->
-  <script>
-    // Constantes e configurações
-    const API_URL = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec";
-    let rules = [];
-    let filteredRules = [];
-    let currentRule = null;
-    let theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-    // Aplicar tema
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
-
-    // Elementos DOM
-    const appContainer = document.getElementById('app');
-    const ruleModal = document.getElementById('ruleModal');
-    const ruleForm = document.getElementById('ruleForm');
-    const modalTitle = document.getElementById('modalTitle');
-    const saveButton = document.getElementById('saveButton');
-    const cancelButton = document.getElementById('cancelButton');
-    const detailsModal = document.getElementById('detailsModal');
-    const deleteModal = document.getElementById('deleteModal');
-    const toast = document.getElementById('toast');
-
-    // Inicializar ícones Lucide
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-    });
-
-    // Funções de API
-    async function getRulesFromAPI() {
-      try {
-        const response = await fetch(`${API_URL}?action=read`);
-        const data = await response.text();
-        return parseRulesCSV(data);
-      } catch (error) {
-        console.error("Error fetching rules:", error);
-        showToast("Erro ao carregar regras", "error");
-        return [];
-      }
-    }
-
-    function parseRulesCSV(data) {
-      const lines = data.split("\n").slice(1);
-      const parsedRules = [];
-
-      lines.forEach((line) => {
-        if (line.trim()) {
-          try {
-            const [id, titulo, descricao, p1, p2, p3, p4] = line.split(",").map(item => item.replace(/\|/g, ','));
-            // Só adiciona se tiver um ID e título válidos
-            if (id && titulo) {
-              parsedRules.push({
-                id,
-                titulo,
-                descricao: descricao || "",
-                paragrafo01: p1 || "",
-                paragrafo02: p2 || "",
-                paragrafo03: p3 || "",
-                paragrafo04: p4 || ""
-              });
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-          } catch (error) {
-            console.error("Erro ao processar linha:", line, error);
-          }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-      });
 
-      console.log(`Total de regras carregadas: ${parsedRules.length}`);
-      return parsedRules;
-    }
+        /* Inputs */
+        input, textarea, button {
+            font-family: inherit;
+        }
 
-    async function createRuleAPI(rule) {
-      try {
-        const formData = new FormData();
-        formData.append("action", "create");
-        formData.append("id", String(new Date().getTime()));
-        formData.append("titulo", rule.titulo);
-        formData.append("descricao", rule.descricao.replace(/,/g, '|'));
-        formData.append("paragrafo01", rule.paragrafo01.replace(/,/g, '|'));
-        formData.append("paragrafo02", rule.paragrafo02.replace(/,/g, '|'));
-        formData.append("paragrafo03", rule.paragrafo03.replace(/,/g, '|'));
-        formData.append("paragrafo04", rule.paragrafo04.replace(/,/g, '|'));
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            background-color: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
+            transition: border-color 0.15s ease;
+        }
 
-        const response = await fetch(API_URL, {
-          method: "POST",
-          body: formData
-        });
-        
-        return response.ok;
-      } catch (error) {
-        console.error("Error creating rule:", error);
-        return false;
-      }
-    }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 2px hsla(var(--ring), 0.2);
+        }
 
-    async function updateRuleAPI(rule) {
-      try {
-        const formData = new FormData();
-        formData.append("action", "update");
-        formData.append("id", rule.id);
-        formData.append("titulo", rule.titulo);
-        formData.append("descricao", rule.descricao.replace(/,/g, '|'));
-        formData.append("paragrafo01", rule.paragrafo01.replace(/,/g, '|'));
-        formData.append("paragrafo02", rule.paragrafo02.replace(/,/g, '|'));
-        formData.append("paragrafo03", rule.paragrafo03.replace(/,/g, '|'));
-        formData.append("paragrafo04", rule.paragrafo04.replace(/,/g, '|'));
+        label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            color: hsl(var(--foreground));
+        }
 
-        const response = await fetch(API_URL, {
-          method: "POST",
-          body: formData
-        });
-        
-        return response.ok;
-      } catch (error) {
-        console.error("Error updating rule:", error);
-        return false;
-      }
-    }
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            white-space: nowrap;
+            min-height: 44px;
+        }
 
-    async function deleteRuleAPI(id) {
-      try {
-        const formData = new FormData();
-        formData.append("action", "delete");
-        formData.append("id", id);
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
 
-        const response = await fetch(API_URL, {
-          method: "POST",
-          body: formData
-        });
-        
-        return response.ok;
-      } catch (error) {
-        console.error("Error deleting rule:", error);
-        return false;
-      }
-    }
+        .btn-primary:hover {
+            background-color: hsla(var(--primary), 0.9);
+        }
 
-    // Funções da UI
-    function renderApp() {
-      appContainer.innerHTML = `
-        <div>
-          <div class="flex flex-col space-y-6 md:space-y-0 md:flex-row md:justify-between md:items-center mb-8 animate-fade-in">
-            <div>
-              <h1 class="text-3xl font-medium tracking-tight">Dashboard Regras</h1>
-              <p class="text-muted-foreground mt-1">
-                Gerenciamento de regras do sistema
-              </p>
+        .btn-secondary {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+        }
+
+        .btn-secondary:hover {
+            background-color: hsla(var(--secondary), 0.8);
+        }
+
+        .btn-destructive {
+            background-color: hsl(var(--destructive));
+            color: hsl(var(--destructive-foreground));
+        }
+
+        .btn-destructive:hover {
+            background-color: hsla(var(--destructive), 0.9);
+        }
+
+        /* Loading */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 2px solid hsl(var(--primary-foreground));
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .rule-card:hover {
+                transform: translateY(-2px);
+            }
+            
+            .flex-col-mobile {
+                flex-direction: column;
+            }
+            
+            .w-full-mobile {
+                width: 100%;
+            }
+            
+            .space-y-2-mobile > * + * {
+                margin-top: 0.5rem;
+            }
+            
+            .mb-4-mobile {
+                margin-bottom: 1rem;
+            }
+            
+            /* Improve tap targets on mobile */
+            button, a, input[type="checkbox"], input[type="radio"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .modal-content {
+                width: calc(100% - 2rem);
+                margin: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-6 max-w-5xl">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+            <div class="mb-4 sm:mb-0">
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight animate-fade-in">Dashboard Regras</h1>
+                <p class="text-muted-foreground mt-1 animate-fade-in" style="color: hsl(var(--muted-foreground));">
+                    Gerenciamento de regras do sistema
+                </p>
             </div>
             
-            <div class="flex items-center gap-4">
-              <div class="relative w-full md:w-64">
-                <i data-lucide="search" class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"></i>
-                <input 
-                  type="search" 
-                  id="searchInput" 
-                  placeholder="Pesquisar regras..." 
-                  class="input pl-8 w-full"
-                >
-              </div>
-              
-              <button 
-                id="addRuleButton" 
-                class="btn btn-primary btn-icon shadow-sm"
-              >
-                <i data-lucide="plus" class="h-4 w-4"></i>
-                <span class="sr-only">Adicionar Regra</span>
-              </button>
-              
-              <button
-                id="themeToggle"
-                class="btn btn-outline btn-icon rounded-full"
-              >
-                <i data-lucide="${theme === 'dark' ? 'sun' : 'moon'}" class="h-4 w-4"></i>
-              </button>
-            </div>
-          </div>
-          
-          <div class="mt-8">
-            <div class="text-sm text-muted-foreground mb-6">
-              Total de Regras: ${rules.length}
+            <button id="theme-toggle" class="p-2 rounded-full transition-colors" 
+                    style="background-color: hsl(var(--secondary)); color: hsl(var(--secondary-foreground));">
+                <i id="theme-icon" class="fas fa-moon"></i>
+            </button>
+        </header>
+        
+        <div class="mb-6 flex flex-col gap-4">
+            <div class="flex flex-col sm:flex-row justify-between gap-4">
+                <button id="add-rule-btn" class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto animate-fade-in">
+                    <i class="fas fa-plus"></i>
+                    Adicionar Nova Regra
+                </button>
+                
+                <div class="relative w-full">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2" 
+                       style="color: hsl(var(--muted-foreground));"></i>
+                    <input type="text" id="search-input" 
+                           class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
+                           placeholder="Pesquisar regras..." 
+                           style="border-color: hsl(var(--border)); background-color: hsl(var(--background));">
+                </div>
             </div>
             
-            <div id="rulesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              ${renderRules()}
+            <div class="rounded-lg p-4 border shadow-sm" 
+                 style="background-color: hsl(var(--card)); border-color: hsl(var(--border));">
+                <p id="rules-count" style="color: hsl(var(--muted-foreground));">
+                    Total de Regras: <span id="total-count" class="font-medium" style="color: hsl(var(--foreground));">0</span>
+                    <span id="filtered-count-container" class="hidden">
+                        | Filtradas: <span id="filtered-count" class="font-medium" style="color: hsl(var(--foreground));">0</span>
+                    </span>
+                </p>
             </div>
-          </div>
         </div>
-      `;
-
-      // Atualizar ícones Lucide
-      lucide.createIcons();
-
-      // Adicionar event listeners
-      document.getElementById('searchInput').addEventListener('input', handleSearch);
-      document.getElementById('addRuleButton').addEventListener('click', handleAddRule);
-      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    }
-
-    function renderRules() {
-      if (filteredRules.length === 0) {
-        return `
-          <div class="col-span-3 text-center py-16">
-            <h3 class="text-lg font-medium">Nenhuma regra encontrada</h3>
-            <p class="text-muted-foreground mt-2">
-              ${filteredRules.length === 0 && rules.length !== 0
-                ? "Tente ajustar sua pesquisa ou adicione uma nova regra."
-                : "Adicione sua primeira regra para começar."}
+        
+        <div id="loading" class="flex justify-center items-center h-40">
+            <div class="flex flex-col items-center gap-2">
+                <div class="loader"></div>
+                <p style="color: hsl(var(--muted-foreground));" class="text-sm">Carregando regras...</p>
+            </div>
+        </div>
+        
+        <div id="no-rules" class="text-center py-12 hidden">
+            <i class="fas fa-scroll text-6xl mb-4" style="color: hsla(var(--muted-foreground), 0.5);"></i>
+            <h3 class="text-lg font-medium mb-1">Nenhuma regra encontrada</h3>
+            <p class="mb-4" style="color: hsl(var(--muted-foreground));">
+                <span id="no-rules-message">Comece adicionando uma nova regra</span>
             </p>
-          </div>
-        `;
-      }
-
-      return filteredRules.map(rule => `
-        <div class="premium-card overflow-hidden animate-scale-in rounded-lg">
-          <div class="p-6 pb-3">
-            <h3 class="text-xl font-semibold">${rule.titulo}</h3>
-          </div>
-          
-          <div class="p-6 pt-3 text-sm space-y-4">
-            <div>
-              <p class="text-muted-foreground font-medium mb-1">Descrição:</p>
-              <p>${rule.descricao}</p>
-            </div>
-            
-            <div>
-              <p class="text-muted-foreground font-medium mb-1">Parágrafo 01:</p>
-              <p class="line-clamp-2">${rule.paragrafo01}</p>
-            </div>
-            
-            <button 
-              class="text-sm text-muted-foreground hover:text-foreground p-0 bg-transparent border-none cursor-pointer"
-              data-id="${rule.id}"
-              data-action="details"
-            >
-              Ver mais detalhes
+            <button id="add-rule-empty" class="btn inline-flex items-center justify-center gap-2" 
+                    style="background-color: hsla(var(--primary), 0.1); color: hsl(var(--primary));">
+                <i class="fas fa-plus"></i>
+                Adicionar Regra
             </button>
-          </div>
-          
-          <div class="p-6 pt-3 border-t flex justify-end space-x-2">
-            <button
-              class="btn btn-outline btn-sm gap-1.5"
-              data-id="${rule.id}"
-              data-action="edit"
-            >
-              <i data-lucide="edit" class="h-3.5 w-3.5"></i>
-              <span>Editar</span>
-            </button>
-            
-            <button
-              class="btn btn-destructive btn-sm gap-1.5"
-              data-id="${rule.id}"
-              data-action="delete"
-            >
-              <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
-              <span>Excluir</span>
-            </button>
-          </div>
         </div>
-      `).join('');
-    }
-
-    function renderLoadingSkeletons() {
-      let skeletons = '';
-      for (let i = 0; i < 6; i++) {
-        skeletons += `
-          <div class="space-y-3">
-            <div class="loading-skeleton h-8 w-3/4"></div>
-            <div class="loading-skeleton h-32"></div>
-            <div class="flex justify-end space-x-2 mt-4">
-              <div class="loading-skeleton h-9 w-20"></div>
-              <div class="loading-skeleton h-9 w-20"></div>
-            </div>
-          </div>
-        `;
-      }
-      
-      return `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${skeletons}</div>`;
-    }
-
-    // Manipuladores de eventos
-    function handleSearch(e) {
-      const query = e.target.value.toLowerCase();
-      
-      if (query.trim() === "") {
-        filteredRules = [...rules];
-      } else {
-        filteredRules = rules.filter(rule => 
-          rule.titulo.toLowerCase().includes(query) || 
-          rule.descricao.toLowerCase().includes(query)
-        );
-      }
-      
-      document.getElementById('rulesContainer').innerHTML = renderRules();
-      lucide.createIcons();
-      setupRuleEventListeners();
-    }
-
-    function setupRuleEventListeners() {
-      // Configurar listeners para botões de cada regra
-      document.querySelectorAll('[data-action]').forEach(button => {
-        const action = button.getAttribute('data-action');
-        const id = button.getAttribute('data-id');
         
-        button.addEventListener('click', () => {
-          const rule = rules.find(r => r.id === id);
-          
-          if (action === 'edit') {
-            handleEditRule(rule);
-          } else if (action === 'delete') {
-            handleDeleteRule(rule);
-          } else if (action === 'details') {
-            showDetailsModal(rule);
-          }
+        <div id="rules-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Rules will be added here dynamically -->
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="rule-modal" class="modal">
+        <div class="modal-content p-4 sm:p-6">
+            <h2 id="modal-title" class="text-xl font-semibold mb-4">Adicionar Nova Regra</h2>
+            
+            <form id="rule-form" class="space-y-4">
+                <input type="hidden" id="rule-id">
+                
+                <div>
+                    <label for="rule-titulo">Título</label>
+                    <input type="text" id="rule-titulo" required>
+                </div>
+                
+                <div>
+                    <label for="rule-descricao">Descrição</label>
+                    <textarea id="rule-descricao" rows="2"></textarea>
+                </div>
+                
+                <div>
+                    <label for="rule-paragrafo01">Parágrafo 01</label>
+                    <textarea id="rule-paragrafo01" rows="2"></textarea>
+                </div>
+                
+                <div>
+                    <label for="rule-paragrafo02">Parágrafo 02</label>
+                    <textarea id="rule-paragrafo02" rows="2"></textarea>
+                </div>
+                
+                <div>
+                    <label for="rule-paragrafo03">Parágrafo 03</label>
+                    <textarea id="rule-paragrafo03" rows="2"></textarea>
+                </div>
+                
+                <div>
+                    <label for="rule-paragrafo04">Parágrafo 04</label>
+                    <textarea id="rule-paragrafo04" rows="2"></textarea>
+                </div>
+                
+                <div class="flex flex-col-mobile sm:flex-row sm:justify-end space-y-2-mobile sm:space-y-0 sm:space-x-3 pt-2">
+                    <button type="button" id="modal-cancel" class="btn w-full-mobile sm:w-auto order-2 sm:order-1" 
+                            style="border: 1px solid hsl(var(--border));">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary w-full-mobile sm:w-auto order-1 sm:order-2">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const apiUrl = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec";
+        let allRules = [];
+        let filteredRules = [];
+        
+        // Elements
+        const rulesContainer = document.getElementById('rules-container');
+        const noRulesElement = document.getElementById('no-rules');
+        const loadingElement = document.getElementById('loading');
+        const ruleModal = document.getElementById('rule-modal');
+        const ruleForm = document.getElementById('rule-form');
+        const modalTitle = document.getElementById('modal-title');
+        const searchInput = document.getElementById('search-input');
+        const totalCountElement = document.getElementById('total-count');
+        const filteredCountContainer = document.getElementById('filtered-count-container');
+        const filteredCountElement = document.getElementById('filtered-count');
+        const noRulesMessage = document.getElementById('no-rules-message');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        // Event Listeners
+        document.getElementById('add-rule-btn').addEventListener('click', () => openModal());
+        document.getElementById('add-rule-empty').addEventListener('click', () => openModal());
+        document.getElementById('modal-cancel').addEventListener('click', () => closeModal());
+        searchInput.addEventListener('input', filterRules);
+        ruleForm.addEventListener('submit', saveRule);
+        themeToggle.addEventListener('click', toggleTheme);
+        
+        // Prevents scrolling when modal is open
+        function setModalOpen(isOpen) {
+            if (isOpen) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRules();
+            initTheme();
         });
-      });
-    }
-
-    function handleAddRule() {
-      currentRule = null;
-      modalTitle.textContent = 'Adicionar Nova Regra';
-      ruleForm.reset();
-      showModal(ruleModal);
-    }
-
-    function handleEditRule(rule) {
-      currentRule = rule;
-      modalTitle.textContent = 'Editar Regra';
-      
-      // Preencher o formulário
-      document.getElementById('titulo').value = rule.titulo;
-      document.getElementById('descricao').value = rule.descricao;
-      document.getElementById('paragrafo01').value = rule.paragrafo01;
-      document.getElementById('paragrafo02').value = rule.paragrafo02;
-      document.getElementById('paragrafo03').value = rule.paragrafo03;
-      document.getElementById('paragrafo04').value = rule.paragrafo04;
-      
-      showModal(ruleModal);
-    }
-
-    function handleDeleteRule(rule) {
-      currentRule = rule;
-      document.getElementById('deleteRuleName').textContent = `"${rule.titulo}"`;
-      showModal(deleteModal);
-    }
-
-    async function handleSaveRule(e) {
-      e.preventDefault();
-      
-      // Desabilitar botão de salvar
-      saveButton.disabled = true;
-      saveButton.textContent = 'Salvando...';
-      
-      const formData = {
-        titulo: document.getElementById('titulo').value,
-        descricao: document.getElementById('descricao').value,
-        paragrafo01: document.getElementById('paragrafo01').value,
-        paragrafo02: document.getElementById('paragrafo02').value,
-        paragrafo03: document.getElementById('paragrafo03').value,
-        paragrafo04: document.getElementById('paragrafo04').value
-      };
-      
-      let success = false;
-      
-      if (currentRule) {
-        // Editar regra existente
-        formData.id = currentRule.id;
-        success = await updateRuleAPI(formData);
-        if (success) {
-          showToast("Regra atualizada com sucesso");
-        } else {
-          showToast("Erro ao atualizar regra", "error");
+        
+        // Load rules from API
+        async function loadRules() {
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${apiUrl}?action=read`);
+                const data = await response.text();
+                
+                const lines = data.split('\n').slice(1);
+                allRules = [];
+                
+                lines.forEach(line => {
+                    if (line.trim()) {
+                        const [id, titulo, descricao, p1, p2, p3, p4] = line
+                            .split(',')
+                            .map(item => item.replace(/\|/g, ','));
+                        
+                        allRules.push({ id, titulo, descricao, p1, p2, p3, p4 });
+                    }
+                });
+                
+                filteredRules = [...allRules];
+                updateRulesCount();
+                renderRules(allRules);
+            } catch (error) {
+                console.error('Error loading rules:', error);
+                showToast('error', 'Erro ao carregar regras');
+            } finally {
+                showLoading(false);
+            }
         }
-      } else {
-        // Criar nova regra
-        success = await createRuleAPI(formData);
-        if (success) {
-          showToast("Regra adicionada com sucesso");
-        } else {
-          showToast("Erro ao adicionar regra", "error");
+        
+        // Show/hide loading state
+        function showLoading(show) {
+            loadingElement.style.display = show ? 'flex' : 'none';
+            rulesContainer.style.display = show ? 'none' : 'grid';
         }
-      }
-      
-      // Reabilitar botão
-      saveButton.disabled = false;
-      saveButton.textContent = 'Salvar';
-      
-      if (success) {
-        hideModal(ruleModal);
-        await refreshRules();
-      }
-    }
-
-    async function handleConfirmDelete() {
-      if (!currentRule) return;
-      
-      const success = await deleteRuleAPI(currentRule.id);
-      
-      if (success) {
-        showToast("Regra removida com sucesso");
-        hideModal(deleteModal);
-        await refreshRules();
-      } else {
-        showToast("Erro ao remover regra", "error");
-      }
-    }
-
-    function showDetailsModal(rule) {
-      document.getElementById('detailsTitle').textContent = rule.titulo;
-      document.getElementById('detailsDescricao').textContent = rule.descricao;
-      document.getElementById('detailsP1').textContent = rule.paragrafo01;
-      document.getElementById('detailsP2').textContent = rule.paragrafo02;
-      document.getElementById('detailsP3').textContent = rule.paragrafo03;
-      document.getElementById('detailsP4').textContent = rule.paragrafo04;
-      
-      showModal(detailsModal);
-    }
-
-    function toggleTheme() {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      
-      // Salvar tema no localStorage
-      localStorage.setItem('theme', theme);
-      
-      // Aplicar tema
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-      
-      // Atualizar ícone
-      const themeIcon = document.querySelector('#themeToggle i');
-      if (themeIcon) {
-        themeIcon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
-        lucide.createIcons();
-      }
-    }
-
-    // Funções utilitárias
-    function showModal(modal) {
-      modal.classList.add('show');
-    }
-
-    function hideModal(modal) {
-      modal.classList.remove('show');
-    }
-
-    function showToast(message, type = 'success') {
-      toast.textContent = message;
-      toast.className = `toast show ${type === 'error' ? 'bg-destructive text-destructive-foreground' : ''}`;
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
-    async function refreshRules() {
-      // Mostrar esqueletos de carregamento
-      document.getElementById('rulesContainer').innerHTML = renderLoadingSkeletons();
-      
-      // Buscar regras da API
-      rules = await getRulesFromAPI();
-      filteredRules = [...rules];
-      
-      // Renderizar interface
-      renderApp();
-      setupRuleEventListeners();
-    }
-
-    // Event Listeners
-    ruleForm.addEventListener('submit', handleSaveRule);
-    cancelButton.addEventListener('click', () => hideModal(ruleModal));
-    document.getElementById('closeDetailsButton').addEventListener('click', () => hideModal(detailsModal));
-    document.getElementById('cancelDeleteButton').addEventListener('click', () => hideModal(deleteModal));
-    document.getElementById('confirmDeleteButton').addEventListener('click', handleConfirmDelete);
-
-    // Fechar modais ao clicar fora
-    ruleModal.addEventListener('click', (e) => {
-      if (e.target === ruleModal) hideModal(ruleModal);
-    });
-    
-    detailsModal.addEventListener('click', (e) => {
-      if (e.target === detailsModal) hideModal(detailsModal);
-    });
-    
-    deleteModal.addEventListener('click', (e) => {
-      if (e.target === deleteModal) hideModal(deleteModal);
-    });
-
-    // Inicializar aplicativo
-    refreshRules();
-  </script>
+        
+        // Update UI with rule count
+        function updateRulesCount() {
+            totalCountElement.textContent = allRules.length;
+            
+            if (searchInput.value.trim() !== '') {
+                filteredCountContainer.classList.remove('hidden');
+                filteredCountElement.textContent = filteredRules.length;
+            } else {
+                filteredCountContainer.classList.add('hidden');
+            }
+            
+            if (filteredRules.length === 0) {
+                rulesContainer.style.display = 'none';
+                noRulesElement.style.display = 'block';
+                
+                if (searchInput.value.trim() !== '') {
+                    noRulesMessage.textContent = 'Tente ajustar sua pesquisa ou adicione uma nova regra';
+                } else {
+                    noRulesMessage.textContent = 'Comece adicionando uma nova regra';
+                }
+            } else {
+                rulesContainer.style.display = 'grid';
+                noRulesElement.style.display = 'none';
+            }
+        }
+        
+        // Filter rules based on search input
+        function filterRules() {
+            const query = searchInput.value.trim().toLowerCase();
+            
+            if (query === '') {
+                filteredRules = [...allRules];
+            } else {
+                filteredRules = allRules.filter(rule => 
+                    rule.titulo.toLowerCase().includes(query) || 
+                    rule.descricao.toLowerCase().includes(query)
+                );
+            }
+            
+            updateRulesCount();
+            renderRules(filteredRules);
+        }
+        
+        // Render rules
+        function renderRules(rules) {
+            rulesContainer.innerHTML = '';
+            
+            rules.forEach((rule, index) => {
+                const delay = index * 50; // Stagger animation
+                const card = createRuleCard(rule, delay);
+                rulesContainer.appendChild(card);
+            });
+            
+            updateRulesCount();
+        }
+        
+        // Create a rule card
+        function createRuleCard(rule, delay) {
+            const { id, titulo, descricao, p1, p2, p3, p4 } = rule;
+            
+            const card = document.createElement('div');
+            card.className = 'rule-card p-4 sm:p-5 animate-fade-in';
+            card.style.animationDelay = `${delay}ms`;
+            
+            // Card content
+            let content = `
+                <h3 class="text-lg font-semibold mb-2">${escapeHtml(titulo)}</h3>
+                <p class="mb-3" style="color: hsl(var(--muted-foreground));">${escapeHtml(descricao)}</p>
+                
+                <div class="rule-details hidden space-y-2 mb-4">
+            `;
+            
+            // Add paragraphs if they exist
+            if (p1) content += `
+                <div>
+                    <p class="font-medium text-sm">Parágrafo 01:</p>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">${escapeHtml(p1)}</p>
+                </div>
+            `;
+            
+            if (p2) content += `
+                <div>
+                    <p class="font-medium text-sm">Parágrafo 02:</p>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">${escapeHtml(p2)}</p>
+                </div>
+            `;
+            
+            if (p3) content += `
+                <div>
+                    <p class="font-medium text-sm">Parágrafo 03:</p>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">${escapeHtml(p3)}</p>
+                </div>
+            `;
+            
+            if (p4) content += `
+                <div>
+                    <p class="font-medium text-sm">Parágrafo 04:</p>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">${escapeHtml(p4)}</p>
+                </div>
+            `;
+            
+            content += `
+                </div>
+                
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mt-4">
+                    <button class="toggle-details text-sm font-medium focus:outline-none" style="color: hsl(var(--primary));">
+                        Mais detalhes
+                    </button>
+                    
+                    <div class="flex flex-wrap gap-2">
+                        <button class="edit-rule flex items-center justify-center px-3 py-1.5 rounded-md text-sm transition-colors" 
+                                style="background-color: hsl(var(--secondary)); color: hsl(var(--secondary-foreground));">
+                            <i class="fas fa-edit mr-1"></i>
+                            Editar
+                        </button>
+                        
+                        <button class="delete-rule flex items-center justify-center px-3 py-1.5 rounded-md text-sm transition-colors" 
+                                style="background-color: hsl(var(--destructive)); color: hsl(var(--destructive-foreground));">
+                            <i class="fas fa-trash mr-1"></i>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            card.innerHTML = content;
+            
+            // Add event listeners
+            card.querySelector('.toggle-details').addEventListener('click', function() {
+                const details = card.querySelector('.rule-details');
+                const isHidden = details.classList.contains('hidden');
+                
+                details.classList.toggle('hidden');
+                this.textContent = isHidden ? 'Menos detalhes' : 'Mais detalhes';
+                
+                if (isHidden) {
+                    details.style.animation = 'slideUp 0.3s ease forwards';
+                }
+            });
+            
+            card.querySelector('.edit-rule').addEventListener('click', () => {
+                openModal(id, titulo, descricao, p1, p2, p3, p4);
+            });
+            
+            card.querySelector('.delete-rule').addEventListener('click', () => {
+                deleteRule(id);
+            });
+            
+            return card;
+        }
+        
+        // Open modal
+        function openModal(id, titulo, descricao, p1, p2, p3, p4) {
+            modalTitle.textContent = id ? 'Editar Regra' : 'Adicionar Nova Regra';
+            
+            document.getElementById('rule-id').value = id || '';
+            document.getElementById('rule-titulo').value = titulo || '';
+            document.getElementById('rule-descricao').value = descricao || '';
+            document.getElementById('rule-paragrafo01').value = p1 || '';
+            document.getElementById('rule-paragrafo02').value = p2 || '';
+            document.getElementById('rule-paragrafo03').value = p3 || '';
+            document.getElementById('rule-paragrafo04').value = p4 || '';
+            
+            ruleModal.classList.add('active');
+            setModalOpen(true);
+        }
+        
+        // Close modal
+        function closeModal() {
+            ruleModal.classList.remove('active');
+            setModalOpen(false);
+        }
+        
+        // Save rule
+        async function saveRule(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('rule-id').value;
+            const titulo = document.getElementById('rule-titulo').value;
+            const descricao = document.getElementById('rule-descricao').value.replace(/,/g, '|');
+            const paragrafo01 = document.getElementById('rule-paragrafo01').value.replace(/,/g, '|');
+            const paragrafo02 = document.getElementById('rule-paragrafo02').value.replace(/,/g, '|');
+            const paragrafo03 = document.getElementById('rule-paragrafo03').value.replace(/,/g, '|');
+            const paragrafo04 = document.getElementById('rule-paragrafo04').value.replace(/,/g, '|');
+            
+            const action = id ? "update" : "create";
+            const formData = new FormData();
+            
+            formData.append('action', action);
+            formData.append('id', id || new Date().getTime().toString());
+            formData.append('titulo', titulo);
+            formData.append('descricao', descricao);
+            formData.append('paragrafo01', paragrafo01);
+            formData.append('paragrafo02', paragrafo02);
+            formData.append('paragrafo03', paragrafo03);
+            formData.append('paragrafo04', paragrafo04);
+            
+            try {
+                await fetch(apiUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                showToast('success', id ? 'Regra atualizada com sucesso' : 'Regra criada com sucesso');
+                closeModal();
+                loadRules();
+            } catch (error) {
+                console.error('Error saving rule:', error);
+                showToast('error', 'Erro ao salvar regra');
+            }
+        }
+        
+        // Delete rule
+        async function deleteRule(id) {
+            const confirmed = await showConfirm('Tem certeza?', 'Você não poderá reverter esta ação!');
+            
+            if (confirmed) {
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('id', id);
+                
+                try {
+                    await fetch(apiUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    showToast('success', 'Regra excluída com sucesso');
+                    loadRules();
+                } catch (error) {
+                    console.error('Error deleting rule:', error);
+                    showToast('error', 'Erro ao excluir regra');
+                }
+            }
+        }
+        
+        // Show toast notification
+        function showToast(icon, text) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: icon,
+                title: text,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'swal2-toast-custom'
+                }
+            });
+        }
+        
+        // Show confirmation dialog
+        function showConfirm(title, text) {
+            return Swal.fire({
+                title: title,
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: document.body.classList.contains('dark') ? 'swal2-dark' : ''
+                }
+            }).then((result) => {
+                return result.isConfirmed;
+            });
+        }
+        
+        // Initialize theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+        }
+        
+        // Toggle theme
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+        
+        // Set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                document.body.classList.remove('dark');
+                themeIcon.className = 'fas fa-moon';
+            }
+            
+            localStorage.setItem('theme', theme);
+        }
+        
+        // Escape HTML to prevent XSS
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // Add custom styles for SweetAlert in dark mode
+        const style = document.createElement('style');
+        style.textContent = `
+            .swal2-dark {
+                background-color: hsl(222.2 84% 4.9%);
+                color: hsl(210 40% 98%);
+            }
+            
+            .swal2-dark .swal2-title,
+            .swal2-dark .swal2-content {
+                color: hsl(210 40% 98%);
+            }
+            
+            .swal2-dark .swal2-icon.swal2-warning {
+                border-color: hsl(var(--destructive));
+                color: hsl(var(--destructive));
+            }
+            
+            .swal2-toast-custom {
+                font-size: 0.875rem;
+                font-family: inherit;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
