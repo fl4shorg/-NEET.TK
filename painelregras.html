@@ -2,934 +2,960 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Regras Mestre</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Regras</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Adicionar ícones Lucide via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8f8f8;
-      color: #111;
+    /* Estilos base */
+    :root {
+      --background: 210 40% 98%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+      --primary: 222.2 47.4% 11.2%;
+      --primary-foreground: 210 40% 98%;
+      --secondary: 210 40% 96.1%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 222.2 84% 4.9%;
+      --radius: 0.8rem;
     }
-    
-    .glass-card {
-      background-color: rgba(255, 255, 255, 0.9);
+
+    .dark {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
+      --card: 222.2 84% 4.9%;
+      --card-foreground: 210 40% 98%;
+      --popover: 222.2 84% 4.9%;
+      --popover-foreground: 210 40% 98%;
+      --primary: 210 40% 98%;
+      --primary-foreground: 222.2 47.4% 11.2%;
+      --secondary: 217.2 32.6% 17.5%;
+      --secondary-foreground: 210 40% 98%;
+      --muted: 217.2 32.6% 17.5%;
+      --muted-foreground: 215 20.2% 65.1%;
+      --accent: 217.2 32.6% 17.5%;
+      --accent-foreground: 210 40% 98%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 217.2 32.6% 17.5%;
+      --input: 217.2 32.6% 17.5%;
+      --ring: 212.7 26.8% 83.9%;
+    }
+
+    * {
+      border-color: hsl(var(--border));
+    }
+
+    body {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Utilidades */
+    .glass {
+      background-color: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
-    
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.375rem;
-      font-weight: 500;
-      font-size: 0.875rem;
-      padding: 0.5rem 1rem;
+
+    .dark .glass {
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .premium-card {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
     }
-    
-    .btn-primary {
-      background-color: #111;
-      color: #f8f8f8;
+
+    .premium-card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
-    
-    .btn-primary:hover {
-      background-color: #333;
+
+    .dark .premium-card {
+      background-color: rgba(0, 0, 0, 0.4);
+      border: 1px solid #374151;
     }
-    
-    .btn-outline {
-      background-color: transparent;
-      border: 1px solid #d1d5db;
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
-    
-    .btn-outline:hover {
-      background-color: #f3f4f6;
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
     }
-    
-    .btn-destructive {
-      background-color: #dc2626;
-      color: white;
-    }
-    
-    .btn-destructive:hover {
-      background-color: #b91c1c;
-    }
-    
-    .form-input {
-      width: 100%;
-      border-radius: 0.375rem;
-      border: 1px solid #d1d5db;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.875rem;
-    }
-    
-    .form-input:focus {
-      outline: none;
-      border-color: #111;
-      box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.1);
-    }
-    
-    .form-textarea {
-      width: 100%;
-      border-radius: 0.375rem;
-      border: 1px solid #d1d5db;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.875rem;
-      min-height: 80px;
-      resize: none;
-    }
-    
-    .form-textarea:focus {
-      outline: none;
-      border-color: #111;
-      box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.1);
-    }
-    
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-    
-    .modal-content {
-      background-color: white;
-      border-radius: 0.75rem;
-      max-width: 600px;
-      width: 95%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    
-    .drawer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: white;
-      border-top-left-radius: 1rem;
-      border-top-right-radius: 1rem;
-      z-index: 50;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-    
-    .drawer.open {
-      transform: translateY(0);
-    }
-    
+
     .toast {
       position: fixed;
-      bottom: 1rem;
+      top: 1rem;
       right: 1rem;
       padding: 1rem;
-      border-radius: 0.5rem;
-      background-color: #111;
-      color: white;
-      max-width: 300px;
-      z-index: 100;
+      background: white;
+      color: black;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border-radius: 0.5rem;
+      z-index: 50;
       opacity: 0;
-      transform: translateY(1rem);
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(-10px);
+      transition: opacity 0.3s, transform 0.3s;
     }
-    
+
     .toast.show {
       opacity: 1;
       transform: translateY(0);
     }
-    
-    .toast.success {
-      background-color: #10b981;
-    }
-    
-    .toast.error {
-      background-color: #ef4444;
-    }
-    
-    .collapse-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-    }
-    
-    .collapse-content.expanded {
-      max-height: 500px;
+
+    .dark .toast {
+      background-color: #1F2937;
+      color: white;
     }
 
-    .animate-fade-up {
-      animation: fadeUp 0.5s ease forwards;
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-out;
     }
 
-    @keyframes fadeUp {
+    .animate-scale-in {
+      animation: scaleIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Componentes */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition-property: color, background-color, border-color;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+
+    .btn-primary {
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+
+    .btn-primary:hover {
+      background-color: hsl(var(--primary) / 0.9);
+    }
+
+    .btn-secondary {
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+    }
+
+    .btn-secondary:hover {
+      background-color: hsl(var(--secondary) / 0.8);
+    }
+
+    .btn-destructive {
+      background-color: hsl(var(--destructive));
+      color: hsl(var(--destructive-foreground));
+    }
+
+    .btn-destructive:hover {
+      background-color: hsl(var(--destructive) / 0.9);
+    }
+
+    .btn-outline {
+      border: 1px solid hsl(var(--input));
+      background-color: transparent;
+    }
+
+    .btn-outline:hover {
+      background-color: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
+    }
+
+    .btn-icon {
+      height: 2.5rem;
+      width: 2.5rem;
+      padding: 0;
+    }
+
+    .btn-sm {
+      height: 2.25rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      border-radius: 0.375rem;
+    }
+
+    .btn [data-lucide] {
+      height: 1rem;
+      width: 1rem;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    .input {
+      display: flex;
+      height: 2.5rem;
+      width: 100%;
+      border-radius: 0.375rem;
+      border: 1px solid hsl(var(--input));
+      background-color: transparent;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px hsl(var(--ring));
+    }
+
+    .textarea {
+      display: flex;
+      min-height: 80px;
+      width: 100%;
+      border-radius: 0.375rem;
+      border: 1px solid hsl(var(--input));
+      background-color: transparent;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px hsl(var(--ring));
+    }
+
+    .label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    .dialog {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .dialog.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .dialog-content {
+      position: relative;
+      width: 100%;
+      max-width: 28rem;
+      max-height: 90vh;
+      overflow-y: auto;
+      background-color: hsl(var(--background));
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      animation: dialogShow 0.3s ease-out;
+    }
+
+    @keyframes dialogShow {
       from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translate(-50%, -50%) scale(0.95);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(-50%, -50%) scale(1);
       }
     }
 
-    @media (max-width: 640px) {
-      .modal-content {
-        width: 100%;
-        height: 100%;
-        border-radius: 0;
-        max-height: 100vh;
+    .dialog-header {
+      margin-bottom: 1rem;
+    }
+
+    .dialog-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .dialog-description {
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .dialog-footer {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .loading-skeleton {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      background-color: hsl(var(--muted));
+      border-radius: 0.375rem;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
       }
     }
   </style>
+
+  <!-- Script para configurar o Tailwind -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 </head>
-<body>
-  <div id="app" class="min-h-screen flex flex-col items-center bg-gray-50 text-gray-900">
-    <main class="w-full max-w-4xl mx-auto px-4 py-4 md:py-8 flex-1">
-      <header class="mb-8">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 class="text-2xl font-bold">Sistema de Regras</h1>
-            <p class="text-gray-500" id="rule-counter">Carregando regras...</p>
+<body class="min-h-screen bg-background text-foreground">
+  <div id="app" class="container py-8 mx-auto"></div>
+
+  <!-- Modal for Rule Form -->
+  <div id="ruleModal" class="dialog">
+    <div class="dialog-content">
+      <form id="ruleForm">
+        <div class="dialog-header">
+          <h2 id="modalTitle" class="dialog-title">Adicionar Nova Regra</h2>
+          <p class="dialog-description">Preencha os campos abaixo para adicionar uma nova regra.</p>
+        </div>
+        
+        <div class="space-y-6 py-4">
+          <div class="space-y-2">
+            <label for="titulo" class="label">Título</label>
+            <input type="text" id="titulo" name="titulo" class="input" required>
           </div>
-          <button id="add-rule-btn" class="btn btn-primary flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Adicionar Nova Regra
-          </button>
-        </div>
-      </header>
-      
-      <div class="glass-card mb-6 animate-fade-up p-3">
-        <div class="relative">
-          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input id="search-input" type="text" placeholder="Pesquisar regras..." class="form-input pl-10">
-        </div>
-      </div>
-      
-      <div id="loading-container" class="space-y-4">
-        <div class="glass-card animate-pulse h-40"></div>
-        <div class="glass-card animate-pulse h-40"></div>
-        <div class="glass-card animate-pulse h-40"></div>
-      </div>
-      
-      <div id="empty-state" class="glass-card py-12 flex flex-col items-center justify-center text-center hidden">
-        <svg class="h-16 w-16 text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <path d="M14 2v6h6"></path>
-          <path d="M9 13h6"></path>
-          <path d="M9 17h6"></path>
-          <path d="M9 9h1"></path>
-        </svg>
-        <h3 class="text-lg font-medium mb-2">Nenhuma regra encontrada</h3>
-        <p class="text-gray-500 max-w-md mb-6">
-          Parece que você ainda não tem nenhuma regra cadastrada. Comece criando sua primeira regra agora.
-        </p>
-        <button id="empty-add-btn" class="btn btn-primary flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Adicionar Nova Regra
-        </button>
-      </div>
-      
-      <div id="no-results" class="glass-card py-12 flex flex-col items-center justify-center text-center hidden">
-        <svg class="h-12 w-12 text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <h3 class="text-lg font-medium mb-2">Nenhuma regra encontrada</h3>
-        <p class="text-gray-500 max-w-md mb-6" id="no-results-text">
-          Não encontramos nenhuma regra correspondente à sua pesquisa.
-        </p>
-        <button id="clear-search-btn" class="btn btn-outline">
-          Limpar pesquisa
-        </button>
-      </div>
-      
-      <div id="rules-container" class="space-y-4"></div>
-      
-      <!-- Modal para formulário de regra -->
-      <div id="rule-form-modal" class="modal hidden">
-        <div class="modal-content">
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-4">
-              <h2 class="text-xl font-semibold" id="form-title">Adicionar Nova Regra</h2>
-              <button id="close-modal-btn" class="text-gray-500 hover:text-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-            <form id="rule-form" class="space-y-4">
-              <div class="space-y-2">
-                <label for="titulo" class="block text-gray-700 font-medium">Título</label>
-                <input id="titulo" name="titulo" type="text" class="form-input" placeholder="Digite o título da regra" required>
-              </div>
-              
-              <div class="space-y-2">
-                <label for="descricao" class="block text-gray-700 font-medium">Descrição</label>
-                <textarea id="descricao" name="descricao" class="form-textarea" placeholder="Digite a descrição da regra"></textarea>
-              </div>
-              
-              <div class="space-y-2">
-                <label for="paragrafo01" class="block text-gray-700 font-medium">Parágrafo 01</label>
-                <textarea id="paragrafo01" name="paragrafo01" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 01"></textarea>
-              </div>
-              
-              <div class="space-y-2">
-                <label for="paragrafo02" class="block text-gray-700 font-medium">Parágrafo 02</label>
-                <textarea id="paragrafo02" name="paragrafo02" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 02"></textarea>
-              </div>
-              
-              <div class="space-y-2">
-                <label for="paragrafo03" class="block text-gray-700 font-medium">Parágrafo 03</label>
-                <textarea id="paragrafo03" name="paragrafo03" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 03"></textarea>
-              </div>
-              
-              <div class="space-y-2">
-                <label for="paragrafo04" class="block text-gray-700 font-medium">Parágrafo 04</label>
-                <textarea id="paragrafo04" name="paragrafo04" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 04"></textarea>
-              </div>
-              
-              <div class="flex justify-end gap-2 pt-4">
-                <button type="button" id="cancel-form-btn" class="btn btn-outline">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
-              </div>
-            </form>
+          
+          <div class="space-y-2">
+            <label for="descricao" class="label">Descrição</label>
+            <textarea id="descricao" name="descricao" class="textarea" required></textarea>
+          </div>
+          
+          <div class="space-y-2">
+            <label for="paragrafo01" class="label">Parágrafo 01</label>
+            <textarea id="paragrafo01" name="paragrafo01" class="textarea" required></textarea>
+          </div>
+          
+          <div class="space-y-2">
+            <label for="paragrafo02" class="label">Parágrafo 02</label>
+            <textarea id="paragrafo02" name="paragrafo02" class="textarea" required></textarea>
+          </div>
+          
+          <div class="space-y-2">
+            <label for="paragrafo03" class="label">Parágrafo 03</label>
+            <textarea id="paragrafo03" name="paragrafo03" class="textarea" required></textarea>
+          </div>
+          
+          <div class="space-y-2">
+            <label for="paragrafo04" class="label">Parágrafo 04</label>
+            <textarea id="paragrafo04" name="paragrafo04" class="textarea" required></textarea>
           </div>
         </div>
-      </div>
-      
-      <!-- Drawer para formulário de regra em mobile -->
-      <div id="rule-form-drawer" class="drawer">
-        <div class="p-4">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold" id="drawer-form-title">Adicionar Nova Regra</h2>
-            <button id="close-drawer-btn" class="text-gray-500 hover:text-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-          <form id="drawer-rule-form" class="space-y-4">
-            <div class="space-y-2">
-              <label for="drawer-titulo" class="block text-gray-700 font-medium">Título</label>
-              <input id="drawer-titulo" name="titulo" type="text" class="form-input" placeholder="Digite o título da regra" required>
-            </div>
-            
-            <div class="space-y-2">
-              <label for="drawer-descricao" class="block text-gray-700 font-medium">Descrição</label>
-              <textarea id="drawer-descricao" name="descricao" class="form-textarea" placeholder="Digite a descrição da regra"></textarea>
-            </div>
-            
-            <div class="space-y-2">
-              <label for="drawer-paragrafo01" class="block text-gray-700 font-medium">Parágrafo 01</label>
-              <textarea id="drawer-paragrafo01" name="paragrafo01" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 01"></textarea>
-            </div>
-            
-            <div class="space-y-2">
-              <label for="drawer-paragrafo02" class="block text-gray-700 font-medium">Parágrafo 02</label>
-              <textarea id="drawer-paragrafo02" name="paragrafo02" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 02"></textarea>
-            </div>
-            
-            <div class="space-y-2">
-              <label for="drawer-paragrafo03" class="block text-gray-700 font-medium">Parágrafo 03</label>
-              <textarea id="drawer-paragrafo03" name="paragrafo03" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 03"></textarea>
-            </div>
-            
-            <div class="space-y-2">
-              <label for="drawer-paragrafo04" class="block text-gray-700 font-medium">Parágrafo 04</label>
-              <textarea id="drawer-paragrafo04" name="paragrafo04" class="form-textarea" placeholder="Digite o conteúdo do parágrafo 04"></textarea>
-            </div>
-            
-            <div class="flex flex-col space-y-2 pt-4">
-              <button type="submit" class="btn btn-primary w-full">Salvar</button>
-              <button type="button" id="cancel-drawer-btn" class="btn btn-outline w-full">Cancelar</button>
-            </div>
-          </form>
+        
+        <div class="dialog-footer">
+          <button type="button" id="cancelButton" class="btn btn-outline">Cancelar</button>
+          <button type="submit" id="saveButton" class="btn btn-primary">Salvar</button>
         </div>
-      </div>
-      
-      <!-- Modal de confirmação para exclusão -->
-      <div id="delete-modal" class="modal hidden">
-        <div class="modal-content max-w-md mx-auto">
-          <div class="p-6">
-            <h2 class="text-xl font-semibold mb-2">Tem certeza?</h2>
-            <p class="text-gray-500 mb-6">
-              Esta ação não pode ser desfeita. Isso excluirá permanentemente esta regra do sistema.
-            </p>
-            <div class="flex justify-end gap-2" id="delete-modal-desktop-buttons">
-              <button id="cancel-delete-btn" class="btn btn-outline">Cancelar</button>
-              <button id="confirm-delete-btn" class="btn btn-destructive">Excluir</button>
-            </div>
-            <div class="flex flex-col space-y-2 hidden" id="delete-modal-mobile-buttons">
-              <button id="mobile-confirm-delete-btn" class="btn btn-destructive w-full">Excluir</button>
-              <button id="mobile-cancel-delete-btn" class="btn btn-outline w-full">Cancelar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div id="toast" class="toast">Toast message</div>
-    </main>
+      </form>
+    </div>
   </div>
 
-  <!-- Essential script tag for GPT Engineer features -->
-  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-  
+  <!-- Modal for Rule Details -->
+  <div id="detailsModal" class="dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h2 id="detailsTitle" class="dialog-title"></h2>
+      </div>
+      
+      <div class="space-y-6 py-4">
+        <div class="space-y-2">
+          <h4 class="font-medium">Descrição:</h4>
+          <p id="detailsDescricao" class="text-sm"></p>
+        </div>
+        
+        <div class="space-y-2">
+          <h4 class="font-medium">Parágrafo 01:</h4>
+          <p id="detailsP1" class="text-sm"></p>
+        </div>
+        
+        <div class="space-y-2">
+          <h4 class="font-medium">Parágrafo 02:</h4>
+          <p id="detailsP2" class="text-sm"></p>
+        </div>
+        
+        <div class="space-y-2">
+          <h4 class="font-medium">Parágrafo 03:</h4>
+          <p id="detailsP3" class="text-sm"></p>
+        </div>
+        
+        <div class="space-y-2">
+          <h4 class="font-medium">Parágrafo 04:</h4>
+          <p id="detailsP4" class="text-sm"></p>
+        </div>
+      </div>
+      
+      <div class="dialog-footer">
+        <button type="button" id="closeDetailsButton" class="btn btn-secondary">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Confirmar exclusão</h2>
+      </div>
+      <p class="py-4">
+        Tem certeza que deseja excluir a regra <span id="deleteRuleName" class="font-medium"></span>? Esta ação não pode ser desfeita.
+      </p>
+      <div class="dialog-footer">
+        <button type="button" id="cancelDeleteButton" class="btn btn-outline">Cancelar</button>
+        <button type="button" id="confirmDeleteButton" class="btn btn-destructive">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast" class="toast" role="alert"></div>
+
+  <!-- Aplicativo JavaScript -->
   <script>
+    // Constantes e configurações
+    const API_URL = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec";
+    let rules = [];
+    let filteredRules = [];
+    let currentRule = null;
+    let theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    // Aplicar tema
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+
+    // Elementos DOM
+    const appContainer = document.getElementById('app');
+    const ruleModal = document.getElementById('ruleModal');
+    const ruleForm = document.getElementById('ruleForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const saveButton = document.getElementById('saveButton');
+    const cancelButton = document.getElementById('cancelButton');
+    const detailsModal = document.getElementById('detailsModal');
+    const deleteModal = document.getElementById('deleteModal');
+    const toast = document.getElementById('toast');
+
+    // Inicializar ícones Lucide
     document.addEventListener('DOMContentLoaded', () => {
-      // API URL
-      const API_URL = "https://script.google.com/macros/s/AKfycbwydyV_ZNXM124qgdAk9MAcxeUayiMox5xVLNUW2bz8PVbP86RbUHKmWyyWeD17ZaA8/exec";
-      
-      // Estado global da aplicação
-      const state = {
-        rules: [],
-        filteredRules: [],
-        searchQuery: '',
-        currentRule: null,
-        ruleIdToDelete: null,
-        isMobile: window.innerWidth < 768
-      };
-      
-      // Elementos DOM
-      const elements = {
-        ruleCounter: document.getElementById('rule-counter'),
-        searchInput: document.getElementById('search-input'),
-        rulesContainer: document.getElementById('rules-container'),
-        loadingContainer: document.getElementById('loading-container'),
-        emptyState: document.getElementById('empty-state'),
-        noResults: document.getElementById('no-results'),
-        noResultsText: document.getElementById('no-results-text'),
-        
-        // Botões
-        addRuleBtn: document.getElementById('add-rule-btn'),
-        emptyAddBtn: document.getElementById('empty-add-btn'),
-        clearSearchBtn: document.getElementById('clear-search-btn'),
-        
-        // Modal de formulário
-        ruleFormModal: document.getElementById('rule-form-modal'),
-        formTitle: document.getElementById('form-title'),
-        ruleForm: document.getElementById('rule-form'),
-        closeModalBtn: document.getElementById('close-modal-btn'),
-        cancelFormBtn: document.getElementById('cancel-form-btn'),
-        
-        // Drawer de formulário (mobile)
-        ruleFormDrawer: document.getElementById('rule-form-drawer'),
-        drawerFormTitle: document.getElementById('drawer-form-title'),
-        drawerRuleForm: document.getElementById('drawer-rule-form'),
-        closeDrawerBtn: document.getElementById('close-drawer-btn'),
-        cancelDrawerBtn: document.getElementById('cancel-drawer-btn'),
-        
-        // Modal de exclusão
-        deleteModal: document.getElementById('delete-modal'),
-        confirmDeleteBtn: document.getElementById('confirm-delete-btn'),
-        cancelDeleteBtn: document.getElementById('cancel-delete-btn'),
-        mobileConfirmDeleteBtn: document.getElementById('mobile-confirm-delete-btn'),
-        mobileCancelDeleteBtn: document.getElementById('mobile-cancel-delete-btn'),
-        deleteModalDesktopButtons: document.getElementById('delete-modal-desktop-buttons'),
-        deleteModalMobileButtons: document.getElementById('delete-modal-mobile-buttons'),
-        
-        // Toast
-        toast: document.getElementById('toast')
-      };
-      
-      // Inputs do formulário desktop
-      const formInputs = {
-        titulo: document.getElementById('titulo'),
-        descricao: document.getElementById('descricao'),
-        paragrafo01: document.getElementById('paragrafo01'),
-        paragrafo02: document.getElementById('paragrafo02'),
-        paragrafo03: document.getElementById('paragrafo03'),
-        paragrafo04: document.getElementById('paragrafo04')
-      };
-      
-      // Inputs do formulário mobile (drawer)
-      const drawerFormInputs = {
-        titulo: document.getElementById('drawer-titulo'),
-        descricao: document.getElementById('drawer-descricao'),
-        paragrafo01: document.getElementById('drawer-paragrafo01'),
-        paragrafo02: document.getElementById('drawer-paragrafo02'),
-        paragrafo03: document.getElementById('drawer-paragrafo03'),
-        paragrafo04: document.getElementById('drawer-paragrafo04')
-      };
-      
-      // Funções de API
-      const api = {
-        async fetchRules() {
-          try {
-            const response = await fetch(`${API_URL}?action=read`);
-            const data = await response.text();
-            
-            // Parse CSV data
-            const lines = data.split("\n").slice(1);
-            const rules = [];
-            
-            lines.forEach((line) => {
-              if (line.trim()) {
-                const [id, titulo, descricao, p1, p2, p3, p4] = line.split(",").map(item => item.replace(/\|/g, ','));
-                
-                // Apenas adiciona à lista se tiver um ID e título válidos
-                if (id && titulo) {
-                  rules.push({
-                    id,
-                    titulo,
-                    descricao,
-                    paragrafo01: p1,
-                    paragrafo02: p2,
-                    paragrafo03: p3,
-                    paragrafo04: p4
-                  });
-                }
-              }
-            });
-            
-            return rules;
-          } catch (error) {
-            console.error("Error fetching rules:", error);
-            showToast("Erro ao carregar regras", "error");
-            return [];
-          }
-        },
-        
-        async createRule(rule) {
-          try {
-            const id = new Date().getTime().toString();
-            return await this.saveRule({ id, ...rule });
-          } catch (error) {
-            console.error("Error creating rule:", error);
-            showToast("Erro ao criar regra", "error");
-            return false;
-          }
-        },
-        
-        async updateRule(rule) {
-          try {
-            return await this.saveRule(rule);
-          } catch (error) {
-            console.error("Error updating rule:", error);
-            showToast("Erro ao atualizar regra", "error");
-            return false;
-          }
-        },
-        
-        async deleteRule(id) {
-          try {
-            const formData = new FormData();
-            formData.append('action', 'delete');
-            formData.append('id', id);
-            
-            const response = await fetch(API_URL, {
-              method: 'POST',
-              body: formData
-            });
-            
-            if (!response.ok) {
-              throw new Error('Failed to delete rule');
-            }
-            
-            return true;
-          } catch (error) {
-            console.error("Error deleting rule:", error);
-            showToast("Erro ao excluir regra", "error");
-            return false;
-          }
-        },
-        
-        async saveRule(rule) {
-          const formData = new FormData();
-          formData.append('action', rule.id ? 'update' : 'create');
-          formData.append('id', rule.id);
-          formData.append('titulo', rule.titulo);
-          formData.append('descricao', rule.descricao?.replace(/,/g, '|') || '');
-          formData.append('paragrafo01', rule.paragrafo01?.replace(/,/g, '|') || '');
-          formData.append('paragrafo02', rule.paragrafo02?.replace(/,/g, '|') || '');
-          formData.append('paragrafo03', rule.paragrafo03?.replace(/,/g, '|') || '');
-          formData.append('paragrafo04', rule.paragrafo04?.replace(/,/g, '|') || '');
-          
-          const response = await fetch(API_URL, {
-            method: 'POST',
-            body: formData
-          });
-          
-          if (!response.ok) {
-            throw new Error('Failed to save rule');
-          }
-          
-          return true;
-        }
-      };
-      
-      // Funções de UI
-      function renderRules() {
-        const { filteredRules, rules, searchQuery } = state;
-        
-        // Update rule counter
-        const validRulesCount = rules.filter(rule => rule.id && rule.titulo).length;
-        elements.ruleCounter.textContent = `${validRulesCount} regra${validRulesCount !== 1 ? 's' : ''} cadastrada${validRulesCount !== 1 ? 's' : ''}`;
-        
-        // Hide loading container
-        elements.loadingContainer.classList.add('hidden');
-        
-        // Handle empty state
-        if (rules.length === 0) {
-          elements.emptyState.classList.remove('hidden');
-          elements.rulesContainer.classList.add('hidden');
-          elements.noResults.classList.add('hidden');
-          return;
-        }
-        
-        // Handle search results
-        if (searchQuery && filteredRules.length === 0) {
-          elements.noResults.classList.remove('hidden');
-          elements.noResultsText.textContent = `Não encontramos nenhuma regra correspondente à sua pesquisa "${searchQuery}".`;
-          elements.rulesContainer.classList.add('hidden');
-          elements.emptyState.classList.add('hidden');
-          return;
-        }
-        
-        // Show rules
-        elements.rulesContainer.classList.remove('hidden');
-        elements.emptyState.classList.add('hidden');
-        elements.noResults.classList.add('hidden');
-        
-        // Clear rules container
-        elements.rulesContainer.innerHTML = '';
-        
-        // Add rules to container
-        filteredRules.forEach((rule, index) => {
-          const ruleElement = createRuleElement(rule, index);
-          elements.rulesContainer.appendChild(ruleElement);
-        });
-      }
-      
-      function createRuleElement(rule, index) {
-        const ruleElement = document.createElement('div');
-        ruleElement.className = 'glass-card p-4 md:p-6 animate-fade-up';
-        ruleElement.style.animationDelay = `${0.1 + index * 0.05}s`;
-        
-        // Criar elemento de cabeçalho
-        const header = document.createElement('div');
-        header.className = 'flex justify-between items-start mb-2';
-        
-        const title = document.createElement('h3');
-        title.className = 'font-semibold text-lg';
-        title.textContent = rule.titulo;
-        
-        const actions = document.createElement('div');
-        actions.className = 'flex space-x-2 items-center';
-        
-        const editButton = document.createElement('button');
-        editButton.className = 'p-1 text-gray-700 hover:text-gray-900 transition-colors';
-        editButton.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-        `;
-        editButton.addEventListener('click', () => openRuleForm(rule));
-        
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'p-1 text-gray-700 hover:text-red-600 transition-colors';
-        deleteButton.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 6h18"></path>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          </svg>
-        `;
-        deleteButton.addEventListener('click', () => openDeleteConfirmation(rule.id));
-        
-        actions.appendChild(editButton);
-        actions.appendChild(deleteButton);
-        
-        header.appendChild(title);
-        header.appendChild(actions);
-        
-        // Criar elemento de descrição
-        const description = document.createElement('p');
-        description.className = 'text-gray-600 mb-4';
-        description.textContent = rule.descricao || 'Sem descrição';
-        
-        // Criar botão para expandir/colapsar
-        const toggleButton = document.createElement('button');
-        toggleButton.className = 'flex items-center text-gray-500 hover:text-gray-700 text-sm font-medium';
-        toggleButton.innerHTML = `
-          <span>Ver mais</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        `;
-        
-        // Criar conteúdo colapsável
-        const collapseContent = document.createElement('div');
-        collapseContent.className = 'collapse-content mt-4 space-y-3 text-gray-600';
-        
-        // Adicionar parágrafos ao conteúdo colapsável
-        [rule.paragrafo01, rule.paragrafo02, rule.paragrafo03, rule.paragrafo04].forEach((paragrafo, i) => {
-          if (paragrafo) {
-            const p = document.createElement('p');
-            p.className = 'text-sm';
-            p.textContent = paragrafo;
-            collapseContent.appendChild(p);
-          }
-        });
-        
-        // Adicionar evento para expandir/colapsar
-        toggleButton.addEventListener('click', () => {
-          collapseContent.classList.toggle('expanded');
-          toggleButton.querySelector('span').textContent = collapseContent.classList.contains('expanded') ? 'Ver menos' : 'Ver mais';
-          toggleButton.querySelector('svg').style.transform = collapseContent.classList.contains('expanded') ? 'rotate(180deg)' : '';
-        });
-        
-        // Montar elemento de regra
-        ruleElement.appendChild(header);
-        ruleElement.appendChild(description);
-        
-        // Somente adicionar o botão e o conteúdo colapsável se houver pelo menos um parágrafo
-        if ([rule.paragrafo01, rule.paragrafo02, rule.paragrafo03, rule.paragrafo04].some(p => p)) {
-          ruleElement.appendChild(toggleButton);
-          ruleElement.appendChild(collapseContent);
-        }
-        
-        return ruleElement;
-      }
-      
-      function filterRules() {
-        const { rules, searchQuery } = state;
-        state.filteredRules = rules.filter(rule => 
-          rule.titulo.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        renderRules();
-      }
-      
-      function showToast(message, type = 'success') {
-        elements.toast.textContent = message;
-        elements.toast.className = `toast ${type}`;
-        elements.toast.classList.add('show');
-        
-        setTimeout(() => {
-          elements.toast.classList.remove('show');
-        }, 3000);
-      }
-      
-      function openRuleForm(rule = null) {
-        state.currentRule = rule;
-        
-        // Atualizar título do formulário
-        const formTitle = rule?.id ? "Editar Regra" : "Adicionar Nova Regra";
-        elements.formTitle.textContent = formTitle;
-        elements.drawerFormTitle.textContent = formTitle;
-        
-        // Preencher o formulário com os dados da regra (ou limpar se for nova regra)
-        const data = rule || {
-          titulo: "",
-          descricao: "",
-          paragrafo01: "",
-          paragrafo02: "",
-          paragrafo03: "",
-          paragrafo04: ""
-        };
-        
-        // Preencher formulário desktop
-        Object.keys(formInputs).forEach(key => {
-          formInputs[key].value = data[key] || "";
-        });
-        
-        // Preencher formulário mobile
-        Object.keys(drawerFormInputs).forEach(key => {
-          drawerFormInputs[key].value = data[key] || "";
-        });
-        
-        // Abrir modal ou drawer dependendo da largura da tela
-        if (state.isMobile) {
-          elements.ruleFormDrawer.classList.add('open');
-        } else {
-          elements.ruleFormModal.classList.remove('hidden');
-        }
-      }
-      
-      function closeRuleForm() {
-        elements.ruleFormModal.classList.add('hidden');
-        elements.ruleFormDrawer.classList.remove('open');
-        state.currentRule = null;
-      }
-      
-      function openDeleteConfirmation(id) {
-        state.ruleIdToDelete = id;
-        elements.deleteModal.classList.remove('hidden');
-        
-        // Exibir botões apropriados com base na largura da tela
-        if (state.isMobile) {
-          elements.deleteModalDesktopButtons.classList.add('hidden');
-          elements.deleteModalMobileButtons.classList.remove('hidden');
-        } else {
-          elements.deleteModalDesktopButtons.classList.remove('hidden');
-          elements.deleteModalMobileButtons.classList.add('hidden');
-        }
-      }
-      
-      function closeDeleteConfirmation() {
-        elements.deleteModal.classList.add('hidden');
-        state.ruleIdToDelete = null;
-      }
-      
-      // Event listeners
-      function setupEventListeners() {
-        // Search input
-        elements.searchInput.addEventListener('input', e => {
-          state.searchQuery = e.target.value;
-          filterRules();
-        });
-        
-        // Clear search button
-        elements.clearSearchBtn.addEventListener('click', () => {
-          elements.searchInput.value = '';
-          state.searchQuery = '';
-          filterRules();
-        });
-        
-        // Add rule buttons
-        elements.addRuleBtn.addEventListener('click', () => openRuleForm());
-        elements.emptyAddBtn.addEventListener('click', () => openRuleForm());
-        
-        // Close modal buttons
-        elements.closeModalBtn.addEventListener('click', closeRuleForm);
-        elements.cancelFormBtn.addEventListener('click', closeRuleForm);
-        
-        // Close drawer buttons
-        elements.closeDrawerBtn.addEventListener('click', closeRuleForm);
-        elements.cancelDrawerBtn.addEventListener('click', closeRuleForm);
-        
-        // Delete confirmation buttons
-        elements.confirmDeleteBtn.addEventListener('click', handleDeleteRule);
-        elements.mobileConfirmDeleteBtn.addEventListener('click', handleDeleteRule);
-        elements.cancelDeleteBtn.addEventListener('click', closeDeleteConfirmation);
-        elements.mobileCancelDeleteBtn.addEventListener('click', closeDeleteConfirmation);
-        
-        // Form submission
-        elements.ruleForm.addEventListener('submit', handleSubmitForm);
-        elements.drawerRuleForm.addEventListener('submit', handleSubmitForm);
-        
-        // Close modals when clicking outside
-        elements.ruleFormModal.addEventListener('click', e => {
-          if (e.target === elements.ruleFormModal) {
-            closeRuleForm();
-          }
-        });
-        
-        elements.deleteModal.addEventListener('click', e => {
-          if (e.target === elements.deleteModal) {
-            closeDeleteConfirmation();
-          }
-        });
-        
-        // Window resize event
-        window.addEventListener('resize', () => {
-          state.isMobile = window.innerWidth < 768;
-        });
-      }
-      
-      async function handleSubmitForm(e) {
-        e.preventDefault();
-        
-        // Determine which form is being submitted
-        const isDrawerForm = e.target === elements.drawerRuleForm;
-        const formData = isDrawerForm ? drawerFormInputs : formInputs;
-        
-        // Coletar dados do formulário
-        const ruleData = {
-          titulo: formData.titulo.value,
-          descricao: formData.descricao.value,
-          paragrafo01: formData.paragrafo01.value,
-          paragrafo02: formData.paragrafo02.value,
-          paragrafo03: formData.paragrafo03.value,
-          paragrafo04: formData.paragrafo04.value
-        };
-        
-        let success = false;
-        
-        // Criar ou atualizar regra
-        if (state.currentRule?.id) {
-          ruleData.id = state.currentRule.id;
-          success = await api.updateRule(ruleData);
-          
-          if (success) {
-            showToast("Regra atualizada com sucesso!");
-          }
-        } else {
-          success = await api.createRule(ruleData);
-          
-          if (success) {
-            showToast("Regra criada com sucesso!");
-          }
-        }
-        
-        if (success) {
-          closeRuleForm();
-          await loadRules();
-        }
-      }
-      
-      async function handleDeleteRule() {
-        if (!state.ruleIdToDelete) return;
-        
-        const success = await api.deleteRule(state.ruleIdToDelete);
-        
-        if (success) {
-          showToast("Regra excluída com sucesso!");
-          closeDeleteConfirmation();
-          await loadRules();
-        }
-      }
-      
-      // Inicialização
-      async function loadRules() {
-        try {
-          elements.loadingContainer.classList.remove('hidden');
-          elements.rulesContainer.classList.add('hidden');
-          elements.emptyState.classList.add('hidden');
-          elements.noResults.classList.add('hidden');
-          
-          state.rules = await api.fetchRules();
-          filterRules();
-        } catch (error) {
-          console.error("Error loading rules:", error);
-          showToast("Erro ao carregar regras", "error");
-        }
-      }
-      
-      async function initApp() {
-        setupEventListeners();
-        await loadRules();
-        
-        // Ensure modals are hidden on load
-        elements.ruleFormModal.classList.add('hidden');
-        elements.deleteModal.classList.add('hidden');
-        elements.ruleFormDrawer.classList.remove('open');
-      }
-      
-      initApp();
+      lucide.createIcons();
     });
+
+    // Funções de API
+    async function getRulesFromAPI() {
+      try {
+        const response = await fetch(`${API_URL}?action=read`);
+        const data = await response.text();
+        return parseRulesCSV(data);
+      } catch (error) {
+        console.error("Error fetching rules:", error);
+        showToast("Erro ao carregar regras", "error");
+        return [];
+      }
+    }
+
+    function parseRulesCSV(data) {
+      const lines = data.split("\n").slice(1);
+      const parsedRules = [];
+
+      lines.forEach((line) => {
+        if (line.trim()) {
+          try {
+            const [id, titulo, descricao, p1, p2, p3, p4] = line.split(",").map(item => item.replace(/\|/g, ','));
+            // Só adiciona se tiver um ID e título válidos
+            if (id && titulo) {
+              parsedRules.push({
+                id,
+                titulo,
+                descricao: descricao || "",
+                paragrafo01: p1 || "",
+                paragrafo02: p2 || "",
+                paragrafo03: p3 || "",
+                paragrafo04: p4 || ""
+              });
+            }
+          } catch (error) {
+            console.error("Erro ao processar linha:", line, error);
+          }
+        }
+      });
+
+      console.log(`Total de regras carregadas: ${parsedRules.length}`);
+      return parsedRules;
+    }
+
+    async function createRuleAPI(rule) {
+      try {
+        const formData = new FormData();
+        formData.append("action", "create");
+        formData.append("id", String(new Date().getTime()));
+        formData.append("titulo", rule.titulo);
+        formData.append("descricao", rule.descricao.replace(/,/g, '|'));
+        formData.append("paragrafo01", rule.paragrafo01.replace(/,/g, '|'));
+        formData.append("paragrafo02", rule.paragrafo02.replace(/,/g, '|'));
+        formData.append("paragrafo03", rule.paragrafo03.replace(/,/g, '|'));
+        formData.append("paragrafo04", rule.paragrafo04.replace(/,/g, '|'));
+
+        const response = await fetch(API_URL, {
+          method: "POST",
+          body: formData
+        });
+        
+        return response.ok;
+      } catch (error) {
+        console.error("Error creating rule:", error);
+        return false;
+      }
+    }
+
+    async function updateRuleAPI(rule) {
+      try {
+        const formData = new FormData();
+        formData.append("action", "update");
+        formData.append("id", rule.id);
+        formData.append("titulo", rule.titulo);
+        formData.append("descricao", rule.descricao.replace(/,/g, '|'));
+        formData.append("paragrafo01", rule.paragrafo01.replace(/,/g, '|'));
+        formData.append("paragrafo02", rule.paragrafo02.replace(/,/g, '|'));
+        formData.append("paragrafo03", rule.paragrafo03.replace(/,/g, '|'));
+        formData.append("paragrafo04", rule.paragrafo04.replace(/,/g, '|'));
+
+        const response = await fetch(API_URL, {
+          method: "POST",
+          body: formData
+        });
+        
+        return response.ok;
+      } catch (error) {
+        console.error("Error updating rule:", error);
+        return false;
+      }
+    }
+
+    async function deleteRuleAPI(id) {
+      try {
+        const formData = new FormData();
+        formData.append("action", "delete");
+        formData.append("id", id);
+
+        const response = await fetch(API_URL, {
+          method: "POST",
+          body: formData
+        });
+        
+        return response.ok;
+      } catch (error) {
+        console.error("Error deleting rule:", error);
+        return false;
+      }
+    }
+
+    // Funções da UI
+    function renderApp() {
+      appContainer.innerHTML = `
+        <div>
+          <div class="flex flex-col space-y-6 md:space-y-0 md:flex-row md:justify-between md:items-center mb-8 animate-fade-in">
+            <div>
+              <h1 class="text-3xl font-medium tracking-tight">Dashboard Regras</h1>
+              <p class="text-muted-foreground mt-1">
+                Gerenciamento de regras do sistema
+              </p>
+            </div>
+            
+            <div class="flex items-center gap-4">
+              <div class="relative w-full md:w-64">
+                <i data-lucide="search" class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"></i>
+                <input 
+                  type="search" 
+                  id="searchInput" 
+                  placeholder="Pesquisar regras..." 
+                  class="input pl-8 w-full"
+                >
+              </div>
+              
+              <button 
+                id="addRuleButton" 
+                class="btn btn-primary btn-icon shadow-sm"
+              >
+                <i data-lucide="plus" class="h-4 w-4"></i>
+                <span class="sr-only">Adicionar Regra</span>
+              </button>
+              
+              <button
+                id="themeToggle"
+                class="btn btn-outline btn-icon rounded-full"
+              >
+                <i data-lucide="${theme === 'dark' ? 'sun' : 'moon'}" class="h-4 w-4"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="mt-8">
+            <div class="text-sm text-muted-foreground mb-6">
+              Total de Regras: ${rules.length}
+            </div>
+            
+            <div id="rulesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              ${renderRules()}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Atualizar ícones Lucide
+      lucide.createIcons();
+
+      // Adicionar event listeners
+      document.getElementById('searchInput').addEventListener('input', handleSearch);
+      document.getElementById('addRuleButton').addEventListener('click', handleAddRule);
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    }
+
+    function renderRules() {
+      if (filteredRules.length === 0) {
+        return `
+          <div class="col-span-3 text-center py-16">
+            <h3 class="text-lg font-medium">Nenhuma regra encontrada</h3>
+            <p class="text-muted-foreground mt-2">
+              ${filteredRules.length === 0 && rules.length !== 0
+                ? "Tente ajustar sua pesquisa ou adicione uma nova regra."
+                : "Adicione sua primeira regra para começar."}
+            </p>
+          </div>
+        `;
+      }
+
+      return filteredRules.map(rule => `
+        <div class="premium-card overflow-hidden animate-scale-in rounded-lg">
+          <div class="p-6 pb-3">
+            <h3 class="text-xl font-semibold">${rule.titulo}</h3>
+          </div>
+          
+          <div class="p-6 pt-3 text-sm space-y-4">
+            <div>
+              <p class="text-muted-foreground font-medium mb-1">Descrição:</p>
+              <p>${rule.descricao}</p>
+            </div>
+            
+            <div>
+              <p class="text-muted-foreground font-medium mb-1">Parágrafo 01:</p>
+              <p class="line-clamp-2">${rule.paragrafo01}</p>
+            </div>
+            
+            <button 
+              class="text-sm text-muted-foreground hover:text-foreground p-0 bg-transparent border-none cursor-pointer"
+              data-id="${rule.id}"
+              data-action="details"
+            >
+              Ver mais detalhes
+            </button>
+          </div>
+          
+          <div class="p-6 pt-3 border-t flex justify-end space-x-2">
+            <button
+              class="btn btn-outline btn-sm gap-1.5"
+              data-id="${rule.id}"
+              data-action="edit"
+            >
+              <i data-lucide="edit" class="h-3.5 w-3.5"></i>
+              <span>Editar</span>
+            </button>
+            
+            <button
+              class="btn btn-destructive btn-sm gap-1.5"
+              data-id="${rule.id}"
+              data-action="delete"
+            >
+              <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
+              <span>Excluir</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderLoadingSkeletons() {
+      let skeletons = '';
+      for (let i = 0; i < 6; i++) {
+        skeletons += `
+          <div class="space-y-3">
+            <div class="loading-skeleton h-8 w-3/4"></div>
+            <div class="loading-skeleton h-32"></div>
+            <div class="flex justify-end space-x-2 mt-4">
+              <div class="loading-skeleton h-9 w-20"></div>
+              <div class="loading-skeleton h-9 w-20"></div>
+            </div>
+          </div>
+        `;
+      }
+      
+      return `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${skeletons}</div>`;
+    }
+
+    // Manipuladores de eventos
+    function handleSearch(e) {
+      const query = e.target.value.toLowerCase();
+      
+      if (query.trim() === "") {
+        filteredRules = [...rules];
+      } else {
+        filteredRules = rules.filter(rule => 
+          rule.titulo.toLowerCase().includes(query) || 
+          rule.descricao.toLowerCase().includes(query)
+        );
+      }
+      
+      document.getElementById('rulesContainer').innerHTML = renderRules();
+      lucide.createIcons();
+      setupRuleEventListeners();
+    }
+
+    function setupRuleEventListeners() {
+      // Configurar listeners para botões de cada regra
+      document.querySelectorAll('[data-action]').forEach(button => {
+        const action = button.getAttribute('data-action');
+        const id = button.getAttribute('data-id');
+        
+        button.addEventListener('click', () => {
+          const rule = rules.find(r => r.id === id);
+          
+          if (action === 'edit') {
+            handleEditRule(rule);
+          } else if (action === 'delete') {
+            handleDeleteRule(rule);
+          } else if (action === 'details') {
+            showDetailsModal(rule);
+          }
+        });
+      });
+    }
+
+    function handleAddRule() {
+      currentRule = null;
+      modalTitle.textContent = 'Adicionar Nova Regra';
+      ruleForm.reset();
+      showModal(ruleModal);
+    }
+
+    function handleEditRule(rule) {
+      currentRule = rule;
+      modalTitle.textContent = 'Editar Regra';
+      
+      // Preencher o formulário
+      document.getElementById('titulo').value = rule.titulo;
+      document.getElementById('descricao').value = rule.descricao;
+      document.getElementById('paragrafo01').value = rule.paragrafo01;
+      document.getElementById('paragrafo02').value = rule.paragrafo02;
+      document.getElementById('paragrafo03').value = rule.paragrafo03;
+      document.getElementById('paragrafo04').value = rule.paragrafo04;
+      
+      showModal(ruleModal);
+    }
+
+    function handleDeleteRule(rule) {
+      currentRule = rule;
+      document.getElementById('deleteRuleName').textContent = `"${rule.titulo}"`;
+      showModal(deleteModal);
+    }
+
+    async function handleSaveRule(e) {
+      e.preventDefault();
+      
+      // Desabilitar botão de salvar
+      saveButton.disabled = true;
+      saveButton.textContent = 'Salvando...';
+      
+      const formData = {
+        titulo: document.getElementById('titulo').value,
+        descricao: document.getElementById('descricao').value,
+        paragrafo01: document.getElementById('paragrafo01').value,
+        paragrafo02: document.getElementById('paragrafo02').value,
+        paragrafo03: document.getElementById('paragrafo03').value,
+        paragrafo04: document.getElementById('paragrafo04').value
+      };
+      
+      let success = false;
+      
+      if (currentRule) {
+        // Editar regra existente
+        formData.id = currentRule.id;
+        success = await updateRuleAPI(formData);
+        if (success) {
+          showToast("Regra atualizada com sucesso");
+        } else {
+          showToast("Erro ao atualizar regra", "error");
+        }
+      } else {
+        // Criar nova regra
+        success = await createRuleAPI(formData);
+        if (success) {
+          showToast("Regra adicionada com sucesso");
+        } else {
+          showToast("Erro ao adicionar regra", "error");
+        }
+      }
+      
+      // Reabilitar botão
+      saveButton.disabled = false;
+      saveButton.textContent = 'Salvar';
+      
+      if (success) {
+        hideModal(ruleModal);
+        await refreshRules();
+      }
+    }
+
+    async function handleConfirmDelete() {
+      if (!currentRule) return;
+      
+      const success = await deleteRuleAPI(currentRule.id);
+      
+      if (success) {
+        showToast("Regra removida com sucesso");
+        hideModal(deleteModal);
+        await refreshRules();
+      } else {
+        showToast("Erro ao remover regra", "error");
+      }
+    }
+
+    function showDetailsModal(rule) {
+      document.getElementById('detailsTitle').textContent = rule.titulo;
+      document.getElementById('detailsDescricao').textContent = rule.descricao;
+      document.getElementById('detailsP1').textContent = rule.paragrafo01;
+      document.getElementById('detailsP2').textContent = rule.paragrafo02;
+      document.getElementById('detailsP3').textContent = rule.paragrafo03;
+      document.getElementById('detailsP4').textContent = rule.paragrafo04;
+      
+      showModal(detailsModal);
+    }
+
+    function toggleTheme() {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      
+      // Salvar tema no localStorage
+      localStorage.setItem('theme', theme);
+      
+      // Aplicar tema
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      
+      // Atualizar ícone
+      const themeIcon = document.querySelector('#themeToggle i');
+      if (themeIcon) {
+        themeIcon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
+
+    // Funções utilitárias
+    function showModal(modal) {
+      modal.classList.add('show');
+    }
+
+    function hideModal(modal) {
+      modal.classList.remove('show');
+    }
+
+    function showToast(message, type = 'success') {
+      toast.textContent = message;
+      toast.className = `toast show ${type === 'error' ? 'bg-destructive text-destructive-foreground' : ''}`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    async function refreshRules() {
+      // Mostrar esqueletos de carregamento
+      document.getElementById('rulesContainer').innerHTML = renderLoadingSkeletons();
+      
+      // Buscar regras da API
+      rules = await getRulesFromAPI();
+      filteredRules = [...rules];
+      
+      // Renderizar interface
+      renderApp();
+      setupRuleEventListeners();
+    }
+
+    // Event Listeners
+    ruleForm.addEventListener('submit', handleSaveRule);
+    cancelButton.addEventListener('click', () => hideModal(ruleModal));
+    document.getElementById('closeDetailsButton').addEventListener('click', () => hideModal(detailsModal));
+    document.getElementById('cancelDeleteButton').addEventListener('click', () => hideModal(deleteModal));
+    document.getElementById('confirmDeleteButton').addEventListener('click', handleConfirmDelete);
+
+    // Fechar modais ao clicar fora
+    ruleModal.addEventListener('click', (e) => {
+      if (e.target === ruleModal) hideModal(ruleModal);
+    });
+    
+    detailsModal.addEventListener('click', (e) => {
+      if (e.target === detailsModal) hideModal(detailsModal);
+    });
+    
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) hideModal(deleteModal);
+    });
+
+    // Inicializar aplicativo
+    refreshRules();
   </script>
 </body>
 </html>
