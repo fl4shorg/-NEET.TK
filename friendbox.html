@@ -1,0 +1,903 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caixinha de Amizades</title>
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  
+  <!-- Tailwind CSS (CDN version) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Framer Motion (for animations) -->
+  <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.js"></script>
+  
+  <!-- Configure Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sky: {
+              50: '#f0f9ff',
+            },
+            blue: {
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+            },
+            gray: {
+              800: '#1e293b',
+            },
+            primary: 'rgb(59 130 246)',
+            accent: 'rgb(139 92 246)',
+            border: 'rgb(226 232 240)',
+            background: 'rgb(240 249 255)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f9ff;
+      color: #1e293b;
+    }
+    
+    /* Utility classes */
+    .glass-card {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .neo-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 300ms ease-out;
+    }
+    
+    .neo-button:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .neo-button:active {
+      transform: translateY(1px);
+    }
+    
+    .neo-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      opacity: 0;
+      transition: opacity 300ms ease-out;
+    }
+    
+    .neo-button:hover::before {
+      opacity: 1;
+    }
+    
+    .bg-grid {
+      background-image: 
+        linear-gradient(to right, rgba(209, 213, 219, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(209, 213, 219, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    .rotating-bg {
+      background: conic-gradient(from 0deg at 50% 50%, 
+        rgba(59, 130, 246, 0.2), 
+        rgba(139, 92, 246, 0.2), 
+        rgba(236, 72, 153, 0.2), 
+        rgba(59, 130, 246, 0.2));
+      animation: rotate-slow 30s linear infinite;
+    }
+    
+    @keyframes rotate-slow {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    /* Navigation menu */
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      background-color: white;
+      padding: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .mobile-menu.open {
+      display: flex;
+    }
+    
+    @media (min-width: 768px) {
+      .mobile-menu {
+        position: static;
+        display: flex;
+        flex-direction: row;
+        background-color: transparent;
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+    
+    /* Form styling */
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 0.375rem;
+    }
+    
+    input:focus, textarea:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+    
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* FAQ accordion */
+    .accordion-item {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.2);
+      margin-bottom: 0.5rem;
+    }
+    
+    .accordion-trigger {
+      width: 100%;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .accordion-trigger:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .accordion-content {
+      padding: 0 1rem 1rem 1rem;
+      color: #64748b;
+    }
+    
+    .accordion-content.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="sticky top-0 z-50 w-full bg-sky-50 px-4 py-3">
+    <div class="container mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="h-12 w-12 bg-blue-500 rounded-full flex items-center justify-center">
+          <span class="text-white font-bold text-lg">FB</span>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800">
+          FriendBox
+        </h1>
+      </div>
+      
+      <button 
+        id="menuToggle"
+        class="block md:hidden"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-gray-800">
+          <line x1="4" x2="20" y1="12" y2="12"></line>
+          <line x1="4" x2="20" y1="6" y2="6"></line>
+          <line x1="4" x2="20" y1="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <nav id="mobileMenu" class="mobile-menu">
+        <a href="#inicio" class="text-sm font-medium text-gray-800 hover:text-blue-500 transition-colors duration-300">Início</a>
+        <a href="#cadastro" class="text-sm font-medium text-gray-800 hover:text-blue-500 transition-colors duration-300">Cadastro</a>
+        <a href="#sobre" class="text-sm font-medium text-gray-800 hover:text-blue-500 transition-colors duration-300">Sobre</a>
+        <a href="#duvidas" class="text-sm font-medium text-gray-800 hover:text-blue-500 transition-colors duration-300">Dúvidas</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="relative bg-sky-50 min-h-screen flex items-center">
+    <div class="container mx-auto px-4 py-12 flex flex-col items-center text-center">
+      <div class="mb-8 bg-blue-100 rounded-full px-6 py-2">
+        <h2 class="text-blue-600 text-xl font-medium">
+          Caixinha de Novas Amizades
+        </h2>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight max-w-4xl">
+        Faça novos amigos e apareça no canal da Neext
+      </h1>
+      
+      <p class="text-lg md:text-xl text-blue-800 mb-10 max-w-3xl">
+        Uma plataforma exclusiva para encontrar novas amizades, compartilhar interesses e ser divulgado no canal da Neext.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
+        <button 
+          class="w-full py-6 text-lg font-semibold rounded-xl bg-blue-500 hover:bg-blue-600 text-white"
+          onclick="document.getElementById('cadastro').scrollIntoView({behavior: 'smooth'})"
+        >
+          Cadastre-se Agora
+        </button>
+        
+        <button 
+          class="w-full py-6 text-lg font-semibold rounded-xl border border-gray-300 text-gray-800 hover:bg-gray-100"
+          onclick="document.getElementById('sobre').scrollIntoView({behavior: 'smooth'})"
+        >
+          Saiba Mais
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre Nós Section -->
+  <section id="sobre" class="py-20 overflow-hidden bg-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="animate-fade-in">
+          <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-600 rounded-full mb-4">
+            Sobre o Projeto
+          </span>
+          
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+            Conectando pessoas na
+            <span class="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
+              era digital
+            </span>
+          </h2>
+          
+          <p class="text-gray-700 mb-6">
+            A Caixinha de Amizades surgiu para aproximar pessoas com interesses em comum, criando conexões genuínas em um mundo cada vez mais digital. Nossa missão é facilitar o surgimento de novas amizades que podem durar para toda a vida.
+          </p>
+          
+          <p class="text-gray-700 mb-6">
+            Através do canal da Neext, apresentamos perfis selecionados, permitindo que membros da comunidade se conheçam de forma segura e autêntica. Mais do que um simples cadastro, somos uma porta de entrada para experiências compartilhadas e memórias inesquecíveis.
+          </p>
+          
+          <div class="flex flex-wrap gap-4 mb-6">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+              </div>
+              <span class="text-sm text-gray-800">Conexões reais</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+              </div>
+              <span class="text-sm text-gray-800">Ambiente seguro</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+              </div>
+              <span class="text-sm text-gray-800">Visibilidade no canal</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="animate-scale-in relative">
+          <div class="relative mx-auto w-full max-w-md">
+            <!-- Elemento decorativo -->
+            <div class="absolute -z-10 inset-0 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 blur-xl transform rotate-6 scale-105"></div>
+            
+            <!-- Cards flutuantes -->
+            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-white/50 p-6 transform -rotate-3">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                  N
+                </div>
+                <div>
+                  <h3 class="font-medium text-gray-900">Neext</h3>
+                  <p class="text-xs text-gray-600">Canal oficial</p>
+                </div>
+              </div>
+              <p class="text-sm mb-4 text-gray-700">
+                "A Caixinha de Amizades tem conectado pessoas incríveis e criado histórias inspiradoras. Estamos muito felizes com os resultados!"
+              </p>
+              <div class="grid grid-cols-3 gap-2">
+                <div class="aspect-square rounded-md bg-blue-50 flex items-center justify-center overflow-hidden">
+                  <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200"></div>
+                </div>
+                <div class="aspect-square rounded-md bg-blue-50 flex items-center justify-center overflow-hidden">
+                  <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200"></div>
+                </div>
+                <div class="aspect-square rounded-md bg-blue-50 flex items-center justify-center overflow-hidden">
+                  <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="absolute -bottom-10 -right-10 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-white/50 w-[180px] transform rotate-6 animate-float">
+              <div class="flex flex-col items-center">
+                <div class="relative mb-2">
+                  <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                    C
+                  </div>
+                  <div class="absolute -right-1 -bottom-1 w-6 h-6 rounded-full bg-green-500 border-2 border-white"></div>
+                </div>
+                <p class="text-xs text-center font-medium text-gray-800">+230 amizades formadas!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cadastro Form Section -->
+  <section id="cadastro" class="py-20 relative">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-600 rounded-full mb-4">
+          Participe Agora
+        </span>
+        
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+          Cadastre-se na
+          <span class="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
+            Caixinha de Amizades
+          </span>
+        </h2>
+        
+        <p class="text-gray-600 max-w-xl mx-auto">
+          Preencha o formulário abaixo para participar. Sua inscrição será analisada e você poderá
+          aparecer no canal da Neext!
+        </p>
+      </div>
+      
+      <div class="max-w-2xl mx-auto">
+        <div class="glass-card rounded-xl p-6 md:p-8">
+          <form id="friendForm">
+            <div class="space-y-6">
+              <div class="space-y-2">
+                <label for="nome">Nome completo</label>
+                <input
+                  id="nome"
+                  type="text"
+                  placeholder="Digite seu nome completo"
+                  class="bg-white/50 border-white/30"
+                />
+              </div>
+              
+              <div class="space-y-2">
+                <label for="numero">Número de telefone</label>
+                <div class="relative">
+                  <input
+                    id="numero"
+                    type="text"
+                    placeholder="Digite seu número (apenas números)"
+                    class="bg-white/50 border-white/30 pl-8"
+                  />
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    +
+                  </span>
+                </div>
+                <p class="text-xs text-gray-500">Ex: +55 11 98765-4321</p>
+              </div>
+              
+              <div class="space-y-2">
+                <label for="motivo">Por que você quer participar?</label>
+                <textarea
+                  id="motivo"
+                  placeholder="Conte um pouco sobre você e o que busca na Caixinha de Amizades..."
+                  class="bg-white/50 border-white/30 min-h-[120px]"
+                ></textarea>
+              </div>
+              
+              <div class="space-y-2">
+                <label>Sua melhor foto</label>
+                <div id="imageUpload" class="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center min-h-[200px] cursor-pointer">
+                  <div class="flex flex-col items-center text-center gap-2">
+                    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-500">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" x2="12" y1="3" y2="15"></line>
+                      </svg>
+                    </div>
+                    <h3 class="text-lg font-medium">Arraste sua foto aqui</h3>
+                    <p class="text-sm text-gray-500 mb-2">
+                      Ou clique para selecionar uma imagem
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      Formatos suportados: JPG, PNG, GIF (Max: 5MB)
+                    </p>
+                    <input type="file" id="fileInput" class="hidden" accept="image/*" />
+                  </div>
+                </div>
+                <div id="imagePreview" class="hidden relative rounded-lg overflow-hidden border">
+                  <img id="previewImg" src="" alt="Preview" class="w-full h-full object-cover aspect-video" />
+                  <button id="removeImage" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+                <p class="text-xs text-gray-500">Escolha uma foto que mostre bem seu rosto.</p>
+              </div>
+              
+              <button 
+                type="submit" 
+                class="w-full neo-button bg-gradient-to-r from-blue-500 to-blue-400 hover:opacity-90 transition-all py-6 text-lg text-white rounded-xl"
+              >
+                Enviar Cadastro
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="duvidas" class="py-20 bg-blue-50/30">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-600 rounded-full mb-4">
+          Dúvidas Frequentes
+        </span>
+        
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+          Tudo o que você precisa saber sobre a
+          <span class="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
+            Caixinha de Amizades
+          </span>
+        </h2>
+        
+        <p class="text-gray-600 max-w-xl mx-auto">
+          Confira as respostas para as perguntas mais comuns sobre como participar
+          e fazer parte dessa comunidade incrível.
+        </p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto">
+        <div class="glass-card rounded-xl p-6 md:p-8">
+          <div id="faqAccordion" class="space-y-4">
+            <!-- FAQ Items will be inserted here by JavaScript -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="max-w-3xl mx-auto mt-12 text-center">
+        <p class="text-gray-600">
+          Ainda tem dúvidas? Entre em contato conosco pelo canal da
+          <a 
+            href="https://youtube.com/@neextbr" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-blue-500 hover:underline font-medium"
+          >
+            Neext no YouTube
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 bg-sky-50 relative overflow-hidden">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="h-8 w-8 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full flex items-center justify-center">
+              <span class="text-white font-bold text-sm">NA</span>
+            </div>
+            <h2 class="text-lg font-bold bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
+              Caixinha de Amizades
+            </h2>
+          </div>
+          <p class="text-sm text-gray-500 mb-4">
+            Conectando pessoas e criando amizades verdadeiras através do canal da Neext.
+          </p>
+          <div class="flex gap-4">
+            <a 
+              href="https://youtube.com/@neextbr" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+              </svg>
+            </a>
+            <a 
+              href="https://instagram.com/neextbr" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+              </svg>
+            </a>
+            <a 
+              href="https://twitter.com/neextbr" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="font-medium mb-4">Links Rápidos</h3>
+          <ul class="space-y-2 text-sm">
+            <li>
+              <a href="#inicio" class="text-gray-500 hover:text-blue-500 transition-colors">Início</a>
+            </li>
+            <li>
+              <a href="#cadastro" class="text-gray-500 hover:text-blue-500 transition-colors">Cadastre-se</a>
+            </li>
+            <li>
+              <a href="#sobre" class="text-gray-500 hover:text-blue-500 transition-colors">Sobre Nós</a>
+            </li>
+            <li>
+              <a href="#duvidas" class="text-gray-500 hover:text-blue-500 transition-colors">Dúvidas Frequentes</a>
+            </li>
+            <li>
+              <a href="https://youtube.com/@neextbr" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-500 transition-colors">Canal da Neext</a>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="font-medium mb-4">Como Funciona</h3>
+          <ol class="space-y-4 text-sm">
+            <li class="flex gap-3">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-medium">
+                1
+              </div>
+              <p class="text-gray-500">
+                Cadastre-se com suas informações e sua melhor foto.
+              </p>
+            </li>
+            <li class="flex gap-3">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-medium">
+                2
+              </div>
+              <p class="text-gray-500">
+                Seu perfil será analisado pela equipe da Neext.
+              </p>
+            </li>
+            <li class="flex gap-3">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-medium">
+                3
+              </div>
+              <p class="text-gray-500">
+                Se selecionado, você aparecerá no canal e poderá fazer novas amizades!
+              </p>
+            </li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="mt-12 pt-8 border-t border-gray-200">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="text-sm text-gray-500">
+            &copy; <span id="currentYear"></span> Caixinha de Amizades. Todos os direitos reservados.
+          </p>
+          <div class="flex gap-6 text-sm">
+            <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors">Termos de Uso</a>
+            <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors">Política de Privacidade</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Elementos decorativos -->
+    <div class="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-blue-500/5 blur-3xl opacity-50"></div>
+    <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-blue-500/5 blur-2xl opacity-70"></div>
+  </footer>
+
+  <!-- Popup de notificação (toast) -->
+  <div id="toast" class="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 transform translate-y-10 opacity-0 transition-all duration-300 z-50 max-w-xs hidden">
+    <div class="flex items-center">
+      <div id="toastIcon" class="flex-shrink-0 w-6 h-6 mr-3"></div>
+      <div id="toastMessage" class="text-sm font-medium"></div>
+    </div>
+  </div>
+
+  <script>
+    // FAQ Data
+    const faqItems = [
+      {
+        question: "O que é a Caixinha de Novas Amizades?",
+        answer: "A Caixinha de Novas Amizades é uma iniciativa do canal Neext para conectar pessoas com interesses semelhantes. Ao se cadastrar, você tem a chance de ser divulgado no canal e fazer novas amizades com outros membros da comunidade."
+      },
+      {
+        question: "Como funciona o processo de seleção?",
+        answer: "Após preencher o formulário com seus dados, nossa equipe fará uma revisão. Os perfis selecionados serão apresentados no canal da Neext, onde outros membros poderão entrar em contato para iniciar novas amizades."
+      },
+      {
+        question: "Meus dados estarão seguros?",
+        answer: "Sim, seus dados são armazenados de forma segura e usados apenas para os fins da Caixinha de Novas Amizades. Seu número será compartilhado apenas com as pessoas que você aprovar para contato."
+      },
+      {
+        question: "Qual tipo de foto devo enviar?",
+        answer: "Recomendamos que você envie uma foto clara do seu rosto, em boa qualidade e bem iluminada. Evite fotos com filtros excessivos ou onde seu rosto não aparece claramente."
+      },
+      {
+        question: "Posso me inscrever mais de uma vez?",
+        answer: "Sim, caso não seja selecionado na primeira tentativa, você pode se inscrever novamente após um período de 30 dias."
+      },
+      {
+        question: "Como saberei se fui selecionado?",
+        answer: "Os perfis selecionados serão apresentados no canal da Neext. Além disso, enviaremos uma mensagem para o número de telefone cadastrado informando sobre a seleção."
+      },
+      {
+        question: "Há alguma restrição de idade para participar?",
+        answer: "Sim, é necessário ter pelo menos 18 anos para participar da Caixinha de Novas Amizades."
+      },
+      {
+        question: "O que devo escrever no campo 'motivo'?",
+        answer: "No campo motivo, você deve explicar brevemente por que quer participar da Caixinha de Novas Amizades, quais são seus interesses e o tipo de amizades que busca. Seja autêntico e sincero!"
+      }
+    ];
+
+    // Populate FAQ items
+    const faqAccordion = document.getElementById('faqAccordion');
+    
+    faqItems.forEach((item, index) => {
+      const accordionItem = document.createElement('div');
+      accordionItem.className = 'accordion-item';
+      accordionItem.innerHTML = `
+        <button class="accordion-trigger" onclick="toggleAccordion(${index})">
+          <span>${item.question}</span>
+        </button>
+        <div class="accordion-content hidden" id="accordion-content-${index}">
+          ${item.answer}
+        </div>
+      `;
+      faqAccordion.appendChild(accordionItem);
+    });
+
+    // Toggle accordion function
+    function toggleAccordion(index) {
+      const content = document.getElementById(`accordion-content-${index}`);
+      content.classList.toggle('hidden');
+    }
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+
+    // Image upload preview
+    const imageUpload = document.getElementById('imageUpload');
+    const fileInput = document.getElementById('fileInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const removeImage = document.getElementById('removeImage');
+    
+    imageUpload.addEventListener('click', () => {
+      fileInput.click();
+    });
+    
+    imageUpload.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      imageUpload.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    
+    imageUpload.addEventListener('dragleave', () => {
+      imageUpload.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    imageUpload.addEventListener('drop', (e) => {
+      e.preventDefault();
+      imageUpload.classList.remove('border-blue-500', 'bg-blue-50');
+      
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleImageFile(e.dataTransfer.files[0]);
+      }
+    });
+    
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files[0]) {
+        handleImageFile(fileInput.files[0]);
+      }
+    });
+    
+    removeImage.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.value = '';
+      imageUpload.classList.remove('hidden');
+      imagePreview.classList.add('hidden');
+    });
+    
+    function handleImageFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        imageUpload.classList.add('hidden');
+        imagePreview.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Form submission
+    const friendForm = document.getElementById('friendForm');
+    
+    friendForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const nome = document.getElementById('nome').value;
+      const numero = document.getElementById('numero').value;
+      const motivo = document.getElementById('motivo').value;
+      const hasImage = !imageUpload.classList.contains('hidden');
+      
+      if (!nome || !numero || !motivo || hasImage) {
+        showToast('Por favor, preencha todos os campos e adicione uma foto.', 'error');
+        return;
+      }
+      
+      // Simulating form submission
+      showToast('Cadastro enviado com sucesso!', 'success');
+      friendForm.reset();
+      imageUpload.classList.remove('hidden');
+      imagePreview.classList.add('hidden');
+    });
+
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+      
+      // Set message
+      toastMessage.textContent = message;
+      
+      // Set icon based on type
+      if (type === 'success') {
+        toastIcon.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+      } else if (type === 'error') {
+        toastIcon.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        `;
+      } else {
+        toastIcon.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        `;
+      }
+      
+      // Show toast
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-10', 'opacity-0');
+      }, 10);
+      
+      // Hide toast after 3 seconds
+      setTimeout(() => {
+        toast.classList.add('translate-y-10', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 300);
+      }, 3000);
+    }
+
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Smooth scrolling for anchor links
+    document.body.addEventListener('click', (e) => {
+      const target = e.target.closest('a');
+      if (target && target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const id = target.getAttribute('href').substring(1);
+        const element = document.getElementById(id);
+        
+        if (element) {
+          window.scrollTo({
+            top: element.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // Close mobile menu if open
+          mobileMenu.classList.remove('open');
+        }
+      }
+    });
+
+    // Add float animation
+    document.styleSheets[0].insertRule(`
+      @keyframes float {
+        0% { transform: translateY(0) rotate(6deg); }
+        50% { transform: translateY(-8px) rotate(6deg); }
+        100% { transform: translateY(0) rotate(6deg); }
+      }
+    `, document.styleSheets[0].cssRules.length);
+
+    document.styleSheets[0].insertRule(`
+      .animate-float {
+        animation: float 5s ease-in-out infinite;
+      }
+    `, document.styleSheets[0].cssRules.length);
+
+    // Add fade-in animation
+    document.styleSheets[0].insertRule(`
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    `, document.styleSheets[0].cssRules.length);
+
+    document.styleSheets[0].insertRule(`
+      .animate-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+      }
+    `, document.styleSheets[0].cssRules.length);
+
+    // Add scale-in animation
+    document.styleSheets[0].insertRule(`
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+    `, document.styleSheets[0].cssRules.length);
+
+    document.styleSheets[0].insertRule(`
+      .animate-scale-in {
+        animation: scaleIn 0.6s ease-out forwards;
+      }
+    `, document.styleSheets[0].cssRules.length);
+  </script>
+</body>
+</html>
