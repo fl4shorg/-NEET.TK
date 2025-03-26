@@ -1,0 +1,984 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Story Neext - Compartilhe sua história</title>
+  <meta name="description" content="Compartilhe sua história, seus desabafos e momentos de vida na Story Neext" />
+  <meta name="author" content="Neext" />
+
+  <meta property="og:title" content="Story Neext - Compartilhe sua história" />
+  <meta property="og:description" content="Compartilhe sua história, seus desabafos e momentos de vida na Story Neext" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@neext" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Include Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.min.js"></script>
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Framer Motion (for animations) -->
+  <script src="https://unpkg.com/framer-motion@11.18.2/dist/framer-motion.js"></script>
+  
+  <style>
+    :root {
+      --background: 220 25% 98%;
+      --foreground: 240 10% 4%;
+      --primary: 250 95% 65%;
+      --primary-foreground: 210 40% 98%;
+      --secondary: 210 40% 96.1%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 250 95% 95%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 214.3 31.8% 91.4%;
+      --radius: 1rem;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      background-image: 
+        radial-gradient(at 100% 0%, hsla(250, 100%, 97%, 0.4) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(250, 100%, 85%, 0.4) 0px, transparent 50%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Glass effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius);
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.5);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(139, 92, 246, 0.8);
+    }
+    
+    /* Text shadow */
+    .text-shadow {
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* 3D effect for cards */
+    .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+    
+    .card-3d:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      box-shadow: 0 30px 40px -20px rgba(139, 92, 246, 0.3),
+                  0 30px 30px -30px rgba(139, 92, 246, 0.2);
+    }
+    
+    /* Custom placeholder shimmer effect */
+    .shimmer {
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      background-position: -150% 0;
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      to {
+        background-position: 150% 0;
+      }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 16px;
+      background: white;
+      color: #333;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      max-width: 300px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      z-index: 9999;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .toast-success {
+      border-left: 4px solid #8b5cf6;
+    }
+    
+    .toast-error {
+      border-left: 4px solid #ef4444;
+    }
+  </style>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: 'hsl(250, 95%, 65%)',
+            background: 'hsl(220, 25%, 98%)',
+            foreground: 'hsl(240, 10%, 4%)'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Three.js Background Canvas -->
+  <div id="bg-canvas" class="fixed inset-0 -z-10 opacity-80"></div>
+  
+  <!-- Header -->
+  <header id="header" class="fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+        <h1 class="font-display font-bold text-2xl tracking-tight">
+          Story <span class="text-primary">Neext</span>
+        </h1>
+      </div>
+      
+      <nav id="desktop-nav" class="hidden md:flex items-center space-x-8">
+        <a href="#sobre" class="text-foreground/80 hover:text-primary transition-colors font-medium">
+          Sobre
+        </a>
+        <a href="#como-funciona" class="text-foreground/80 hover:text-primary transition-colors font-medium">
+          Como Funciona
+        </a>
+        <a href="#duvidas" class="text-foreground/80 hover:text-primary transition-colors font-medium">
+          Dúvidas
+        </a>
+        <a href="#enviar" class="flex items-center space-x-1 px-4 py-2 rounded-full bg-primary text-white font-medium hover:bg-opacity-90 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+          <span>Enviar História</span>
+        </a>
+      </nav>
+      
+      <button id="mobile-menu-button" class="p-2 text-foreground/80 hover:text-primary transition-colors md:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </header>
+  
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden">
+    <div class="w-64 h-full bg-white p-6 flex flex-col">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="font-bold text-xl">Menu</h2>
+        <button id="close-menu" class="p-1 text-foreground/80 hover:text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col space-y-4">
+        <a href="#sobre" class="text-foreground/80 hover:text-primary transition-colors py-2">Sobre</a>
+        <a href="#como-funciona" class="text-foreground/80 hover:text-primary transition-colors py-2">Como Funciona</a>
+        <a href="#duvidas" class="text-foreground/80 hover:text-primary transition-colors py-2">Dúvidas</a>
+        <a href="#enviar" class="text-foreground/80 hover:text-primary transition-colors py-2">Enviar História</a>
+      </nav>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 pb-12">
+      <div class="max-w-7xl mx-auto w-full">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div class="flex-1 text-center lg:text-left fade-in">
+            <div class="inline-block px-3 py-1 mb-6 rounded-full bg-primary/10 text-primary text-sm font-medium">
+              Compartilhe sua jornada
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight mb-6 text-shadow">
+              Compartilhe <span class="text-primary">sua história</span> com o mundo
+            </h1>
+            <p class="text-lg md:text-xl text-foreground/70 mb-8 max-w-xl mx-auto lg:mx-0">
+              Uma oportunidade única para expressar seus desabafos, experiências e momentos 
+              marcantes da sua vida no canal da Neext.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <a 
+                href="#enviar" 
+                class="px-8 py-3 rounded-full bg-primary text-white font-medium hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl hover:shadow-primary/20 flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                <span>Compartilhe sua história</span>
+              </a>
+              <a 
+                href="#como-funciona" 
+                class="px-8 py-3 rounded-full bg-white/80 border border-gray-200 text-foreground font-medium hover:bg-white/90 transition-all shadow-lg hover:shadow-xl flex items-center justify-center"
+              >
+                Como funciona
+              </a>
+            </div>
+          </div>
+          
+          <div class="flex-1 relative fade-in">
+            <div class="relative w-full max-w-lg mx-auto">
+              <div class="absolute -inset-0.5 bg-gradient-to-r from-primary to-purple-300 rounded-2xl blur opacity-50 animate-pulse-slow"></div>
+              <div class="card-3d relative bg-white/90 shadow-xl rounded-2xl p-8 backdrop-blur-sm">
+                <div class="flex items-center mb-8">
+                  <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-xl">Story Neext</h3>
+                    <p class="text-sm text-foreground/60">A caixinha de histórias</p>
+                  </div>
+                </div>
+                <div class="space-y-4">
+                  <p class="text-foreground/80 italic">
+                    "A Story Neext me deu a oportunidade de compartilhar minha jornada de superação. 
+                    Foi incrível ver como minha história inspirou outras pessoas!"
+                  </p>
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 mr-3"></div>
+                    <div>
+                      <h4 class="font-medium">Ana Silva</h4>
+                      <p class="text-xs text-foreground/60">Enviado há 2 dias</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="sobre" class="py-20 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 fade-in">
+            Sobre a <span class="text-primary">Story Neext</span>
+          </h2>
+          <p class="text-foreground/70 text-lg max-w-2xl mx-auto fade-in">
+            A caixinha de histórias que conecta pessoas através de experiências de vida e desabafos autênticos.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div class="card-3d bg-white/80 border border-gray-100 rounded-xl p-6 shadow-lg fade-in">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Histórias Autênticas</h3>
+            <p class="text-foreground/70">Compartilhe experiências reais e momentos significativos da sua vida.</p>
+          </div>
+          
+          <!-- Feature 2 -->
+          <div class="card-3d bg-white/80 border border-gray-100 rounded-xl p-6 shadow-lg fade-in">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Espaço Seguro</h3>
+            <p class="text-foreground/70">Um ambiente acolhedor para expressar seus sentimentos e desabafos.</p>
+          </div>
+          
+          <!-- Feature 3 -->
+          <div class="card-3d bg-white/80 border border-gray-100 rounded-xl p-6 shadow-lg fade-in">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Visibilidade</h3>
+            <p class="text-foreground/70">Sua história pode ser selecionada para aparecer no canal da Neext.</p>
+          </div>
+        </div>
+        
+        <div class="mt-16 p-8 rounded-2xl bg-primary/5 border border-primary/20 fade-in">
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="w-full md:w-1/3">
+              <div class="aspect-video bg-primary/20 rounded-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary/50">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="w-full md:w-2/3">
+              <h3 class="text-2xl font-bold mb-4">Apareça no Canal da Neext</h3>
+              <p class="text-foreground/70 mb-4">
+                As histórias mais impactantes e inspiradoras serão selecionadas para serem 
+                compartilhadas no canal da Neext, alcançando milhares de pessoas.
+              </p>
+              <p class="text-foreground/70">
+                Esta é uma oportunidade única para que sua voz seja ouvida e sua 
+                experiência possa inspirar e conectar-se com outras pessoas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- How It Works Section -->
+    <section id="como-funciona" class="py-20 px-6 bg-gradient-to-b from-transparent to-primary/5">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 fade-in">
+            Como <span class="text-primary">Funciona</span>
+          </h2>
+          <p class="text-foreground/70 text-lg max-w-2xl mx-auto fade-in">
+            O processo simples para compartilhar sua história com o mundo
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Step 1 -->
+          <div class="relative fade-in">
+            <div class="card-3d bg-white/90 border border-gray-100 rounded-xl p-6 shadow-lg h-full">
+              <div class="text-4xl font-bold text-primary/20 mb-4">01</div>
+              <h3 class="text-xl font-bold mb-2">Escreva sua história</h3>
+              <p class="text-foreground/70">Compartilhe sua experiência, desafio ou momento marcante da sua vida de forma autêntica e sincera.</p>
+            </div>
+            <div class="hidden lg:block absolute top-1/4 -right-4 w-8 h-8 z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8 text-primary/30">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Step 2 -->
+          <div class="relative fade-in">
+            <div class="card-3d bg-white/90 border border-gray-100 rounded-xl p-6 shadow-lg h-full">
+              <div class="text-4xl font-bold text-primary/20 mb-4">02</div>
+              <h3 class="text-xl font-bold mb-2">Envie para a Neext</h3>
+              <p class="text-foreground/70">Preencha o formulário com seu nome e sua história. Todas as submissões são tratadas com respeito e cuidado.</p>
+            </div>
+            <div class="hidden lg:block absolute top-1/4 -right-4 w-8 h-8 z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8 text-primary/30">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="relative fade-in">
+            <div class="card-3d bg-white/90 border border-gray-100 rounded-xl p-6 shadow-lg h-full">
+              <div class="text-4xl font-bold text-primary/20 mb-4">03</div>
+              <h3 class="text-xl font-bold mb-2">Revisão e Seleção</h3>
+              <p class="text-foreground/70">Nossa equipe analisa as histórias recebidas, selecionando as mais impactantes e inspiradoras.</p>
+            </div>
+            <div class="hidden lg:block absolute top-1/4 -right-4 w-8 h-8 z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8 text-primary/30">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Step 4 -->
+          <div class="relative fade-in">
+            <div class="card-3d bg-white/90 border border-gray-100 rounded-xl p-6 shadow-lg h-full">
+              <div class="text-4xl font-bold text-primary/20 mb-4">04</div>
+              <h3 class="text-xl font-bold mb-2">Compartilhamento no Canal</h3>
+              <p class="text-foreground/70">As histórias escolhidas serão compartilhadas no canal da Neext, onde poderão inspirar milhares de pessoas.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-16 text-center fade-in">
+          <a 
+            href="#enviar" 
+            class="inline-flex items-center justify-center px-8 py-3 rounded-full bg-primary text-white font-medium hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl hover:shadow-primary/20"
+          >
+            Compartilhe sua história agora
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section id="duvidas" class="py-20 px-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 fade-in">
+            Dúvidas <span class="text-primary">Frequentes</span>
+          </h2>
+          <p class="text-foreground/70 text-lg fade-in">
+            Respostas para as perguntas mais comuns sobre a Story Neext
+          </p>
+        </div>
+        
+        <div class="glass rounded-2xl p-6 shadow-lg fade-in">
+          <div id="accordion" class="w-full">
+            <!-- FAQ Item 1 -->
+            <div class="faq-item border-b border-gray-200 py-4">
+              <button class="faq-question flex justify-between items-center w-full text-left font-medium text-lg py-2">
+                <span>O que é a Story Neext?</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="faq-answer text-foreground/70 hidden pt-2 pb-4">
+                A Story Neext é uma iniciativa que convida pessoas a compartilharem suas histórias de vida, experiências e desabafos. As histórias mais impactantes são selecionadas para serem compartilhadas no canal da Neext.
+              </div>
+            </div>
+            
+            <!-- FAQ Item 2 -->
+            <div class="faq-item border-b border-gray-200 py-4">
+              <button class="faq-question flex justify-between items-center w-full text-left font-medium text-lg py-2">
+                <span>Que tipo de histórias posso compartilhar?</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="faq-answer text-foreground/70 hidden pt-2 pb-4">
+                Você pode compartilhar experiências pessoais, momentos de superação, desafios que enfrentou, lições aprendidas ou qualquer narrativa que considere significativa e que possa inspirar outras pessoas.
+              </div>
+            </div>
+            
+            <!-- FAQ Item 3 -->
+            <div class="faq-item border-b border-gray-200 py-4">
+              <button class="faq-question flex justify-between items-center w-full text-left font-medium text-lg py-2">
+                <span>Minha identidade será revelada?</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="faq-answer text-foreground/70 hidden pt-2 pb-4">
+                Respeitamos sua privacidade. Você pode escolher usar apenas seu primeiro nome ou um pseudônimo. Detalhes que possam identificá-lo podem ser omitidos a seu pedido.
+              </div>
+            </div>
+            
+            <!-- FAQ Item 4 -->
+            <div class="faq-item border-b border-gray-200 py-4">
+              <button class="faq-question flex justify-between items-center w-full text-left font-medium text-lg py-2">
+                <span>Todas as histórias enviadas serão publicadas?</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="faq-answer text-foreground/70 hidden pt-2 pb-4">
+                Nossa equipe seleciona as histórias que serão compartilhadas no canal. Buscamos narrativas autênticas, inspiradoras e que possam ressoar com nosso público. Mesmo que sua história não seja selecionada, agradecemos sua contribuição.
+              </div>
+            </div>
+            
+            <!-- FAQ Item 5 -->
+            <div class="faq-item border-b border-gray-200 py-4">
+              <button class="faq-question flex justify-between items-center w-full text-left font-medium text-lg py-2">
+                <span>Posso editar ou remover minha história depois de enviada?</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="faq-answer text-foreground/70 hidden pt-2 pb-4">
+                Sim, você pode solicitar edições ou a remoção da sua história entrando em contato conosco através do nosso canal de suporte. Respeitamos seu direito de controlar sua narrativa.
+              </div>
+            </div>
+            
+            <!-- FAQ Item 6 -->
+            <div class="faq-item border-b border-gray-200 py-4">
+              <button class="faq-question flex justify-between items-center w-full text-left font-medium text-lg py-2">
+                <span>Existe alguma restrição quanto ao conteúdo?</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="faq-answer text-foreground/70 hidden pt-2 pb-4">
+                Pedimos que as histórias não contenham conteúdo ofensivo, discriminatório ou que possa causar dano a terceiros. Nossa equipe revisa todas as submissões para garantir a adequação do conteúdo.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Story Form Section -->
+    <section id="enviar" class="py-20 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 fade-in">
+            Compartilhe <span class="text-primary">Sua História</span>
+          </h2>
+          <p class="text-foreground/70 text-lg max-w-2xl mx-auto fade-in">
+            Seu relato pode inspirar e conectar-se com milhares de pessoas
+          </p>
+        </div>
+        
+        <div class="glass rounded-2xl p-8 shadow-lg fade-in">
+          <form id="storyForm" class="space-y-6">
+            <div>
+              <label for="nome" class="block text-sm font-medium text-foreground/80 mb-1">
+                Seu Nome
+              </label>
+              <input
+                type="text"
+                id="nome"
+                placeholder="Como você gostaria de ser chamado(a)"
+                class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/30 focus:border-primary/60 outline-none transition-all"
+                required
+              />
+            </div>
+            
+            <div>
+              <label for="historia" class="block text-sm font-medium text-foreground/80 mb-1">
+                Sua História
+              </label>
+              <textarea
+                id="historia"
+                placeholder="Compartilhe sua experiência, desafio ou momento marcante..."
+                class="w-full p-3 h-40 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/30 focus:border-primary/60 outline-none transition-all resize-y"
+                required
+              ></textarea>
+            </div>
+            
+            <div class="flex justify-center pt-4">
+              <button
+                type="submit"
+                id="submitButton"
+                class="inline-flex items-center justify-center px-8 py-3 rounded-full bg-primary text-white font-medium hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl hover:shadow-primary/20"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                Enviar História
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="py-8 px-6 border-t border-gray-200 bg-white/50 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center space-x-2">
+          <h2 class="font-display font-bold text-xl">
+            Story <span class="text-primary">Neext</span>
+          </h2>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-8">
+          <a href="#sobre" class="text-foreground/80 hover:text-primary transition-colors">
+            Sobre
+          </a>
+          <a href="#como-funciona" class="text-foreground/80 hover:text-primary transition-colors">
+            Como Funciona
+          </a>
+          <a href="#duvidas" class="text-foreground/80 hover:text-primary transition-colors">
+            Dúvidas
+          </a>
+          <a href="#enviar" class="text-foreground/80 hover:text-primary transition-colors">
+            Enviar História
+          </a>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <a href="#" class="text-foreground/60 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+          </a>
+          <a href="#" class="text-foreground/60 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" class="text-foreground/60 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+            </svg>
+          </a>
+          <a href="#" class="text-foreground/60 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+              <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+      <div class="mt-8 pt-8 border-t border-gray-200 text-center text-foreground/60 text-sm">
+        <p class="flex items-center justify-center gap-1">
+          Feito com 
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="red" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          para a Neext
+        </p>
+        <p class="mt-2">&copy; <span id="current-year"></span> Story Neext. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Toast Element -->
+  <div id="toast" class="toast">
+    <span id="toast-message">Mensagem de notificação</span>
+  </div>
+  
+  <!-- Scripts -->
+  <script>
+    // Update current year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Three.js Background Setup
+    function setupThreeBackground() {
+      // Scene setup
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 10;
+      
+      // Renderer
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000, 0);
+      document.getElementById('bg-canvas').appendChild(renderer.domElement);
+      
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(ambientLight);
+      
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(10, 10, 10);
+      scene.add(directionalLight);
+      
+      // Create spheres
+      const createSphere = (position, color, scale) => {
+        const geometry = new THREE.SphereGeometry(1, 64, 64);
+        const material = new THREE.MeshStandardMaterial({
+          color: color,
+          roughness: 0.5,
+          metalness: 0.2,
+          transparent: true,
+          opacity: 0.8
+        });
+        
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.set(...position);
+        sphere.scale.set(scale, scale, scale);
+        scene.add(sphere);
+        
+        return sphere;
+      };
+      
+      // Determine if mobile
+      const isMobile = window.innerWidth < 768;
+      
+      // Create spheres
+      const sphere1 = createSphere([-4, 2, -5], 0xa78bfa, isMobile ? 1.2 : 2);
+      const sphere2 = createSphere([4, -2, -10], 0x8b5cf6, isMobile ? 2 : 3);
+      const sphere3 = createSphere([0, 1, -15], 0xc4b5fd, isMobile ? 2.5 : 4);
+      
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        
+        // Animate spheres
+        const time = Date.now() * 0.001;
+        
+        sphere1.rotation.x = time * 0.1;
+        sphere1.rotation.y = time * 0.05;
+        sphere1.position.y = 2 + Math.sin(time * 0.5) * 0.2;
+        
+        sphere2.rotation.x = time * 0.06;
+        sphere2.rotation.y = time * 0.03;
+        sphere2.position.y = -2 + Math.sin(time * 0.3) * 0.2;
+        
+        sphere3.rotation.x = time * 0.04;
+        sphere3.rotation.y = time * 0.02;
+        sphere3.position.y = 1 + Math.sin(time * 0.2) * 0.2;
+        
+        renderer.render(scene, camera);
+      }
+      
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+      
+      // Start animation
+      animate();
+    }
+    
+    // Set up FAQ accordion
+    function setupFaq() {
+      const questions = document.querySelectorAll('.faq-question');
+      
+      questions.forEach(question => {
+        question.addEventListener('click', () => {
+          const answer = question.nextElementSibling;
+          const icon = question.querySelector('.faq-icon');
+          
+          // Toggle answer visibility
+          if (answer.classList.contains('hidden')) {
+            answer.classList.remove('hidden');
+            icon.style.transform = 'rotate(180deg)';
+          } else {
+            answer.classList.add('hidden');
+            icon.style.transform = 'rotate(0deg)';
+          }
+        });
+      });
+    }
+    
+    // Add scroll event for header transparency
+    function setupHeader() {
+      const header = document.getElementById('header');
+      
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          header.classList.add('glass', 'shadow-md');
+        } else {
+          header.classList.remove('glass', 'shadow-md');
+        }
+      });
+    }
+    
+    // Setup mobile menu
+    function setupMobileMenu() {
+      const menuButton = document.getElementById('mobile-menu-button');
+      const closeButton = document.getElementById('close-menu');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      
+      menuButton.addEventListener('click', () => {
+        mobileMenu.classList.remove('hidden');
+      });
+      
+      closeButton.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+      
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+    }
+    
+    // Setup form submission
+    function setupForm() {
+      const form = document.getElementById('storyForm');
+      const submitButton = document.getElementById('submitButton');
+      
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const nome = document.getElementById('nome').value;
+        const historia = document.getElementById('historia').value;
+        
+        if (!nome.trim() || !historia.trim()) {
+          showToast('Por favor, preencha todos os campos.', 'error');
+          return;
+        }
+        
+        // Show loading state
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.innerHTML = `
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Enviando...
+        `;
+        submitButton.disabled = true;
+        
+        try {
+          const url = "https://script.google.com/macros/s/AKfycbz8kSNNEv8_wAkIJoyH0An2eagian11eWQztsmLNevOQh5rXm2wlbM-2uNF_aS4vnO8pg/exec";
+          const data = {
+            nome: nome,
+            historia: historia,
+            dataHora: new Date().toLocaleString("pt-BR")
+          };
+          
+          await fetch(url, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+          
+          showToast('História enviada com sucesso!', 'success');
+          form.reset();
+        } catch (error) {
+          console.error('Erro ao enviar:', error);
+          showToast('Ocorreu um problema ao enviar sua história. Tente novamente.', 'error');
+        } finally {
+          submitButton.innerHTML = originalButtonText;
+          submitButton.disabled = false;
+        }
+      });
+    }
+    
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      
+      toast.className = 'toast'; // Reset class
+      
+      if (type === 'success') {
+        toast.classList.add('toast-success');
+      } else if (type === 'error') {
+        toast.classList.add('toast-error');
+      }
+      
+      toastMessage.textContent = message;
+      
+      // Show toast
+      toast.classList.add('show');
+      
+      // Hide toast after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Set up scroll animations
+    function setupScrollAnimations() {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = 0;
+            entry.target.style.transform = 'translateY(20px)';
+            
+            // Trigger animation
+            setTimeout(() => {
+              entry.target.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+              entry.target.style.opacity = 1;
+              entry.target.style.transform = 'translateY(0)';
+            }, 100);
+            
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      fadeElements.forEach(element => {
+        element.style.opacity = 0;
+        observer.observe(element);
+      });
+    }
+    
+    // Smooth scrolling for anchor links
+    function setupSmoothScroll() {
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 100,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+    
+    // Initialize all features when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      setupThreeBackground();
+      setupFaq();
+      setupHeader();
+      setupMobileMenu();
+      setupForm();
+      setupScrollAnimations();
+      setupSmoothScroll();
+    });
+  </script>
+</body>
+</html>
