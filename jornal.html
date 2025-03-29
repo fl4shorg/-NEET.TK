@@ -1,13 +1,15 @@
-<!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Notícia - NNN News</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Gerador de Notícia - NNN News
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -45,12 +47,18 @@
             font-weight: bold;
             color: #fff;
             padding: 20px;
-            background: linear-gradient(90deg, #6a0dad, #ff4500);
+            background: linear-gradient(90deg, #ff69b4, #8a2be2);
             width: 100%;
             box-sizing: border-box;
             position: relative;
         }
         .news-header .menu-icon {
+            position: absolute;
+            left: 20px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .news-header .search-icon {
             position: absolute;
             right: 20px;
             font-size: 22px;
@@ -64,6 +72,9 @@
             padding: 0 10px;
             text-align: center;
         }
+        .news-title i {
+            margin-right: 10px;
+        }
         .news-content {
             font-size: 16px;
             margin-top: 10px;
@@ -74,7 +85,7 @@
             flex: 1; /* Permite que o conteúdo cresça para ocupar o espaço */
         }
         .news-image {
-            border: 4px solid purple;
+            border: 4px solid #8a2be2;
             border-radius: 8px;
             width: 100px;
             height: 130px;
@@ -100,64 +111,116 @@
             cursor: pointer;
             font-size: 16px;
         }
-        .search-icon {
-            margin-right: 10px;
-        }
         .advertisement {
             position: absolute;
-            bottom: 30px;
+            bottom: 50px;
             left: 10px;
-            font-size: 12px;
+            right: 10px;
+            font-size: 10px;
             color: #777;
             padding: 5px;
+            text-align: center;
         }
         .advertisement i {
             margin-right: 5px;
         }
+        .advertisement::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 1px;
+            background-color: #ddd;
+            margin-bottom: 5px;
+        }
         .reporter {
-            font-size: 14px;
+            font-size: 10px;
             color: #555;
-            margin-top: 10px;
+            margin-top: 15px;
             padding: 5px 10px;
             background-color: transparent;
+            text-align: center;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="inputs">
-            <input type="text" id="titleInput" placeholder="Digite o título da notícia" oninput="updatePreview()">
-            <textarea id="contentInput" placeholder="Digite o conteúdo da notícia" rows="5" oninput="updatePreview()"></textarea>
-            <label for="imageUpload">Escolha uma imagem para a notícia:</label>
-            <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)">
-            <input type="text" id="reporterInput" placeholder="Digite o nome do repórter" oninput="updateReporter()">
-        </div>
-
-        <div class="preview-container" id="newsPreview">
-            <div class="news-header">
-                <i class="fas fa-search search-icon"></i>
-                NNN NEWS
-                <span class="menu-icon">☰</span>
-            </div>
-            <div class="news-title" id="newsTitle">Título da Notícia</div>
-            <div style="display: flex; align-items: flex-start; margin-top: 10px;">
-                <div class="news-content" id="newsContent">Conteúdo da Notícia</div>
-                <div class="news-image" id="newsImage">Imagem da Notícia</div>
-            </div>
-            <div class="advertisement">
-                <i class="fas fa-calendar-alt"></i> Informe Publicitário - Data: <span id="currentDate"></span>
-            </div>
-            <div class="reporter" id="reporterDisplay">
-                <i class="fas fa-user"></i> Repórter: <span id="reporterName">Nome do Repórter</span>
-            </div>
-        </div>
-
-        <button class="btn" onclick="generateImage()">Gerar Imagem de Notícia</button>
+        .developed-by {
+            font-size: 10px;
+            color: #555;
+            margin-top: 5px;
+            padding: 5px 10px;
+            background-color: transparent;
+            text-align: center;
+        }
+        .developed-by .heart-icon {
+            vertical-align: middle;
+            margin-right: 5px;
+            font-size: 12px;
+        }
+  </style>
+ </head>
+ <body>
+  <div class="container">
+   <div class="inputs">
+    <input id="titleInput" oninput="updatePreview()" placeholder="Digite o título da notícia" type="text"/>
+    <textarea id="contentInput" oninput="updatePreview()" placeholder="Digite o conteúdo da notícia" rows="5"></textarea>
+    <label for="imageUpload">
+     Escolha uma imagem para a notícia:
+    </label>
+    <input accept="image/*" id="imageUpload" onchange="previewImage(event)" type="file"/>
+    <input id="reporterInput" oninput="updateReporter()" placeholder="Digite o nome do repórter" type="text"/>
+   </div>
+   <div class="preview-container" id="newsPreview">
+    <div class="news-header">
+     <span class="menu-icon">
+      ☰
+     </span>
+     NNN NEWS
+     <i class="fas fa-search search-icon">
+     </i>
     </div>
-
-    <script>
-        function updatePreview() {
-            document.getElementById('newsTitle').innerText = document.getElementById('titleInput').value || "Título da Notícia";
+    <div class="news-title" id="newsTitle">
+     <i class="fas fa-newspaper">
+     </i>
+     <span id="newsTitleText">
+      Título da Notícia
+     </span>
+    </div>
+    <div style="display: flex; align-items: flex-start; margin-top: 10px;">
+     <div class="news-content" id="newsContent">
+      Conteúdo da Notícia
+     </div>
+     <div class="news-image" id="newsImage">
+      <img alt="Imagem da Notícia" height="130" src="https://storage.googleapis.com/a1aa/image/eNnCChXnRXG9KjW3r5WEYzBbx_robgHhl23Vf9bnyoc.jpg" width="100"/>
+     </div>
+    </div>
+    <div style="margin-top: 20px;">
+     <div class="advertisement">
+      <i class="fas fa-calendar-alt">
+      </i>
+      Informe Publicitário - Data:
+      <span id="currentDate">
+      </span>
+     </div>
+     <div class="reporter" id="reporterDisplay">
+      <i class="fas fa-user">
+      </i>
+      Repórter:
+      <span id="reporterName">
+       Nome do Repórter
+      </span>
+     </div>
+     <div class="developed-by">
+      <span class="heart-icon">
+       ❤️
+      </span>
+      Desenvolvido pela Neext
+     </div>
+    </div>
+   </div>
+   <button class="btn" onclick="generateImage()">
+    Gerar Imagem de Notícia
+   </button>
+  </div>
+  <script>
+   function updatePreview() {
+            document.getElementById('newsTitleText').innerText = document.getElementById('titleInput').value || "Título da Notícia";
             document.getElementById('newsContent').innerText = document.getElementById('contentInput').value || "Conteúdo da Notícia";
         }
 
@@ -167,9 +230,11 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    container.innerHTML = `<img src="${e.target.result}" alt="Imagem da Notícia">`;
+                    container.innerHTML = `<img src="${e.target.result}" alt="Imagem da Notícia" class="w-full h-full object-cover">`;
                 };
                 reader.readAsDataURL(file);
+            } else {
+                container.innerHTML = `<img src="https://placehold.co/100x130" alt="Imagem da Notícia" class="w-full h-full object-cover">`;
             }
         }
 
@@ -197,6 +262,6 @@
 
         // Chama a função para exibir a data ao carregar a página
         window.onload = displayCurrentDate;
-    </script>
-</body>
+  </script>
+ </body>
 </html>
