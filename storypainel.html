@@ -1,209 +1,716 @@
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Visualizar Registros</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"/>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .dark-mode {
-            background-color: #1a202c;
-            color: #cbd5e0;
-        }
-        .dark-mode .bg-white {
-            background-color: #2d3748;
-        }
-        .dark-mode .text-orange-500 {
-            color: #f6ad55;
-        }
-        .dark-mode .bg-gradient-to-r {
-            background: linear-gradient(to right, #9f7aea, #d53f8c);
-        }
-        .dark-mode .text-gray-800 {
-            color: #e2e8f0;
-        }
-        .dark-mode .text-gray-600 {
-            color: #a0aec0;
-        }
-        .dark-mode .border-gray-300 {
-            border-color: #4a5568;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Story Neext</title>
+  <meta name="description" content="Visualize e gerencie histórias" />
+  
+  <!-- Fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Font Awesome para ícones -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 3.9%;
+      
+      --popover: 0 0% 100%;
+      --popover-foreground: 240 10% 3.9%;
+      
+      --primary: 346 77% 49%;
+      --primary-foreground: 355 100% 97%;
+      
+      --secondary: 240 4.8% 95.9%;
+      --secondary-foreground: 240 5.9% 10%;
+      
+      --accent: 279 86% 61%;
+      --accent-foreground: 0 0% 98%;
+      
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      
+      --border: 240 5.9% 90%;
+      --input: 240 5.9% 90%;
+      --ring: 346 77% 49%;
+      
+      --radius: 0.5rem;
+
+      --gradient-1: linear-gradient(90deg, #F55B90 0%, #A45CEC 100%);
+      --gradient-2: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%);
+      --gradient-3: linear-gradient(90deg, #10B981 0%, #14B8A6 100%);
+      --gradient-4: linear-gradient(90deg, #F59E0B 0%, #F97316 100%);
+    }
+
+    .dark {
+      --background: 240 10% 3.9%;
+      --foreground: 0 0% 98%;
+      
+      --card: 240 10% 6.9%;
+      --card-foreground: 0 0% 98%;
+      
+      --popover: 240 10% 6.9%;
+      --popover-foreground: 0 0% 98%;
+      
+      --primary: 346 77% 49%;
+      --primary-foreground: 355 100% 97%;
+      
+      --secondary: 240 3.7% 15.9%;
+      --secondary-foreground: 0 0% 98%;
+      
+      --accent: 279 86% 61%;
+      --accent-foreground: 0 0% 98%;
+      
+      --muted: 240 3.7% 15.9%;
+      --muted-foreground: 240 5% 64.9%;
+      
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 0% 98%;
+      
+      --border: 240 3.7% 15.9%;
+      --input: 240 3.7% 15.9%;
+      --ring: 346 77% 49%;
+
+      --gradient-1: linear-gradient(90deg, #F55B90 0%, #A45CEC 100%);
+      --gradient-2: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%);
+      --gradient-3: linear-gradient(90deg, #10B981 0%, #14B8A6 100%);
+      --gradient-4: linear-gradient(90deg, #F59E0B 0%, #F97316 100%);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: hsl(var(--foreground));
+      background-color: hsl(var(--background));
+    }
+
+    .story-card {
+      background-color: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      transition: all 0.3s;
+    }
+
+    .story-card:hover {
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    .story-card-header {
+      background: var(--gradient-1);
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .story-icon-circle {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .story-icon-circle-1 {
+      background: var(--gradient-2);
+    }
+
+    .story-icon-circle-2 {
+      background: var(--gradient-1);
+    }
+
+    .story-icon-circle-3 {
+      background: var(--gradient-3);
+    }
+
+    .story-icon-circle-4 {
+      background: var(--gradient-4);
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Tailwind CSS configuration */
+    html {
+      line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
+      tab-size: 4;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .bg-gradient-text {
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .from-red-500 {
+      --tw-gradient-from: #ef4444;
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(239 68 68 / 0));
+    }
+
+    .to-orange-500 {
+      --tw-gradient-to: #f97316;
+    }
+
+    .to-pink-500 {
+      --tw-gradient-to: #ec4899;
+    }
+
+    .from-purple-500 {
+      --tw-gradient-from: #a855f7;
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(168 85 247 / 0));
+    }
+
+    .to-pink-500 {
+      --tw-gradient-to: #ec4899;
+    }
+  </style>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))',
+            },
+            secondary: {
+              DEFAULT: 'hsl(var(--secondary))',
+              foreground: 'hsl(var(--secondary-foreground))',
+            },
+            destructive: {
+              DEFAULT: 'hsl(var(--destructive))',
+              foreground: 'hsl(var(--destructive-foreground))',
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+              foreground: 'hsl(var(--muted-foreground))',
+            },
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+              foreground: 'hsl(var(--accent-foreground))',
+            },
+            popover: {
+              DEFAULT: 'hsl(var(--popover))',
+              foreground: 'hsl(var(--popover-foreground))',
+            },
+            card: {
+              DEFAULT: 'hsl(var(--card))',
+              foreground: 'hsl(var(--card-foreground))',
+            },
+          },
+        },
+      },
+    }
+  </script>
 </head>
-<body class="bg-orange-500 flex flex-col items-center min-h-screen">
-    <nav class="bg-white w-full py-4 shadow-md flex justify-between items-center px-4">
-        <h1 class="text-2xl font-bold text-orange-500">Caixinha de Histórias</h1>
-        <button id="theme-toggle" class="text-orange-500 focus:outline-none">
-            <i id="theme-icon" class="fas fa-sun text-2xl"></i>
-        </button>
-    </nav>
-    <div class="container mx-auto px-4 py-4">
-        <div class="flex flex-col items-center space-y-4">
-            <input type="text" placeholder="Pesquisar histórias..." class="w-full max-w-md p-2 border border-gray-300 rounded-md"/>
-            <div id="message-counter" class="text-white text-lg font-bold"></div>
+<body>
+  <div id="app" class="min-h-screen flex flex-col bg-background">
+    <!-- Navbar -->
+    <nav class="bg-card w-full py-4 px-4 shadow-sm border-b">
+      <div class="container mx-auto">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </div>
+            <div class="ml-2">
+              <h1 class="text-xl font-semibold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">Story Neext</h1>
+            </div>
+          </div>
+          <button id="theme-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors" aria-label="Toggle theme">
+            <svg id="sun-icon" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <svg id="moon-icon" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+          </button>
         </div>
+      </div>
+    </nav>
+    
+    <!-- Main content -->
+    <div class="container mx-auto px-4 py-6 flex-1">
+      <!-- Header section -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold mb-1">Caixa de entrada</h2>
+        <p class="text-muted-foreground" id="stories-count">Carregando histórias...</p>
+      </div>
+      
+      <!-- Search and filter section -->
+      <div class="mb-8 flex flex-col md:flex-row gap-4">
+        <div class="flex-1 relative">
+          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Buscar mensagens..."
+            class="w-full pl-10 pr-4 py-2 bg-input text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+          />
+        </div>
+        <div>
+          <div class="dropdown inline-block relative">
+            <button id="filter-button" class="flex items-center px-3 py-2 text-sm rounded-md border border-input bg-secondary hover:bg-muted transition-colors">
+              <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              <span>Filtrar</span>
+            </button>
+            <div id="dropdown-menu" class="dropdown-menu absolute hidden right-0 w-[200px] bg-popover border border-border rounded-md shadow-lg mt-1 z-10">
+              <button class="filter-option w-full text-left px-3 py-2 hover:bg-muted cursor-pointer" data-value="all">Todas as mensagens</button>
+              <button class="filter-option w-full text-left px-3 py-2 hover:bg-muted cursor-pointer" data-value="hour">Última hora</button>
+              <button class="filter-option w-full text-left px-3 py-2 hover:bg-muted cursor-pointer" data-value="day">Hoje</button>
+              <button class="filter-option w-full text-left px-3 py-2 hover:bg-muted cursor-pointer" data-value="week">Esta semana</button>
+              <button class="filter-option w-full text-left px-3 py-2 hover:bg-muted cursor-pointer" data-value="month">Este mês</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Stories grid -->
+      <div id="loading-indicator" class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+      
+      <div id="stories-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden"></div>
+      
+      <div id="empty-state" class="text-center py-12 hidden">
+        <p class="text-muted-foreground text-lg">Nenhuma história encontrada</p>
+        <button id="clear-filters" class="mt-4 text-primary hover:underline">
+          Limpar filtros
+        </button>
+      </div>
     </div>
-    <div id="registros-container" class="space-y-4 container mx-auto px-4 py-4"></div>
-    <script>
-        const url = "https://script.google.com/macros/s/AKfycbz8kSNNEv8_wAkIJoyH0An2eagian11eWQztsmLNevOQh5rXm2wlbM-2uNF_aS4vnO8pg/exec?view=all";
 
-        function timeAgo(date) {
-            const now = new Date();
-            const seconds = Math.floor((now - new Date(date)) / 1000);
-            let interval = Math.floor(seconds / 31536000);
-            if (interval > 1) return interval + "a atrás";
-            interval = Math.floor(seconds / 2592000);
-            if (interval > 1) return interval + "m atrás";
-            interval = Math.floor(seconds / 86400);
-            if (interval > 1) return interval + "d atrás";
-            interval = Math.floor(seconds / 3600);
-            if (interval > 1) return interval + "h atrás";
-            interval = Math.floor(seconds / 60);
-            if (interval > 1) return interval + "min atrás";
-            return Math.floor(seconds) + "s atrás";
-        }
+    <!-- Toast container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
+  </div>
 
-        async function fetchData() {
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                return data;
-            } catch (err) {
-                console.error("Erro ao carregar registros:", err);
-                return [];
-            }
-        }
+  <script>
+    // Estado da aplicação
+    const state = {
+      stories: [],
+      loading: true,
+      searchTerm: "",
+      filter: "all",
+      filteredStories: [],
+      isDarkMode: false
+    };
 
-        function createCard(registro) {
-            const card = document.createElement("div");
-            card.className = "bg-white rounded-lg shadow-lg max-w-xs mx-auto";
+    // Elementos DOM
+    const elements = {
+      storiesCount: document.getElementById('stories-count'),
+      storiesGrid: document.getElementById('stories-grid'),
+      loadingIndicator: document.getElementById('loading-indicator'),
+      emptyState: document.getElementById('empty-state'),
+      searchInput: document.getElementById('search-input'),
+      filterButton: document.getElementById('filter-button'),
+      dropdownMenu: document.getElementById('dropdown-menu'),
+      clearFilters: document.getElementById('clear-filters'),
+      themeToggle: document.getElementById('theme-toggle'),
+      sunIcon: document.getElementById('sun-icon'),
+      moonIcon: document.getElementById('moon-icon')
+    };
 
-            const header = document.createElement("div");
-            header.className = "bg-gradient-to-r from-pink-500 to-purple-500 rounded-t-lg p-3";
-            header.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div class="flex space-x-1">
-                        <div class="w-1 h-1 bg-white rounded-full"></div>
-                        <div class="w-1 h-1 bg-white rounded-full"></div>
-                        <div class="w-1 h-1 bg-white rounded-full"></div>
-                    </div>
-                    <div class="text-white text-sm font-bold mx-auto">Mande sua história!!</div>
-                    <i class="bi bi-chat-right-text-fill text-white text-sm"></i>
-                </div>
-            `;
-            card.appendChild(header);
+    // Funções de utilidade
+    const timeAgo = (date) => {
+      const now = new Date();
+      const seconds = Math.floor((now.getTime() - new Date(date).getTime()) / 1000);
+      
+      let interval = Math.floor(seconds / 31536000);
+      if (interval > 1) return interval + "a atrás";
+      
+      interval = Math.floor(seconds / 2592000);
+      if (interval > 1) return interval + "m atrás";
+      
+      interval = Math.floor(seconds / 86400);
+      if (interval > 1) return interval + "d atrás";
+      
+      interval = Math.floor(seconds / 3600);
+      if (interval > 1) return interval + "h atrás";
+      
+      interval = Math.floor(seconds / 60);
+      if (interval > 1) return interval + "min atrás";
+      
+      return Math.floor(seconds) + "s atrás";
+    };
 
-            const content = document.createElement("div");
-            content.className = "p-3";
-            content.innerHTML = `
-                <div class="flex items-start mb-2">
-                    <svg class="w-4 h-4 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages">
-                        <path d="m5 8 6 6"/>
-                        <path d="m4 14 6-6 2-3"/>
-                        <path d="M2 5h12"/>
-                        <path d="M7 2h1"/>
-                        <path d="m22 22-5-10-5 10"/>
-                        <path d="M14 18h6"/>
-                    </svg>
-                    <p class="text-gray-800 text-sm flex-grow">${registro.historia}</p>
-                </div>
-                <div class="flex items-center mb-2">
-                    <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-check">
-                        <path d="M2 21a8 8 0 0 1 13.292-6"/>
-                        <circle cx="10" cy="8" r="5"/>
-                        <path d="m16 19 2 2 4-4"/>
-                    </svg>
-                    <div class="bg-purple-800 text-white rounded-full px-2 py-1">
-                        <p class="text-xs font-bold">${registro.nome}</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-gray-600 text-xs">${timeAgo(registro.dataHora)}</span>
-                </div>
-                <hr class="border-gray-300 mb-2"/>
-                <div class="text-center text-gray-600 text-xs flex items-center justify-between">
-                    <div class="flex items-center space-x-1">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pill">
-                            <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
-                            <path d="m8.5 8.5 7 7"></path>
-                        </svg>
-                        <span class="font-bold">Neext Story</span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-infinity">
-                                <path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"></path>
-                            </svg>
-                        </div>
-                        <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chrome">
-                                <circle cx="12" cy="12" r="10"/>
-                                <circle cx="12" cy="12" r="4"/>
-                                <line x1="21.17" x2="12" y1="8" y2="8"/>
-                                <line x1="3.95" x2="8.54" y1="6.06" y2="14"/>
-                                <line x1="10.88" x2="15.46" y1="21.94" y2="14"/>
-                            </svg>
-                        </div>
-                        <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-round">
-                                <path d="M10 2v6.292a7 7 0 1 0 4 0V2"></path>
-                                <path d="M5 15h14"></path>
-                                <path d="M8.5 2h7"></path>
-                            </svg>
-                        </div>
-                        <div class="w-8 h-8 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift">
-                                <rect x="3" y="8" width="18" height="4" rx="1"/>
-                                <path d="M12 8v13"/>
-                                <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/>
-                                <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            `;
-            card.appendChild(content);
-            return card;
-        }
+    const showToast = (message, type = 'info') => {
+      const toast = document.createElement('div');
+      toast.className = `p-4 mb-3 rounded-md text-white ${type === 'error' ? 'bg-destructive' : 'bg-primary'} shadow-lg`;
+      toast.innerHTML = message;
+      
+      const container = document.getElementById('toast-container');
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+        setTimeout(() => {
+          container.removeChild(toast);
+        }, 300);
+      }, 3000);
+    };
 
-        async function renderCards() {
-            const container = document.getElementById("registros-container");
-            const data = await fetchData();
-            const fragment = document.createDocumentFragment();
+    // Funções para manipulação de tema
+    const initTheme = () => {
+      const storedTheme = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      
+      if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+        document.documentElement.classList.add("dark");
+        elements.moonIcon.classList.add("hidden");
+        elements.sunIcon.classList.remove("hidden");
+        state.isDarkMode = true;
+      } else {
+        document.documentElement.classList.remove("dark");
+        elements.moonIcon.classList.remove("hidden");
+        elements.sunIcon.classList.add("hidden");
+        state.isDarkMode = false;
+      }
+    };
 
-            data.forEach(registro => {
-                const card = createCard(registro);
-                fragment.appendChild(card);
-            });
+    const toggleTheme = () => {
+      if (state.isDarkMode) {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+        elements.moonIcon.classList.remove("hidden");
+        elements.sunIcon.classList.add("hidden");
+        state.isDarkMode = false;
+      } else {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+        elements.moonIcon.classList.add("hidden");
+        elements.sunIcon.classList.remove("hidden");
+        state.isDarkMode = true;
+      }
+    };
 
-            container.appendChild(fragment);
+    // Funções para manipulação de dados
+    const fetchData = async () => {
+      const url = "https://script.google.com/macros/s/AKfycbz8kSNNEv8_wAkIJoyH0An2eagian11eWQztsmLNevOQh5rXm2wlbM-2uNF_aS4vnO8pg/exec?view=all";
+      
+      try {
+        state.loading = true;
+        updateUI();
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        state.stories = data;
+        applyFilters();
+        
+        state.loading = false;
+        updateUI();
+      } catch (error) {
+        console.error("Erro ao carregar registros:", error);
+        showToast("Não foi possível carregar as histórias. Tente novamente mais tarde.", "error");
+        
+        state.loading = false;
+        updateUI();
+      }
+    };
 
-            // Atualiza o contador de mensagens
-            const messageCounter = document.getElementById("message-counter");
-            messageCounter.textContent = `Total de mensagens: ${data.length}`;
-        }
-
-        document.addEventListener("DOMContentLoaded", renderCards);
-
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            } else {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            }
+    const applyFilters = () => {
+      let filtered = [...state.stories];
+      
+      // Aplicar filtro de busca
+      if (state.searchTerm) {
+        filtered = filtered.filter(
+          story => 
+            story.historia.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
+            story.nome.toLowerCase().includes(state.searchTerm.toLowerCase())
+        );
+      }
+      
+      // Aplicar filtro de tempo
+      const now = new Date();
+      
+      if (state.filter !== "all") {
+        filtered = filtered.filter(story => {
+          const storyDate = new Date(story.dataHora);
+          const timeDiff = now.getTime() - storyDate.getTime();
+          const hoursDiff = timeDiff / (1000 * 60 * 60);
+          const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+          
+          switch (state.filter) {
+            case "hour":
+              return hoursDiff <= 1;
+            case "day":
+              return daysDiff < 1;
+            case "week":
+              return daysDiff < 7;
+            case "month":
+              return daysDiff < 30;
+            default:
+              return true;
+          }
         });
-    </script>
+      }
+      
+      state.filteredStories = filtered;
+    };
+
+    // Funções de atualização da UI
+    const updateUI = () => {
+      // Atualizar contador de histórias
+      elements.storiesCount.textContent = `${state.filteredStories.length} ${state.filteredStories.length === 1 ? "história recebida" : "histórias recebidas"}`;
+      
+      // Mostrar/esconder componentes baseado no estado
+      if (state.loading) {
+        elements.loadingIndicator.classList.remove('hidden');
+        elements.storiesGrid.classList.add('hidden');
+        elements.emptyState.classList.add('hidden');
+      } else if (state.filteredStories.length === 0) {
+        elements.loadingIndicator.classList.add('hidden');
+        elements.storiesGrid.classList.add('hidden');
+        elements.emptyState.classList.remove('hidden');
+        
+        // Mostrar/esconder botão de limpar filtros
+        if (state.searchTerm || state.filter !== "all") {
+          elements.clearFilters.classList.remove('hidden');
+        } else {
+          elements.clearFilters.classList.add('hidden');
+        }
+      } else {
+        elements.loadingIndicator.classList.add('hidden');
+        elements.storiesGrid.classList.remove('hidden');
+        elements.emptyState.classList.add('hidden');
+        
+        // Renderizar histórias
+        renderStories();
+      }
+    };
+
+    const renderStories = () => {
+      elements.storiesGrid.innerHTML = '';
+      
+      state.filteredStories.forEach((story, index) => {
+        const storyCard = document.createElement('div');
+        storyCard.className = 'story-card max-w-xs w-full mx-auto animate-fade-in';
+        
+        storyCard.innerHTML = `
+          <div class="story-card-header">
+            <div class="flex justify-between items-center">
+              <div class="flex space-x-1">
+                <div class="w-1 h-1 bg-white rounded-full"></div>
+                <div class="w-1 h-1 bg-white rounded-full"></div>
+                <div class="w-1 h-1 bg-white rounded-full"></div>
+              </div>
+              <div class="text-white text-sm font-bold mx-auto">Mande sua história!!</div>
+              <i class="bi bi-chat-right-text-fill text-white text-sm"></i>
+            </div>
+          </div>
+
+          <div class="p-4">
+            <div class="flex items-start mb-3">
+              <svg class="w-4 h-4 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#gradientA)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                  <linearGradient id="gradientA" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#ef4444" />
+                    <stop offset="100%" stop-color="#f97316" />
+                  </linearGradient>
+                </defs>
+                <path d="M3.5 13h6" />
+                <path d="m2 16 4.5-9 4.5 9" />
+                <path d="M18 7v9" />
+                <path d="m14 12 4 4 4-4" />
+              </svg>
+              <p class="text-foreground text-sm flex-grow">${story.historia}</p>
+            </div>
+
+            <div class="flex items-center mb-3">
+              <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#gradientB)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                  <linearGradient id="gradientB" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#ec4899" />
+                  </linearGradient>
+                </defs>
+                <path d="M10 2v2" />
+                <path d="M14 2v2" />
+                <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" />
+                <path d="M6 2v2" />
+              </svg>
+              <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full px-3 py-1">
+                <p class="text-white text-xs font-bold">${story.nome}</p>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-muted-foreground text-xs">${timeAgo(story.dataHora)}</span>
+            </div>
+
+            <hr class="border-border mb-3" />
+
+            <div class="text-center text-muted-foreground text-xs flex items-center justify-between">
+              <div class="flex items-center space-x-1">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#gradientC)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <defs>
+                    <linearGradient id="gradientC" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#f43f5e" />
+                      <stop offset="100%" stop-color="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="20" height="5" x="2" y="3" rx="1" />
+                  <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+                  <path d="M10 12h4" />
+                </svg>
+                <span class="font-bold bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">Neext Story</span>
+              </div>
+
+              <div class="flex space-x-2">
+                <div class="story-icon-circle story-icon-circle-1">
+                  <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"></path>
+                  </svg>
+                </div>
+                <div class="story-icon-circle story-icon-circle-2">
+                  <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="4" />
+                    <line x1="21.17" x2="12" y1="8" y2="8" />
+                    <line x1="3.95" x2="8.54" y1="6.06" y2="14" />
+                    <line x1="10.88" x2="15.46" y1="21.94" y2="14" />
+                  </svg>
+                </div>
+                <div class="story-icon-circle story-icon-circle-3">
+                  <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10 2v6.292a7 7 0 1 0 4 0V2"></path>
+                    <path d="M5 15h14"></path>
+                    <path d="M8.5 2h7"></path>
+                  </svg>
+                </div>
+                <div class="story-icon-circle story-icon-circle-4">
+                  <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="8" width="18" height="4" rx="1" />
+                    <path d="M12 8v13" />
+                    <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" />
+                    <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        elements.storiesGrid.appendChild(storyCard);
+      });
+    };
+
+    // Event listeners
+    const setupEventListeners = () => {
+      // Search input
+      elements.searchInput.addEventListener('input', (e) => {
+        state.searchTerm = e.target.value;
+        applyFilters();
+        updateUI();
+      });
+      
+      // Filter dropdown
+      elements.filterButton.addEventListener('click', () => {
+        elements.dropdownMenu.classList.toggle('hidden');
+      });
+      
+      // Fechar dropdown ao clicar fora
+      document.addEventListener('click', (e) => {
+        if (!elements.filterButton.contains(e.target) && !elements.dropdownMenu.contains(e.target)) {
+          elements.dropdownMenu.classList.add('hidden');
+        }
+      });
+      
+      // Filter options
+      document.querySelectorAll('.filter-option').forEach(option => {
+        option.addEventListener('click', () => {
+          state.filter = option.getAttribute('data-value');
+          elements.dropdownMenu.classList.add('hidden');
+          applyFilters();
+          updateUI();
+        });
+      });
+      
+      // Clear filters
+      elements.clearFilters.addEventListener('click', () => {
+        state.searchTerm = "";
+        state.filter = "all";
+        elements.searchInput.value = "";
+        applyFilters();
+        updateUI();
+      });
+      
+      // Theme toggle
+      elements.themeToggle.addEventListener('click', toggleTheme);
+    };
+
+    // Inicialização
+    const init = () => {
+      initTheme();
+      setupEventListeners();
+      fetchData();
+    };
+
+    // Iniciar aplicação
+    init();
+  </script>
 </body>
 </html>
