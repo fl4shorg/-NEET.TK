@@ -5,7 +5,6 @@
     {"tipo": "⊠", "texto": "Conteúdo +18"},
     {"tipo": "⊠", "texto": "Ban Sem motivo"},
     {"tipo": "⊠", "texto": "Figurinhas Com Agressão animal ou humana"},
-    {"tipo": "⊠", "texto": "Conversar"},
     {"tipo": "⊠", "texto": "Figurinhas racistas"},
         {"tipo": "⊠", "texto": "Inatividade"},
     {"tipo": "⊠", "texto": "Nazismo"},
@@ -21,6 +20,7 @@
     {"tipo": "□", "texto": "Todas as idades"},
     {"tipo": "□", "texto": "Floodar figurinhas"},
     {"tipo": "□", "texto": "Shitpost"},
+        {"tipo": "□", "texto": "Conversar"},
     {"tipo": "□", "texto": "Imagens apenas em visu única"}
   ],
   "legenda":          "Legenda 𖡡",
