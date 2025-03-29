@@ -4,1353 +4,1282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoveNEEXT - Encontre seu amor</title>
+    <title>Love Neext</title>
     <style>
+        /* Estilos gerais */
         :root {
-            --background: #fffafc;
-            --foreground: #3b1e2c;
-            --primary: #ff3385;
-            --primary-hover: #e01e65;
-            --secondary: #ffb3d1;
-            --muted: #f9ecf1;
-            --muted-foreground: #7f5367;
-            --accent: #ffb3d1;
-            --border: #f0d4e0;
-            --input: #f0d4e0;
-            --ring: #ff3385;
-            --error: #e01e65;
-            --success: #34a853;
+            --love-color: #ff3b82;
+            --love-dark: #e62d74;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            border-color: var(--border);
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background-color: var(--background);
-            color: var(--foreground);
-            line-height: 1.5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
             overflow-x: hidden;
+            background: linear-gradient(to bottom, #ffffff, #fdf2f8);
+            color: #1a1a1a;
         }
-
+        
         .container {
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 20px;
         }
-
-        /* Navbar styles */
-        .navbar {
-            background-color: var(--background);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            position: fixed;
+        
+        /* Header */
+        header {
+            width: 100%;
+            padding: 16px;
+            position: absolute;
             top: 0;
             left: 0;
-            right: 0;
             z-index: 50;
-            padding: 0.75rem 1rem;
         }
-
-        .navbar-container {
+        
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
         }
-
-        .navbar-logo {
+        
+        .logo {
             display: flex;
             align-items: center;
+            gap: 8px;
             font-weight: bold;
-            font-size: 1.25rem;
-            text-decoration: none;
-            color: var(--foreground);
-        }
-
-        .heart-icon {
-            color: var(--primary);
-            margin-right: 0.5rem;
-            fill: var(--primary);
-        }
-
-        .navbar-links {
-            display: none;
-        }
-
-        .navbar-links a {
-            color: var(--muted-foreground);
-            text-decoration: none;
-            margin-left: 1rem;
-            transition: color 0.2s;
-        }
-
-        .navbar-links a:hover {
-            color: var(--primary);
-        }
-
-        .navbar-button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: background-color 0.2s;
-        }
-
-        .navbar-button:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .mobile-menu-button {
-            display: block;
-            background: none;
-            border: none;
-            color: var(--foreground);
-            padding: 0.5rem;
-            cursor: pointer;
-        }
-
-        .mobile-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: var(--background);
-            backdrop-filter: blur(10px);
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .mobile-menu.active {
-            display: flex;
-        }
-
-        .mobile-menu a {
-            color: var(--muted-foreground);
-            text-decoration: none;
-            padding: 0.25rem 0.5rem;
-            transition: color 0.2s;
-        }
-
-        .mobile-menu a:hover {
-            color: var(--primary);
-        }
-
-        /* Main content styles */
-        .main {
-            padding-top: 5rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .section {
-            padding: 2.5rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card {
-            background-color: var(--muted);
-            border-radius: 0.75rem;
-            padding: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Form styles */
-        .form-container {
-            max-width: 48rem;
-            margin: 0 auto;
-        }
-
-        .page-title {
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: 1.875rem;
-            font-weight: bold;
-        }
-
-        .page-description {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--muted-foreground);
-            font-size: 1.125rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            height: 2.5rem;
-            padding: 0 0.75rem;
-            background-color: var(--background);
-            border: 1px solid var(--input);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .form-textarea {
-            width: 100%;
-            min-height: 6rem;
-            padding: 0.5rem 0.75rem;
-            background-color: var(--background);
-            border: 1px solid var(--input);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .form-input:focus, 
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--ring);
-            box-shadow: 0 0 0 2px rgba(255, 51, 133, 0.25);
-        }
-
-        .form-input:disabled,
-        .form-textarea:disabled,
-        .form-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .form-file-input {
-            cursor: pointer;
-        }
-
-        .file-info {
-            font-size: 0.875rem;
-            color: var(--muted-foreground);
-            margin-top: 0.25rem;
-        }
-
-        .img-preview-container {
-            margin-top: 1rem;
-            display: none;
-            text-align: center;
-        }
-
-        .img-preview {
-            max-height: 12rem;
-            border-radius: 0.5rem;
-        }
-
-        .progress-container {
-            width: 100%;
-            height: 0.5rem;
-            background-color: var(--muted);
-            border-radius: 9999px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-            display: none;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .form-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .form-button:hover:not(:disabled) {
-            background-color: var(--primary-hover);
-        }
-
-        .button-loader {
-            margin-right: 0.5rem;
-            display: none;
-        }
-
-        .spinner {
-            width: 1.25rem;
-            height: 1.25rem;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Toast notification */
-        .toast-container {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            max-width: 350px;
-            z-index: 100;
-        }
-
-        .toast {
-            background-color: var(--background);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-top: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transform: translateY(100%);
-            opacity: 0;
-            transition: transform 0.3s, opacity 0.3s;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast-success {
-            border-left: 4px solid var(--success);
-        }
-
-        .toast-error {
-            border-left: 4px solid var(--error);
-        }
-
-        .toast-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .toast-message {
-            font-size: 0.875rem;
-            color: var(--muted-foreground);
-        }
-
-        /* 3D scene placeholder */
-        .scene-container {
-            width: 100%;
-            height: 30vh;
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-            border-radius: 0.75rem;
-            margin: 3rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .floating-heart {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary);
-            transform: rotate(45deg);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .floating-heart:before,
-        .floating-heart:after {
-            content: "";
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .floating-heart:before {
-            top: -25px;
-            left: 0;
-        }
-
-        .floating-heart:after {
-            top: 0;
-            left: -25px;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(45deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(45deg);
-            }
-        }
-
-        .heart1 {
-            top: 30%;
-            left: 20%;
-            animation-delay: 0s;
-        }
-
-        .heart2 {
-            top: 50%;
-            left: 50%;
-            animation-delay: 0.5s;
-        }
-
-        .heart3 {
-            top: 25%;
-            left: 75%;
-            animation-delay: 1s;
-        }
-
-        /* Footer styles */
-        .footer {
-            background-color: var(--muted);
-            padding: 2.5rem 0 1.5rem;
-            margin-top: auto;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .footer-logo-text {
-            font-weight: bold;
-            font-size: 1.25rem;
-        }
-
-        .footer-description {
-            font-size: 0.875rem;
-            color: var(--muted-foreground);
-        }
-
-        .footer-heading {
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-link {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-link a {
-            font-size: 0.875rem;
-            color: var(--muted-foreground);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-link a:hover {
-            color: var(--primary);
-        }
-
-        .footer-divider {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .footer-copyright {
-            font-size: 0.875rem;
-            color: var(--muted-foreground);
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-made-with {
-            font-size: 0.875rem;
-            color: var(--muted-foreground);
-            display: flex;
-            align-items: center;
-        }
-
-        .bg-accent {
-            position: absolute;
-            width: 18rem;
-            height: 18rem;
-            border-radius: 9999px;
-            background-color: var(--secondary);
-            opacity: 0.1;
-            filter: blur(3rem);
-            z-index: -1;
-        }
-
-        .bg-accent-1 {
-            top: 2.5rem;
-            left: -5rem;
-        }
-
-        .bg-accent-2 {
-            bottom: 2.5rem;
-            right: -5rem;
-        }
-
-        .made-with-heart {
-            display: inline-block;
-            color: var(--primary);
-            margin: 0 0.25rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Hero section */
-        .hero-section {
-            padding-top: 2rem;
-        }
-
-        .hero-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #ff3385, #ffb3d1);
+            font-size: 20px;
+            background: linear-gradient(to right, #ff3b82, #9f7aea);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
             color: transparent;
         }
-
-        .hero-description {
-            font-size: 1.125rem;
-            color: var(--muted-foreground);
-            margin-bottom: 2rem;
-            max-width: 600px;
+        
+        .nav-links {
+            display: none;
         }
-
-        .hero-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 2rem;
+        
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+            }
         }
-
-        .hero-button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            font-weight: 500;
+        
+        .nav-links a {
+            color: rgba(26, 26, 26, 0.8);
             text-decoration: none;
-            border-radius: 0.5rem;
-            transition: all 0.2s;
+            transition: color 0.3s;
         }
-
-        .hero-button-primary {
-            background-color: var(--primary);
-            color: white;
+        
+        .nav-links a:hover {
+            color: var(--love-color);
         }
-
-        .hero-button-primary:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .hero-button-secondary {
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .hero-button-secondary:hover {
-            background-color: rgba(255, 51, 133, 0.1);
-        }
-
-        /* Features section */
-        .features-section {
-            padding: 4rem 0;
-            background-color: var(--muted);
-        }
-
-        .features-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 3rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background-color: var(--background);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-icon {
-            width: 3rem;
-            height: 3rem;
-            background-color: rgba(255, 51, 133, 0.1);
-            border-radius: 9999px;
-            display: flex;
+        
+        .btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
+            gap: 8px;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
         }
-
-        .feature-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+        
+        .btn-primary {
+            background-color: var(--love-color);
+            color: white;
         }
-
-        .feature-description {
-            color: var(--muted-foreground);
-            font-size: 0.875rem;
+        
+        .btn-primary:hover {
+            background-color: var(--love-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 59, 130, 0.3);
         }
-
-        /* CTA section */
-        .cta-section {
-            padding: 4rem 0;
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid rgba(255, 59, 130, 0.3);
+            color: var(--love-color);
+        }
+        
+        .btn-outline:hover {
+            color: var(--love-dark);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding-top: 120px;
+            padding-bottom: 80px;
             text-align: center;
             position: relative;
         }
-
-        .cta-title {
-            font-size: 2rem;
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin-bottom: 24px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            line-height: 1.2;
         }
-
-        .cta-description {
-            font-size: 1.125rem;
-            color: var(--muted-foreground);
-            margin-bottom: 2rem;
+        
+        .hero p {
+            color: rgba(26, 26, 26, 0.7);
+            font-size: 18px;
             max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto 40px;
         }
-
-        /* Loading screen */
-        .loading-screen {
-            position: fixed;
+        
+        .hero-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+            
+            .hero-cta {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #ff3b82, #9f7aea);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        /* Decorative elements */
+        .decorative-bg {
+            position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--background);
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -10;
+        }
+        
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+        }
+        
+        .blob-1 {
+            top: -80px;
+            left: -80px;
+            width: 320px;
+            height: 320px;
+            background-color: #f3e8ff;
+        }
+        
+        .blob-2 {
+            top: 20%;
+            right: -80px;
+            width: 240px;
+            height: 240px;
+            background-color: #ffecf0;
+        }
+        
+        .blob-3 {
+            bottom: 20%;
+            left: -80px;
+            width: 280px;
+            height: 280px;
+            background-color: #fef3c7;
+        }
+        
+        /* 3D Love Box */
+        .love-box-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            height: 320px;
+            margin: 64px auto 0;
+            perspective: 1000px;
+        }
+        
+        .love-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        
+        .love-card {
+            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(255, 59, 130, 0.2);
+            text-align: center;
+            padding: 24px;
+            animation: pulse 4s infinite;
         }
-
-        .loading-heart {
-            width: 4rem;
-            height: 4rem;
-            fill: var(--primary);
-            color: var(--primary);
-            animation: pulse 1.5s infinite;
-        }
-
-        .loading-text {
-            margin-top: 1rem;
-            font-size: 1.25rem;
-            font-weight: 500;
-        }
-
-        /* Home/Index page specific styles */
-        .index-main-content {
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 4rem;
-        }
-
-        /* Media queries */
-        @media (min-width: 640px) {
-            .hero-buttons {
-                flex-direction: row;
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 10px 30px rgba(255, 59, 130, 0.2);
             }
-
-            .footer-grid {
+            50% {
+                box-shadow: 0 10px 40px rgba(255, 59, 130, 0.4);
+            }
+            100% {
+                box-shadow: 0 10px 30px rgba(255, 59, 130, 0.2);
+            }
+        }
+        
+        .love-heart {
+            width: 96px;
+            height: 96px;
+            margin-bottom: 16px;
+            color: var(--love-color);
+            fill: var(--love-color);
+            animation: beat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes beat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        .floating-heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            color: var(--love-color);
+            fill: var(--love-color);
+            opacity: 0.5;
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        .heart-1 {
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+        
+        .heart-2 {
+            top: 10%;
+            right: 10%;
+            animation-delay: 0.5s;
+        }
+        
+        .heart-3 {
+            bottom: 10%;
+            left: 20%;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: spin 10s linear infinite;
+        }
+        
+        .circle-1 {
+            top: -24px;
+            left: -24px;
+            width: 48px;
+            height: 48px;
+            background-color: rgba(255, 187, 209, 0.7);
+        }
+        
+        .circle-2 {
+            bottom: -32px;
+            right: -32px;
+            width: 64px;
+            height: 64px;
+            background-color: rgba(209, 187, 255, 0.7);
+            animation-direction: reverse;
+        }
+        
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Como Funciona */
+        .section {
+            padding: 64px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-header p {
+            color: rgba(26, 26, 26, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .steps-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .step-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background-color: #ffecf0;
+            color: var(--love-color);
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .step-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .step-card p {
+            color: rgba(26, 26, 26, 0.7);
+        }
+        
+        /* Sobre Nós */
+        .about-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(255, 59, 130, 0.1);
+        }
+        
+        .about-card h2 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .about-card p {
+            font-size: 18px;
+            color: rgba(26, 26, 26, 0.8);
+            margin-bottom: 16px;
+        }
+        
+        /* Formulário */
+        .form-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(255, 59, 130, 0.1);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .form-header h2 {
+            font-size: 28px;
+            margin: 16px 0 8px;
+        }
+        
+        .form-header p {
+            color: rgba(26, 26, 26, 0.7);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        
+        @media (min-width: 768px) {
+            .form-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-
+        
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--love-color);
+        }
+        
+        textarea {
+            min-height: 128px;
+            resize: vertical;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(255, 59, 130, 0.2);
+        }
+        
+        .image-preview {
+            width: 160px;
+            height: 160px;
+            margin: 16px auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 59, 130, 0.2);
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .help-text {
+            font-size: 12px;
+            color: rgba(26, 26, 26, 0.6);
+            margin-top: 4px;
+        }
+        
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-icon {
+            width: 56px;
+            height: 56px;
+            background-color: #ffecf0;
+            color: var(--love-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .faq-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .accordion {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .accordion-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .accordion-header {
+            padding: 16px 0;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .accordion-content p {
+            padding: 0 0 16px;
+            color: rgba(26, 26, 26, 0.8);
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+        
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-item.active .accordion-content {
+            max-height: 300px;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            padding: 32px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .footer-top {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: center;
+        }
+        
         @media (min-width: 768px) {
-            .navbar-links {
-                display: flex;
-                align-items: center;
-            }
-
-            .mobile-menu-button {
-                display: none;
-            }
-
-            .hero-title {
-                font-size: 3rem;
-            }
-
-            .features-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .footer-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .footer-divider {
+            .footer-top {
                 flex-direction: row;
-                justify-content: space-between;
             }
-
-            .footer-copyright {
-                margin-bottom: 0;
-            }
-
-            .hero-container {
+            
+            .footer-links {
                 flex-direction: row;
+                gap: 32px;
                 text-align: left;
-                align-items: flex-start;
-                justify-content: space-between;
             }
-
-            .hero-content {
-                width: 50%;
+        }
+        
+        .footer-links a {
+            color: rgba(26, 26, 26, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--love-color);
+        }
+        
+        .footer-bottom {
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
             }
-
-            .hero-visual {
-                width: 45%;
+        }
+        
+        .footer-bottom p {
+            font-size: 14px;
+            color: rgba(26, 26, 26, 0.6);
+        }
+        
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toast {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s forwards;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
+        }
+        
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+        
+        .toast-success {
+            background-color: #dcfce7;
+            border-left: 4px solid #16a34a;
+            color: #166534;
+        }
+        
+        .toast-error {
+            background-color: #fee2e2;
+            border-left: 4px solid #dc2626;
+            color: #991b1b;
+        }
+        
+        .toast-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: inherit;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        
+        .toast-close:hover {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <svg class="loading-heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-        </svg>
-        <p class="loading-text">Carregando o amor...</p>
+    <!-- Decorative Background -->
+    <div class="decorative-bg">
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
+        <div class="bg-blob blob-3"></div>
     </div>
-
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="#" class="navbar-logo">
-                <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                </svg>
-                <span>LoveNEEXT</span>
-            </a>
-
-            <div class="navbar-links">
-                <a href="#home">Home</a>
-                <a href="#como-funciona">Como Funciona</a>
-                <a href="#sobre">Sobre</a>
-                <a href="#cadastro" class="navbar-button">Cadastre-se</a>
-            </div>
-
-            <button class="mobile-menu-button" id="mobileMenuButton">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="4" x2="20" y1="12" y2="12"/>
-                    <line x1="4" x2="20" y1="6" y2="6"/>
-                    <line x1="4" x2="20" y1="18" y2="18"/>
-                </svg>
-            </button>
-        </div>
-
-        <div class="mobile-menu" id="mobileMenu">
-            <a href="#home">Home</a>
-            <a href="#como-funciona">Como Funciona</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#cadastro" class="navbar-button">Cadastre-se</a>
-        </div>
-    </nav>
-
-    <!-- Main content -->
-    <main class="main">
-        <!-- Home section -->
-        <section id="home" class="section hero-section">
-            <div class="container">
-                <div class="hero-container">
-                    <div class="hero-content">
-                        <h1 class="hero-title">Encontre seu amor na comunidade NEEXT</h1>
-                        <p class="hero-description">
-                            Conectamos pessoas apaixonadas pela tecnologia que buscam relacionamentos autênticos.
-                        </p>
-                        <div class="hero-buttons">
-                            <a href="#cadastro" class="hero-button hero-button-primary">Cadastre-se</a>
-                            <a href="#como-funciona" class="hero-button hero-button-secondary">Como Funciona</a>
-                        </div>
-                    </div>
-                    <div class="hero-visual">
-                        <!-- 3D Scene representation -->
-                        <div class="scene-container">
-                            <div class="floating-heart heart1"></div>
-                            <div class="floating-heart heart2"></div>
-                            <div class="floating-heart heart3"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Background elements -->
-            <div class="bg-accent bg-accent-1"></div>
-            <div class="bg-accent bg-accent-2"></div>
-        </section>
-        
-        <!-- Features section -->
-        <section id="como-funciona" class="section features-section">
-            <div class="container">
-                <h2 class="features-title">Por que escolher o LoveNEEXT?</h2>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
-                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Comunidade Exclusiva</h3>
-                        <p class="feature-description">
-                            Faça parte de uma comunidade exclusiva de pessoas com interesses em comum.
-                        </p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Cadastro Simples</h3>
-                        <p class="feature-description">
-                            Processo de cadastro rápido e fácil para começar a encontrar matches.
-                        </p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Conexões Reais</h3>
-                        <p class="feature-description">
-                            Criamos um ambiente para conexões autênticas e relacionamentos duradouros.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- CTA section -->
-        <section class="section cta-section">
-            <div class="container">
-                <h2 class="cta-title">Pronto para encontrar seu match?</h2>
-                <p class="cta-description">
-                    Junte-se a milhares de pessoas da comunidade NEEXT que já encontraram o amor.
-                </p>
-                <a href="#cadastro" class="hero-button hero-button-primary">Cadastre-se Agora</a>
-            </div>
-            
-            <!-- Decorative elements -->
-            <div class="bg-accent bg-accent-1"></div>
-            <div class="bg-accent bg-accent-2"></div>
-        </section>
-
-        <!-- Registration Form section -->
-        <section id="cadastro" class="section">
-            <div class="container">
-                <div class="form-container">
-                    <h1 class="page-title">Cadastre-se no LoveNEEXT</h1>
-                    <p class="page-description">
-                        Preencha o formulário abaixo para começar sua jornada rumo ao amor
-                    </p>
-
-                    <div class="card">
-                        <form id="registrationForm">
-                            <div class="form-group">
-                                <label for="name" class="form-label">Nome </label>
-                                <input
-                                    id="name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Seu nome "
-                                    required
-                                />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="age" class="form-label">Idade</label>
-                                <input
-                                    id="age"
-                                    type="number"
-                                    class="form-input"
-                                    placeholder="Sua idade"
-                                    min="1"
-                                    max="120"
-                                    required
-                                />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="description" class="form-label">Descrição</label>
-                                <textarea
-                                    id="description"
-                                    class="form-textarea"
-                                    placeholder="Fale um pouco sobre você"
-                                    rows="4"
-                                ></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="image" class="form-label">Foto (opcional)</label>
-                                <input
-                                    id="image"
-                                    type="file"
-                                    class="form-input form-file-input"
-                                    accept="image/*"
-                                />
-                                <div id="fileInfo" class="file-info"></div>
-                                
-                                <div id="progressContainer" class="progress-container">
-                                    <div id="progressBar" class="progress-bar"></div>
-                                </div>
-                                
-                                <div id="previewContainer" class="img-preview-container">
-                                    <img id="imagePreview" class="img-preview" src="#" alt="Preview" />
-                                </div>
-                            </div>
-
-                            <button type="submit" id="submitButton" class="form-button">
-                                <span id="buttonLoader" class="button-loader">
-                                    <div class="spinner"></div>
-                                </span>
-                                <span id="buttonText">Enviar Cadastro</span>
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Made with love for NEEXT -->
-                    <div style="text-align: center; margin-top: 2rem;">
-                        <p style="display: flex; align-items: center; justify-content: center; color: var(--muted-foreground);">
-                            Feito com 
-                            <span class="made-with-heart">❤️</span> 
-                            para a comunidade NEEXT
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Background elements -->
-            <div class="bg-accent bg-accent-1"></div>
-            <div class="bg-accent bg-accent-2"></div>
-        </section>
-
-        <!-- About section -->
-        <section id="sobre" class="section features-section">
-            <div class="container">
-                <h2 class="features-title">Sobre o LoveNEEXT</h2>
-                <div style="text-align: center; max-width: 800px; margin: 0 auto;">
-                    <p style="margin-bottom: 1.5rem;">
-                        O LoveNEEXT nasceu da ideia de criar um ambiente seguro e acolhedor para que membros da comunidade NEEXT possam encontrar parceiros com interesses em comum.
-                    </p>
-                    <p style="margin-bottom: 1.5rem;">
-                        Nossa missão é conectar pessoas que compartilham a paixão pela tecnologia e inovação, facilitando o surgimento de relacionamentos autênticos e duradouros.
-                    </p>
-                    <p>
-                        Acreditamos que os melhores relacionamentos começam com valores e interesses compartilhados, e a comunidade NEEXT é o lugar perfeito para encontrar pessoas que pensam como você.
-                    </p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
+    
+    <!-- Header -->
+    <header>
         <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <div class="footer-logo">
-                        <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            <nav>
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    <span>Love Neext</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#sobre">Sobre</a>
+                    <a href="#como-funciona">Como Funciona</a>
+                    <a href="#form">Enviar Love</a>
+                    <a href="#faq">Dúvidas</a>
+                </div>
+                <a href="#form" class="btn btn-primary">Enviar Love</a>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Encontre seu <span class="gradient-text">novo amor</span> com a Neext</h1>
+                <p>Envie seu perfil para a nossa caixinha de amor e tenha a chance de ser divulgado nos canais da Neext, encontrando seu par ideal.</p>
+                <div class="hero-cta">
+                    <a href="#form" class="btn btn-primary">
+                        Enviar Love
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
                         </svg>
-                        <h3 class="footer-logo-text">LoveNEEXT</h3>
-                    </div>
-                    <p class="footer-description">
-                        Encontre seu próximo amor na comunidade NEEXT.
-                    </p>
-                </div>
-                
-                <div>
-                    <h4 class="footer-heading">Links Rápidos</h4>
-                    <ul class="footer-links">
-                        <li class="footer-link">
-                            <a href="#home">Home</a>
-                        </li>
-                        <li class="footer-link">
-                            <a href="#como-funciona">Como Funciona</a>
-                        </li>
-                        <li class="footer-link">
-                            <a href="#sobre">Sobre</a>
-                        </li>
-                        <li class="footer-link">
-                            <a href="#cadastro">Cadastre-se</a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="footer-heading">Legal</h4>
-                    <ul class="footer-links">
-                        <li class="footer-link">
-                            <a href="#">Termos de Uso</a>
-                        </li>
-                        <li class="footer-link">
-                            <a href="#">Privacidade</a>
-                        </li>
-                        <li class="footer-link">
-                            <a href="#">Cookies</a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="footer-heading">Contato</h4>
-                    <ul class="footer-links">
-                        <li class="footer-link">
-                            neextsupport@onmail.com </li>
-                        <li class="footer-link">
-                            São Paulo, Brasil
-                        </li>
-                    </ul>
+                    </a>
+                    <a href="#como-funciona" class="btn btn-outline">
+                        Saiba mais
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
             
-            <div class="footer-divider">
-                <p class="footer-copyright">
-                    &copy; <span id="currentYear"></span> LoveNEEXT. Todos os direitos reservados.
-                </p>
-                <div class="footer-made-with">
-                    Feito com <span class="made-with-heart">❤️</span> para a comunidade NEEXT
+            <!-- 3D Love Box -->
+            <div class="love-box-container">
+                <div class="love-box">
+                    <div class="love-card">
+                        <!-- Floating hearts -->
+                        <svg class="floating-heart heart-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        <svg class="floating-heart heart-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        <svg class="floating-heart heart-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        
+                        <!-- Main heart -->
+                        <svg class="love-heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        
+                        <h3 class="gradient-text" style="font-size: 24px; font-weight: bold; margin-bottom: 8px;">Love Box</h3>
+                        <p style="color: rgba(26, 26, 26, 0.7);">Envie seu amor para Neext</p>
+                        
+                        <!-- Decorative circles -->
+                        <div class="decorative-circle circle-1"></div>
+                        <div class="decorative-circle circle-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Como Funciona Section -->
+    <section id="como-funciona" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Como <span class="gradient-text">Funciona</span></h2>
+                <p>Três passos simples para encontrar um novo amor através da caixinha Love Neext</p>
+            </div>
+            
+            <div class="steps-container">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Preencha o formulário</h3>
+                    <p>Complete o formulário com seus dados, uma descrição sobre você e adicione sua melhor foto para aumentar suas chances.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Avaliação da equipe</h3>
+                    <p>Nossa equipe irá analisar seu perfil e selecionar os mais compatíveis com o público da Neext.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Divulgação e conexão</h3>
+                    <p>Se selecionado, seu perfil será divulgado nos canais da Neext, permitindo que outras pessoas interessadas entrem em contato.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sobre Section -->
+    <section id="sobre" class="section">
+        <div class="container">
+            <div class="about-card">
+                <h2>Sobre o <span class="gradient-text">Love Neext</span></h2>
+                <p>A Caixinha Love Neext foi criada com o objetivo de unir pessoas que compartilham interesses, valores e buscam uma conexão genuína. Nosso diferencial está na divulgação dos perfis para uma comunidade engajada e diversificada.</p>
+                <p>Acreditamos no poder das conexões reais e trabalhamos para criar oportunidades de encontros autênticos. Cada perfil é cuidadosamente avaliado pela nossa equipe para garantir uma experiência segura e de qualidade para todos os participantes.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Form Section -->
+    <section id="form" class="section">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <svg class="love-heart" style="width: 40px; height: 40px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    <h2>Envie seu <span class="gradient-text">Love Neext</span></h2>
+                    <p>Preencha o formulário abaixo e seja divulgado nos canais da Neext!</p>
+                </div>
+                
+                <form id="loveForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nome">Nome completo</label>
+                            <input type="text" id="nome" name="nome" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idade">Idade</label>
+                            <input type="number" id="idade" name="idade" min="1" max="120" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefone">Telefone (WhatsApp)</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="Digite seu telefone (Ex: 11999887766)" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="descricao">Descrição (conte sobre você)</label>
+                        <textarea id="descricao" name="descricao" placeholder="Conte um pouco sobre você, seus gostos e o que procura..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="imagem">Sua foto (opcional)</label>
+                        <input type="file" id="imagem" name="imagem" accept="image/*">
+                        <p class="help-text">Máximo 5MB. Formato recomendado: quadrado.</p>
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img src="#" alt="Pré-visualização">
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="submitBtn" class="btn btn-primary btn-submit">Enviar meu Love Neext</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section id="faq" class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="faq-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <path d="M12 17h.01"></path>
+                    </svg>
+                </div>
+                <h2>Dúvidas Frequentes</h2>
+                <p>Tire todas as suas dúvidas sobre a caixinha de Love Neext</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>O que é o Love Neext?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>O Love Neext é uma plataforma onde você pode enviar seu perfil para ter a oportunidade de encontrar um novo amor. 
+                            Ao preencher o formulário, seus dados podem ser divulgados no canal da Neext, permitindo que outras pessoas conheçam você.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Como funciona o processo de divulgação?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Após enviar seu formulário com seus dados e foto, nossa equipe fará uma avaliação. Se aprovado, seu perfil poderá 
+                            ser divulgado nos canais da Neext, onde outras pessoas poderão conhecer você. Não garantimos a divulgação de todos os perfis.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>É necessário enviar uma foto?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>A foto não é obrigatória, mas é altamente recomendada para aumentar suas chances de divulgação e sucesso. 
+                            Perfis com fotos recebem mais atenção. Use uma foto clara, recente e que mostre bem seu rosto.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>O que devo escrever na descrição?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Na descrição, recomendamos que você fale sobre sua personalidade, interesses, hobbies e o que busca em um relacionamento. 
+                            Seja autêntico e verdadeiro. Evite textos muito curtos ou genéricos. Quanto mais detalhes você fornecer, maiores são as chances 
+                            de encontrar alguém compatível.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>É gratuito participar?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Sim, o envio do seu perfil para o Love Neext é totalmente gratuito. Não cobramos nenhuma taxa para receber ou processar seu cadastro.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Como saberei se fui selecionado(a)?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Se seu perfil for selecionado para divulgação, entraremos em contato através do número de telefone que você forneceu. 
+                            Por isso, é importante verificar se o número está correto e se você pode receber mensagens por WhatsApp.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-top">
+                    <div class="logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        <span>Love Neext</span>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <a href="#sobre">Sobre</a>
+                        <a href="#como-funciona">Como Funciona</a>
+                        <a href="#form">Enviar Love</a>
+                        <a href="#faq">Dúvidas</a>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; <span id="currentYear">2023</span> Love Neext - Todos os direitos reservados</p>
+                    <p>Feito com ❤️ para a Neext</p>
                 </div>
             </div>
         </div>
     </footer>
-
-    <!-- Toast notification container -->
+    
+    <!-- Toast Container for Notifications -->
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Script for GPT Engineer - Don't remove this! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-
+    
     <script>
-        // API Configuration
+        // URL do Google Apps Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPRSUGdNX3l8QXfR1lkjU5A-KLCBsKASjp_iQFPrrSb_9V9ZRbGXe07oD9UdR7Y-9p/exec";
         const API_IMGBB = "3d9fa0bdf06acddf7b9b0e0122b2dc9d";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxFdS_AjkvN9y2DvEKLZsfKI-fOL8Ht1mUW9AmzYou1357_mG0tUZvOkw6o-09mY9Yo/exec";
         
-        // DOM Elements
-        const loadingScreen = document.getElementById('loadingScreen');
-        const mobileMenuButton = document.getElementById('mobileMenuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const form = document.getElementById('registrationForm');
-        const nameInput = document.getElementById('name');
-        const ageInput = document.getElementById('age');
-        const descriptionInput = document.getElementById('description');
-        const imageInput = document.getElementById('image');
-        const fileInfo = document.getElementById('fileInfo');
-        const previewContainer = document.getElementById('previewContainer');
-        const imagePreview = document.getElementById('imagePreview');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const submitButton = document.getElementById('submitButton');
-        const buttonLoader = document.getElementById('buttonLoader');
-        const buttonText = document.getElementById('buttonText');
-        const toastContainer = document.getElementById('toastContainer');
-        const currentYearElement = document.getElementById('currentYear');
+        // Atualizar o ano no rodapé
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
         
-        // Set current year in footer
-        currentYearElement.textContent = new Date().getFullYear();
-
-        // Loading screen
-        window.addEventListener('load', function() {
+        // Efeito 3D na Love Box
+        const loveBox = document.querySelector('.love-box');
+        document.addEventListener('mousemove', (e) => {
+            if (!loveBox) return;
+            
+            const x = (window.innerWidth / 2 - e.pageX) / 25;
+            const y = (window.innerHeight / 2 - e.pageY) / 25;
+            
+            loveBox.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+        
+        // Accordion functionality
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Fechar todos os itens ativos
+                accordionItems.forEach(i => i.classList.remove('active'));
+                
+                // Se o item clicado não estava ativo, abra-o
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+        
+        // Função para exibir toasts
+        function showToast(title, message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.classList.add('toast', `toast-${type}`);
+            
+            toast.innerHTML = `
+                <div>
+                    <div class="toast-title">${title}</div>
+                    <div>${message}</div>
+                </div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto-remove toast after 5 seconds
             setTimeout(() => {
-                loadingScreen.style.opacity = 0;
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }, 1500);
+                toast.style.animation = 'slideOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+            
+            // Close button functionality
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.style.animation = 'slideOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            });
+        }
+        
+        // Pré-visualização da imagem
+        const imageInput = document.getElementById('imagem');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                imagePreview.style.display = 'none';
+                return;
+            }
+            
+            // Validar tamanho do arquivo (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Imagem muito grande', 'A imagem deve ter no máximo 5MB', 'error');
+                imageInput.value = '';
+                imagePreview.style.display = 'none';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.querySelector('img').src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
         });
-
-        // Mobile Menu Toggle
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
+        
+        // Envio do formulário
+        const form = document.getElementById('loveForm');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        submitBtn.addEventListener('click', async () => {
+            const nome = document.getElementById('nome').value.trim();
+            const idade = document.getElementById('idade').value;
+            const telefone = document.getElementById('telefone').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const imagem = imageInput.files[0];
+            
+            // Validações básicas
+            if (!nome) {
+                showToast('Campo obrigatório', 'Por favor, informe seu nome', 'error');
+                return;
+            }
+            
+            if (!idade || parseInt(idade) < 1 || parseInt(idade) > 120) {
+                showToast('Campo inválido', 'Por favor, informe uma idade válida entre 1 e 120', 'error');
+                return;
+            }
+            
+            if (!telefone) {
+                showToast('Campo obrigatório', 'Por favor, informe seu telefone', 'error');
+                return;
+            }
+            
+            // Desabilitar botão e mostrar estado de carregamento
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+            
+            try {
+                let imageUrl = '';
+                
+                // Fazer upload da imagem, se existir
+                if (imagem) {
+                    const formData = new FormData();
+                    formData.append('key', API_IMGBB);
+                    formData.append('image', imagem);
+                    
+                    const response = await fetch('https://api.imgbb.com/1/upload', {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        imageUrl = result.data.url;
+                    } else {
+                        throw new Error('Falha ao enviar imagem');
+                    }
+                }
+                
+                // Enviar dados para o Google Apps Script
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'no-cors', // Usando modo no-cors
+                    body: JSON.stringify({
+                        nome: nome,
+                        idade: idade,
+                        telefone: telefone,
+                        descricao: descricao,
+                        imagemUrl: imageUrl
+                    }),
+                });
+                
+                // Como estamos usando no-cors, não podemos acessar a resposta
+                // Então vamos mostrar uma mensagem informativa
+                showToast('Sucesso!', 'Seu Love foi enviado para a Neext com sucesso!');
+                
+                // Limpar formulário
+                form.reset();
+                imagePreview.style.display = 'none';
+                
+            } catch (error) {
+                showToast('Erro ao enviar', error.message || 'Ocorreu um erro inesperado', 'error');
+                console.error('Erro:', error);
+            } finally {
+                // Restaurar botão
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar meu Love Neext';
+            }
         });
-
-        // Smooth scrolling for anchor links
+        
+        // Função para rolagem suave
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Close mobile menu if open
-                if (mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                }
-                
                 const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
                 const targetElement = document.querySelector(targetId);
+                
                 if (targetElement) {
                     window.scrollTo({
-                        top: targetElement.offsetTop - 80,
+                        top: targetElement.offsetTop - 50,
                         behavior: 'smooth'
                     });
                 }
             });
         });
-
-        // Toast Notification Function
-        function showToast(title, message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
+        
+        // Fazer com que o botão "Enviar Love" no header leve para o formulário
+        document.addEventListener('DOMContentLoaded', () => {
+            const formElement = document.getElementById('form');
+            const allLoveButtons = document.querySelectorAll('.btn-primary');
             
-            toast.innerHTML = `
-                <div class="toast-title">${title}</div>
-                <div class="toast-message">${message}</div>
-            `;
-            
-            toastContainer.appendChild(toast);
-            
-            // Trigger reflow for animation
-            toast.offsetHeight;
-            toast.classList.add('show');
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    toastContainer.removeChild(toast);
-                }, 300);
-            }, 5000);
-        }
-
-        // Image Preview
-        imageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) {
-                previewContainer.style.display = 'none';
-                fileInfo.textContent = '';
-                return;
-            }
-            
-            // Check file size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('Erro', 'A imagem deve ter no máximo 5MB', 'error');
-                imageInput.value = '';
-                return;
-            }
-            
-            // Display file info
-            fileInfo.textContent = `${file.name} (${formatFileSize(file.size)})`;
-            
-            // Show preview
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewContainer.style.display = 'block';
-                imagePreview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // Helper function to format file size
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Set loading state
-        function setLoadingState(isLoading) {
-            submitButton.disabled = isLoading;
-            buttonText.textContent = isLoading ? 'Enviando...' : 'Enviar Cadastro';
-            buttonLoader.style.display = isLoading ? 'block' : 'none';
-            nameInput.disabled = isLoading;
-            ageInput.disabled = isLoading;
-            descriptionInput.disabled = isLoading;
-            imageInput.disabled = isLoading;
-        }
-
-        // Upload image to ImgBB
-        function uploadImageToImgBB(file) {
-            return new Promise((resolve, reject) => {
-                const formData = new FormData();
-                formData.append('key', API_IMGBB);
-                formData.append('image', file);
-                
-                const xhr = new XMLHttpRequest();
-                
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const percent = Math.round((e.loaded / e.total) * 100);
-                        progressBar.style.width = `${percent}%`;
-                    }
-                });
-                
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            const response = JSON.parse(xhr.responseText);
-                            if (response.success) {
-                                resolve(response.data.url);
-                            } else {
-                                reject(new Error(response.error?.message || 'Erro no upload'));
-                            }
-                        } else {
-                            reject(new Error('Falha na conexão com o ImgBB'));
-                        }
-                    }
-                };
-                
-                xhr.open('POST', 'https://api.imgbb.com/1/upload', true);
-                xhr.send(formData);
-            });
-        }
-
-        // Send form data to Google Apps Script
-        function sendFormData(data) {
-            return fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-        }
-
-        // Form submission
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Validation
-            const name = nameInput.value.trim();
-            const age = ageInput.value;
-            const description = descriptionInput.value.trim();
-            
-            if (!name) {
-                showToast('Erro', 'Por favor, digite seu nome', 'error');
-                return;
-            }
-            
-            if (!age || isNaN(parseInt(age)) || parseInt(age) < 1 || parseInt(age) > 120) {
-                showToast('Erro', 'Por favor, digite uma idade válida (1-120)', 'error');
-                return;
-            }
-            
-            setLoadingState(true);
-            showToast('Processando', 'Enviando seus dados...');
-            
-            try {
-                let imageUrl = '';
-                const file = imageInput.files[0];
-                
-                // Upload image if exists
-                if (file) {
-                    progressContainer.style.display = 'block';
-                    try {
-                        imageUrl = await uploadImageToImgBB(file);
-                    } catch (error) {
-                        console.error("Erro ao fazer upload da imagem:", error);
-                        throw new Error("Falha ao fazer upload da imagem. Tente novamente.");
-                    } finally {
-                        progressContainer.style.display = 'none';
-                    }
+            allLoveButtons.forEach(btn => {
+                if (btn.innerText.includes('Enviar Love')) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        formElement.scrollIntoView({ behavior: 'smooth' });
+                    });
                 }
-                
-                // Send data to Google Apps Script
-                await sendFormData({
-                    nome: name,
-                    idade: parseInt(age),
-                    descricao: description,
-                    imagemUrl: imageUrl
-                });
-                
-                // Handle success
-                showToast('Sucesso', 'Cadastro realizado com sucesso!');
-                
-                // Reset form
-                form.reset();
-                previewContainer.style.display = 'none';
-                fileInfo.textContent = '';
-                progressBar.style.width = '0%';
-                
-            } catch (error) {
-                console.error("Erro durante o envio:", error);
-                showToast('Erro', `Ocorreu um erro: ${error.message}`, 'error');
-            } finally {
-                setLoadingState(false);
-            }
+            });
         });
     </script>
 </body>
