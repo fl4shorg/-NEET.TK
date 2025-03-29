@@ -1,170 +1,819 @@
+
+<!DOCTYPE html>
 <html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Visualizar Mensagens</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-</head>
-<body class="bg-gray-100 flex flex-col items-center min-h-screen">
-  <!-- Navbar -->
-  <nav class="bg-purple-700 w-full py-4 shadow-lg">
-    <div class="container mx-auto px-4">
-      <div class="flex justify-center">
-        <span class="text-white text-xl font-semibold">Correios da Neext</span>
-      </div>
-    </div>
-  </nav>
-  <!-- Main Content -->
-  <div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-6 text-center">Mensagens Enviadas</h1>
-    <div id="contador" class="text-center text-lg font-semibold mb-6"></div>
-    <div class="mb-6">
-      <input type="text" id="search" placeholder="Pesquisar correios..." class="w-full p-2 border border-gray-300 rounded-lg">
-    </div>
-    <div id="mensagens" class="space-y-6"></div>
-  </div>
-
-  <script>
-    // Função para calcular o tempo decorrido
-    function timeAgo(date) {
-      const now = new Date();
-      const past = new Date(date);
-      const diff = Math.abs(now - past);
-      const minutes = Math.floor(diff / (1000 * 60));
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-      if (minutes < 60) {
-        return `${minutes} minutos atrás`;
-      } else if (hours < 24) {
-        return `${hours} horas atrás`;
-      } else {
-        return `${days} dias atrás`;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Correios da Neext</title>
+    <meta name="description" content="Visualizador de mensagens anônimas" />
+    <meta name="author" content="Neext" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <style>
+      /* Tema claro */
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+        --primary: 280 100% 60%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
       }
-    }
 
-    // Função para buscar as mensagens do Apps Script
-    fetch('https://script.google.com/macros/s/AKfycbz1ftxB9DiRF8Ju0ecbAxE2tCzxGKRkTOciD5xLRklsJli8rMzfSuY5liwrTwFBJ_q8/exec', {
-      method: 'GET',
-      mode: 'cors',  // Modo CORS
-    })
-    .then(response => response.json())
-    .then(data => {
-      var mensagensDiv = document.getElementById('mensagens');
-      var contadorDiv = document.getElementById('contador');
-      contadorDiv.innerText = `Total de Correios: ${data.length}`;
-      data.reverse().forEach(item => {
-        var div = document.createElement('div');
-        div.className = "bg-white border border-gray-300 rounded-lg shadow-lg max-w-md w-full mx-auto correio";
-        div.innerHTML = `
-          <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-center py-3 rounded-t-lg font-semibold flex items-center justify-center">
-            <svg class="lucide lucide-mail-question mr-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22 10.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12.5"></path>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-              <path d="M18 15.28c.2-.4.5-.8.9-1a2.1 2.1 0 0 1 2.6.4c.3.4.5.8.5 1.3 0 1.3-2 2-2 2"></path>
-              <path d="M20 22v.01"></path>
-            </svg>
-            Correio Anônimo
+      /* Tema escuro */
+      .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+        --primary: 280 100% 60%;
+        --primary-foreground: 210 40% 98%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+        transition: all 0.3s ease;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: hsl(var(--card));
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        width: 100%;
+        padding: 1rem 0;
+        transition: background-color 0.3s ease;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+      }
+
+      .brand-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(to right, #ec4899, #8b5cf6);
+      }
+
+      .brand-text {
+        margin-left: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: hsl(var(--foreground));
+      }
+
+      .theme-toggle {
+        background: transparent;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: hsl(var(--foreground));
+      }
+
+      .theme-toggle:hover {
+        background-color: hsl(var(--secondary));
+      }
+
+      .hr {
+        border: 0;
+        height: 1px;
+        background-color: hsl(var(--border));
+        margin-top: 1rem;
+      }
+
+      .content {
+        padding: 1.5rem;
+        max-width: 64rem;
+        margin: 0 auto;
+      }
+
+      .card {
+        background-color: hsl(var(--card));
+        color: hsl(var(--card-foreground));
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: hsl(var(--foreground));
+      }
+
+      .subtitle {
+        color: hsl(var(--foreground) / 0.6);
+        margin-bottom: 1.5rem;
+      }
+
+      .search-filter-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      @media (min-width: 768px) {
+        .search-filter-container {
+          flex-direction: row;
+        }
+      }
+
+      .search-container {
+        position: relative;
+        flex-grow: 1;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 2.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid hsl(var(--border));
+        background-color: hsl(var(--card));
+        color: hsl(var(--foreground));
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .search-input:focus {
+        border-color: hsl(var(--primary));
+        box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: hsl(var(--foreground) / 0.5);
+      }
+
+      .filter-container {
+        position: relative;
+      }
+
+      .filter-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        border: 1px solid hsl(var(--border));
+        background-color: hsl(var(--card));
+        color: hsl(var(--foreground));
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .filter-button:hover {
+        background-color: hsl(var(--secondary));
+      }
+
+      .filter-dropdown {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        width: 12rem;
+        background-color: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        z-index: 10;
+        overflow: hidden;
+      }
+
+      .filter-dropdown-inner {
+        padding: 0.5rem;
+      }
+
+      .filter-option {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        border: none;
+        background-color: transparent;
+        color: hsl(var(--foreground));
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .filter-option:hover {
+        background-color: hsl(var(--secondary));
+      }
+
+      .filter-option.active {
+        background-color: hsla(var(--primary), 0.1);
+        color: hsl(var(--primary));
+      }
+
+      .messages-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 16rem;
+      }
+
+      .spinner-inner {
+        width: 3rem;
+        height: 3rem;
+        border: 0.25rem solid hsl(var(--border));
+        border-top-color: hsl(var(--primary));
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2.5rem 0;
+      }
+
+      .empty-icon {
+        margin: 0 auto;
+        height: 4rem;
+        width: 4rem;
+        color: hsl(var(--foreground) / 0.3);
+        font-size: 3rem;
+      }
+
+      .empty-title {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: hsl(var(--foreground));
+      }
+
+      .empty-description {
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: hsl(var(--foreground) / 0.6);
+      }
+
+      .message-card {
+        background-color: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 0.5rem;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .message-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      .message-header {
+        background: linear-gradient(to right, #8b5cf6, #ec4899);
+        color: white;
+        text-align: center;
+        padding: 0.75rem;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .message-content {
+        padding: 1.5rem;
+      }
+
+      .message-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .message-timestamp {
+        font-size: 0.875rem;
+        color: hsl(var(--foreground) / 0.6);
+      }
+
+      .message-text {
+        color: hsl(var(--foreground));
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        display: flex;
+        align-items: flex-start;
+      }
+
+      .message-icon {
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+        margin-top: 0.25rem;
+      }
+
+      .tag-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .recipient-tag {
+        background-color: hsl(30 100% 97%);
+        color: hsl(20 100% 40%);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+      }
+
+      .dark .recipient-tag {
+        background-color: hsl(20 100% 20%);
+        color: hsl(30 100% 80%);
+      }
+
+      .message-footer {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .sender-button {
+        color: hsl(220 100% 50%);
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dark .sender-button {
+        color: hsl(220 100% 70%);
+      }
+
+      .sender-button:hover {
+        text-decoration: underline;
+      }
+
+      .card-footer {
+        background-color: hsl(var(--secondary));
+        border-top: 1px solid hsl(var(--border));
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-brand {
+        display: flex;
+        align-items: center;
+      }
+
+      .footer-text {
+        font-size: 0.875rem;
+        color: hsl(var(--foreground) / 0.6);
+      }
+
+      .icon-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        color: white;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      /* Utilities */
+      .mr-1 {
+        margin-right: 0.25rem;
+      }
+
+      .mr-2 {
+        margin-right: 0.5rem;
+      }
+
+      .mt-1 {
+        margin-top: 0.25rem;
+      }
+
+      .space-x-2 > * + * {
+        margin-left: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="nav">
+      <div class="container nav-container">
+        <div class="nav-brand">
+          <div class="brand-icon">
+            <i class="fas fa-envelope text-white text-xl"></i>
           </div>
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-4">
-              <div class="text-gray-500 text-sm">${timeAgo(item.data)}</div>
-            </div>
-            <div class="text-gray-900 text-lg mb-4 leading-relaxed flex items-center">
-              <svg class="lucide lucide-languages mr-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <path d="m5 8 6 6"></path>
-                <path d="m4 14 6-6 2-3"></path>
-                <path d="M2 5h12"></path>
-                <path d="M7 2h1"></path>
-                <path d="m22 22-5-10-5 10"></path>
-                <path d="M14 18h6"></path>
-              </svg>
-              ${item.mensagem}
-            </div>
-            <div class="flex items-center space-x-2 mb-4">
-              <svg class="lucide lucide-syringe mr-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <path d="m18 2 4 4"></path>
-                <path d="m17 7 3-3"></path>
-                <path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"></path>
-                <path d="m9 11 4 4"></path>
-                <path d="m5 19-3 3"></path>
-                <path d="m14 4 6 6"></path>
-              </svg>
-              <div class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">
-                Enviado para: ${item.nome}
+          <span class="brand-text">Correios da Neext</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Alternar tema">
+          <i class="fas fa-sun"></i>
+        </button>
+      </div>
+      <hr class="hr">
+    </nav>
+
+    <div class="content">
+      <div class="card">
+        <h2 class="title">Caixa de entrada</h2>
+        <p id="contador" class="subtitle">0 Correios</p>
+        
+        <div class="search-filter-container">
+          <div class="search-container">
+            <input 
+              type="text" 
+              id="search" 
+              placeholder="Pesquisar correios..." 
+              class="search-input"
+            >
+            <i class="fas fa-search search-icon"></i>
+          </div>
+          
+          <div class="filter-container">
+            <button 
+              id="filterButton"
+              class="filter-button"
+            >
+              <i class="fas fa-filter"></i>
+              <span>Filtrar</span>
+            </button>
+            
+            <div id="filterDropdown" class="filter-dropdown hidden">
+              <div class="filter-dropdown-inner">
+                <button 
+                  data-filter="todos"
+                  class="filter-option active"
+                >
+                  Todos
+                </button>
+                <button 
+                  data-filter="ultima-hora"
+                  class="filter-option"
+                >
+                  Última hora
+                </button>
+                <button 
+                  data-filter="hoje"
+                  class="filter-option"
+                >
+                  Hoje
+                </button>
+                <button 
+                  data-filter="esta-semana"
+                  class="filter-option"
+                >
+                  Esta semana
+                </button>
+                <button 
+                  data-filter="este-mes"
+                  class="filter-option"
+                >
+                  Este mês
+                </button>
               </div>
             </div>
-            <div class="flex justify-end">
-              <button class="text-blue-600 text-sm flex items-center hover:underline">
-                <svg class="lucide lucide-user-round mr-1" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="8" r="5"></circle>
-                  <path d="M20 21a8 8 0 0 0-16 0"></path>
-                </svg>
-                Anônimo(a)
-              </button>
-            </div>
           </div>
-          <div class="bg-white border-t border-gray-300 rounded-b-lg p-4 flex justify-between items-center">
-            <div class="flex items-center">
-              <svg class="lucide lucide-mails mr-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <rect height="13" rx="2" width="16" x="6" y="4"></rect>
-                <path d="m22 7-7.1 3.78c-.57.3-1.23.3-1.8 0L6 7"></path>
-                <path d="M2 8v11c0 1.1.9 2 2 2h14"></path>
-              </svg>
-              <span class="text-gray-500 text-sm">neext mail </span>
-            </div>
-            <div class="flex items-center space-x-2">
-              <svg class="lucide lucide-chrome" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="4"></circle>
-                <line x1="21.17" x2="12" y1="8" y2="8"></line>
-                <line x1="3.95" x2="8.54" y1="6.06" y2="14"></line>
-                <line x1="10.88" x2="15.46" y1="21.94" y2="14"></line>
-              </svg>
-              <svg class="lucide lucide-biohazard" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="11.9" r="2"></circle>
-                <path d="M6.7 3.4c-.9 2.5 0 5.2 2.2 6.7C6.5 9 3.7 9.6 2 11.6"></path>
-                <path d="m8.9 10.1 1.4.8"></path>
-                <path d="M17.3 3.4c.9 2.5 0 5.2-2.2 6.7 2.4-1.2 5.2-.6 6.9 1.5"></path>
-                <path d="m15.1 10.1-1.4.8"></path>
-                <path d="M16.7 20.8c-2.6-.4-4.6-2.6-4.7-5.3-.2 2.6-2.1 4.8-4.7 5.2"></path>
-                <path d="M12 13.9v1.6"></path>
-                <path d="M13.5 5.4c-1-.2-2-.2-3 0"></path>
-                <path d="M17 16.4c.7-.7 1.2-1.6 1.5-2.5"></path>
-                <path d="M5.5 13.9c.3.9.8 1.8 1.5 2.5"></path>
-              </svg>
-              <svg class="lucide lucide-plug-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 2v6"></path>
-                <path d="M15 2v6"></path>
-                <path d="M12 17v5"></path>
-                <path d="M5 8h14"></path>
-                <path d="M6 11V8h12v3a6 6 0 1 1-12 0Z"></path>
-              </svg>
-            </div>
+        </div>
+        
+        <div id="loadingSpinner" class="spinner">
+          <div class="spinner-inner"></div>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-icon">
+            <i class="fas fa-inbox"></i>
           </div>
-        `;
-        mensagensDiv.appendChild(div);
+          <h3 class="empty-title">Nenhum correio encontrado</h3>
+          <p id="emptyMessage" class="empty-description">
+            Sua caixa de entrada está vazia
+          </p>
+        </div>
+
+        <div id="mensagens" class="messages-container hidden">
+          <!-- Messages will be inserted here via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Referencias DOM
+      const themeToggle = document.getElementById('themeToggle');
+      const filterButton = document.getElementById('filterButton');
+      const filterDropdown = document.getElementById('filterDropdown');
+      const filterOptions = document.querySelectorAll('.filter-option');
+      const searchInput = document.getElementById('search');
+      const mensagensContainer = document.getElementById('mensagens');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const emptyState = document.getElementById('emptyState');
+      const emptyMessage = document.getElementById('emptyMessage');
+      const contador = document.getElementById('contador');
+
+      // Estado da aplicação
+      let darkMode = localStorage.getItem('theme') === 'dark' || 
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      let messages = [];
+      let filteredMessages = [];
+      let activeFilter = 'todos';
+      let searchTerm = '';
+
+      // Inicializar tema
+      if (darkMode) {
+        document.body.classList.add('dark');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      } else {
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+
+      // Alternar tema
+      themeToggle.addEventListener('click', () => {
+        darkMode = !darkMode;
+        document.body.classList.toggle('dark', darkMode);
+        localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+        themeToggle.innerHTML = darkMode 
+          ? '<i class="fas fa-moon"></i>' 
+          : '<i class="fas fa-sun"></i>';
       });
 
-      // Função de pesquisa
-      document.getElementById('search').addEventListener('input', function() {
-        var searchTerm = this.value.toLowerCase();
-        var correios = document.querySelectorAll('.correio');
-        correios.forEach(function(correio) {
-          var mensagem = correio.querySelector('.leading-relaxed').innerText.toLowerCase();
-          if (mensagem.includes(searchTerm)) {
-            correio.style.display = '';
-          } else {
-            correio.style.display = 'none';
-          }
+      // Alternar filtro
+      filterButton.addEventListener('click', () => {
+        filterDropdown.classList.toggle('hidden');
+      });
+
+      // Fechar filtro ao clicar fora
+      document.addEventListener('click', (event) => {
+        if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+          filterDropdown.classList.add('hidden');
+        }
+      });
+
+      // Selecionar filtro
+      filterOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const filter = option.getAttribute('data-filter');
+          activeFilter = filter;
+          
+          // Atualizar visual do filtro selecionado
+          filterOptions.forEach(opt => opt.classList.remove('active'));
+          option.classList.add('active');
+          
+          // Aplicar filtro
+          applyFilters();
+          filterDropdown.classList.add('hidden');
         });
       });
-    })
-    .catch(error => {
-      alert('Erro ao carregar as mensagens.');
-      console.error(error);
-    });
-  </script>
-</body>
+
+      // Pesquisar
+      searchInput.addEventListener('input', () => {
+        searchTerm = searchInput.value.toLowerCase();
+        applyFilters();
+      });
+
+      // Função para calcular o tempo decorrido
+      function timeAgo(date) {
+        const now = new Date();
+        const past = new Date(date);
+        const diff = Math.abs(now - past);
+        const minutes = Math.floor(diff / (1000 * 60));
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        if (minutes < 60) {
+          return `${minutes} minutos atrás`;
+        } else if (hours < 24) {
+          return `${hours} horas atrás`;
+        } else {
+          return `${days} dias atrás`;
+        }
+      }
+
+      // Filtrar mensagens
+      function applyFilters() {
+        // Primeiro aplicar filtro de tempo
+        let timeFiltered = [...messages];
+        
+        if (activeFilter !== 'todos') {
+          const now = new Date();
+          timeFiltered = messages.filter(msg => {
+            const msgDate = new Date(msg.data);
+            const diffMs = now - msgDate;
+            const diffMinutes = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            
+            switch(activeFilter) {
+              case 'ultima-hora':
+                return diffHours < 1;
+              case 'hoje':
+                return diffDays < 1;
+              case 'esta-semana':
+                return diffDays < 7;
+              case 'este-mes':
+                return diffDays < 30;
+              default:
+                return true;
+            }
+          });
+        }
+        
+        // Depois aplicar filtro de pesquisa
+        if (searchTerm) {
+          filteredMessages = timeFiltered.filter(msg => 
+            msg.mensagem.toLowerCase().includes(searchTerm) || 
+            msg.nome.toLowerCase().includes(searchTerm)
+          );
+        } else {
+          filteredMessages = timeFiltered;
+        }
+        
+        // Atualizar UI
+        renderMessages();
+      }
+
+      // Renderizar mensagens
+      function renderMessages() {
+        mensagensContainer.innerHTML = '';
+        contador.textContent = `${filteredMessages.length} Correios`;
+        
+        if (filteredMessages.length === 0) {
+          mensagensContainer.classList.add('hidden');
+          emptyState.classList.remove('hidden');
+          emptyMessage.textContent = searchTerm 
+            ? "Tente outra pesquisa ou remova os filtros" 
+            : "Sua caixa de entrada está vazia";
+        } else {
+          mensagensContainer.classList.remove('hidden');
+          emptyState.classList.add('hidden');
+          
+          filteredMessages.forEach(item => {
+            const messageElement = document.createElement('div');
+            messageElement.className = "message-card";
+            messageElement.innerHTML = `
+              <div class="message-header">
+                <svg class="mr-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 10.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12.5"></path>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                  <path d="M18 15.28c.2-.4.5-.8.9-1a2.1 2.1 0 0 1 2.6.4c.3.4.5.8.5 1.3 0 1.3-2 2-2 2"></path>
+                  <path d="M20 22v.01"></path>
+                </svg>
+                Correio Anônimo
+              </div>
+              <div class="message-content">
+                <div class="message-meta">
+                  <div class="message-timestamp">${timeAgo(item.data)}</div>
+                </div>
+                <div class="message-text">
+                  <svg class="message-icon" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m5 8 6 6"></path>
+                    <path d="m4 14 6-6 2-3"></path>
+                    <path d="M2 5h12"></path>
+                    <path d="M7 2h1"></path>
+                    <path d="m22 22-5-10-5 10"></path>
+                    <path d="M14 18h6"></path>
+                  </svg>
+                  <span>${item.mensagem}</span>
+                </div>
+                <div class="tag-container">
+                  <svg class="mr-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m18 2 4 4"></path>
+                    <path d="m17 7 3-3"></path>
+                    <path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"></path>
+                    <path d="m9 11 4 4"></path>
+                    <path d="m5 19-3 3"></path>
+                    <path d="m14 4 6 6"></path>
+                  </svg>
+                  <div class="recipient-tag">
+                    Enviado para: ${item.nome}
+                  </div>
+                </div>
+                <div class="message-footer">
+                  <button class="sender-button">
+                    <svg class="mr-1" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="8" r="5"></circle>
+                      <path d="M20 21a8 8 0 0 0-16 0"></path>
+                    </svg>
+                    Anônimo(a)
+                  </button>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="footer-brand">
+                  <svg class="mr-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="13" rx="2" width="16" x="6" y="4"></rect>
+                    <path d="m22 7-7.1 3.78c-.57.3-1.23.3-1.8 0L6 7"></path>
+                    <path d="M2 8v11c0 1.1.9 2 2 2h14"></path>
+                  </svg>
+                  <span class="footer-text">neext mail</span>
+                </div>
+                <div class="icon-container">
+                  <div class="footer-icon" style="background: linear-gradient(to right, #4ade80, #3b82f6);">
+                    <i class="fab fa-chrome text-white"></i>
+                  </div>
+                  <div class="footer-icon" style="background: linear-gradient(to right, #facc15, #ef4444);">
+                    <i class="fas fa-biohazard text-white"></i>
+                  </div>
+                  <div class="footer-icon" style="background: linear-gradient(to right, #a78bfa, #ec4899);">
+                    <i class="fas fa-plug text-white"></i>
+                  </div>
+                </div>
+              </div>
+            `;
+            mensagensContainer.appendChild(messageElement);
+          });
+        }
+      }
+
+      // Buscar dados da API
+      fetch('https://script.google.com/macros/s/AKfycbz1ftxB9DiRF8Ju0ecbAxE2tCzxGKRkTOciD5xLRklsJli8rMzfSuY5liwrTwFBJ_q8/exec', {
+        method: 'GET',
+        mode: 'cors',
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Falha na resposta da rede');
+        }
+        return response.json();
+      })
+      .then(data => {
+        messages = [...data].reverse();
+        filteredMessages = messages;
+        loadingSpinner.classList.add('hidden');
+        renderMessages();
+      })
+      .catch(error => {
+        console.error('Erro ao carregar as mensagens:', error);
+        loadingSpinner.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        emptyMessage.textContent = "Não foi possível carregar os correios. Tente novamente mais tarde.";
+        alert('Erro ao carregar as mensagens. Tente novamente mais tarde.');
+      });
+    </script>
+  </body>
 </html>
