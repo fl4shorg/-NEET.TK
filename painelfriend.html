@@ -1,0 +1,206 @@
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friendship e Dados da Planilha</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+</head>
+<body class="bg-white text-black">
+  <!-- Friendship Section -->
+  <div class="p-4 flex items-center justify-between">
+    <div class="flex items-center">
+      <div class="bg-gradient-to-r from-purple-400 to-blue-500 p-2 rounded-full">
+        <i class="fas fa-users text-white text-2xl"></i>
+      </div>
+      <h1 class="ml-2 text-xl font-semibold">Friendship</h1>
+    </div>
+    <i class="fas fa-sun text-xl"></i>
+  </div>
+  <hr class="border-gray-300">
+  <div class="p-4">
+    <h2 class="text-2xl font-bold">Caixa de entrada</h2>
+    <p id="messageCount" class="text-gray-600">0 mensagens anônimas recebidas</p>
+    <div class="mt-4 relative">
+      <input id="searchInput" class="w-full p-2 pl-10 bg-gray-200 text-gray-700 rounded-md focus:outline-none" placeholder="Buscar mensagens..." type="text" oninput="filterMessages()"/>
+      <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+    </div>
+    <div class="mt-4 flex space-x-2">
+      <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="toggleFilterOptions()">
+        <i class="fas fa-filter"></i> Filtro
+      </button>
+      <div id="filterOptions" class="hidden flex space-x-2">
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="filterByTime('today')">Hoje</button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="filterByTime('week')">Esta Semana</button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="filterByTime('month')">Este Mês</button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="filterByTime('all')">Todos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dados da Planilha Section -->
+  <div class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div id="loading" class="text-black text-lg">Carregando os dados...</div>
+    <div id="dataContainer" class="space-y-4 w-full max-w-sm" style="display:none;"></div>
+  </div>
+
+  <script>
+    let allData = [];
+
+    function timeSince(date) {
+      const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+      let interval = Math.floor(seconds / 31536000);
+
+      if (interval > 1) {
+        return interval + " anos atrás";
+      }
+      interval = Math.floor(seconds / 2592000);
+      if (interval > 1) {
+        return interval + " meses atrás";
+      }
+      interval = Math.floor(seconds / 86400);
+      if (interval > 1) {
+        return interval + " dias atrás";
+      }
+      interval = Math.floor(seconds / 3600);
+      if (interval > 1) {
+        return interval + " horas atrás";
+      }
+      interval = Math.floor(seconds / 60);
+      if (interval > 1) {
+        return interval + " minutos atrás";
+      }
+      return Math.floor(seconds) + " segundos atrás";
+    }
+
+    function loadData() {
+      const url = 'https://script.google.com/macros/s/AKfycbyJxoDY4j0Z4lMms1niY_eg1uDLvbHdWTgQVjoNd_mj8EZS5f-xyL5JO2HkCAt6UrBZ/exec?action=verdados';
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          allData = data.reverse();
+          document.getElementById('loading').style.display = 'none'; 
+          displayMessages(allData);
+        })
+        .catch(error => {
+          document.getElementById('loading').textContent = 'Erro ao carregar os dados.';
+          console.error('Erro:', error);
+        });
+    }
+
+    function displayMessages(data) {
+      const container = document.getElementById('dataContainer');
+      const messageCount = document.getElementById('messageCount');
+      container.innerHTML = '';
+
+      if (data.length > 0) {
+        messageCount.textContent = `${data.length} mensagens anônimas recebidas`;
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'bg-gray-200 text-black rounded-lg shadow-lg w-full';
+
+          const header = document.createElement('div');
+          header.className = 'bg-gradient-to-r from-blue-500 to-blue-800 rounded-t-lg p-2 flex items-center justify-center';
+          header.innerHTML = '<i class="fas fa-envelope text-white mr-2"></i><span class="font-semibold text-white">Faça Novas Amizades!!</span>';
+          card.appendChild(header);
+
+          const content = document.createElement('div');
+          content.className = 'p-4';
+          
+          const date = document.createElement('p');
+          date.className = 'text-gray-600 text-sm mb-2 flex items-center';
+          date.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-arrow-up-icon lucide-calendar-arrow-up mr-2"><path d="m14 18 4-4 4 4"/><path d="M16 2v4"/><path d="M18 22v-8"/><path d="M21 11.343V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9"/><path d="M3 10h18"/><path d="M8 2v4"/></svg>' + timeSince(item["Data e Hora"]) || 'Sem data';
+          content.appendChild(date);
+
+          const imgContainer = document.createElement('div');
+          imgContainer.className = 'flex flex-col items-center';
+          const img = document.createElement('img');
+          img.className = 'mb-4 rounded-full border-4 border-gray-300';
+          img.src = item["Imagem"] || 'https://placehold.co/100x100';
+          img.alt = 'Placeholder image';
+          img.width = 100;
+          img.height = 100;
+          imgContainer.appendChild(img);
+          content.appendChild(imgContainer);
+
+          const recipient = document.createElement('div');
+          recipient.className = 'flex items-center mb-2';
+          recipient.innerHTML = '<i class="fas fa-syringe mr-2"></i><span class="bg-orange-700 text-white rounded-full px-2 py-1 text-sm">' + (item["Nome"] || 'Sem nome') + '</span>';
+          content.appendChild(recipient);
+
+          const number = document.createElement('div');
+          number.className = 'flex items-center mb-4';
+          number.innerHTML = '<i class="fas fa-phone mr-2"></i><span class="text-sm">+' + (item["Número "] || 'Sem número') + '</span>';
+          content.appendChild(number);
+
+          const message = document.createElement('p');
+          message.className = 'text-lg mb-4';
+          message.innerHTML = '<i class="fas fa-flask mr-2"></i>' + (item["Motivo "] || 'Sem motivo');
+          content.appendChild(message);
+
+          card.appendChild(content);
+
+          const footer = document.createElement('div');
+          footer.className = 'bg-gray-300 rounded-b-lg p-2 flex justify-between items-center';
+          footer.innerHTML = '<button class="flex items-center text-black"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mailbox-icon lucide-mailbox"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4v8Z"/><polyline points="15,9 18,9 18,11"/><path d="M6.5 5C9 5 11 7 11 9.5V17a2 2 0 0 1-2 2"/><line x1="6" x2="7" y1="10" y2="10"/></svg><span class="ml-2">friendship</span></button><div class="flex space-x-2"><button class="text-white bg-gradient-to-r from-green-400 to-blue-500 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chrome-icon lucide-chrome"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" x2="12" y1="8" y2="8"/><line x1="3.95" x2="8.54" y1="6.06" y2="14"/><line x1="10.88" x2="15.46" y1="21.94" y2="14"/></svg></button><button class="text-white bg-gradient-to-r from-yellow-400 to-red-500 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-infinity-icon lucide-infinity"><path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"/></svg></button><button class="text-white bg-gradient-to-r from-purple-400 to-pink-500 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem-icon lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg></button></div>';
+          card.appendChild(footer);
+
+          container.appendChild(card);
+        });
+
+        container.style.display = 'block';
+      } else {
+        messageCount.textContent = '0 mensagens anônimas recebidas';
+        container.innerHTML = '<div class="text-black">Nenhum dado encontrado.</div>';
+        container.style.display = 'block';
+      }
+    }
+
+    function filterMessages() {
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      const filteredData = allData.filter(item => {
+        return item["Nome"].toLowerCase().includes(searchInput) || 
+               item["Motivo "].toLowerCase().includes(searchInput) || 
+               item["Número "].toLowerCase().includes(searchInput);
+      });
+      displayMessages(filteredData);
+    }
+
+    function filterByTime(period) {
+      const now = new Date();
+      let filteredData = [];
+
+      if (period === 'today') {
+        filteredData = allData.filter(item => {
+          const itemDate = new Date(item["Data e Hora"]);
+          return itemDate.toDateString() === now.toDateString();
+        });
+      } else if (period === 'week') {
+        filteredData = allData.filter(item => {
+          const itemDate = new Date(item["Data e Hora"]);
+          const oneWeekAgo = new Date();
+          oneWeekAgo.setDate(now.getDate() - 7);
+          return itemDate >= oneWeekAgo && itemDate <= now;
+        });
+      } else if (period === 'month') {
+        filteredData = allData.filter(item => {
+          const itemDate = new Date(item["Data e Hora"]);
+          return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
+        });
+      } else {
+        filteredData = allData;
+      }
+
+      displayMessages(filteredData);
+    }
+
+    function toggleFilterOptions() {
+      const filterOptions = document.getElementById('filterOptions');
+      filterOptions.classList.toggle('hidden');
+    }
+
+    window.onload = loadData;
+  </script>
+</body>
+</html>
