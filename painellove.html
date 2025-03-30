@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loveneext - Visualização de Cadastros</title>
+    <meta name="description" content="Aplicativo Loveneext para visualização de cadastros e mensagens" />
+    <meta name="author" content="Loveneext" />
+
+    <meta property="og:title" content="Loveneext" />
+    <meta property="og:description" content="Visualização de cadastros e mensagens do Loveneext" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@loveneext" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      // Configure Tailwind with dark mode
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              love: {
+                undo: '#ff6b6b',
+                undoGradient: '#f06595',
+                times: '#cc5de8',
+                timesGradient: '#845ef7',
+                heart: '#5c7cfa',
+                heartGradient: '#339af0',
+                marker: '#22b8cf',
+                markerGradient: '#20c997',
+                phone: '#ff922b',
+                phoneGradient: '#fcc419',
+                logo: '#ff922b',
+                logoGradient: '#ff6b6b'
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      /* Check system preference for dark mode on load */
+      :root {
+        color-scheme: light dark;
+      }
+
+      /* Base styling */
+      .dark {
+        --bg-color: #1e293b;
+        --text-color: #f8fafc;
+        --card-bg: #334155;
+        --border-color: #475569;
+        --muted-color: #94a3b8;
+        --accent-color: #0ea5e9;
+      }
+      
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      body.dark {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+      
+      /* Card styles */
+      .profile-card {
+        transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .dark .profile-card {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+      }
+
+      /* Custom icon styling */
+      .gradient-icon {
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+      }
+      
+      .gradient-icon i {
+        color: white;
+      }
+      
+      .gradient-icon.undo {
+        background: linear-gradient(45deg, #ff6b6b, #f06595);
+      }
+      
+      .gradient-icon.times {
+        background: linear-gradient(45deg, #cc5de8, #845ef7);
+      }
+      
+      .gradient-icon.heart {
+        background: linear-gradient(45deg, #5c7cfa, #339af0);
+      }
+      
+      .gradient-icon.map-marker {
+        background: linear-gradient(45deg, #22b8cf, #20c997);
+      }
+      
+      .gradient-icon.phone {
+        background: linear-gradient(45deg, #ff922b, #fcc419);
+        width: 20px;
+        height: 20px;
+        font-size: 0.75rem;
+        margin-right: 0.5rem;
+      }
+      
+      .default-image {
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 150px;
+        height: 150px;
+        border-radius: 0.5rem;
+      }
+      
+      .dark .default-image {
+        background: #334155;
+      }
+      
+      .default-image i {
+        color: #94a3b8;
+        font-size: 3rem;
+      }
+      
+      .gradient-heart {
+        background: linear-gradient(45deg, #ff922b, #ff6b6b);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+      }
+      
+      .gradient-heart i {
+        color: white;
+      }
+
+      /* Filter button styles */
+      .filter-btn {
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .filter-btn.active {
+        background-color: #3b82f6;
+        color: white;
+      }
+      
+      .dark .filter-btn {
+        background-color: #334155;
+        color: #f8fafc;
+        border: 1px solid #475569;
+      }
+      
+      .dark .filter-btn.active {
+        background-color: #3b82f6;
+        color: white;
+      }
+      
+      /* Loader animation */
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .loader {
+        border-top-color: #3b82f6;
+        animation: spin 1s linear infinite;
+      }
+      
+      /* Mobile responsiveness */
+      @media (max-width: 640px) {
+        .profiles-grid {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app" class="min-h-screen transition-colors duration-300">
+      <header class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+        <div class="flex items-center">
+          <div class="gradient-heart">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h1 class="ml-2 text-xl font-semibold">
+            Loveneext
+          </h1>
+        </div>
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <i class="fas fa-sun dark:hidden"></i>
+          <i class="fas fa-moon hidden dark:inline"></i>
+        </button>
+      </header>
+      
+      <main class="container mx-auto px-4 py-6">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold">Caixa de entrada</h2>
+          <p id="totalLoves" class="text-gray-600 dark:text-gray-400">0 total de loves recebidos</p>
+          
+          <div class="mt-4 relative">
+            <input id="searchInput" class="w-full p-2 pl-10 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Buscar mensagens..." type="text"/>
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"></i>
+          </div>
+          
+          <div class="mt-4 flex flex-wrap">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="hour">Última hora</button>
+            <button class="filter-btn" data-filter="day">Último dia</button>
+            <button class="filter-btn" data-filter="week">Última semana</button>
+            <button class="filter-btn" data-filter="month">Último mês</button>
+          </div>
+        </div>
+        
+        <div id="loader" class="flex justify-center items-center min-h-[50vh]">
+          <div class="loader rounded-full h-12 w-12 border-4 border-gray-200 dark:border-gray-700"></div>
+        </div>
+        
+        <div id="profilesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center profiles-grid"></div>
+        
+        <div id="noResults" class="hidden col-span-full text-center py-12">
+          <p class="text-xl text-gray-600 dark:text-gray-400">Nenhum perfil encontrado</p>
+          <button id="clearFilters" class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">
+            Limpar filtros
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Configuration
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPRSUGdNX3l8QXfR1lkjU5A-KLCBsKASjp_iQFPrrSb_9V9ZRbGXe07oD9UdR7Y-9p/exec";
+      
+      // State management
+      let allProfiles = [];
+      let activeFilter = 'all';
+      let searchQuery = '';
+      
+      // DOM Elements
+      const themeToggle = document.getElementById('theme-toggle');
+      const profilesContainer = document.getElementById('profilesContainer');
+      const totalLovesElement = document.getElementById('totalLoves');
+      const searchInput = document.getElementById('searchInput');
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const clearFiltersButton = document.getElementById('clearFilters');
+      const noResultsElement = document.getElementById('noResults');
+      const loaderElement = document.getElementById('loader');
+      
+      // Theme management
+      function initTheme() {
+        // Check for saved theme preference or use system preference
+        const isDarkMode = localStorage.getItem('theme') === 'dark' || 
+          (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        
+        if (isDarkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+      
+      function toggleTheme() {
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        }
+      }
+      
+      // Data loading and display
+      async function loadData() {
+        loaderElement.classList.remove('hidden');
+        profilesContainer.classList.add('hidden');
+        
+        try {
+          const response = await fetch(SCRIPT_URL);
+          const result = await response.json();
+          
+          if (result.status === 'success' && result.data && result.data.length > 0) {
+            allProfiles = result.data.reverse(); // Most recent first
+            applyFilters();
+          } else {
+            console.error('Nenhum dado encontrado');
+            showError('Não foi possível carregar os dados');
+          }
+        } catch (error) {
+          console.error('Erro:', error);
+          showError('Falha ao carregar os dados');
+        } finally {
+          loaderElement.classList.add('hidden');
+          profilesContainer.classList.remove('hidden');
+        }
+      }
+      
+      function showError(message) {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative';
+        errorElement.innerHTML = `<strong class="font-bold">Erro!</strong> <span class="block sm:inline">${message}</span>`;
+        
+        document.querySelector('main').prepend(errorElement);
+        
+        setTimeout(() => {
+          errorElement.remove();
+        }, 5000);
+      }
+      
+      function applyFilters() {
+        let filtered = [...allProfiles];
+        
+        // Apply time filter
+        if (activeFilter !== 'all') {
+          const now = new Date();
+          filtered = filtered.filter(item => {
+            const profileDate = new Date(item['Data/Hora'] || item['Data/Hora '] || '');
+            const hoursDiff = (now.getTime() - profileDate.getTime()) / (1000 * 60 * 60);
+            
+            switch (activeFilter) {
+              case 'hour': return hoursDiff <= 1;
+              case 'day': return hoursDiff <= 24;
+              case 'week': return hoursDiff <= 168; // 7 * 24
+              case 'month': return hoursDiff <= 720; // 30 * 24
+              default: return true;
+            }
+          });
+        }
+        
+        // Apply search filter
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          filtered = filtered.filter(item => {
+            const nome = (item['Nome'] || '').toLowerCase();
+            const descricao = (item['Descrição'] || item['Descrição '] || '').toLowerCase();
+            return nome.includes(query) || descricao.includes(query);
+          });
+        }
+        
+        displayProfiles(filtered);
+      }
+      
+      function displayProfiles(profiles) {
+        profilesContainer.innerHTML = '';
+        
+        // Update total count
+        totalLovesElement.textContent = `${profiles.length} total de loves recebidos`;
+        
+        // Show/hide no results message
+        if (profiles.length === 0) {
+          noResultsElement.classList.remove('hidden');
+        } else {
+          noResultsElement.classList.add('hidden');
+          
+          // Create profile cards
+          profiles.forEach(profile => {
+            const profileCard = createProfileCard(profile);
+            profilesContainer.appendChild(profileCard);
+          });
+        }
+      }
+      
+      function createProfileCard(profile) {
+        const nome = profile['Nome'] || profile.Nome || '-';
+        const idade = profile['Idade '] || profile.Idade || '-';
+        const telefone = profile['Telefone '] || profile.Telefone || '-';
+        const descricao = profile['Descrição '] || profile.Descrição || '-';
+        const dataHora = profile['Data/Hora'] || profile['Data/Hora '] || '-';
+        const imagemUrl = profile['URL da imagem '] || profile['URL da Imagem'] || '';
+        
+        // Separate date and time
+        const [date, time] = dataHora.split(' ');
+        const [hour, minute] = time ? time.split(':') : ['--', '--'];
+        const hourNum = parseInt(hour);
+        const ampm = hourNum >= 12 ? 'PM' : 'AM';
+        const formattedTime = `${hourNum % 12 || 12}:${minute} ${ampm}`;
+        
+        // Create card element
+        const card = document.createElement('div');
+        card.className = 'profile-card bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 border border-gray-200 dark:border-gray-700';
+        
+        card.innerHTML = `
+          <div class="flex items-center justify-between p-2 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center space-x-1">
+              <i class="fas fa-cog text-gray-500 dark:text-gray-400"></i>
+              <span class="text-gray-500 dark:text-gray-400 font-semibold text-sm">NEEXT PHONE</span>
+            </div>
+            <div class="text-gray-500 dark:text-gray-400 text-sm flex-grow text-center">
+              ${formattedTime}
+            </div>
+            <div class="flex items-center space-x-1 text-gray-500 dark:text-gray-400 text-sm">
+              <i class="fas fa-signal"></i>
+              <i class="fas fa-wifi"></i>
+              <i class="fas fa-battery-three-quarters"></i>
+              <span class="battery-level"></span>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center justify-center mb-4">
+              <i class="fas fa-heart text-purple-600 text-2xl"></i>
+              <span class="ml-2 text-red-500 font-bold text-xl">neextinder</span>
+            </div>
+            <div class="flex justify-center mb-4">
+              ${imagemUrl.trim() 
+                ? `<img alt="Profile picture of ${nome}" class="rounded-lg object-cover" height="150" src="${imagemUrl.trim()}" width="150"/>`
+                : `<div class="default-image"><i class="fas fa-user"></i></div>`
+              }
+            </div>
+            <div class="text-center">
+              <div class="flex items-center justify-center mb-2">
+                <span class="font-bold text-lg">${nome}, ${idade}</span>
+                <i class="fas fa-check-circle text-blue-500 ml-1"></i>
+              </div>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">${descricao}</p>
+              <p class="text-gray-600 dark:text-gray-400 mb-4 flex items-center justify-center">
+                <i class="fas fa-calendar-alt mr-2"></i> Data: ${date}
+              </p>
+              <p class="text-gray-600 dark:text-gray-400 mb-4 flex items-center justify-center">
+                <div class="gradient-icon phone"><i class="fas fa-phone-alt"></i></div>
+                Phone: ${telefone}
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-around p-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="gradient-icon undo">
+              <i class="fas fa-undo text-2xl"></i>
+            </div>
+            <div class="gradient-icon times">
+              <i class="fas fa-times text-2xl"></i>
+            </div>
+            <div class="gradient-icon heart">
+              <i class="fas fa-heart text-2xl"></i>
+            </div>
+            <div class="gradient-icon map-marker">
+              <i class="fas fa-map-marker-alt text-2xl"></i>
+            </div>
+          </div>
+        `;
+        
+        return card;
+      }
+
+      // Battery level functions
+      function updateBatteryLevel() {
+        try {
+          if (navigator.getBattery) {
+            navigator.getBattery().then(function(battery) {
+              const batteryLevel = Math.round(battery.level * 100) + '%';
+              document.querySelectorAll('.battery-level').forEach(el => {
+                el.textContent = batteryLevel;
+              });
+            });
+          } else {
+            document.querySelectorAll('.battery-level').forEach(el => {
+              el.textContent = '100%';
+            });
+          }
+        } catch (error) {
+          console.error('Error getting battery level:', error);
+          document.querySelectorAll('.battery-level').forEach(el => {
+            el.textContent = '100%';
+          });
+        }
+      }
+      
+      // Event handlers
+      function handleSearchInput(e) {
+        searchQuery = e.target.value;
+        applyFilters();
+      }
+      
+      function handleFilterClick(e) {
+        const filter = e.target.dataset.filter;
+        
+        // Update active filter
+        filterButtons.forEach(btn => {
+          btn.classList.remove('active');
+        });
+        e.target.classList.add('active');
+        
+        activeFilter = filter;
+        applyFilters();
+      }
+      
+      function handleClearFilters() {
+        // Reset filters
+        searchQuery = '';
+        activeFilter = 'all';
+        
+        // Update UI
+        searchInput.value = '';
+        filterButtons.forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.filter === 'all') {
+            btn.classList.add('active');
+          }
+        });
+        
+        applyFilters();
+      }
+
+      // Initialize the app
+      document.addEventListener('DOMContentLoaded', () => {
+        // Set up event listeners
+        themeToggle.addEventListener('click', toggleTheme);
+        searchInput.addEventListener('input', handleSearchInput);
+        clearFiltersButton.addEventListener('click', handleClearFilters);
+        
+        filterButtons.forEach(btn => {
+          btn.addEventListener('click', handleFilterClick);
+        });
+        
+        // Initialize theme
+        initTheme();
+        
+        // Update battery level
+        updateBatteryLevel();
+        setInterval(updateBatteryLevel, 60000); // Update every minute
+        
+        // Load profile data
+        loadData();
+      });
+    </script>
+  </body>
+</html>
