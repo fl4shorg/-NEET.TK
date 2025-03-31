@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>© 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
+  <title>© 𝗢𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔</title>
   <meta name="description" content="© neext ltda." />
   
   <!-- Ícone da página -->
@@ -14,13 +13,12 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
   <!-- Open Graph tags -->
-  <meta property="og:title" content="© 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔" />
+  <meta property="og:title" content="© 𝗢𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔" />
   <meta property="og:description" content="© neext ltda." />
   <meta property="og:type" content="website" />
 
-
   <!-- Three.js for background animation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.157.0/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
   
   <!-- Lucide Icons (SVG based) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -62,8 +60,8 @@
       position: relative;
       z-index: 10;
       backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .image-side {
@@ -100,6 +98,7 @@
     .brand-logo img {
       max-width: 120px;
       margin-bottom: 16px;
+      animation: float 6s ease-in-out infinite;
     }
 
     .brand-logo .tagline {
@@ -111,7 +110,7 @@
 
     .form-side {
       flex: 1;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
       padding: 48px 40px;
       display: flex;
       flex-direction: column;
@@ -147,7 +146,7 @@
       margin-bottom: 8px;
       font-size: 14px;
       font-weight: 600;
-      color: #475569;
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .input-container {
@@ -165,6 +164,15 @@
       transition: all 0.2s ease;
       background-color: rgba(255, 255, 255, 0.1);
       color: #ffffff;
+    }
+
+    .input-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 16px 12px;
+      padding-right: 2.5rem;
     }
 
     .input-group input:focus,
@@ -186,7 +194,6 @@
       left: 14px;
       transform: translateY(-50%);
       color: rgba(255, 255, 255, 0.7);
-      font-size: 16px;
     }
 
     .password-toggle {
@@ -195,7 +202,6 @@
       right: 14px;
       transform: translateY(-50%);
       color: rgba(255, 255, 255, 0.7);
-      font-size: 16px;
       cursor: pointer;
       background: none;
       border: none;
@@ -204,20 +210,14 @@
     }
 
     .password-toggle:hover {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .remember-me {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       margin-bottom: 24px;
       font-size: 14px;
-    }
-
-    .remember-me-left {
-      display: flex;
-      align-items: center;
     }
 
     .remember-me input {
@@ -251,6 +251,7 @@
 
     .login-button:hover {
       background: #7c3aed;
+      transform: translateY(-2px);
     }
 
     .login-button:active {
@@ -269,9 +270,10 @@
       font-weight: 600;
       letter-spacing: 0.5px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      z-index: 100;
+      z-index: 50;
       backdrop-filter: blur(4px);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: float 6s ease-in-out infinite;
     }
 
     .social-buttons {
@@ -288,21 +290,16 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #f8fafc;
-      color: #64748b;
       transition: all 0.2s ease;
-      border: 1px solid #e2e8f0;
-      font-size: 18px;
+      color: white;
     }
 
     .instagram-button {
       background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-      color: white;
     }
 
     .whatsapp-button {
       background: #25D366;
-      color: white;
     }
 
     .social-button:hover {
@@ -313,8 +310,9 @@
     .form-footer {
       margin-top: auto;
       text-align: center;
-      font-size: 13px;
+      font-size: 12px;
       color: rgba(255, 255, 255, 0.6);
+      padding-top: 24px;
     }
 
     .loader-container {
@@ -340,107 +338,41 @@
     }
 
     .loader {
-      display: inline-block;
       position: relative;
       width: 80px;
       height: 80px;
     }
 
-    .loader div {
-      animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-      transform-origin: 40px 40px;
-    }
-
-    .loader div:after {
-      content: " ";
-      display: block;
-      position: absolute;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #8b5cf6;
-      margin: -4px 0 0 -4px;
-    }
-
     .loader div:nth-child(1) {
-      animation-delay: -0.036s;
-    }
-
-    .loader div:nth-child(1):after {
-      top: 63px;
-      left: 63px;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 4px solid transparent;
+      border-top-color: #8b5cf6;
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
     }
 
     .loader div:nth-child(2) {
-      animation-delay: -0.072s;
-    }
-
-    .loader div:nth-child(2):after {
-      top: 68px;
-      left: 56px;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 4px solid transparent;
+      border-right-color: #db2777;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite reverse;
     }
 
     .loader div:nth-child(3) {
-      animation-delay: -0.108s;
-    }
-
-    .loader div:nth-child(3):after {
-      top: 71px;
-      left: 48px;
-    }
-
-    .loader div:nth-child(4) {
-      animation-delay: -0.144s;
-    }
-
-    .loader div:nth-child(4):after {
-      top: 72px;
-      left: 40px;
-    }
-
-    .loader div:nth-child(5) {
-      animation-delay: -0.18s;
-    }
-
-    .loader div:nth-child(5):after {
-      top: 71px;
-      left: 32px;
-    }
-
-    .loader div:nth-child(6) {
-      animation-delay: -0.216s;
-    }
-
-    .loader div:nth-child(6):after {
-      top: 68px;
-      left: 24px;
-    }
-
-    .loader div:nth-child(7) {
-      animation-delay: -0.252s;
-    }
-
-    .loader div:nth-child(7):after {
-      top: 63px;
-      left: 17px;
-    }
-
-    .loader div:nth-child(8) {
-      animation-delay: -0.288s;
-    }
-
-    .loader div:nth-child(8):after {
-      top: 56px;
-      left: 12px;
-    }
-
-    @keyframes loader {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 2s ease infinite;
     }
 
     .toast {
@@ -460,27 +392,63 @@
       opacity: 0;
       transition: all 0.3s ease;
       z-index: 1000;
-    }
-
-    .toast i {
-      font-size: 18px;
+      backdrop-filter: blur(4px);
     }
 
     .toast.success {
-      background-color: #10b981;
+      background-color: rgba(16, 185, 129, 0.9);
+      border-left: 4px solid #10b981;
     }
 
     .toast.error {
-      background-color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.9);
+      border-left: 4px solid #ef4444;
     }
 
     .toast.warning {
-      background-color: #f59e0b;
+      background-color: rgba(245, 158, 11, 0.9);
+      border-left: 4px solid #f59e0b;
     }
 
     .toast.show {
       transform: translateY(0);
       opacity: 1;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
     }
 
     @media (min-width: 768px) {
@@ -499,7 +467,7 @@
 
     @media (max-width: 767px) {
       .login-container {
-        width: 100%;
+        width: 95%;
         max-width: 450px;
         min-height: auto;
         border-radius: 12px;
@@ -519,6 +487,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
   </style>
 </head>
@@ -587,16 +556,15 @@
           </div>
           
           <div class="input-group">
-            <label class="label" for="group">Grupo</label>
+            <label class="label" for="group">Painel</label>
             <div class="input-container">
               <span class="input-icon">
-                <i data-lucide="users"></i>
+                <i data-lucide="layout-dashboard"></i>
               </span>
               <select id="group" required>
-                <option value="" disabled selected>Selecione seu grupo</option> 
+                <option value="" disabled selected>Selecione seu painel</option>
                 <option value="love">loveneext</option> 
                 <option value="story">story neext</option>   
-         
                 <option value="feedback">feedback neext</option>     
                 <option value="suporte">suporte</option>                                                          
                 <option value="friendship">friendship</option>                                                        
@@ -636,41 +604,36 @@
           </div>
           
           <div class="remember-me">
-            <div class="remember-me-left">
-              <input 
-                type="checkbox" 
-                id="remember-me"
-              />
-              <label for="remember-me">Lembrar senha</label>
-            </div>
+            <input type="checkbox" id="remember-me" />
+            <label for="remember-me">Lembrar senha</label>
           </div>
           
           <button type="submit" class="login-button">
             <i data-lucide="log-in"></i> Entrar
           </button>
-
-          <div class="social-buttons">
-            <a 
-              href="https://instagram.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="social-button instagram-button"
-            >
-              <i data-lucide="instagram"></i>
-            </a>
-            <a 
-              href="https://wa.me/message/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="social-button whatsapp-button"
-            >
-              <i data-lucide="message-circle"></i>
-            </a>
-          </div>
         </form>
+
+        <div class="social-buttons">
+          <a 
+            href="https://instagram.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="social-button instagram-button"
+          >
+            <i data-lucide="instagram"></i>
+          </a>
+          <a 
+            href="https://wa.me/message/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="social-button whatsapp-button"
+          >
+            <i data-lucide="message-circle"></i>
+          </a>
+        </div>
         
         <div class="form-footer">
-          © 2019 𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔. Todos os direitos reservados.
+          © 2019 𝗢𝗡𝗘𝗘𝗫𝗧 𝗟𝗧𝗗𝗔. Todos os direitos reservados.
         </div>
       </div>
     </div>
@@ -678,11 +641,6 @@
     <!-- Loader -->
     <div id="loader-container" class="loader-container">
       <div class="loader">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
         <div></div>
         <div></div>
         <div></div>
@@ -765,14 +723,19 @@
         const newType = type === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', newType);
         
-        // Change icon
-        const icon = type === 'password' ? 'eye-off' : 'eye';
-        this.innerHTML = `<i data-lucide="${icon}"></i>`;
+        // Corrige o problema do ícone desaparecendo
+        const iconName = newType === 'text' ? 'eye-off' : 'eye';
+        
+        // Limpa o botão e cria um novo elemento ícone
+        toggleButton.innerHTML = '';
+        const iconElement = document.createElement('i');
+        iconElement.setAttribute('data-lucide', iconName);
+        toggleButton.appendChild(iconElement);
+        
+        // Reinicializa o ícone usando o método correto do Lucide
         lucide.createIcons({
-          icons: {
-            'eye': true,
-            'eye-off': true
-          }
+          selector: 'i[data-lucide]',
+          nameAttr: 'data-lucide',
         });
       });
     }
@@ -1037,7 +1000,6 @@
           ring.rotation.y = Math.random() * Math.PI;
           
           scene.add(ring);
-          orbitalRings.push(ring);
           
           // Add user data for animation
           ring.userData = {
@@ -1048,6 +1010,8 @@
             ).normalize(),
             rotationSpeed: 0.003 + Math.random() * 0.005
           };
+          
+          orbitalRings.push(ring);
         }
       });
       
@@ -1101,11 +1065,10 @@
         const time = Date.now() * 0.001;
         
         // Animate individual particles
-        particles.children.forEach((particle, index) => {
+        particles.children.forEach((particle) => {
           const { 
             speed, 
             rotationSpeed, 
-            orbitRadius, 
             orbitOffset,
             pulseSpeed,
             originalScale,
@@ -1170,7 +1133,7 @@
       
       animate();
       
-      // Return cleanup function for proper resource management
+      // Setup cleanup function
       return function cleanup() {
         window.removeEventListener('resize', handleResize);
         
@@ -1195,6 +1158,7 @@
           scene.remove(line);
         });
         
+        // Remove particles
         particles.children.forEach(particle => {
           particles.remove(particle);
         });
