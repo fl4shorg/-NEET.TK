@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEEXT Support Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'neext-blue': '#1E3A8A',
+            'neext-indigo': '#4F46E5',
+            'neext-purple': '#7E22CE',
+            primary: '#4F46E5',
+            secondary: '#7E22CE',
+            background: '#f8fafc',
+            foreground: '#0f172a',
+            muted: '#f1f5f9',
+            'muted-foreground': '#64748b'
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'float': 'float 3s ease-in-out infinite',
+            'spin-slow': 'spin 8s linear infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' }
+            },
+            spin: {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
+            },
+            pulse: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.5' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    
+    .glass-card {
+      background-color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .bg-gradient-text {
+      background: linear-gradient(to right, #1E3A8A, #4F46E5, #7E22CE);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(to bottom, rgba(248, 250, 252, 1), rgba(241, 245, 249, 0.3));
+    }
+    
+    .animate-fade-in {
+      opacity: 0;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .animate-spin-slow {
+      animation: spin 8s linear infinite;
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .accordion-item.active .accordion-content {
+      max-height: 500px;
+      opacity: 1;
+    }
+    
+    .accordion-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: all 0.3s ease-out;
+    }
+    
+    .accordion-icon {
+      transition: transform 0.3s ease;
+    }
+    
+    .accordion-item.active .accordion-icon {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4 bg-transparent" id="header">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#1E3A8A] to-[#7E22CE] flex items-center justify-center">
+          <span class="text-white font-bold text-sm">NX</span>
+        </div>
+        <h1 class="text-2xl font-bold bg-gradient-text">NEEXT</h1>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#" class="text-foreground hover:text-primary transition-colors">Início</a>
+        <a href="#about" class="text-foreground hover:text-primary transition-colors">Sobre</a>
+        <a href="#faq" class="text-foreground hover:text-primary transition-colors">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <a href="#contact" class="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#4F46E5] to-[#7E22CE] hover:opacity-90 transition-opacity">
+          Fale Conosco
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="min-h-[100vh] flex flex-col justify-center pt-20 pb-16 gradient-bg">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 animate-fade-in">
+      <div class="flex-1 space-y-6 max-w-2xl">
+        <div class="space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Suporte 24/7</span>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-bold bg-gradient-text">
+            Central de Suporte NEEXT
+          </h1>
+          <p class="text-lg md:text-xl text-muted-foreground">
+            Estamos aqui para ouvir você. Reclamações, denúncias ou sugestões - 
+            trabalhamos para melhorar continuamente nossos serviços.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#contact" class="inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-[#4F46E5] to-[#7E22CE] hover:opacity-90 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+            Entrar em contato
+          </a>
+          <a href="#faq" class="inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm font-medium border border-primary text-primary hover:bg-primary/10">
+            Ver dúvidas frequentes
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="flex-1 relative max-w-md w-full h-[400px] glass-card rounded-2xl overflow-hidden">
+        <div class="absolute inset-0 animate-pulse-slow bg-gradient-to-br from-[#1E3A8A]/30 via-[#7E22CE]/30 to-[#4F46E5]/30"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="relative">
+            <div class="w-40 h-40 rounded-full bg-gradient-to-br from-[#1E3A8A] to-[#7E22CE] animate-spin-slow flex items-center justify-center">
+              <div class="w-32 h-32 rounded-full bg-white flex items-center justify-center">
+                <div class="flex flex-col items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#7E22CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                  </svg>
+                  <span class="text-lg font-medium bg-gradient-text">SUPORTE</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center animate-float">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+            </div>
+            
+            <div class="absolute -bottom-3 -left-3 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center animate-float" style="animation-delay: 1s">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7E22CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-20 gradient-bg">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold bg-gradient-text mb-4">
+          Caixinha de Suporte NEEXT
+        </h2>
+        <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Nossa equipe está pronta para ouvir suas necessidades e oferecer o melhor suporte possível.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="glass-card p-6 rounded-xl transition-all duration-500 hover:translate-y-[-8px] hover:shadow-lg animate-fade-in">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#1E3A8A] to-[#7E22CE] flex items-center justify-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-center mb-2">Atendimento Personalizado</h3>
+          <p class="text-muted-foreground text-center">Suporte dedicado para resolver suas questões com agilidade e eficiência.</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-xl transition-all duration-500 hover:translate-y-[-8px] hover:shadow-lg animate-fade-in" style="animation-delay: 150ms">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#1E3A8A] to-[#7E22CE] flex items-center justify-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-center mb-2">Canal de Comunicação</h3>
+          <p class="text-muted-foreground text-center">Diálogo aberto para reclamações, sugestões e feedback sobre nossos serviços.</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-xl transition-all duration-500 hover:translate-y-[-8px] hover:shadow-lg animate-fade-in" style="animation-delay: 300ms">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#1E3A8A] to-[#7E22CE] flex items-center justify-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-center mb-2">Denúncias Seguras</h3>
+          <p class="text-muted-foreground text-center">Canal confidencial para reportar problemas com total segurança e discrição.</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-xl transition-all duration-500 hover:translate-y-[-8px] hover:shadow-lg animate-fade-in" style="animation-delay: 450ms">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#1E3A8A] to-[#7E22CE] flex items-center justify-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-center mb-2">Suporte 24/7</h3>
+          <p class="text-muted-foreground text-center">Estamos disponíveis a qualquer momento para atender suas necessidades.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="contact" class="py-16 gradient-bg">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold bg-gradient-text mb-4">Entre em Contato</h2>
+          <p class="text-muted-foreground">
+            Estamos prontos para ouvir você. Preencha o formulário abaixo para enviar sua mensagem.
+          </p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-8">
+          <form id="contactForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium mb-1" for="name">Nome</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="nome"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="Seu nome"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-1" for="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="seu.email@exemplo.com"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-1" for="phone">Telefone</label>
+              <input
+                type="tel"
+                id="phone"
+                name="numero"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="(00) 00000-0000"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-1" for="message">Mensagem</label>
+              <textarea
+                id="message"
+                name="descricao"
+                rows="5"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                placeholder="Descreva sua mensagem, dúvida ou sugestão..."
+              ></textarea>
+            </div>
+            
+            <div class="flex justify-center">
+              <button
+                type="submit"
+                class="px-8 py-3 bg-gradient-to-r from-[#4F46E5] to-[#7E22CE] text-white font-medium rounded-md hover:opacity-90 transition-opacity flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                Enviar Mensagem
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- FAQ Section -->
+  <section id="faq" class="py-16 gradient-bg">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="space-y-4 text-center mb-12">
+        <h2 class="text-3xl font-bold bg-gradient-text">
+          Dúvidas Frequentes
+        </h2>
+        <p class="text-muted-foreground">
+          Encontre respostas para as perguntas mais comuns sobre nosso suporte.
+        </p>
+      </div>
+
+      <div class="glass-card rounded-xl p-6 md:p-8">
+        <div class="space-y-4" id="accordion">
+          <div class="accordion-item border border-gray-200 rounded-lg px-4">
+            <button class="w-full flex justify-between items-center py-4 text-left font-medium">
+              <span>Como posso acompanhar minha reclamação?</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="accordion-content pb-4 text-muted-foreground">
+              Após enviar sua reclamação, você receberá um número de protocolo por email. Você pode usar esse número para verificar o status da sua reclamação através do nosso site ou entrando em contato com nosso suporte.
+            </div>
+          </div>
+          
+          <div class="accordion-item border border-gray-200 rounded-lg px-4">
+            <button class="w-full flex justify-between items-center py-4 text-left font-medium">
+              <span>Qual é o prazo de resposta para reclamações?</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="accordion-content pb-4 text-muted-foreground">
+              Nos comprometemos a responder todas as reclamações em até 5 dias úteis. Para casos mais complexos, podemos precisar de um prazo maior, mas manteremos você informado sobre o progresso.
+            </div>
+          </div>
+          
+          <div class="accordion-item border border-gray-200 rounded-lg px-4">
+            <button class="w-full flex justify-between items-center py-4 text-left font-medium">
+              <span>Como faço uma denúncia anônima?</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="accordion-content pb-4 text-muted-foreground">
+              Para fazer uma denúncia anônima, selecione a opção 'Denúncia' no formulário de contato e marque a opção 'Manter anonimato'. Não será necessário preencher seus dados pessoais, apenas detalhar a situação que deseja denunciar.
+            </div>
+          </div>
+          
+          <div class="accordion-item border border-gray-200 rounded-lg px-4">
+            <button class="w-full flex justify-between items-center py-4 text-left font-medium">
+              <span>Quais tipos de problemas a NEEXT pode resolver?</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="accordion-content pb-4 text-muted-foreground">
+              A NEEXT pode ajudar com diversos tipos de problemas relacionados aos nossos serviços, incluindo questões técnicas, suporte ao cliente, faturamento, qualidade de serviço e muito mais. Se você não tem certeza se podemos ajudar, entre em contato conosco mesmo assim.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-[#1E3A8A] to-[#4F46E5] text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+              <span class="text-[#4F46E5] font-bold text-sm">NX</span>
+            </div>
+            <h3 class="text-xl font-bold">NEEXT</h3>
+          </div>
+          <p class="text-white/80 mb-4">
+            Transformando o futuro com tecnologia e inovação.
+          </p>
+          <div class="flex gap-4">
+            <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+            <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+              </svg>
+            </a>
+            <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Links Rápidos</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-white/80 hover:text-white transition-colors">Início</a></li>
+            <li><a href="#about" class="text-white/80 hover:text-white transition-colors">Sobre Nós</a></li>
+            <li><a href="#services" class="text-white/80 hover:text-white transition-colors">Nossos Serviços</a></li>
+            <li><a href="#contact" class="text-white/80 hover:text-white transition-colors">Contato</a></li>
+            <li><a href="#faq" class="text-white/80 hover:text-white transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Contato</h3>
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span class="text-white/80">(00) 1234-5678</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span class="text-white/80">contato@neext.com</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span class="text-white/80">Av. Tecnologia, 1000 - São Paulo, SP</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="mt-8 pt-8 border-t border-white/20 text-center">
+        <p class="text-white/80">© 2023 NEEXT. Todos os direitos reservados.</p>
+        <p class="mt-2 text-white/80 flex items-center justify-center gap-1">
+          Feito com 
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ff3366" stroke="#ff3366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          para a NEEXT
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll header effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.classList.remove('py-4', 'bg-transparent');
+        header.classList.add('py-2', 'bg-white/80', 'backdrop-blur-lg', 'shadow-md');
+      } else {
+        header.classList.remove('py-2', 'bg-white/80', 'backdrop-blur-lg', 'shadow-md');
+        header.classList.add('py-4', 'bg-transparent');
+      }
+    });
+
+    // Accordion functionality
+    const accordionItems = document.querySelectorAll('.accordion-item');
+    accordionItems.forEach(item => {
+      const btn = item.querySelector('button');
+      btn.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+        
+        // Close all accordions
+        accordionItems.forEach(accItem => {
+          accItem.classList.remove('active');
+        });
+        
+        // Open current accordion if it wasn't already open
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // Form submission
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(this);
+      const url = 'https://script.google.com/macros/s/AKfycbztTvhKIOzfdXfN6sGBkYSiR5t71xN4CyDT0VbDmZ6_xZe0dZgJHrj73tP_3zM809kMcg/exec';
+
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = `
+        <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Enviando...
+      `;
+      submitBtn.disabled = true;
+
+      // Send form data
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+      })
+      .then(response => {
+        // Show success message (since no-cors mode doesn't return readable response)
+        alert('Sua mensagem foi enviada com sucesso! Entraremos em contato em breve.');
+        document.getElementById('contactForm').reset();
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+      })
+      .finally(() => {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      });
+    });
+
+    // Add animation to elements when they come into view
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('.glass-card');
+      
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('animate-fade-in');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', animateOnScroll);
+    // Run once on page load
+    animateOnScroll();
+  </script>
+</body>
+</html>
+
