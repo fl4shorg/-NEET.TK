@@ -1,0 +1,1041 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeextSync - Dashboard de Arquivos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  <style>
+    /* Base styles */
+    :root {
+      --blue-500: #3b82f6;
+      --blue-700: #1d4ed8;
+      --foreground: #1e293b;
+      --muted-foreground: #64748b;
+      --border: #e2e8f0;
+      --background: #f8fafc;
+      --card: #ffffff;
+      --muted: #f1f5f9;
+      --primary: #0f172a;
+      --secondary: #f1f5f9;
+      --navbar-bg: #ffffff;  /* Added navbar background color for light mode */
+    }
+
+    .dark {
+      --foreground: #f8fafc;
+      --muted-foreground: #94a3b8;
+      --border: #334155;
+      --background: #0f172a;
+      --card: #1e293b;
+      --muted: #1e293b;
+      --primary: #f8fafc;
+      --secondary: #334155;
+      --navbar-bg: #0f172a;  /* Dark mode navbar background */
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--foreground);
+      background-color: var(--background);
+      margin: 0;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+
+    /* 3D Effects */
+    .rotate-3d {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      transition: transform 0.6s;
+    }
+
+    .rotate-3d:hover {
+      transform: rotate3d(1, 1, 1, 15deg);
+    }
+
+    /* Card styles */
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Button styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--blue-500);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--blue-700);
+    }
+
+    .btn-ghost {
+      background-color: transparent;
+      color: var(--foreground);
+    }
+
+    .btn-ghost:hover {
+      background-color: var(--muted);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--foreground);
+    }
+
+    /* Input styles */
+    .input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background-color: var(--background);
+      color: var(--foreground);
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+    }
+
+    /* Progress bar */
+    .progress {
+      width: 100%;
+      height: 0.5rem;
+      background-color: var(--muted);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--blue-500);
+      transition: width 0.2s ease;
+    }
+
+    /* No scrollbar utility */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Toaster */
+    #toaster {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+    }
+
+    .toast {
+      background-color: var(--card);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      animation: fadeIn 0.3s ease-in-out forwards;
+      max-width: 300px;
+    }
+
+    .toast-success {
+      border-left: 4px solid #10b981;
+    }
+
+    .toast-error {
+      border-left: 4px solid #ef4444;
+    }
+
+    .toast-info {
+      border-left: 4px solid #3b82f6;
+    }
+    
+    /* Navbar */
+    #navbar {
+      background-color: var(--navbar-bg);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-200">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center rotate-3d">
+              <span class="text-white font-bold text-sm">N</span>
+            </div>
+            <h1 class="text-lg md:text-xl font-bold">
+              Neext<span class="text-blue-500">Sync</span>
+            </h1>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="theme-toggle" class="btn btn-ghost p-2" aria-label="Toggle theme">
+              <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              </svg>
+              <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Mobile Navigation Tabs -->
+        <div id="mobile-tabs" class="md:hidden flex justify-between mt-2 border-t pt-2 overflow-x-auto gap-1 no-scrollbar">
+          <button data-tab="dashboard" class="tab-button active btn btn-secondary flex-1 min-w-[60px] px-2 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+              <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+              <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+              <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+            </svg>
+          </button>
+          <button data-tab="upload" class="tab-button btn btn-ghost flex-1 min-w-[60px] px-2 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </button>
+          <button data-tab="files" class="tab-button btn btn-ghost flex-1 min-w-[60px] px-2 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </button>
+          <button data-tab="search" class="tab-button btn btn-ghost flex-1 min-w-[60px] px-2 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex flex-1">
+      <!-- Sidebar (hidden on mobile) -->
+      <div id="sidebar" class="hidden md:flex md:flex-col md:gap-1 md:p-4 md:border-r md:border-border md:h-screen md:min-w-[220px]">
+        <p class="text-sm text-muted-foreground mb-4 px-2">
+          Painel de depósitos de arquivos da Neext
+        </p>
+        <button data-tab="dashboard" class="sidebar-button active btn btn-secondary justify-start gap-2 mb-1 w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+            <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+            <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+            <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+          </svg>
+          Dashboard
+        </button>
+        <button data-tab="upload" class="sidebar-button btn btn-ghost justify-start gap-2 mb-1 w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Upload de Arquivo
+        </button>
+        <button data-tab="files" class="sidebar-button btn btn-ghost justify-start gap-2 mb-1 w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          Meus Arquivos
+        </button>
+        <button data-tab="search" class="sidebar-button btn btn-ghost justify-start gap-2 mb-1 w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          Pesquisar
+        </button>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col min-h-screen">
+        <main class="flex-1 pt-20 px-2 md:px-6 md:pt-24">
+          <div class="container mx-auto">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content space-y-4 md:space-y-6">
+              <div class="space-y-2">
+                <h2 class="text-xl md:text-2xl font-bold">Dashboard</h2>
+                <p class="text-sm text-muted-foreground">
+                  Bem-vindo ao NeextSync, seu painel de depósitos de arquivos
+                </p>
+              </div>
+              
+              <!-- Stats Cards -->
+              <div class="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="card animate-fade-in transform transition-all hover:scale-[1.03] hover:shadow-md">
+                  <div class="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+                    <div class="text-sm font-medium">Total de Arquivos</div>
+                    <div class="transform transition-all hover:rotate-12 hover:scale-110">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-muted-foreground" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="px-4 pb-4">
+                    <div id="file-count" class="text-2xl md:text-3xl font-bold">0</div>
+                    <p class="text-xs text-muted-foreground">
+                      Arquivos armazenados
+                    </p>
+                  </div>
+                </div>
+                <div class="card animate-fade-in transform transition-all hover:scale-[1.03] hover:shadow-md" style="animation-delay: 0.1s">
+                  <div class="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+                    <div class="text-sm font-medium">Espaço Utilizado</div>
+                    <div class="transform transition-all hover:rotate-12 hover:scale-110">
+                      <!-- Updated to hard drive icon -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-muted-foreground" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12h20"></path>
+                        <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
+                        <circle cx="16" cy="15" r="1"></circle>
+                        <circle cx="19" cy="15" r="1"></circle>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="px-4 pb-4">
+                    <div id="total-size" class="text-2xl md:text-3xl font-bold">0 B</div>
+                    <p class="text-xs text-muted-foreground">
+                      De 15 GB totais
+                    </p>
+                  </div>
+                </div>
+                <div class="card animate-fade-in transform transition-all hover:scale-[1.03] hover:shadow-md" style="animation-delay: 0.2s">
+                  <div class="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+                    <div class="text-sm font-medium">Espaço Disponível</div>
+                    <div class="transform transition-all hover:rotate-12 hover:scale-110">
+                      <!-- Updated to hard drive icon -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-muted-foreground" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12h20"></path>
+                        <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>
+                        <circle cx="16" cy="15" r="1"></circle>
+                        <circle cx="19" cy="15" r="1"></circle>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="px-4 pb-4">
+                    <div id="available-space" class="text-2xl md:text-3xl font-bold">15 GB</div>
+                    <p class="text-xs text-muted-foreground">
+                      Para uso
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="space-y-2 mt-4 md:mt-8">
+                <h3 class="text-base md:text-lg font-medium">Arquivos Recentes</h3>
+                <div id="recent-files" class="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                  <!-- Recent Files will be loaded here -->
+                </div>
+              </div>
+            </div>
+            
+            <!-- Upload Tab -->
+            <div id="upload-tab" class="tab-content space-y-4 md:space-y-6 hidden">
+              <div class="space-y-2">
+                <h2 class="text-xl md:text-2xl font-bold">Upload de Arquivo</h2>
+                <p class="text-sm text-muted-foreground">
+                  Envie novos arquivos para o NeextSync
+                </p>
+              </div>
+              
+              <div class="max-w-full md:max-w-2xl mx-auto">
+                <div class="card animate-fade-in">
+                  <div class="p-6">
+                    <h3 class="text-2xl font-semibold leading-none tracking-tight">Upload de Arquivo</h3>
+                    <p class="text-sm text-muted-foreground mt-1.5">
+                      Envie seus arquivos para o NeextSync
+                    </p>
+                  </div>
+                  <div class="px-6 pt-0">
+                    <div class="flex flex-col items-center justify-center w-full">
+                      <label 
+                        for="file-upload" 
+                        class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 border-gray-300 dark:border-gray-600"
+                      >
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mb-2 text-gray-500 dark:text-gray-400" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                          </svg>
+                          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span class="font-medium">Clique para enviar</span> ou arraste e solte
+                          </p>
+                          <p id="selected-file-name" class="text-xs text-gray-500 dark:text-gray-400">
+                            Qualquer tipo de arquivo (máx. 10 MB)
+                          </p>
+                        </div>
+                        <input
+                          id="file-upload"
+                          type="file"
+                          class="hidden"
+                        />
+                      </label>
+                      
+                      <div id="upload-progress-container" class="w-full mt-4 hidden">
+                        <div class="progress">
+                          <div id="upload-progress-bar" class="progress-bar" style="width: 0%"></div>
+                        </div>
+                        <p id="upload-status" class="text-xs text-center mt-1 text-muted-foreground">
+                          Enviando...
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center p-6 pt-0">
+                    <div class="ml-auto">
+                      <button id="upload-button" class="btn btn-primary" disabled>
+                        Enviar Arquivo
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Files Tab -->
+            <div id="files-tab" class="tab-content space-y-4 md:space-y-6 hidden">
+              <div class="space-y-2">
+                <h2 class="text-xl md:text-2xl font-bold">Meus Arquivos</h2>
+                <p class="text-sm text-muted-foreground">
+                  Gerencie todos os seus arquivos armazenados
+                </p>
+              </div>
+              
+              <div id="files-container" class="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Files will be loaded here -->
+              </div>
+            </div>
+            
+            <!-- Search Tab -->
+            <div id="search-tab" class="tab-content space-y-4 md:space-y-6 animate-fade-in hidden">
+              <div class="space-y-2">
+                <h2 class="text-xl md:text-2xl font-bold">Pesquisar Arquivos</h2>
+                <p class="text-sm text-muted-foreground">
+                  Encontre rapidamente seus arquivos armazenados
+                </p>
+              </div>
+              
+              <div class="flex flex-col sm:flex-row gap-2">
+                <div class="relative flex-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                  </svg>
+                  <input
+                    id="search-input"
+                    placeholder="Digite o nome do arquivo..."
+                    class="input pl-8"
+                  />
+                </div>
+                <button id="search-button" class="btn btn-primary mt-2 sm:mt-0">
+                  Pesquisar
+                </button>
+              </div>
+              
+              <div id="search-results" class="mt-4 md:mt-8 space-y-4 hidden">
+                <!-- Search results will be displayed here -->
+              </div>
+            </div>
+          </div>
+        </main>
+        
+        <footer class="py-3 px-4 md:py-4 md:px-6 border-t text-center text-xs md:text-sm text-muted-foreground">
+          <p>© <span id="current-year"></span> NeextSync. Todos os direitos reservados.</p>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toaster"></div>
+
+  <script>
+    // Global variables
+    let files = [];
+    let isUploading = false;
+    let selectedFile = null;
+    
+    // DOM Elements
+    const currentYearElement = document.getElementById('current-year');
+    const themeToggle = document.getElementById('theme-toggle');
+    const moonIcon = document.getElementById('moon-icon');
+    const sunIcon = document.getElementById('sun-icon');
+    const fileUploadInput = document.getElementById('file-upload');
+    const selectedFileName = document.getElementById('selected-file-name');
+    const uploadButton = document.getElementById('upload-button');
+    const uploadProgressContainer = document.getElementById('upload-progress-container');
+    const uploadProgressBar = document.getElementById('upload-progress-bar');
+    const uploadStatus = document.getElementById('upload-status');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const searchResults = document.getElementById('search-results');
+    const fileCountElement = document.getElementById('file-count');
+    const totalSizeElement = document.getElementById('total-size');
+    const availableSpaceElement = document.getElementById('available-space');
+    const tabButtons = document.querySelectorAll('.tab-button, .sidebar-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set current year in footer
+      currentYearElement.textContent = new Date().getFullYear();
+      
+      // Load files
+      loadFiles();
+      
+      // Setup theme
+      setupTheme();
+      
+      // Setup event listeners
+      setupEventListeners();
+      
+      // Detect scroll for navbar shadow
+      window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 10) {
+          navbar.classList.add('shadow-md', 'bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur-md');
+        } else {
+          navbar.classList.remove('shadow-md', 'bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur-md');
+        }
+      });
+    });
+    
+    // Setup theme based on local storage or system preference
+    function setupTheme() {
+      const storedTheme = localStorage.getItem('theme');
+      
+      if (storedTheme) {
+        document.documentElement.classList.toggle('dark', storedTheme === 'dark');
+      } else {
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.toggle('dark', isDarkMode);
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+      }
+      
+      updateThemeIcons();
+    }
+    
+    // Update theme icons based on current theme
+    function updateThemeIcons() {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      moonIcon.classList.toggle('hidden', isDarkMode);
+      sunIcon.classList.toggle('hidden', !isDarkMode);
+    }
+    
+    // Setup all event listeners
+    function setupEventListeners() {
+      // Theme toggle
+      themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        const newTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcons();
+      });
+      
+      // Tab switching
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const tabId = button.dataset.tab;
+          switchTab(tabId);
+        });
+      });
+      
+      // File upload input change
+      fileUploadInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          selectedFile = e.target.files[0];
+          selectedFileName.textContent = selectedFile.name;
+          uploadButton.disabled = false;
+        }
+      });
+      
+      // Upload button click
+      uploadButton.addEventListener('click', () => {
+        if (selectedFile && !isUploading) {
+          uploadFile(selectedFile);
+        }
+      });
+      
+      // Search input enter key
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          handleSearch();
+        }
+      });
+      
+      // Search button click
+      searchButton.addEventListener('click', handleSearch);
+    }
+    
+    // Switch between tabs
+    function switchTab(tabId) {
+      // Update buttons
+      tabButtons.forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.classList.add('active', 'btn-secondary');
+          btn.classList.remove('btn-ghost');
+        } else {
+          btn.classList.remove('active', 'btn-secondary');
+          btn.classList.add('btn-ghost');
+        }
+      });
+      
+      // Update content
+      tabContents.forEach(content => {
+        if (content.id === `${tabId}-tab`) {
+          content.classList.remove('hidden');
+        } else {
+          content.classList.add('hidden');
+        }
+      });
+    }
+    
+    // Load files from the API
+    async function loadFiles() {
+      showLoading('recent-files');
+      showLoading('files-container');
+      
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxD7RCj1_6tyZxIaRH7MWPNhraSFNii8_gtiXESHqamqqmhXnMhzazLi8zFD1Aum4_n/exec");
+        const data = await response.json();
+        files = data.map((file, index) => ({ ...file, id: index + 1 }));
+        
+        // Update file count
+        fileCountElement.textContent = files.length;
+        
+        // Calculate total size and available space
+        let total = 0;
+        files.forEach(file => {
+          const sizeStr = file.tamanho;
+          const num = parseFloat(sizeStr.replace(/[^0-9.]/g, ''));
+          if (sizeStr.includes('GB')) total += num * 1073741824;
+          else if (sizeStr.includes('MB')) total += num * 1048576;
+          else if (sizeStr.includes('KB')) total += num * 1024;
+          else total += num;
+        });
+        
+        totalSizeElement.textContent = formatSize(total);
+        
+        // Calculate available space (15GB total)
+        const totalSpace = 15 * 1073741824; // 15GB in bytes
+        const availableBytes = totalSpace - total;
+        availableSpaceElement.textContent = formatSize(availableBytes);
+        
+        // Render files
+        renderFiles(files, 'files-container');
+        renderFiles(files.slice(0, 6), 'recent-files');
+      } catch (error) {
+        console.error("Erro ao carregar arquivos:", error);
+        showToast('Erro ao carregar arquivos. Tente novamente.', 'error');
+      }
+    }
+    
+    // Show loading state
+    function showLoading(containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `
+        <div class="col-span-full flex justify-center items-center p-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 animate-spin mr-3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          <span>Carregando arquivos...</span>
+        </div>
+      `;
+    }
+    
+    // Format file size
+    function formatSize(bytes) {
+      if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(2) + ' GB';
+      if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+      if (bytes >= 1024) return (bytes / 1024).toFixed(2) + ' KB';
+      return bytes + ' B';
+    }
+    
+    // Get file icon based on extension
+    function getFileIcon(fileName) {
+      const extension = fileName.split('.').pop()?.toLowerCase() || '';
+      
+      if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(extension)) {
+        return `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <rect x="8" y="12" width="8" height="6" rx="1"></rect>
+          <path d="M10 14h.01"></path>
+        </svg>`;
+      }
+      
+      if (['mp4', 'webm', 'mov', 'avi', 'mkv'].includes(extension)) {
+        return `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <path d="m10 11 5 3-5 3v-6Z"></path>
+        </svg>`;
+      }
+      
+      if (['mp3', 'wav', 'ogg', 'm4a'].includes(extension)) {
+        return `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <path d="M12 18v-6"></path>
+          <path d="M8 18v-1"></path>
+          <path d="M16 18v-3"></path>
+        </svg>`;
+      }
+      
+      if (['zip', 'rar', '7z', 'tar', 'gz'].includes(extension)) {
+        return `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-amber-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <path d="M10 13v-4h4"></path>
+          <path d="M10 13h4"></path>
+          <path d="M10 17h4"></path>
+        </svg>`;
+      }
+      
+      if (['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx'].includes(extension)) {
+        return `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+          <line x1="9" y1="11" x2="15" y2="11"></line>
+          <line x1="9" y1="19" x2="15" y2="19"></line>
+        </svg>`;
+      }
+      
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+      </svg>`;
+    }
+    
+    // Render files
+    function renderFiles(filesList, containerId) {
+      const container = document.getElementById(containerId);
+      
+      if (filesList.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/40">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-muted-foreground mb-3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <h3 class="text-lg font-medium">Nenhum arquivo encontrado</h3>
+            <p class="text-sm text-muted-foreground max-w-md mt-1">
+              Nenhum arquivo foi enviado ainda. Adicione arquivos usando a aba "Upload de Arquivo".
+            </p>
+          </div>
+        `;
+        return;
+      }
+      
+      let filesHTML = '';
+      
+      filesList.forEach((file, i) => {
+        filesHTML += `
+          <div class="card overflow-hidden transform transition-all hover:scale-[1.02] hover:shadow-lg animate-fade-in" style="animation-delay: ${i * 50}ms; perspective: 1000px; transform-style: preserve-3d">
+            <div class="p-0">
+              <div class="p-4 md:p-6">
+                <div class="flex items-start space-x-4">
+                  <div class="transform transition-transform hover:rotate-6">
+                    ${getFileIcon(file.nome)}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="font-medium line-clamp-1 text-left">${file.nome}</h4>
+                    <p class="text-xs md:text-sm text-muted-foreground">${file.tamanho}</p>
+                  </div>
+                  <a 
+                    href="${file.link}" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="btn btn-ghost p-2 text-muted-foreground hover:text-foreground"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span class="sr-only">Download</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = filesHTML;
+    }
+    
+    // Upload file
+    function uploadFile(file) {
+      if (isUploading) return;
+      
+      isUploading = true;
+      uploadButton.disabled = true;
+      uploadButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4 animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+        Enviando...
+      `;
+      uploadProgressContainer.classList.remove('hidden');
+      
+      // Simulate progress
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress > 95) {
+          clearInterval(progressInterval);
+          progress = 95;
+        }
+        uploadProgressBar.style.width = `${Math.min(Math.round(progress), 95)}%`;
+      }, 200);
+      
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      
+      reader.onload = function() {
+        const base64Data = reader.result?.toString().split(",")[1];
+        
+        fetch("https://script.google.com/macros/s/AKfycbxD7RCj1_6tyZxIaRH7MWPNhraSFNii8_gtiXESHqamqqmhXnMhzazLi8zFD1Aum4_n/exec", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            fileData: base64Data || "",
+            fileName: file.name,
+            mimeType: file.type,
+            fileSize: file.size.toString()
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          clearInterval(progressInterval);
+          uploadProgressBar.style.width = '100%';
+          uploadStatus.textContent = 'Concluído!';
+          
+          setTimeout(() => {
+            if (data.status === "sucesso") {
+              showToast("Arquivo enviado com sucesso!", "success");
+              loadFiles();
+              switchTab("dashboard");
+            } else {
+              showToast(`Erro: ${data.mensagem || "Falha ao enviar arquivo"}`, "error");
+            }
+            resetUpload();
+          }, 500);
+        })
+        .catch(error => {
+          clearInterval(progressInterval);
+          console.error("Erro:", error);
+          showToast("Erro ao enviar o arquivo. Tente novamente.", "error");
+          resetUpload();
+        });
+      };
+      
+      reader.onerror = function() {
+        clearInterval(progressInterval);
+        showToast("Erro ao ler o arquivo. Tente novamente.", "error");
+        resetUpload();
+      };
+    }
+    
+    // Reset upload form
+    function resetUpload() {
+      selectedFile = null;
+      isUploading = false;
+      uploadButton.disabled = true;
+      uploadButton.innerHTML = 'Enviar Arquivo';
+      uploadProgressContainer.classList.add('hidden');
+      uploadProgressBar.style.width = '0%';
+      uploadStatus.textContent = 'Enviando...';
+      selectedFileName.textContent = 'Qualquer tipo de arquivo (máx. 10 MB)';
+      fileUploadInput.value = '';
+    }
+    
+    // Handle search
+    function handleSearch() {
+      const searchTerm = searchInput.value.trim();
+      
+      if (!searchTerm) {
+        showToast("Digite algo para pesquisar", "error");
+        return;
+      }
+      
+      const results = files.filter(file => 
+        file.nome.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      
+      searchResults.classList.remove('hidden');
+      
+      if (results.length === 0) {
+        searchResults.innerHTML = `
+          <h3 class="text-base md:text-lg font-medium">
+            0 resultados para "${searchTerm}"
+          </h3>
+          
+          <div class="flex flex-col items-center justify-center p-4 md:p-8 text-center border rounded-lg bg-muted/40">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-muted-foreground mb-3 animate-pulse" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <h3 class="text-lg font-medium">Nenhum arquivo encontrado</h3>
+            <p class="text-sm text-muted-foreground max-w-md">
+              Tente pesquisar com outros termos ou verifique se o arquivo foi enviado
+            </p>
+          </div>
+        `;
+        showToast(`Nenhum resultado encontrado para "${searchTerm}"`, "info");
+      } else {
+        let resultsHTML = `
+          <h3 class="text-lg font-medium mb-4">
+            ${results.length} resultados para "${searchTerm}"
+          </h3>
+          
+          <div class="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        `;
+        
+        results.forEach((file, i) => {
+          resultsHTML += `
+            <div class="card overflow-hidden transform transition-all hover:scale-[1.02] hover:shadow-lg animate-fade-in" style="animation-delay: ${i * 50}ms; perspective: 1000px; transform-style: preserve-3d">
+              <div class="p-0">
+                <div class="p-4 md:p-6">
+                  <div class="flex items-start space-x-4">
+                    <div class="transform transition-transform hover:rotate-6">
+                      ${getFileIcon(file.nome)}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h4 class="font-medium line-clamp-1 text-left">${file.nome}</h4>
+                      <p class="text-xs md:text-sm text-muted-foreground">${file.tamanho}</p>
+                    </div>
+                    <a 
+                      href="${file.link}" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="btn btn-ghost p-2 text-muted-foreground hover:text-foreground"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>
+                      <span class="sr-only">Download</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        resultsHTML += `</div>`;
+        searchResults.innerHTML = resultsHTML;
+        showToast(`Encontrados ${results.length} resultados`, "success");
+      }
+    }
+    
+    // Show toast notification
+    function showToast(message, type = 'info') {
+      const toaster = document.getElementById('toaster');
+      const toast = document.createElement('div');
+      
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <div class="flex items-center">
+          ${type === 'success' ? 
+            '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : 
+            type === 'error' ? 
+            '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' :
+            '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
+          }
+          <div>${message}</div>
+        </div>
+        <button class="ml-4" onclick="this.parentElement.remove()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      `;
+      
+      toaster.appendChild(toast);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.remove();
+        }
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
