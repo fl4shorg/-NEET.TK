@@ -666,7 +666,7 @@
       showLoading('files-container');
       
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxD7RCj1_6tyZxIaRH7MWPNhraSFNii8_gtiXESHqamqqmhXnMhzazLi8zFD1Aum4_n/exec");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbziTltnZ8vIEnjo5BAS0vIn4Nbun_YwaLbiogd_ybjFkL57SMtuMWiJR5gVpyfs4log/exec");
         const data = await response.json();
         files = data.map((file, index) => ({ ...file, id: index + 1 }));
         
@@ -867,7 +867,7 @@
       reader.onload = function() {
         const base64Data = reader.result?.toString().split(",")[1];
         
-        fetch("https://script.google.com/macros/s/AKfycbxD7RCj1_6tyZxIaRH7MWPNhraSFNii8_gtiXESHqamqqmhXnMhzazLi8zFD1Aum4_n/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbziTltnZ8vIEnjo5BAS0vIn4Nbun_YwaLbiogd_ybjFkL57SMtuMWiJR5gVpyfs4log/exec", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({
