@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -564,6 +565,11 @@
               <select id="group" required>
                 <option value="" disabled selected>Selecione seu painel</option>
                 <option value="love">loveneext</option> 
+                <option value="regras">regras da neext</option> 
+                <option value="manualskur">manual skur</option> 
+                <option value="manualfbi">manual fbi</option> 
+                <option value="cargoschat">cargos chat</option> 
+                <option value="cargosskur">cargos sticker</option> 
                 <option value="story">story neext</option>   
                 <option value="feedback">feedback neext</option>     
                 <option value="suporte">suporte</option>                                                          
@@ -575,7 +581,6 @@
                 <option value="perguntas">perguntas neext</option>
                 <option value="correio">correio neext</option>
                 <option value="pensador">pensador neext</option>
-                <option value="feedback">painel feedback</option>
                 <option value="detençãoskur">detençãoskur</option>
                 <option value="detençãofbi">detençãofbi</option>
                 <option value="paineldiretor">paineldiretor</option>
@@ -689,14 +694,8 @@
       
       // Create Lucide icon in the toast
       lucide.createIcons({
-        icons: {
-          'check-circle': true,
-          'alert-circle': true,
-          'alert-triangle': true
-        },
-        attrs: {
-          class: ['lucide-icon']
-        }
+        selector: 'i[data-lucide]',
+        nameAttr: 'data-lucide',
       });
       
       // Show toast
@@ -1133,7 +1132,7 @@
       
       animate();
       
-      // Setup cleanup function
+      // Return cleanup function
       return function cleanup() {
         window.removeEventListener('resize', handleResize);
         
