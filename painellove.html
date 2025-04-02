@@ -11,13 +11,16 @@
     <meta property="og:title" content="Loveneext" />
     <meta property="og:description" content="Visualização de cadastros e mensagens do Loveneext" />
     <meta property="og:type" content="website" />
-    
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@loveneext" />
-    
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -28,156 +31,23 @@
           extend: {
             colors: {
               love: {
-                undo: '#ff6b6b',
-                undoGradient: '#f06595',
-                times: '#cc5de8',
-                timesGradient: '#845ef7',
-                heart: '#5c7cfa',
-                heartGradient: '#339af0',
-                marker: '#22b8cf',
-                markerGradient: '#20c997',
-                phone: '#ff922b',
-                phoneGradient: '#fcc419',
-                logo: '#ff922b',
-                logoGradient: '#ff6b6b'
+                400: '#ff6b6b',
+                600: '#ff0066',
               }
-            }
+            },
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+            },
           }
         }
       }
     </script>
 
     <style>
-      /* Check system preference for dark mode on load */
-      :root {
-        color-scheme: light dark;
-      }
-
       /* Base styling */
-      .dark {
-        --bg-color: #1e293b;
-        --text-color: #f8fafc;
-        --card-bg: #334155;
-        --border-color: #475569;
-        --muted-color: #94a3b8;
-        --accent-color: #0ea5e9;
-      }
-      
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         transition: background-color 0.3s ease, color 0.3s ease;
-      }
-      
-      body.dark {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-      }
-      
-      /* Card styles */
-      .profile-card {
-        transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-      }
-      
-      .dark .profile-card {
-        background-color: var(--card-bg);
-        border-color: var(--border-color);
-      }
-
-      /* Custom icon styling */
-      .gradient-icon {
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-      }
-      
-      .gradient-icon i {
-        color: white;
-      }
-      
-      .gradient-icon.undo {
-        background: linear-gradient(45deg, #ff6b6b, #f06595);
-      }
-      
-      .gradient-icon.times {
-        background: linear-gradient(45deg, #cc5de8, #845ef7);
-      }
-      
-      .gradient-icon.heart {
-        background: linear-gradient(45deg, #5c7cfa, #339af0);
-      }
-      
-      .gradient-icon.map-marker {
-        background: linear-gradient(45deg, #22b8cf, #20c997);
-      }
-      
-      .gradient-icon.phone {
-        background: linear-gradient(45deg, #ff922b, #fcc419);
-        width: 20px;
-        height: 20px;
-        font-size: 0.75rem;
-        margin-right: 0.5rem;
-      }
-      
-      .default-image {
-        background: #f0f0f0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 150px;
-        height: 150px;
-        border-radius: 0.5rem;
-      }
-      
-      .dark .default-image {
-        background: #334155;
-      }
-      
-      .default-image i {
-        color: #94a3b8;
-        font-size: 3rem;
-      }
-      
-      .gradient-heart {
-        background: linear-gradient(45deg, #ff922b, #ff6b6b);
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-      }
-      
-      .gradient-heart i {
-        color: white;
-      }
-
-      /* Filter button styles */
-      .filter-btn {
-        padding: 0.5rem 1rem;
-        margin-right: 0.5rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      
-      .filter-btn.active {
-        background-color: #3b82f6;
-        color: white;
-      }
-      
-      .dark .filter-btn {
-        background-color: #334155;
-        color: #f8fafc;
-        border: 1px solid #475569;
-      }
-      
-      .dark .filter-btn.active {
-        background-color: #3b82f6;
-        color: white;
       }
       
       /* Loader animation */
@@ -187,29 +57,86 @@
       }
       
       .loader {
-        border-top-color: #3b82f6;
+        border-top-color: #ff0066;
         animation: spin 1s linear infinite;
       }
       
-      /* Mobile responsiveness */
-      @media (max-width: 640px) {
-        .profiles-grid {
-          justify-content: center;
-        }
+      /* Card swipe animations */
+      @keyframes swipe-right {
+        from { transform: translateX(0) rotate(0); opacity: 1; }
+        to { transform: translateX(200px) rotate(15deg); opacity: 0; }
+      }
+      
+      @keyframes swipe-left {
+        from { transform: translateX(0) rotate(0); opacity: 1; }
+        to { transform: translateX(-200px) rotate(-15deg); opacity: 0; }
+      }
+      
+      .swipe-right {
+        animation: swipe-right 0.5s forwards;
+      }
+      
+      .swipe-left {
+        animation: swipe-left 0.5s forwards;
+      }
+      
+      /* Action buttons styles */
+      .action-button {
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        color: white;
+      }
+      
+      .action-button:hover {
+        transform: scale(1.1);
+      }
+      
+      .undo-btn {
+        background: linear-gradient(to right, #ffcc00, #ff9900);
+      }
+      
+      .dislike-btn {
+        background: linear-gradient(to right, #ff5555, #ff0000);
+      }
+      
+      .like-btn {
+        background: linear-gradient(to right, #5555ff, #0000ff);
+      }
+      
+      .location-btn {
+        background: linear-gradient(to right, #33cc33, #009900);
+      }
+      
+      /* Status bar styling */
+      .status-bar {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+      }
+      
+      /* Phone badge styling */
+      .phone-badge {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
       }
     </style>
   </head>
 
-  <body>
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <div id="app" class="min-h-screen transition-colors duration-300">
+      <!-- Header -->
       <header class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
         <div class="flex items-center">
-          <div class="gradient-heart">
-            <i class="fas fa-heart"></i>
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-love-400 to-love-600 flex items-center justify-center">
+            <i class="fas fa-heart text-white"></i>
           </div>
-          <h1 class="ml-2 text-xl font-semibold">
-            Loveneext
-          </h1>
+          <h1 class="ml-2 text-xl font-semibold">Loveneext</h1>
         </div>
         <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
           <i class="fas fa-sun dark:hidden"></i>
@@ -218,39 +145,58 @@
       </header>
       
       <main class="container mx-auto px-4 py-6">
+        <!-- Headline -->
         <div class="mb-6">
           <h2 class="text-2xl font-bold">Caixa de entrada</h2>
           <p id="totalLoves" class="text-gray-600 dark:text-gray-400">0 total de loves recebidos</p>
           
+          <!-- Search bar -->
           <div class="mt-4 relative">
-            <input id="searchInput" class="w-full p-2 pl-10 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Buscar mensagens..." type="text"/>
+            <input id="searchInput" class="w-full p-3 pl-10 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-love-400 transition-all" placeholder="Buscar mensagens..." type="text"/>
             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"></i>
           </div>
           
-          <div class="mt-4 flex flex-wrap">
-            <button class="filter-btn active" data-filter="all">Todos</button>
-            <button class="filter-btn" data-filter="hour">Última hora</button>
-            <button class="filter-btn" data-filter="day">Último dia</button>
-            <button class="filter-btn" data-filter="week">Última semana</button>
-            <button class="filter-btn" data-filter="month">Último mês</button>
+          <!-- Filters -->
+          <div class="mt-4 flex flex-wrap justify-between items-center">
+            <button id="toggleFilters" class="flex items-center gap-2 px-4 py-2 mb-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+              <i class="fas fa-filter"></i>
+              <span id="filterText">Mostrar filtros</span>
+            </button>
+            
+            <span id="activeFilterLabel" class="text-sm text-gray-500 dark:text-gray-400 mb-2 hidden">
+              Filtro ativo: <span id="activeFilterText">Todos</span>
+            </span>
+          </div>
+          
+          <div id="filterContainer" class="mt-2 flex flex-wrap hidden">
+            <button class="filter-btn active px-3 py-1 mr-2 mb-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-filter="all">Todos</button>
+            <button class="filter-btn px-3 py-1 mr-2 mb-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-filter="hour">Última hora</button>
+            <button class="filter-btn px-3 py-1 mr-2 mb-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-filter="day">Último dia</button>
+            <button class="filter-btn px-3 py-1 mr-2 mb-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-filter="week">Última semana</button>
+            <button class="filter-btn px-3 py-1 mr-2 mb-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-filter="month">Último mês</button>
           </div>
         </div>
         
+        <!-- Loading state -->
         <div id="loader" class="flex justify-center items-center min-h-[50vh]">
           <div class="loader rounded-full h-12 w-12 border-4 border-gray-200 dark:border-gray-700"></div>
         </div>
         
-        <div id="profilesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center profiles-grid"></div>
+        <!-- Profile cards -->
+        <div id="profilesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center"></div>
         
-        <div id="noResults" class="hidden col-span-full text-center py-12">
+        <!-- No results state -->
+        <div id="noResults" class="hidden text-center py-12">
           <p class="text-xl text-gray-600 dark:text-gray-400">Nenhum perfil encontrado</p>
-          <button id="clearFilters" class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">
+          <button id="clearFilters" class="mt-4 px-4 py-2 bg-love-400 hover:bg-love-600 text-white rounded-md transition-colors">
             Limpar filtros
           </button>
         </div>
       </main>
     </div>
-
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    
     <script>
       // Configuration
       const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPRSUGdNX3l8QXfR1lkjU5A-KLCBsKASjp_iQFPrrSb_9V9ZRbGXe07oD9UdR7Y-9p/exec";
@@ -259,6 +205,7 @@
       let allProfiles = [];
       let activeFilter = 'all';
       let searchQuery = '';
+      let showFilters = false;
       
       // DOM Elements
       const themeToggle = document.getElementById('theme-toggle');
@@ -269,6 +216,11 @@
       const clearFiltersButton = document.getElementById('clearFilters');
       const noResultsElement = document.getElementById('noResults');
       const loaderElement = document.getElementById('loader');
+      const toggleFiltersButton = document.getElementById('toggleFilters');
+      const filterContainer = document.getElementById('filterContainer');
+      const filterText = document.getElementById('filterText');
+      const activeFilterLabel = document.getElementById('activeFilterLabel');
+      const activeFilterText = document.getElementById('activeFilterText');
       
       // Theme management
       function initTheme() {
@@ -290,6 +242,44 @@
         } else {
           document.documentElement.classList.add('dark');
           localStorage.setItem('theme', 'dark');
+        }
+      }
+      
+      function toggleFilters() {
+        showFilters = !showFilters;
+        if (showFilters) {
+          filterContainer.classList.remove('hidden');
+          filterText.textContent = 'Ocultar filtros';
+        } else {
+          filterContainer.classList.add('hidden');
+          filterText.textContent = 'Mostrar filtros';
+        }
+      }
+      
+      // Time formatting
+      function formatTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSec = Math.round(diffMs / 1000);
+        const diffMin = Math.round(diffSec / 60);
+        const diffHour = Math.round(diffMin / 60);
+        const diffDay = Math.round(diffHour / 24);
+        const diffMonth = Math.round(diffDay / 30);
+        const diffYear = Math.round(diffMonth / 12);
+        
+        if (diffSec < 60) {
+          return 'agora mesmo';
+        } else if (diffMin < 60) {
+          return `há ${diffMin} ${diffMin === 1 ? 'minuto' : 'minutos'}`;
+        } else if (diffHour < 24) {
+          return `há ${diffHour} ${diffHour === 1 ? 'hora' : 'horas'}`;
+        } else if (diffDay < 30) {
+          return `há ${diffDay} ${diffDay === 1 ? 'dia' : 'dias'}`;
+        } else if (diffMonth < 12) {
+          return `há ${diffMonth} ${diffMonth === 1 ? 'mês' : 'meses'}`;
+        } else {
+          return `há ${diffYear} ${diffYear === 1 ? 'ano' : 'anos'}`;
         }
       }
       
@@ -319,15 +309,17 @@
       }
       
       function showError(message) {
-        const errorElement = document.createElement('div');
-        errorElement.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative';
-        errorElement.innerHTML = `<strong class="font-bold">Erro!</strong> <span class="block sm:inline">${message}</span>`;
+        // Create toast notification
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in';
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
         
-        document.querySelector('main').prepend(errorElement);
-        
+        // Remove after 3 seconds
         setTimeout(() => {
-          errorElement.remove();
-        }, 5000);
+          toast.classList.add('animate-fade-out');
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
       }
       
       function applyFilters() {
@@ -361,6 +353,27 @@
         }
         
         displayProfiles(filtered);
+        
+        // Show active filter text if not "all"
+        if (activeFilter !== 'all') {
+          activeFilterLabel.classList.remove('hidden');
+          switch (activeFilter) {
+            case 'hour':
+              activeFilterText.textContent = 'Última hora';
+              break;
+            case 'day':
+              activeFilterText.textContent = 'Último dia';
+              break;
+            case 'week':
+              activeFilterText.textContent = 'Última semana';
+              break;
+            case 'month':
+              activeFilterText.textContent = 'Último mês';
+              break;
+          }
+        } else {
+          activeFilterLabel.classList.add('hidden');
+        }
       }
       
       function displayProfiles(profiles) {
@@ -384,106 +397,98 @@
       }
       
       function createProfileCard(profile) {
-        const nome = profile['Nome'] || profile.Nome || '-';
-        const idade = profile['Idade '] || profile.Idade || '-';
-        const telefone = profile['Telefone '] || profile.Telefone || '-';
-        const descricao = profile['Descrição '] || profile.Descrição || '-';
-        const dataHora = profile['Data/Hora'] || profile['Data/Hora '] || '-';
-        const imagemUrl = profile['URL da imagem '] || profile['URL da Imagem'] || '';
+        const nome = profile['Nome'] || '';
+        const idade = profile['Idade'] || profile['Idade '] || '';
+        const telefone = profile['Telefone'] || profile['Telefone '] || '';
+        const descricao = profile['Descrição'] || profile['Descrição '] || '';
+        const dataHora = profile['Data/Hora'] || profile['Data/Hora '] || '';
+        const imagemUrl = profile['URL da imagem'] || profile['URL da imagem '] || profile['URL da Imagem'] || '';
         
-        // Separate date and time
-        const [date, time] = dataHora.split(' ');
-        const [hour, minute] = time ? time.split(':') : ['--', '--'];
-        const hourNum = parseInt(hour);
-        const ampm = hourNum >= 12 ? 'PM' : 'AM';
-        const formattedTime = `${hourNum % 12 || 12}:${minute} ${ampm}`;
+        // Format time ago
+        const timeAgo = formatTimeAgo(dataHora);
+        
+        // Get current time for status bar
+        const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
         // Create card element
         const card = document.createElement('div');
-        card.className = 'profile-card bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 border border-gray-200 dark:border-gray-700';
+        card.className = 'w-full max-w-xs overflow-hidden shadow-lg border dark:border-gray-700 rounded-xl transition-all hover:shadow-xl bg-white dark:bg-gray-800';
         
         card.innerHTML = `
-          <div class="flex items-center justify-between p-2 border-b border-gray-200 dark:border-gray-700">
+          <!-- Status bar -->
+          <div class="flex items-center justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-xs">
             <div class="flex items-center space-x-1">
-              <i class="fas fa-cog text-gray-500 dark:text-gray-400"></i>
-              <span class="text-gray-500 dark:text-gray-400 font-semibold text-sm">NEEXT PHONE</span>
+              <span class="text-gray-500 dark:text-gray-400 font-semibold">NEEXT</span>
             </div>
-            <div class="text-gray-500 dark:text-gray-400 text-sm flex-grow text-center">
-              ${formattedTime}
+            <div class="text-gray-500 dark:text-gray-400 flex-grow text-center">
+              ${currentTime}
             </div>
-            <div class="flex items-center space-x-1 text-gray-500 dark:text-gray-400 text-sm">
-              <i class="fas fa-signal"></i>
-              <i class="fas fa-wifi"></i>
-              <i class="fas fa-battery-three-quarters"></i>
-              <span class="battery-level"></span>
+            <div class="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
+              <i class="fas fa-signal text-xs"></i>
+              <i class="fas fa-wifi text-xs"></i>
+              <i class="fas fa-battery-three-quarters text-xs"></i>
             </div>
           </div>
-          <div class="p-4">
-            <div class="flex items-center justify-center mb-4">
-              <i class="fas fa-heart text-purple-600 text-2xl"></i>
-              <span class="ml-2 text-red-500 font-bold text-xl">neextinder</span>
-            </div>
-            <div class="flex justify-center mb-4">
-              ${imagemUrl.trim() 
-                ? `<img alt="Profile picture of ${nome}" class="rounded-lg object-cover" height="150" src="${imagemUrl.trim()}" width="150"/>`
-                : `<div class="default-image"><i class="fas fa-user"></i></div>`
-              }
-            </div>
-            <div class="text-center">
-              <div class="flex items-center justify-center mb-2">
-                <span class="font-bold text-lg">${nome}, ${idade}</span>
-                <i class="fas fa-check-circle text-blue-500 ml-1"></i>
-              </div>
-              <p class="text-gray-600 dark:text-gray-400 mb-4">${descricao}</p>
-              <p class="text-gray-600 dark:text-gray-400 mb-4 flex items-center justify-center">
-                <i class="fas fa-calendar-alt mr-2"></i> Data: ${date}
-              </p>
-              <p class="text-gray-600 dark:text-gray-400 mb-4 flex items-center justify-center">
-                <div class="gradient-icon phone"><i class="fas fa-phone-alt"></i></div>
-                Phone: ${telefone}
-              </p>
+          
+          <!-- Tinderneext title with heart icon -->
+          <div class="flex items-center justify-center p-3 border-b border-gray-200 dark:border-gray-700">
+            <i class="fas fa-heart text-red-500 mr-1"></i>
+            <span class="text-red-500 font-bold text-lg">tinderneext</span>
+          </div>
+          
+          <!-- Profile image -->
+          <div class="relative h-72">
+            ${imagemUrl ? 
+              `<img src="${imagemUrl}" alt="Foto de ${nome}" class="w-full h-full object-cover">` : 
+              `<div class="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+                <div class="h-24 w-24 flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-4xl rounded-full">
+                  ${nome.charAt(0)}
+                </div>
+              </div>`
+            }
+            
+            <!-- Time badge -->
+            <div class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs py-1 px-2 rounded-full">
+              ${timeAgo}
             </div>
           </div>
-          <div class="flex justify-around p-4 border-t border-gray-200 dark:border-gray-700">
-            <div class="gradient-icon undo">
-              <i class="fas fa-undo text-2xl"></i>
+          
+          <!-- Profile content -->
+          <div class="pt-4 p-6">
+            <div class="flex items-center gap-1 mb-2">
+              <h3 class="text-xl font-bold">${nome}</h3>
+              <span class="text-lg">, ${idade}</span>
+              <i class="fas fa-check-circle text-blue-500 ml-1 text-sm"></i>
             </div>
-            <div class="gradient-icon times">
-              <i class="fas fa-times text-2xl"></i>
+            
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-3">
+              ${descricao}
+            </p>
+            
+            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
+              <i class="fas fa-phone text-xs mr-1"></i>
+              <span>${telefone}</span>
             </div>
-            <div class="gradient-icon heart">
-              <i class="fas fa-heart text-2xl"></i>
-            </div>
-            <div class="gradient-icon map-marker">
-              <i class="fas fa-map-marker-alt text-2xl"></i>
-            </div>
+          </div>
+          
+          <!-- Action buttons -->
+          <div class="flex justify-between p-3 pt-0">
+            <button class="action-button undo-btn">
+              <i class="fas fa-undo"></i>
+            </button>
+            <button class="action-button dislike-btn">
+              <i class="fas fa-times"></i>
+            </button>
+            <button class="action-button like-btn">
+              <i class="fas fa-heart"></i>
+            </button>
+            <button class="action-button location-btn">
+              <i class="fas fa-map-marker-alt"></i>
+            </button>
           </div>
         `;
         
         return card;
-      }
-
-      // Battery level functions
-      function updateBatteryLevel() {
-        try {
-          if (navigator.getBattery) {
-            navigator.getBattery().then(function(battery) {
-              const batteryLevel = Math.round(battery.level * 100) + '%';
-              document.querySelectorAll('.battery-level').forEach(el => {
-                el.textContent = batteryLevel;
-              });
-            });
-          } else {
-            document.querySelectorAll('.battery-level').forEach(el => {
-              el.textContent = '100%';
-            });
-          }
-        } catch (error) {
-          console.error('Error getting battery level:', error);
-          document.querySelectorAll('.battery-level').forEach(el => {
-            el.textContent = '100%';
-          });
-        }
       }
       
       // Event handlers
@@ -495,14 +500,19 @@
       function handleFilterClick(e) {
         const filter = e.target.dataset.filter;
         
-        // Update active filter
-        filterButtons.forEach(btn => {
-          btn.classList.remove('active');
-        });
-        e.target.classList.add('active');
-        
-        activeFilter = filter;
-        applyFilters();
+        if (filter) {
+          // Update active filter
+          filterButtons.forEach(btn => {
+            btn.classList.remove('active', 'bg-blue-500', 'text-white');
+            btn.classList.add('bg-gray-100', 'dark:bg-gray-700');
+          });
+          
+          e.target.classList.add('active', 'bg-blue-500', 'text-white');
+          e.target.classList.remove('bg-gray-100', 'dark:bg-gray-700');
+          
+          activeFilter = filter;
+          applyFilters();
+        }
       }
       
       function handleClearFilters() {
@@ -513,13 +523,43 @@
         // Update UI
         searchInput.value = '';
         filterButtons.forEach(btn => {
-          btn.classList.remove('active');
+          btn.classList.remove('active', 'bg-blue-500', 'text-white');
+          btn.classList.add('bg-gray-100', 'dark:bg-gray-700');
+          
           if (btn.dataset.filter === 'all') {
-            btn.classList.add('active');
+            btn.classList.add('active', 'bg-blue-500', 'text-white');
+            btn.classList.remove('bg-gray-100', 'dark:bg-gray-700');
           }
         });
         
+        activeFilterLabel.classList.add('hidden');
         applyFilters();
+      }
+
+      // Card action handlers
+      function addCardActionListeners() {
+        document.querySelectorAll('.action-button').forEach(button => {
+          button.addEventListener('click', function() {
+            const card = this.closest('.card');
+            if (!card) return;
+            
+            if (this.classList.contains('like-btn')) {
+              card.classList.add('swipe-right');
+            } else if (this.classList.contains('dislike-btn')) {
+              card.classList.add('swipe-left');
+            }
+            
+            setTimeout(() => {
+              card.remove();
+              updateTotalCount();
+            }, 500);
+          });
+        });
+      }
+      
+      function updateTotalCount() {
+        const totalVisible = document.querySelectorAll('#profilesContainer > div').length;
+        totalLovesElement.textContent = `${totalVisible} total de loves recebidos`;
       }
 
       // Initialize the app
@@ -528,17 +568,13 @@
         themeToggle.addEventListener('click', toggleTheme);
         searchInput.addEventListener('input', handleSearchInput);
         clearFiltersButton.addEventListener('click', handleClearFilters);
+        toggleFiltersButton.addEventListener('click', toggleFilters);
         
-        filterButtons.forEach(btn => {
-          btn.addEventListener('click', handleFilterClick);
-        });
+        // Add filter button event listeners
+        filterContainer.addEventListener('click', handleFilterClick);
         
         // Initialize theme
         initTheme();
-        
-        // Update battery level
-        updateBatteryLevel();
-        setInterval(updateBatteryLevel, 60000); // Update every minute
         
         // Load profile data
         loadData();
