@@ -1,1 +1,1286 @@
-erro
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Neext</title>
+    <style>
+        /* Estilos gerais */
+        :root {
+            --love-color: #ff3b82;
+            --love-dark: #e62d74;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #ffffff, #fdf2f8);
+            color: #1a1a1a;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            width: 100%;
+            padding: 16px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 50;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 20px;
+            background: linear-gradient(to right, #ff3b82, #9f7aea);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+            }
+        }
+        
+        .nav-links a {
+            color: rgba(26, 26, 26, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--love-color);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--love-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--love-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 59, 130, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid rgba(255, 59, 130, 0.3);
+            color: var(--love-color);
+        }
+        
+        .btn-outline:hover {
+            color: var(--love-dark);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding-top: 120px;
+            padding-bottom: 80px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            color: rgba(26, 26, 26, 0.7);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+            
+            .hero-cta {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #ff3b82, #9f7aea);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        /* Decorative elements */
+        .decorative-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -10;
+        }
+        
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+        }
+        
+        .blob-1 {
+            top: -80px;
+            left: -80px;
+            width: 320px;
+            height: 320px;
+            background-color: #f3e8ff;
+        }
+        
+        .blob-2 {
+            top: 20%;
+            right: -80px;
+            width: 240px;
+            height: 240px;
+            background-color: #ffecf0;
+        }
+        
+        .blob-3 {
+            bottom: 20%;
+            left: -80px;
+            width: 280px;
+            height: 280px;
+            background-color: #fef3c7;
+        }
+        
+        /* 3D Love Box */
+        .love-box-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            height: 320px;
+            margin: 64px auto 0;
+            perspective: 1000px;
+        }
+        
+        .love-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        
+        .love-card {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(255, 59, 130, 0.2);
+            text-align: center;
+            padding: 24px;
+            animation: pulse 4s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 10px 30px rgba(255, 59, 130, 0.2);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(255, 59, 130, 0.4);
+            }
+            100% {
+                box-shadow: 0 10px 30px rgba(255, 59, 130, 0.2);
+            }
+        }
+        
+        .love-heart {
+            width: 96px;
+            height: 96px;
+            margin-bottom: 16px;
+            color: var(--love-color);
+            fill: var(--love-color);
+            animation: beat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes beat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        .floating-heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            color: var(--love-color);
+            fill: var(--love-color);
+            opacity: 0.5;
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        .heart-1 {
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+        
+        .heart-2 {
+            top: 10%;
+            right: 10%;
+            animation-delay: 0.5s;
+        }
+        
+        .heart-3 {
+            bottom: 10%;
+            left: 20%;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: spin 10s linear infinite;
+        }
+        
+        .circle-1 {
+            top: -24px;
+            left: -24px;
+            width: 48px;
+            height: 48px;
+            background-color: rgba(255, 187, 209, 0.7);
+        }
+        
+        .circle-2 {
+            bottom: -32px;
+            right: -32px;
+            width: 64px;
+            height: 64px;
+            background-color: rgba(209, 187, 255, 0.7);
+            animation-direction: reverse;
+        }
+        
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Como Funciona */
+        .section {
+            padding: 64px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-header p {
+            color: rgba(26, 26, 26, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .steps-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .step-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background-color: #ffecf0;
+            color: var(--love-color);
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .step-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .step-card p {
+            color: rgba(26, 26, 26, 0.7);
+        }
+        
+        /* Sobre Nós */
+        .about-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(255, 59, 130, 0.1);
+        }
+        
+        .about-card h2 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .about-card p {
+            font-size: 18px;
+            color: rgba(26, 26, 26, 0.8);
+            margin-bottom: 16px;
+        }
+        
+        /* Formulário */
+        .form-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(255, 59, 130, 0.1);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .form-header h2 {
+            font-size: 28px;
+            margin: 16px 0 8px;
+        }
+        
+        .form-header p {
+            color: rgba(26, 26, 26, 0.7);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--love-color);
+        }
+        
+        textarea {
+            min-height: 128px;
+            resize: vertical;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(255, 59, 130, 0.2);
+        }
+        
+        .image-preview {
+            width: 160px;
+            height: 160px;
+            margin: 16px auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 59, 130, 0.2);
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .help-text {
+            font-size: 12px;
+            color: rgba(26, 26, 26, 0.6);
+            margin-top: 4px;
+        }
+        
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-icon {
+            width: 56px;
+            height: 56px;
+            background-color: #ffecf0;
+            color: var(--love-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .faq-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .accordion {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .accordion-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .accordion-header {
+            padding: 16px 0;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .accordion-content p {
+            padding: 0 0 16px;
+            color: rgba(26, 26, 26, 0.8);
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+        
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-item.active .accordion-content {
+            max-height: 300px;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            padding: 32px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .footer-top {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-top {
+                flex-direction: row;
+            }
+            
+            .footer-links {
+                flex-direction: row;
+                gap: 32px;
+                text-align: left;
+            }
+        }
+        
+        .footer-links a {
+            color: rgba(26, 26, 26, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--love-color);
+        }
+        
+        .footer-bottom {
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+            }
+        }
+        
+        .footer-bottom p {
+            font-size: 14px;
+            color: rgba(26, 26, 26, 0.6);
+        }
+        
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toast {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s forwards;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+        
+        .toast-success {
+            background-color: #dcfce7;
+            border-left: 4px solid #16a34a;
+            color: #166534;
+        }
+        
+        .toast-error {
+            background-color: #fee2e2;
+            border-left: 4px solid #dc2626;
+            color: #991b1b;
+        }
+        
+        .toast-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: inherit;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        
+        .toast-close:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Background -->
+    <div class="decorative-bg">
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
+        <div class="bg-blob blob-3"></div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    <span>Love Neext</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#sobre">Sobre</a>
+                    <a href="#como-funciona">Como Funciona</a>
+                    <a href="#form">Enviar Love</a>
+                    <a href="#faq">Dúvidas</a>
+                </div>
+                <a href="#form" class="btn btn-primary">Enviar Love</a>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Encontre seu <span class="gradient-text">novo amor</span> com a Neext</h1>
+                <p>Envie seu perfil para a nossa caixinha de amor e tenha a chance de ser divulgado nos canais da Neext, encontrando seu par ideal.</p>
+                <div class="hero-cta">
+                    <a href="#form" class="btn btn-primary">
+                        Enviar Love
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </a>
+                    <a href="#como-funciona" class="btn btn-outline">
+                        Saiba mais
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 3D Love Box -->
+            <div class="love-box-container">
+                <div class="love-box">
+                    <div class="love-card">
+                        <!-- Floating hearts -->
+                        <svg class="floating-heart heart-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        <svg class="floating-heart heart-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        <svg class="floating-heart heart-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        
+                        <!-- Main heart -->
+                        <svg class="love-heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        
+                        <h3 class="gradient-text" style="font-size: 24px; font-weight: bold; margin-bottom: 8px;">Love Box</h3>
+                        <p style="color: rgba(26, 26, 26, 0.7);">Envie seu amor para Neext</p>
+                        
+                        <!-- Decorative circles -->
+                        <div class="decorative-circle circle-1"></div>
+                        <div class="decorative-circle circle-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Como Funciona Section -->
+    <section id="como-funciona" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Como <span class="gradient-text">Funciona</span></h2>
+                <p>Três passos simples para encontrar um novo amor através da caixinha Love Neext</p>
+            </div>
+            
+            <div class="steps-container">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Preencha o formulário</h3>
+                    <p>Complete o formulário com seus dados, uma descrição sobre você e adicione sua melhor foto para aumentar suas chances.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Avaliação da equipe</h3>
+                    <p>Nossa equipe irá analisar seu perfil e selecionar os mais compatíveis com o público da Neext.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Divulgação e conexão</h3>
+                    <p>Se selecionado, seu perfil será divulgado nos canais da Neext, permitindo que outras pessoas interessadas entrem em contato.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sobre Section -->
+    <section id="sobre" class="section">
+        <div class="container">
+            <div class="about-card">
+                <h2>Sobre o <span class="gradient-text">Love Neext</span></h2>
+                <p>A Caixinha Love Neext foi criada com o objetivo de unir pessoas que compartilham interesses, valores e buscam uma conexão genuína. Nosso diferencial está na divulgação dos perfis para uma comunidade engajada e diversificada.</p>
+                <p>Acreditamos no poder das conexões reais e trabalhamos para criar oportunidades de encontros autênticos. Cada perfil é cuidadosamente avaliado pela nossa equipe para garantir uma experiência segura e de qualidade para todos os participantes.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Form Section -->
+    <section id="form" class="section">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <svg class="love-heart" style="width: 40px; height: 40px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    <h2>Envie seu <span class="gradient-text">Love Neext</span></h2>
+                    <p>Preencha o formulário abaixo e seja divulgado nos canais da Neext!</p>
+                </div>
+                
+                <form id="loveForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nome">Nome completo</label>
+                            <input type="text" id="nome" name="nome" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idade">Idade</label>
+                            <input type="number" id="idade" name="idade" min="1" max="120" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefone">Telefone (WhatsApp)</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="Digite seu telefone (Ex: 11999887766)" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="descricao">Descrição (conte sobre você)</label>
+                        <textarea id="descricao" name="descricao" placeholder="Conte um pouco sobre você, seus gostos e o que procura..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="imagem">Sua foto (opcional)</label>
+                        <input type="file" id="imagem" name="imagem" accept="image/*">
+                        <p class="help-text">Máximo 5MB. Formato recomendado: quadrado.</p>
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img src="#" alt="Pré-visualização">
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="submitBtn" class="btn btn-primary btn-submit">Enviar meu Love Neext</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section id="faq" class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="faq-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <path d="M12 17h.01"></path>
+                    </svg>
+                </div>
+                <h2>Dúvidas Frequentes</h2>
+                <p>Tire todas as suas dúvidas sobre a caixinha de Love Neext</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>O que é o Love Neext?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>O Love Neext é uma plataforma onde você pode enviar seu perfil para ter a oportunidade de encontrar um novo amor. 
+                            Ao preencher o formulário, seus dados podem ser divulgados no canal da Neext, permitindo que outras pessoas conheçam você.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Como funciona o processo de divulgação?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Após enviar seu formulário com seus dados e foto, nossa equipe fará uma avaliação. Se aprovado, seu perfil poderá 
+                            ser divulgado nos canais da Neext, onde outras pessoas poderão conhecer você. Não garantimos a divulgação de todos os perfis.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>É necessário enviar uma foto?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>A foto não é obrigatória, mas é altamente recomendada para aumentar suas chances de divulgação e sucesso. 
+                            Perfis com fotos recebem mais atenção. Use uma foto clara, recente e que mostre bem seu rosto.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>O que devo escrever na descrição?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Na descrição, recomendamos que você fale sobre sua personalidade, interesses, hobbies e o que busca em um relacionamento. 
+                            Seja autêntico e verdadeiro. Evite textos muito curtos ou genéricos. Quanto mais detalhes você fornecer, maiores são as chances 
+                            de encontrar alguém compatível.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>É gratuito participar?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Sim, o envio do seu perfil para o Love Neext é totalmente gratuito. Não cobramos nenhuma taxa para receber ou processar seu cadastro.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Como saberei se fui selecionado(a)?</span>
+                            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Se seu perfil for selecionado para divulgação, entraremos em contato através do número de telefone que você forneceu. 
+                            Por isso, é importante verificar se o número está correto e se você pode receber mensagens por WhatsApp.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-top">
+                    <div class="logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#ff3b82" stroke="#ff3b82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        </svg>
+                        <span>Love Neext</span>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <a href="#sobre">Sobre</a>
+                        <a href="#como-funciona">Como Funciona</a>
+                        <a href="#form">Enviar Love</a>
+                        <a href="#faq">Dúvidas</a>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; <span id="currentYear">2023</span> Love Neext - Todos os direitos reservados</p>
+                    <p>Feito com ❤️ para a Neext</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Toast Container for Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        // URL do Google Apps Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPRSUGdNX3l8QXfR1lkjU5A-KLCBsKASjp_iQFPrrSb_9V9ZRbGXe07oD9UdR7Y-9p/exec";
+        const API_IMGBB = "3d9fa0bdf06acddf7b9b0e0122b2dc9d";
+        
+        // Atualizar o ano no rodapé
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Efeito 3D na Love Box
+        const loveBox = document.querySelector('.love-box');
+        document.addEventListener('mousemove', (e) => {
+            if (!loveBox) return;
+            
+            const x = (window.innerWidth / 2 - e.pageX) / 25;
+            const y = (window.innerHeight / 2 - e.pageY) / 25;
+            
+            loveBox.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+        
+        // Accordion functionality
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Fechar todos os itens ativos
+                accordionItems.forEach(i => i.classList.remove('active'));
+                
+                // Se o item clicado não estava ativo, abra-o
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+        
+        // Função para exibir toasts
+        function showToast(title, message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.classList.add('toast', `toast-${type}`);
+            
+            toast.innerHTML = `
+                <div>
+                    <div class="toast-title">${title}</div>
+                    <div>${message}</div>
+                </div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto-remove toast after 5 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+            
+            // Close button functionality
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.style.animation = 'slideOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            });
+        }
+        
+        // Pré-visualização da imagem
+        const imageInput = document.getElementById('imagem');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                imagePreview.style.display = 'none';
+                return;
+            }
+            
+            // Validar tamanho do arquivo (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Imagem muito grande', 'A imagem deve ter no máximo 5MB', 'error');
+                imageInput.value = '';
+                imagePreview.style.display = 'none';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.querySelector('img').src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        // Envio do formulário
+        const form = document.getElementById('loveForm');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        submitBtn.addEventListener('click', async () => {
+            const nome = document.getElementById('nome').value.trim();
+            const idade = document.getElementById('idade').value;
+            const telefone = document.getElementById('telefone').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const imagem = imageInput.files[0];
+            
+            // Validações básicas
+            if (!nome) {
+                showToast('Campo obrigatório', 'Por favor, informe seu nome', 'error');
+                return;
+            }
+            
+            if (!idade || parseInt(idade) < 1 || parseInt(idade) > 120) {
+                showToast('Campo inválido', 'Por favor, informe uma idade válida entre 1 e 120', 'error');
+                return;
+            }
+            
+            if (!telefone) {
+                showToast('Campo obrigatório', 'Por favor, informe seu telefone', 'error');
+                return;
+            }
+            
+            // Desabilitar botão e mostrar estado de carregamento
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+            
+            try {
+                let imageUrl = '';
+                
+                // Fazer upload da imagem, se existir
+                if (imagem) {
+                    const formData = new FormData();
+                    formData.append('key', API_IMGBB);
+                    formData.append('image', imagem);
+                    
+                    const response = await fetch('https://api.imgbb.com/1/upload', {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        imageUrl = result.data.url;
+                    } else {
+                        throw new Error('Falha ao enviar imagem');
+                    }
+                }
+                
+                // Enviar dados para o Google Apps Script
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'no-cors', // Usando modo no-cors
+                    body: JSON.stringify({
+                        nome: nome,
+                        idade: idade,
+                        telefone: telefone,
+                        descricao: descricao,
+                        imagemUrl: imageUrl
+                    }),
+                });
+                
+                // Como estamos usando no-cors, não podemos acessar a resposta
+                // Então vamos mostrar uma mensagem informativa
+                showToast('Sucesso!', 'Seu Love foi enviado para a Neext com sucesso!');
+                
+                // Limpar formulário
+                form.reset();
+                imagePreview.style.display = 'none';
+                
+            } catch (error) {
+                showToast('Erro ao enviar', error.message || 'Ocorreu um erro inesperado', 'error');
+                console.error('Erro:', error);
+            } finally {
+                // Restaurar botão
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar meu Love Neext';
+            }
+        });
+        
+        // Função para rolagem suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 50,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Fazer com que o botão "Enviar Love" no header leve para o formulário
+        document.addEventListener('DOMContentLoaded', () => {
+            const formElement = document.getElementById('form');
+            const allLoveButtons = document.querySelectorAll('.btn-primary');
+            
+            allLoveButtons.forEach(btn => {
+                if (btn.innerText.includes('Enviar Love')) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        formElement.scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
