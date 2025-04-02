@@ -8,8 +8,6 @@
   <script src="https://cdn.tailwindcss.com">
   </script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
-  <!-- Adicionando a biblioteca html2canvas -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
    body {
             font-family: Arial, sans-serif;
@@ -219,7 +217,6 @@
    <button class="btn" onclick="generateImage()">
     Gerar Imagem de Notícia
    </button>
-   <div id="downloadStatus"></div>
   </div>
   <script>
    function updatePreview() {
@@ -246,39 +243,11 @@
         }
 
         function generateImage() {
-            const status = document.getElementById('downloadStatus');
-            status.innerHTML = "Gerando imagem, aguarde...";
-            
-            // Opções para melhorar a qualidade da captura
-            const options = {
-                scale: 2, // Aumenta a escala para melhor qualidade
-                useCORS: true, // Permite capturar imagens de outros domínios
-                backgroundColor: "#ffffff", // Garante fundo branco
-                logging: false // Desativa logs no console
-            };
-            
-            html2canvas(document.getElementById('newsPreview'), options).then(canvas => {
-                try {
-                    // Converte o canvas para uma URL de dados
-                    const imgData = canvas.toDataURL('image/png');
-                    
-                    // Cria um link de download
-                    const link = document.createElement('a');
-                    link.href = imgData;
-                    link.download = "noticia_" + new Date().getTime() + ".png";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    status.innerHTML = "Imagem gerada com sucesso!";
-                    setTimeout(() => {
-                        status.innerHTML = "";
-                    }, 3000);
-                } catch (error) {
-                    status.innerHTML = "Erro ao gerar imagem: " + error.message;
-                }
-            }).catch(error => {
-                status.innerHTML = "Erro ao capturar a imagem: " + error.message;
+            html2canvas(document.getElementById('newsPreview')).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL("image/png");
+                link.download = "noticia.png";
+                link.click();
             });
         }
 
