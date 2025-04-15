@@ -55,9 +55,7 @@
     }
 
     .turnstile-box {
-      height: 0;
-      width: 0;
-      overflow: hidden;
+      margin-top: 20px;
     }
 
     p {
@@ -71,13 +69,12 @@
 
   <h1>Download do Painel Neext</h1>
 
-  <!-- Turnstile invisível -->
+  <!-- Turnstile visível -->
   <div class="turnstile-box">
     <div class="cf-turnstile"
          data-sitekey="0x4AAAAAABL6cvP6D4bON4Tw"
-         data-callback="turnstileResolved"
          data-theme="dark"
-         data-execution="execute">
+         data-callback="turnstileResolved">
     </div>
   </div>
 
@@ -88,16 +85,8 @@
   <a href="painelneext 1.0.apk" class="download-btn" id="downloadBtn" download>Baixar APK</a>
 
   <script>
-    // Executa o Turnstile invisível automaticamente
-    window.onload = function () {
-      setTimeout(() => {
-        if (typeof turnstile !== 'undefined') {
-          turnstile.execute();
-        }
-      }, 500); // Pequeno delay para garantir o carregamento
-    }
-
     function turnstileResolved(token) {
+      // Mostra o spinner por 5 segundos antes de liberar o download
       document.getElementById('spinner').style.display = 'block';
 
       setTimeout(function () {
