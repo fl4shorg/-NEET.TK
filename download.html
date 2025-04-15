@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Download - Painel Neext</title>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,17 +39,23 @@
     }
 
     .spinner {
+      display: none;
       border: 4px solid #f3f3f3;
       border-top: 4px solid #00e676;
       border-radius: 50%;
       width: 50px;
       height: 50px;
       animation: spin 1s linear infinite;
+      margin-top: 20px;
     }
 
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+
+    .turnstile-box {
+      margin-top: 20px;
     }
 
     p {
@@ -62,19 +69,30 @@
 
   <h1>Download do Painel Neext</h1>
 
-  <!-- Spinner de carregamento -->
-  <div class="spinner"></div>
-  <p>Aguarde enquanto preparamos o download...</p>
+  <p>Resolva o desafio abaixo para iniciar o download:</p>
 
-  <!-- Botão de download (inicialmente escondido) -->
-  <a href="painelneext 1.0.apk" class="download-btn" download>Baixar APK</a>
+  <!-- Turnstile CAPTCHA -->
+  <div class="turnstile-box">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABL6cvP6D4bON4Tw" data-callback="turnstileResolved"></div>
+  </div>
+
+  <!-- Spinner -->
+  <div class="spinner" id="spinner"></div>
+
+  <!-- Botão de download -->
+  <a href="painelneext.apk" class="download-btn" id="downloadBtn" download>Baixar APK</a>
 
   <script>
-    // Após 5 segundos, esconder o spinner e mostrar o botão de download
-    setTimeout(function() {
-      document.querySelector('.spinner').style.display = 'none';  // Esconde o carregamento
-      document.querySelector('.download-btn').style.display = 'block';  // Exibe o botão
-    }, 5000); // 5000 milissegundos = 5 segundos
+    function turnstileResolved(token) {
+      // Mostrar spinner
+      document.getElementById('spinner').style.display = 'block';
+
+      // Espera de 5 segundos
+      setTimeout(function () {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('downloadBtn').style.display = 'inline-block';
+      }, 5000);
+    }
   </script>
 
 </body>
