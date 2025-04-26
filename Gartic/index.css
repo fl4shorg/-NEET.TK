@@ -1,0 +1,110 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 260 60% 99%;
+    --foreground: 260 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 260 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 10% 10%;
+
+    --primary: 260 80% 50%;
+    --primary-foreground: 260 10% 98%;
+
+    --secondary: 260 30% 96%;
+    --secondary-foreground: 260 10% 20%;
+
+    --muted: 260 40% 96%;
+    --muted-foreground: 260 10% 40%;
+
+    --accent: 260 40% 96%;
+    --accent-foreground: 260 10% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 260 10% 98%;
+
+    --border: 260 30% 92%;
+    --input: 260 30% 92%;
+    --ring: 260 80% 50%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 260 25% 8%;
+    --foreground: 260 10% 95%;
+
+    --card: 260 25% 10%;
+    --card-foreground: 260 10% 95%;
+
+    --popover: 260 25% 10%;
+    --popover-foreground: 260 10% 95%;
+
+    --primary: 260 80% 60%;
+    --primary-foreground: 260 10% 5%;
+
+    --secondary: 260 15% 20%;
+    --secondary-foreground: 260 10% 90%;
+
+    --muted: 260 15% 20%;
+    --muted-foreground: 260 10% 70%;
+
+    --accent: 260 15% 20%;
+    --accent-foreground: 260 10% 95%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 260 10% 95%;
+
+    --border: 260 15% 25%;
+    --input: 260 15% 25%;
+    --ring: 260 80% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.brush-option {
+  @apply flex items-center justify-center w-10 h-10 rounded-full transition-all;
+}
+
+.brush-option.active {
+  @apply bg-primary text-white shadow-md scale-110;
+}
+
+.color-option {
+  @apply w-8 h-8 rounded-full cursor-pointer border-2 border-gray-300 transition-all;
+}
+
+.color-option.active {
+  @apply border-primary scale-110 shadow-md;
+}
+
+.bg-option {
+  @apply w-10 h-10 rounded-md cursor-pointer border border-gray-300 transition-all;
+}
+
+.bg-option.active {
+  @apply border-primary scale-110 shadow-md;
+}
+
+.drawing-canvas {
+  touch-action: none;
+}
+
+.shimmer {
+  @apply bg-gradient-to-r from-transparent via-white/20 to-transparent bg-[length:200%_100%] animate-shimmer;
+}
