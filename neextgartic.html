@@ -5,8 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GarticNeext</title>
-    <meta name="description" content="Envie seu desenho para o canal Neext e veja quem acerta! Sua arte poderá ser vista por milhares de pessoas!" />
-          <meta property="og:image" content="https://neetk.onrender.com/preview/gartic.png?v=7">
+    <meta name="description" content="Lovable Generated Project" />
+    <meta name="author" content="Lovable" />
     <style>
       :root {
         --background: #ffffff;
@@ -46,6 +46,7 @@
         border-bottom: 1px solid var(--border);
         background-color: rgba(var(--background), 0.95);
         backdrop-filter: blur(8px);
+        z-index: 100;
       }
 
       .container {
@@ -91,6 +92,9 @@
         position: relative;
         height: 60vh;
         margin-bottom: 1.5rem;
+        background-color: white;
+        border: 2px solid var(--border);
+        border-radius: 0.5rem;
       }
 
       #drawingCanvas {
@@ -99,10 +103,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        border: 2px solid var(--border);
-        border-radius: 0.5rem;
-        background-color: white;
         touch-action: none;
+        z-index: 10;
       }
 
       .tools-grid {
@@ -282,6 +284,50 @@
         display: none;
       }
     </style>
+    <script>
+      // Initialize theme based on local storage or system preference
+      function initializeTheme() {
+        const isDark = localStorage.theme === 'dark' || 
+          (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        
+        document.documentElement.classList.toggle('dark', isDark);
+        
+        // Update icons visibility
+        updateThemeIcons(isDark);
+      }
+      
+      // Toggle theme function
+      function toggleTheme() {
+        const isDark = document.documentElement.classList.contains('dark');
+        document.documentElement.classList.toggle('dark');
+        localStorage.theme = isDark ? 'light' : 'dark';
+        
+        // Update icons visibility
+        updateThemeIcons(!isDark);
+      }
+      
+      // Update theme toggle icon visibility
+      function updateThemeIcons(isDark) {
+        const sunIcon = document.getElementById('theme-toggle-light-icon');
+        const moonIcon = document.getElementById('theme-toggle-dark-icon');
+        
+        if (isDark) {
+          sunIcon.classList.remove('hidden');
+          moonIcon.classList.add('hidden');
+        } else {
+          sunIcon.classList.add('hidden');
+          moonIcon.classList.remove('hidden');
+        }
+      }
+      
+      // Run on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        initializeTheme();
+        
+        // Add click event to theme toggle button
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+      });
+    </script>
   </head>
   <body>
     <nav class="navbar">
@@ -394,38 +440,14 @@
     </footer>
 
     <script>
-      // Theme toggle functionality
-      const themeToggleBtn = document.getElementById('theme-toggle');
-      const darkIcon = document.getElementById('theme-toggle-dark-icon');
-      const lightIcon = document.getElementById('theme-toggle-light-icon');
-
-      // Initialize theme
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-        darkIcon.classList.add('hidden');
-        lightIcon.classList.remove('hidden');
-      } else {
-        document.documentElement.classList.remove('dark');
-        lightIcon.classList.add('hidden');
-        darkIcon.classList.remove('hidden');
-      }
-
-      themeToggleBtn.addEventListener('click', function() {
-        document.documentElement.classList.toggle('dark');
-        darkIcon.classList.toggle('hidden');
-        lightIcon.classList.toggle('hidden');
-        localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-      });
-
-      // Canvas Drawing Functionality
-      const canvas = document.getElementById('drawingCanvas');
-      const ctx = canvas.getContext('2d');
+      let canvas, ctx;
       let isDrawing = false;
       let currentTool = 'pencil';
       let currentColor = '#000000';
       let currentSize = 2;
       let lastX = 0;
       let lastY = 0;
+      let canvasState = null;
 
       const COLORS = [
         '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00',
@@ -434,14 +456,23 @@
       ];
 
       function init() {
+        canvas = document.getElementById('drawingCanvas');
+        ctx = canvas.getContext('2d');
+        
         resizeCanvas();
         setupColorPalette();
         setInitialState();
         addEventListeners();
+        
+        // Set initial background
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        saveCanvasState();
       }
 
       function setupColorPalette() {
         const palette = document.getElementById('colorPalette');
+        palette.innerHTML = ''; // Clear the palette first
         COLORS.forEach(color => {
           const button = document.createElement('button');
           button.className = 'color-button';
@@ -453,8 +484,6 @@
       }
 
       function setInitialState() {
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = currentColor;
         ctx.lineWidth = currentSize;
         ctx.lineCap = currentTool === 'pencil' ? 'square' : 'round';
@@ -470,20 +499,71 @@
         canvas.addEventListener('touchstart', handleTouch);
         canvas.addEventListener('touchmove', handleTouch);
         canvas.addEventListener('touchend', stopDrawing);
+        
+        // Save canvas state when scrolling starts
+        window.addEventListener('scroll', saveCanvasState);
+        
         document.getElementById('brushSize').addEventListener('change', (e) => {
           currentSize = parseInt(e.target.value);
           ctx.lineWidth = currentSize;
         });
       }
 
+      function saveCanvasState() {
+        canvasState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      }
+
+      function restoreCanvasState() {
+        if (canvasState) {
+          ctx.putImageData(canvasState, 0, 0);
+        }
+      }
+
       function resizeCanvas() {
         const parent = canvas.parentElement;
         if (!parent) return;
 
+        // Save current drawing if ctx exists
+        let oldState = null;
+        if (ctx) {
+          try {
+            oldState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          } catch (e) {
+            console.log("Couldn't save canvas state", e);
+          }
+        }
+
         const rect = parent.getBoundingClientRect();
         canvas.width = rect.width;
         canvas.height = rect.height;
-        setInitialState();
+        
+        if (ctx) {
+          // Restore white background
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          // Restore drawing if we had one
+          if (oldState) {
+            try {
+              ctx.putImageData(oldState, 0, 0);
+            } catch (e) {
+              console.log("Couldn't restore canvas state", e);
+            }
+          }
+          
+          // Restore drawing settings
+          if (currentTool === 'eraser') {
+            ctx.strokeStyle = '#FFFFFF';
+          } else {
+            ctx.strokeStyle = currentColor;
+          }
+          ctx.lineWidth = currentSize;
+          ctx.lineCap = currentTool === 'pencil' ? 'square' : 'round';
+          ctx.lineJoin = 'round';
+          
+          // Save new state
+          saveCanvasState();
+        }
       }
 
       function getCoordinates(e) {
@@ -507,16 +587,21 @@
         lastX = coords.x;
         lastY = coords.y;
 
+        // Save current state before starting a new drawing action
+        saveCanvasState();
+
         if (currentTool === 'spray') {
           drawSpray(lastX, lastY);
         } else {
           ctx.beginPath();
           ctx.moveTo(lastX, lastY);
+          
           if (currentTool === 'eraser') {
             ctx.strokeStyle = '#FFFFFF';
           } else {
             ctx.strokeStyle = currentColor;
           }
+          
           ctx.lineTo(lastX + 0.1, lastY + 0.1);
           ctx.stroke();
         }
@@ -611,6 +696,7 @@
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.beginPath();
+        saveCanvasState();
       }
 
       async function handleSubmit() {
@@ -623,29 +709,41 @@
         }
 
         try {
-          const imageBase64 = canvas.toDataURL('image/png').split(',')[1];
+          const imageDataUrl = canvas.toDataURL('image/png');
+          
+          const base64Data = imageDataUrl.split(',')[1];
+          
           const formData = new FormData();
           formData.append('key', '3d9fa0bdf06acddf7b9b0e0122b2dc9d');
-          formData.append('image', imageBase64);
+          formData.append('image', base64Data);
 
-          const resImg = await fetch('https://api.imgbb.com/1/upload', {
+          const response = await fetch('https://api.imgbb.com/1/upload', {
             method: 'POST',
             body: formData
           });
 
-          const dataImg = await resImg.json();
-          const linkImagem = dataImg.data.url;
+          if (!response.ok) {
+            throw new Error('Falha ao fazer upload da imagem');
+          }
 
-          await fetch('https://script.google.com/macros/s/AKfycbwy2V3MIsdN-pZIyGn_Xe8wWMvtXY_EPKWcMU0j6G0eblRZ4pO-Ny7y5cgCheQOw73d/exec', {
+          const data = await response.json();
+          
+          if (!data.success) {
+            throw new Error('Falha ao processar a imagem');
+          }
+          
+          const imageUrl = data.data.url;
+          
+          const scriptResponse = await fetch('https://script.google.com/macros/s/AKfycbwy2V3MIsdN-pZIyGn_Xe8wWMvtXY_EPKWcMU0j6G0eblRZ4pO-Ny7y5cgCheQOw73d/exec', {
             method: 'POST',
             mode: 'no-cors',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               nomePessoa: name,
               nomeDesenho: drawingName,
-              linkImagem: linkImagem
+              linkImagem: imageUrl
             })
           });
 
@@ -654,12 +752,12 @@
           document.getElementById('authorName').value = '';
           document.getElementById('drawingName').value = '';
         } catch (error) {
-          alert('Erro ao enviar o desenho');
+          console.error('Erro ao enviar o desenho:', error);
+          alert('Erro ao enviar o desenho: ' + error.message);
         }
       }
 
-      // Initialize the app
-      init();
+      document.addEventListener('DOMContentLoaded', init);
     </script>
   </body>
 </html>
