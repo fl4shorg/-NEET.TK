@@ -1,108 +1,262 @@
-<html class="scroll-smooth" lang="pt-BR">
+<html class="scroll-smooth" lang="pt-BR" >
  <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <title>
-   Garticneext Painel
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Garticneext Painel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+   rel="stylesheet"
+  />
   <style>
-   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+   @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
    body {
-     font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
    }
    .blurred {
-     filter: blur(4px);
-     transition: filter 0.3s ease;
+    filter: blur(4px);
+    transition: filter 0.3s ease;
+   }
+   /* Scrollbar styling for both themes */
+   ::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+   }
+   ::-webkit-scrollbar-track {
+    background: transparent;
+   }
+   ::-webkit-scrollbar-thumb {
+    background-color: #6b6bff80;
+    border-radius: 10px;
+   }
+   /* Light theme overrides */
+   .light body {
+    background-color: #f0f0f0;
+    color: #111827;
+   }
+   .light #totalEnvios {
+    background-color: #e2e8f0;
+    color: #1e40af;
+   }
+   .light input,
+   .light nav button {
+    background-color: #fff;
+    border-color: #cbd5e1;
+    color: #1e40af;
+   }
+   .light input::placeholder {
+    color: #94a3b8;
+   }
+   .light nav button:hover {
+    background-color: #cbd5e1;
+   }
+   .light nav button.bg-\[\#3B3B4B\] {
+    background-color: #cbd5e1 !important;
+    color: #1e40af !important;
+   }
+   .light .border-\[\#6B6BFF\] {
+    border-color: #3b82f6;
+   }
+   .light .text-\[\#6B6BFF\] {
+    color: #3b82f6;
+   }
+   .light .text-white {
+    color: #111827;
+   }
+   .light .bg-\[\#0B1226\] {
+    background-color: #f0f0f0 !important;
+   }
+   .light .bg-\[\#1B243A\] {
+    background-color: #e2e8f0 !important;
+   }
+   .light .bg-\[\#3B3B4B\] {
+    background-color: #cbd5e1 !important;
+   }
+   .light .text-\[\#3B3B4B\] {
+    color: #94a3b8 !important;
+   }
+   .light .italic.text-\[\#6B6BFF\] {
+    color: #3b82f6 !important;
    }
   </style>
  </head>
- <body class="bg-[#0B1226] text-white min-h-screen p-4">
-  <header class="flex flex-wrap items-center justify-between mb-4 gap-3">
+ <body class="bg-[#0B1226] text-white min-h-screen p-4 transition-colors duration-500">
+  <header
+   class="flex flex-wrap items-center justify-between mb-4 gap-3"
+  >
    <div class="flex items-center gap-2 max-w-[60%]">
     <i class="fas fa-pen text-[#6B6BFF] text-lg"></i>
     <h1 class="font-extrabold text-2xl leading-[1.1]">
      Garticneext
-     <br/>
+     <br />
      painel
     </h1>
    </div>
-   <div id="totalEnvios" class="bg-[#1B243A] rounded-md px-4 py-2 text-sm font-semibold max-w-[35%] text-left">
+   <div
+    id="totalEnvios"
+    class="bg-[#1B243A] rounded-md px-4 py-2 text-sm font-semibold max-w-[35%] text-left"
+   >
     Total de
-    <br/>
+    <br />
     envios:
     <span class="text-[#6B6BFF]">0</span>
    </div>
-   <button aria-label="Toggle dark mode" class="text-white text-xl">
+   <button
+    id="toggleThemeBtn"
+    aria-label="Toggle light/dark theme"
+    class="text-white text-xl"
+    title="Alternar tema claro/escuro"
+   >
     <i class="fas fa-moon"></i>
    </button>
   </header>
-  <form class="mb-4">
+  <form id="searchForm" class="mb-4" onsubmit="return false;">
    <label class="sr-only" for="search">Pesquisar desenhos</label>
    <div class="relative max-w-full">
-    <input class="w-full rounded-md bg-[#121B2B] border border-[#1B243A] py-3 pl-12 pr-4 text-[#6B6BFF] placeholder-[#3B3B4B] focus:outline-none focus:ring-2 focus:ring-[#6B6BFF]" id="search" placeholder="Pesquisar desenhos..." type="search"/>
-    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[#3B3B4B]"></i>
+    <input
+     autocomplete="off"
+     class="w-full rounded-md bg-[#121B2B] border border-[#1B243A] py-3 pl-12 pr-4 text-[#6B6BFF] placeholder-[#3B3B4B] focus:outline-none focus:ring-2 focus:ring-[#6B6BFF] transition-colors duration-300"
+     id="search"
+     placeholder="Pesquisar desenhos..."
+     type="search"
+    />
+    <i
+     class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[#3B3B4B]"
+    ></i>
    </div>
   </form>
-  <nav class="flex items-center gap-3 border-b border-[#2B2B3B] pb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-[#6B6BFF]/50 scrollbar-track-transparent">
-   <button class="flex items-center gap-1 text-white font-semibold whitespace-nowrap">
+  <nav
+   class="flex items-center gap-3 border-b border-[#2B2B3B] pb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-[#6B6BFF]/50 scrollbar-track-transparent"
+  >
+   <button
+    data-filter="all"
+    class="filter-btn flex items-center gap-1 text-white font-semibold whitespace-nowrap bg-[#3B3B4B] rounded-md px-4 py-2"
+   >
     <i class="fas fa-filter"></i>
     Filtrar por:
    </button>
-   <button class="bg-[#3B3B4B] rounded-md px-4 py-2 font-semibold whitespace-nowrap">Todos</button>
-   <button class="text-white font-semibold whitespace-nowrap px-4 py-2 rounded-md hover:bg-[#3B3B4B]">Última hora</button>
-   <button class="text-white font-semibold whitespace-nowrap px-4 py-2 rounded-md hover:bg-[#3B3B4B]">Hoje</button>
+   <button
+    data-filter="all"
+    class="filter-btn bg-[#3B3B4B] rounded-md px-4 py-2 font-semibold whitespace-nowrap"
+   >
+    Todos
+   </button>
+   <button
+    data-filter="lastHour"
+    class="filter-btn text-white font-semibold whitespace-nowrap px-4 py-2 rounded-md hover:bg-[#3B3B4B]"
+   >
+    Última hora
+   </button>
+   <button
+    data-filter="today"
+    class="filter-btn text-white font-semibold whitespace-nowrap px-4 py-2 rounded-md hover:bg-[#3B3B4B]"
+   >
+    Hoje
+   </button>
   </nav>
   <main id="lista" class="mt-6 space-y-6 max-w-md mx-auto"></main>
-  <div id="mensagem" class="text-center text-red-600 font-bold mt-4 max-w-md mx-auto"></div>
+  <div
+   id="mensagem"
+   class="text-center text-red-600 font-bold mt-4 max-w-md mx-auto"
+  ></div>
   <script>
    function tempoDecorrido(dataHoraString) {
-    if (!dataHoraString) return '';
+    if (!dataHoraString) return "";
     const agora = new Date();
     const dataEnvio = new Date(dataHoraString);
-    if (isNaN(dataEnvio)) return '';
+    if (isNaN(dataEnvio)) return "";
     const diffMs = agora - dataEnvio;
-    if (diffMs < 0) return 'agora mesmo';
+    if (diffMs < 0) return "agora mesmo";
     const segundos = Math.floor(diffMs / 1000);
-    if (segundos < 60) return `há ${segundos} segundo${segundos !== 1 ? 's' : ''}`;
+    if (segundos < 60)
+     return `há ${segundos} segundo${segundos !== 1 ? "s" : ""}`;
     const minutos = Math.floor(segundos / 60);
-    if (minutos < 60) return `há ${minutos} minuto${minutos !== 1 ? 's' : ''}`;
+    if (minutos < 60)
+     return `há ${minutos} minuto${minutos !== 1 ? "s" : ""}`;
     const horas = Math.floor(minutos / 60);
-    if (horas < 24) return `há ${horas} hora${horas !== 1 ? 's' : ''}`;
+    if (horas < 24) return `há ${horas} hora${horas !== 1 ? "s" : ""}`;
     const dias = Math.floor(horas / 24);
-    return `há ${dias} dia${dias !== 1 ? 's' : ''}`;
+    return `há ${dias} dia${dias !== 1 ? "s" : ""}`;
+   }
+
+   function filtrarRegistros(registros, filtro) {
+    const agora = new Date();
+    if (filtro === "lastHour") {
+     return registros.filter((d) => {
+      const dataEnvio = new Date(d.dataHora);
+      return !isNaN(dataEnvio) && agora - dataEnvio <= 3600000; // 1 hora em ms
+     });
+    } else if (filtro === "today") {
+     return registros.filter((d) => {
+      const dataEnvio = new Date(d.dataHora);
+      if (isNaN(dataEnvio)) return false;
+      return dataEnvio.toDateString() === agora.toDateString();
+     });
+    }
+    return registros;
+   }
+
+   function aplicarTema(tema) {
+    const html = document.documentElement;
+    if (tema === "light") {
+     html.classList.add("light");
+     document.body.classList.remove("bg-[#0B1226]", "text-white");
+     document.body.classList.add("bg-[#f0f0f0]", "text-[#111827]");
+     toggleThemeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+     html.classList.remove("light");
+     document.body.classList.remove("bg-[#f0f0f0]", "text-[#111827]");
+     document.body.classList.add("bg-[#0B1226]", "text-white");
+     toggleThemeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+    }
    }
 
    async function carregarDesenhos() {
-    const lista = document.getElementById('lista');
-    const mensagem = document.getElementById('mensagem');
-    const totalEnviosSpan = document.querySelector('#totalEnvios span');
-    const chave = 'minha_chave_123';
+    const lista = document.getElementById("lista");
+    const mensagem = document.getElementById("mensagem");
+    const totalEnviosSpan = document.querySelector("#totalEnvios span");
+    const searchInput = document.getElementById("search");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const toggleThemeBtn = document.getElementById("toggleThemeBtn");
+    const chave = "minha_chave_123";
     const url = `https://script.google.com/macros/s/AKfycbwy2V3MIsdN-pZIyGn_Xe8wWMvtXY_EPKWcMU0j6G0eblRZ4pO-Ny7y5cgCheQOw73d/exec?chave=${chave}`;
-    try {
-      const resposta = await fetch(url);
-      if (!resposta.ok) {
-        throw new Error('Erro de conexão com o servidor.');
-      }
-      const dados = await resposta.json();
-      if (dados.status !== 'sucesso') {
-        mensagem.textContent = dados.mensagem || 'Erro ao buscar dados.';
-        return;
-      }
-      if (dados.registros.length === 0) {
-        mensagem.textContent = 'Nenhum desenho encontrado.';
-        return;
-      }
-      mensagem.textContent = '';
-      totalEnviosSpan.textContent = dados.registros.length;
-      lista.innerHTML = '';
-      dados.registros.reverse().forEach(desenho => {
-        const tempo = tempoDecorrido(desenho.dataHora);
-        const artigo = document.createElement('article');
-        artigo.className = 'border border-[#6B6BFF] rounded-lg p-4 relative';
-        artigo.innerHTML = `
+    let registros = [];
+    let filtroAtual = "all";
+    let termoBusca = "";
+
+    // Load theme from localStorage or default to dark
+    let temaAtual = localStorage.getItem("tema") || "dark";
+    aplicarTema(temaAtual);
+
+    toggleThemeBtn.addEventListener("click", () => {
+     temaAtual = temaAtual === "dark" ? "light" : "dark";
+     aplicarTema(temaAtual);
+     localStorage.setItem("tema", temaAtual);
+    });
+
+    function renderLista() {
+     let filtrados = filtrarRegistros(registros, filtroAtual);
+     if (termoBusca.trim() !== "") {
+      const termoLower = termoBusca.toLowerCase();
+      filtrados = filtrados.filter(
+       (d) =>
+        (d.nomeDesenho && d.nomeDesenho.toLowerCase().includes(termoLower)) ||
+        (d.nomePessoa && d.nomePessoa.toLowerCase().includes(termoLower))
+      );
+     }
+     totalEnviosSpan.textContent = filtrados.length;
+     lista.innerHTML = "";
+     if (filtrados.length === 0) {
+      mensagem.textContent = "Nenhum desenho encontrado.";
+      return;
+     } else {
+      mensagem.textContent = "";
+     }
+     filtrados.forEach((desenho) => {
+      const tempo = tempoDecorrido(desenho.dataHora);
+      const artigo = document.createElement("article");
+      artigo.className = "border border-[#6B6BFF] rounded-lg p-4 relative";
+      artigo.innerHTML = `
           <div class="flex justify-between items-start mb-2">
             <h2 class="text-[#6B6BFF] font-semibold text-sm flex items-center gap-2">
               <i class="fas fa-pen text-[#6B6BFF]"></i>
@@ -112,39 +266,78 @@
           </div>
           <div class="flex justify-between items-center mb-2">
             <div class="flex items-center gap-2 text-white font-semibold text-lg">
-              <h3 class="leading-none transition-filter" style="transition: filter 0.3s ease;">${desenho.nomeDesenho || '.'}</h3>
-              <button aria-label="Visualizar" class="text-[#6B6BFF] text-lg toggle-blur">
+              <h3 class="leading-none transition-filter" style="transition: filter 0.3s ease;">${
+               desenho.nomeDesenho || "."
+              }</h3>
+              <button aria-label="Visualizar" class="text-[#6B6BFF] text-lg toggle-blur" title="Mostrar/ocultar nome">
                 <i class="fas fa-eye"></i>
               </button>
             </div>
           </div>
           <div class="flex justify-center mb-3">
-            <img src="${desenho.linkImagem}" alt="Desenho: ${desenho.nomeDesenho}, artista: ${desenho.nomePessoa}" class="rounded-md max-w-[200px] max-h-[200px] object-cover" width="200" height="200"/>
+            <img src="${desenho.linkImagem}" alt="Desenho: ${
+       desenho.nomeDesenho
+      }, artista: ${desenho.nomePessoa}" class="rounded-md max-w-[200px] max-h-[200px] object-cover" width="200" height="200"/>
           </div>
           <div class="flex justify-between text-sm">
             <p><strong>Artista:</strong> ${desenho.nomePessoa}</p>
             <p class="italic text-[#6B6BFF]">${tempo}</p>
           </div>
         `;
-        lista.appendChild(artigo);
-      });
+      lista.appendChild(artigo);
+     });
 
-      // Add event listeners for blur toggle
-      lista.querySelectorAll('.toggle-blur').forEach(button => {
-        button.addEventListener('click', () => {
-          const h3 = button.previousElementSibling;
-          if (!h3) return;
-          if (h3.classList.contains('blurred')) {
-            h3.classList.remove('blurred');
-          } else {
-            h3.classList.add('blurred');
-          }
-        });
+     // Add event listeners for blur toggle and icon change
+     lista.querySelectorAll(".toggle-blur").forEach((button) => {
+      button.addEventListener("click", () => {
+       const h3 = button.previousElementSibling;
+       if (!h3) return;
+       const icon = button.querySelector("i");
+       if (h3.classList.contains("blurred")) {
+        h3.classList.remove("blurred");
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+       } else {
+        h3.classList.add("blurred");
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+       }
       });
-    } catch (error) {
-      console.error('Erro:', error);
-      mensagem.textContent = 'Erro ao conectar ao servidor.';
+     });
     }
+
+    try {
+     const resposta = await fetch(url);
+     if (!resposta.ok) {
+      throw new Error("Erro de conexão com o servidor.");
+     }
+     const dados = await resposta.json();
+     if (dados.status !== "sucesso") {
+      mensagem.textContent = dados.mensagem || "Erro ao buscar dados.";
+      return;
+     }
+     registros = dados.registros.reverse();
+     renderLista();
+    } catch (error) {
+     console.error("Erro:", error);
+     mensagem.textContent = "Erro ao conectar ao servidor.";
+    }
+
+    // Filter buttons event
+    filterButtons.forEach((btn) => {
+     btn.addEventListener("click", () => {
+      filtroAtual = btn.getAttribute("data-filter") || "all";
+      filterButtons.forEach((b) => b.classList.remove("bg-[#3B3B4B]"));
+      btn.classList.add("bg-[#3B3B4B]");
+      renderLista();
+     });
+    });
+
+    // Search input event
+    searchInput.addEventListener("input", (e) => {
+     termoBusca = e.target.value;
+     renderLista();
+    });
    }
    carregarDesenhos();
   </script>
