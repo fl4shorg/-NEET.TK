@@ -1,26 +1,665 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neextgartic-draw-submit-art</title>
+    <title>GarticNeext</title>
     <meta name="description" content="Lovable Generated Project" />
     <meta name="author" content="Lovable" />
+    <style>
+      :root {
+        --background: #ffffff;
+        --foreground: #000000;
+        --border: #e5e7eb;
+        --card: #ffffff;
+        --card-foreground: #000000;
+        --primary: #000000;
+        --primary-foreground: #ffffff;
+        --muted: #6b7280;
+      }
 
-    <meta property="og:title" content="neextgartic-draw-submit-art" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+      .dark {
+        --background: #1a1b1e;
+        --foreground: #ffffff;
+        --border: #2e2e2e;
+        --card: #27272a;
+        --card-foreground: #ffffff;
+        --primary: #ffffff;
+        --primary-foreground: #000000;
+        --muted: #a1a1aa;
+      }
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, sans-serif;
+        background-color: var(--background);
+        color: var(--foreground);
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        border-bottom: 1px solid var(--border);
+        background-color: rgba(var(--background), 0.95);
+        backdrop-filter: blur(8px);
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .navbar-content {
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: bold;
+        font-size: 1.25rem;
+      }
+
+      .theme-toggle {
+        padding: 0.5rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--foreground);
+        border-radius: 0.5rem;
+      }
+
+      .theme-toggle:hover {
+        background-color: var(--border);
+      }
+
+      .main-content {
+        padding-top: 5rem;
+        padding-bottom: 1.5rem;
+      }
+
+      .canvas-container {
+        position: relative;
+        height: 60vh;
+        margin-bottom: 1.5rem;
+      }
+
+      #drawingCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px solid var(--border);
+        border-radius: 0.5rem;
+        background-color: white;
+        touch-action: none;
+      }
+
+      .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .tools-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .tool-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .tool-btn:hover {
+        background-color: var(--border);
+      }
+
+      .tool-btn.active {
+        background-color: var(--border);
+      }
+
+      .color-palette {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .color-button {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.2s;
+      }
+
+      .color-button:hover {
+        transform: scale(1.1);
+      }
+
+      .color-button.selected {
+        border-color: var(--foreground);
+        transform: scale(1.1);
+      }
+
+      .brush-size {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        margin-bottom: 1.5rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .form-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .input {
+        padding: 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        background-color: var(--card);
+        color: var(--card-foreground);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: background-color 0.2s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        border: none;
+      }
+
+      .btn-secondary {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      @media (min-width: 768px) {
+        .info-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .info-card {
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        background-color: var(--card);
+      }
+
+      .info-text {
+        color: var(--muted);
+        font-size: 0.875rem;
+        margin: 0;
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        padding: 1.5rem 0;
+      }
+
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      @media (min-width: 768px) {
+        .footer-content {
+          flex-direction: row;
+          justify-content: space-between;
+          height: 3.5rem;
+        }
+      }
+
+      .heart-icon {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
   </head>
-
   <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script Gartic="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" Gartic="/Gartic/main.tsx"></script>
+    <nav class="navbar">
+      <div class="container navbar-content">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 17h13M5 12h6M7 7h2M18.4 5c.8-.8 2.2-.8 3 0 .8.8.8 2.2 0 3L7.8 21.7c-.2.2-.5.3-.8.3H3v-4c0-.3.1-.6.3-.8L18.4 5z"/>
+          </svg>
+          <span>GarticNeext</span>
+        </div>
+        <button id="theme-toggle" class="theme-toggle">
+          <svg id="theme-toggle-light-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="hidden">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+          </svg>
+          <svg id="theme-toggle-dark-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <main class="main-content container">
+      <div style="max-width: 48rem; margin: 0 auto;">
+        <div class="canvas-container">
+          <canvas id="drawingCanvas"></canvas>
+        </div>
+
+        <div class="tools-grid">
+          <button onclick="setTool('pencil')" class="tool-btn active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+            </svg>
+            Lápis
+          </button>
+          <button onclick="setTool('brush')" class="tool-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.4 5c.8-.8 2.2-.8 3 0 .8.8.8 2.2 0 3L7.8 21.7c-.2.2-.5.3-.8.3H3v-4c0-.3.1-.6.3-.8L18.4 5z"/>
+            </svg>
+            Pincel
+          </button>
+          <button onclick="setTool('spray')" class="tool-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 12v.01"/>
+              <path d="M2 12h2"/>
+              <path d="M14 12h8"/>
+              <path d="M12 2v2"/>
+              <path d="M12 14v8"/>
+              <path d="m4.93 4.93 1.41 1.41"/>
+              <path d="m17.66 17.66 1.41 1.41"/>
+              <path d="m19.07 4.93-1.41 1.41"/>
+              <path d="m6.34 17.66-1.41 1.41"/>
+              <path d="M12 8a4 4 0 0 1 0 8 4 4 0 0 1 0-8"/>
+            </svg>
+            Spray
+          </button>
+          <button onclick="setTool('eraser')" class="tool-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 20H7L3 16c-1.5-1.5-1.5-3.5 0-5l7-7c1.5-1.5 3.5-1.5 5 0l5 5c1.5 1.5 1.5 3.5 0 5l-4 4"/>
+            </svg>
+            Borracha
+          </button>
+        </div>
+
+        <div id="colorPalette" class="color-palette"></div>
+
+        <select id="brushSize" class="brush-size">
+          <option value="2">Fino</option>
+          <option value="5">Médio</option>
+          <option value="10">Grosso</option>
+          <option value="20">Extra Grosso</option>
+        </select>
+
+        <div class="form-grid">
+          <input type="text" id="authorName" placeholder="Seu Nome" class="input">
+          <input type="text" id="drawingName" placeholder="Nome do Desenho" class="input">
+        </div>
+
+        <div class="button-group">
+          <button onclick="handleSubmit()" class="btn btn-primary">Enviar</button>
+          <button onclick="clearCanvas()" class="btn btn-secondary">Limpar</button>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <p class="info-text">Use o lápis para desenhos precisos e linhas finas.</p>
+          </div>
+          <div class="info-card">
+            <p class="info-text">O pincel é ótimo para traços mais suaves e naturais.</p>
+          </div>
+          <div class="info-card">
+            <p class="info-text">Experimente o spray para criar efeitos de textura.</p>
+          </div>
+          <div class="info-card">
+            <p class="info-text">A borracha ajuda a corrigir erros no seu desenho.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <p class="info-text" style="display: flex; align-items: center;">
+          Feito com
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" class="heart-icon" style="width: 1rem; height: 1rem; margin: 0 0.25rem;">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          para a <span style="font-weight: bold; margin-left: 0.25rem;">Neext</span>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Theme toggle functionality
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const darkIcon = document.getElementById('theme-toggle-dark-icon');
+      const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+      // Initialize theme
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        darkIcon.classList.add('hidden');
+        lightIcon.classList.remove('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        lightIcon.classList.add('hidden');
+        darkIcon.classList.remove('hidden');
+      }
+
+      themeToggleBtn.addEventListener('click', function() {
+        document.documentElement.classList.toggle('dark');
+        darkIcon.classList.toggle('hidden');
+        lightIcon.classList.toggle('hidden');
+        localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      });
+
+      // Canvas Drawing Functionality
+      const canvas = document.getElementById('drawingCanvas');
+      const ctx = canvas.getContext('2d');
+      let isDrawing = false;
+      let currentTool = 'pencil';
+      let currentColor = '#000000';
+      let currentSize = 2;
+      let lastX = 0;
+      let lastY = 0;
+
+      const COLORS = [
+        '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00',
+        '#FF00FF', '#00FFFF', '#FFA500', '#800080', '#008000', '#800000',
+        '#008080', '#000080', '#808080', '#C0C0C0'
+      ];
+
+      function init() {
+        resizeCanvas();
+        setupColorPalette();
+        setInitialState();
+        addEventListeners();
+      }
+
+      function setupColorPalette() {
+        const palette = document.getElementById('colorPalette');
+        COLORS.forEach(color => {
+          const button = document.createElement('button');
+          button.className = 'color-button';
+          button.style.backgroundColor = color;
+          button.onclick = () => setColor(color);
+          if (color === currentColor) button.classList.add('selected');
+          palette.appendChild(button);
+        });
+      }
+
+      function setInitialState() {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentSize;
+        ctx.lineCap = currentTool === 'pencil' ? 'square' : 'round';
+        ctx.lineJoin = 'round';
+      }
+
+      function addEventListeners() {
+        window.addEventListener('resize', resizeCanvas);
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        canvas.addEventListener('touchstart', handleTouch);
+        canvas.addEventListener('touchmove', handleTouch);
+        canvas.addEventListener('touchend', stopDrawing);
+        document.getElementById('brushSize').addEventListener('change', (e) => {
+          currentSize = parseInt(e.target.value);
+          ctx.lineWidth = currentSize;
+        });
+      }
+
+      function resizeCanvas() {
+        const parent = canvas.parentElement;
+        if (!parent) return;
+
+        const rect = parent.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        setInitialState();
+      }
+
+      function getCoordinates(e) {
+        const rect = canvas.getBoundingClientRect();
+        const event = e.touches ? e.touches[0] : e;
+        return {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top
+        };
+      }
+
+      function handleTouch(e) {
+        e.preventDefault();
+        const touch = e.type === 'touchstart' ? startDrawing : draw;
+        touch(e);
+      }
+
+      function startDrawing(e) {
+        isDrawing = true;
+        const coords = getCoordinates(e);
+        lastX = coords.x;
+        lastY = coords.y;
+
+        if (currentTool === 'spray') {
+          drawSpray(lastX, lastY);
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(lastX, lastY);
+          if (currentTool === 'eraser') {
+            ctx.strokeStyle = '#FFFFFF';
+          } else {
+            ctx.strokeStyle = currentColor;
+          }
+          ctx.lineTo(lastX + 0.1, lastY + 0.1);
+          ctx.stroke();
+        }
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+
+        const coords = getCoordinates(e);
+        const currentX = coords.x;
+        const currentY = coords.y;
+
+        if (currentTool === 'spray') {
+          drawSpray(currentX, currentY);
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(lastX, lastY);
+          
+          if (currentTool === 'eraser') {
+            ctx.strokeStyle = '#FFFFFF';
+          } else {
+            ctx.strokeStyle = currentColor;
+          }
+          
+          if (currentTool === 'pencil') {
+            ctx.lineTo(currentX, currentY);
+          } else if (currentTool === 'brush' || currentTool === 'eraser') {
+            const dx = currentX - lastX;
+            const dy = currentY - lastY;
+            ctx.quadraticCurveTo(
+              lastX + dx / 2,
+              lastY + dy / 2,
+              currentX,
+              currentY
+            );
+          }
+          
+          ctx.stroke();
+        }
+
+        lastX = currentX;
+        lastY = currentY;
+      }
+
+      function drawSpray(x, y) {
+        const density = currentSize * 2;
+        const radius = currentSize * 2;
+
+        ctx.fillStyle = currentTool === 'eraser' ? 'white' : currentColor;
+        for (let i = 0; i < density; i++) {
+          const offsetX = (Math.random() - 0.5) * radius * 2;
+          const offsetY = (Math.random() - 0.5) * radius * 2;
+          ctx.fillRect(x + offsetX, y + offsetY, 1, 1);
+        }
+      }
+
+      function stopDrawing() {
+        isDrawing = false;
+      }
+
+      function setTool(tool) {
+        currentTool = tool;
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`[onclick="setTool('${tool}')"]`).classList.add('active');
+
+        ctx.lineCap = tool === 'pencil' ? 'square' : 'round';
+        ctx.lineJoin = 'round';
+        
+        if (tool === 'eraser') {
+          ctx.strokeStyle = '#FFFFFF';
+        } else {
+          ctx.strokeStyle = currentColor;
+        }
+      }
+
+      function setColor(color) {
+        currentColor = color;
+        if (currentTool !== 'eraser') {
+          ctx.strokeStyle = color;
+        }
+        document.querySelectorAll('.color-button').forEach(btn => {
+          btn.classList.remove('selected');
+          if (btn.style.backgroundColor === color) {
+            btn.classList.add('selected');
+          }
+        });
+      }
+
+      function clearCanvas() {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+      }
+
+      async function handleSubmit() {
+        const name = document.getElementById('authorName').value;
+        const drawingName = document.getElementById('drawingName').value;
+
+        if (!name || !drawingName) {
+          alert('Por favor, preencha todos os campos');
+          return;
+        }
+
+        try {
+          const imageBase64 = canvas.toDataURL('image/png').split(',')[1];
+          const formData = new FormData();
+          formData.append('key', '3d9fa0bdf06acddf7b9b0e0122b2dc9d');
+          formData.append('image', imageBase64);
+
+          const resImg = await fetch('https://api.imgbb.com/1/upload', {
+            method: 'POST',
+            body: formData
+          });
+
+          const dataImg = await resImg.json();
+          const linkImagem = dataImg.data.url;
+
+          await fetch('https://script.google.com/macros/s/AKfycbwy2V3MIsdN-pZIyGn_Xe8wWMvtXY_EPKWcMU0j6G0eblRZ4pO-Ny7y5cgCheQOw73d/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              nomePessoa: name,
+              nomeDesenho: drawingName,
+              linkImagem: linkImagem
+            })
+          });
+
+          alert('Desenho enviado com sucesso!');
+          clearCanvas();
+          document.getElementById('authorName').value = '';
+          document.getElementById('drawingName').value = '';
+        } catch (error) {
+          alert('Erro ao enviar o desenho');
+        }
+      }
+
+      // Initialize the app
+      init();
+    </script>
   </body>
 </html>
