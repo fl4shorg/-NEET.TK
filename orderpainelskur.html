@@ -1,0 +1,209 @@
+<html class="scroll-smooth" lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Order Sticker
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: "Inter", sans-serif;
+    }
+  </style>
+ </head>
+ <body class="bg-[#121826] text-[#cbd5e1] min-h-screen p-4">
+  <header class="flex items-center justify-between mb-6">
+   <div class="flex items-center gap-4">
+    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#7c5aff] to-[#4e3eff] flex items-center justify-center text-white">
+     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"></path>
+      <path d="M14 3v4a2 2 0 0 0 2 2h4"></path>
+      <path d="M8 13h.01"></path>
+      <path d="M16 13h.01"></path>
+      <path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1"></path>
+     </svg>
+    </div>
+    <h1 class="text-2xl font-extrabold text-[#cbd5e1] leading-none select-none">
+     Order Sticker
+    </h1>
+   </div>
+   <div class="flex items-center gap-2 bg-[#1f2937] rounded-full px-4 py-1 select-none" id="pedidoCount">
+    <span class="w-4 h-4 rounded-full bg-[#34d399] block">
+    </span>
+    <span class="font-semibold text-[#e5e7eb] text-lg leading-none">
+     0
+    </span>
+    <span class="font-semibold text-[#e5e7eb] text-lg leading-none">
+     Pedidos
+    </span>
+   </div>
+  </header>
+  <section class="mb-6 rounded-xl border border-[#1f2937] p-4 max-w-md w-full">
+   <form class="flex flex-col gap-4" onsubmit="event.preventDefault();">
+    <label class="sr-only" for="search">
+     Pesquisar pedidos
+    </label>
+    <input autocomplete="off" class="w-full rounded-lg bg-[#1f2937] border border-[#334155] text-[#94a3b8] placeholder-[#94a3b8] py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#7c5aff]" id="search" placeholder="Pesquisar pedidos..." type="search" oninput="aplicarFiltros()"/>
+    <div class="flex items-center gap-2">
+     <button aria-label="Filtrar pedidos" class="w-14 h-14 rounded-lg bg-[#334155] flex items-center justify-center text-[#cbd5e1] text-2xl" id="btnFiltro" type="button" onclick="toggleFiltroMenu()">
+      <i class="fas fa-filter">
+      </i>
+     </button>
+     <select aria-label="Filtro de tempo" class="rounded-lg bg-[#1f2937] border border-[#334155] text-[#94a3b8] py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#7c5aff]" id="filtroTempo" onchange="aplicarFiltros()">
+      <option value="todos" selected>
+       Todos
+      </option>
+      <option value="ultimaHora">
+       Última hora
+      </option>
+      <option value="hoje">
+       Hoje
+      </option>
+      <option value="estaSemana">
+       Esta semana
+      </option>
+      <option value="esteMes">
+       Este mês
+      </option>
+     </select>
+    </div>
+   </form>
+  </section>
+  <section class="max-w-md w-full flex flex-col gap-6" id="listaPedidos">
+   <!-- Pedidos serão inseridos aqui -->
+  </section>
+  <script>
+   const apiUrl = 'https://script.google.com/macros/s/AKfycbwQW25Umk3TqMv4q47BbdJsb8frZMRa7_shbNhHDEx43xcser8OLxk8bDtgrs85P_90uQ/exec?dados=true';
+   let pedidos = [];
+   let pedidosFiltrados = [];
+
+   // Função para formatar data relativa (ex: "há cerca de 3 horas")
+   function tempoRelativo(dataString) {
+     const data = new Date(dataString);
+     const agora = new Date();
+     const diffMs = agora - data;
+     const diffHoras = Math.floor(diffMs / (1000 * 60 * 60));
+     if (diffHoras <= 0) return 'há menos de 1 hora';
+     if (diffHoras === 1) return 'há cerca de 1 hora';
+     return `há cerca de ${diffHoras} horas`;
+   }
+
+   // Função para criar o card de pedido
+   function criarCardPedido(pedido) {
+     const card = document.createElement('article');
+     card.className = 'border border-[#7c5aff] rounded-xl p-4 flex flex-col gap-3';
+
+     const header = document.createElement('div');
+     header.className = 'flex justify-between items-start';
+
+     const nome = document.createElement('span');
+     nome.className = 'text-white text-xl font-extrabold select-none';
+     nome.textContent = pedido.nome || '.';
+
+     const tempo = document.createElement('span');
+     tempo.className = 'bg-[#1e293b] text-[#60a5fa] rounded-full px-4 py-1 text-sm font-semibold select-none';
+     tempo.textContent = tempoRelativo(pedido.data);
+
+     header.appendChild(nome);
+     header.appendChild(tempo);
+
+     const descricao = document.createElement('div');
+     descricao.className = 'bg-[#0f172a] rounded-lg border-l-4 border-[#7c5aff] p-4 text-white text-lg font-normal select-none';
+     descricao.textContent = pedido.pedido || '.';
+
+     const status = document.createElement('div');
+     status.className = 'flex items-center gap-2 select-none';
+
+     const statusIndicador = document.createElement('span');
+     statusIndicador.className = 'w-3 h-3 rounded-full bg-[#34d399] block';
+
+     const statusTexto = document.createElement('span');
+     statusTexto.className = 'text-[#94a3b8] text-lg font-normal';
+     statusTexto.textContent = 'Recebido';
+
+     status.appendChild(statusIndicador);
+     status.appendChild(statusTexto);
+
+     card.appendChild(header);
+     card.appendChild(descricao);
+     card.appendChild(status);
+
+     return card;
+   }
+
+   // Função para exibir os pedidos na lista
+   function exibirPedidos(lista) {
+     const container = document.getElementById('listaPedidos');
+     container.innerHTML = '';
+     lista.forEach(pedido => {
+       container.appendChild(criarCardPedido(pedido));
+     });
+     // Atualiza o contador de pedidos
+     const pedidoCount = document.getElementById('pedidoCount').querySelector('span:nth-child(2)');
+     pedidoCount.textContent = lista.length;
+   }
+
+   // Função para carregar os dados da API
+   function carregarDados() {
+     fetch(apiUrl)
+       .then(response => response.json())
+       .then(data => {
+         pedidos = data.reverse();
+         pedidosFiltrados = pedidos;
+         exibirPedidos(pedidosFiltrados);
+       })
+       .catch(error => {
+         console.error('Erro ao carregar os dados:', error);
+         alert('Erro ao carregar os dados.');
+       });
+   }
+
+   // Função para aplicar filtros de pesquisa e tempo
+   function aplicarFiltros() {
+     const termo = document.getElementById('search').value.toLowerCase();
+     const filtroTempo = document.getElementById('filtroTempo').value;
+     const agora = new Date();
+
+     pedidosFiltrados = pedidos.filter(pedido => {
+       const nomeMatch = pedido.nome && pedido.nome.toLowerCase().includes(termo);
+       const pedidoMatch = pedido.pedido && pedido.pedido.toLowerCase().includes(termo);
+       if (!nomeMatch && !pedidoMatch) return false;
+
+       if (!pedido.data) return false;
+       const dataPedido = new Date(pedido.data);
+
+       switch (filtroTempo) {
+         case 'ultimaHora':
+           return (agora - dataPedido) <= 3600000; // 1 hora em ms
+         case 'hoje':
+           return dataPedido.toDateString() === agora.toDateString();
+         case 'estaSemana': {
+           const primeiroDiaSemana = new Date(agora);
+           primeiroDiaSemana.setDate(agora.getDate() - agora.getDay());
+           primeiroDiaSemana.setHours(0,0,0,0);
+           return dataPedido >= primeiroDiaSemana && dataPedido <= agora;
+         }
+         case 'esteMes':
+           return dataPedido.getMonth() === agora.getMonth() && dataPedido.getFullYear() === agora.getFullYear();
+         case 'todos':
+         default:
+           return true;
+       }
+     });
+
+     exibirPedidos(pedidosFiltrados);
+   }
+
+   // Função para toggle menu filtro (se quiser implementar dropdown no futuro)
+   function toggleFiltroMenu() {
+     // Placeholder para dropdown toggle se necessário
+   }
+
+   window.onload = carregarDados;
+  </script>
+ </body>
+</html>
