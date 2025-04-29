@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Sticker - Figurinhas Personalizadas</title>
+  
+  <!-- Inclusão do TailwindCSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Configuração do Tailwind -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#9b87f5',
+            background: '#f7f8fc',
+            card: '#ffffff',
+            accent: '#f3f0ff',
+            'accent-foreground': '#9b87f5',
+            'muted-foreground': '#64748b',
+            border: '#e2e8f0',
+            whatsapp: '#25D366',
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'float': 'float 6s ease-in-out infinite',
+            'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' }
+            },
+            pulse: {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0.7 }
+            }
+          }
+        },
+      }
+    }
+  </script>
+  
+  <style>
+    .text-gradient {
+      background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+      --tw-gradient-from: #9b87f5;
+      --tw-gradient-to: rgba(155, 135, 245, 0);
+      --tw-gradient-stops: var(--tw-gradient-from), #a996f6, var(--tw-gradient-to);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Dark mode styles */
+    .dark {
+      background-color: #1a1a1a;
+      color: #f5f5f5;
+    }
+
+    .dark .bg-white {
+      background-color: #2d2d2d;
+      color: #f5f5f5;
+    }
+
+    .dark .bg-background {
+      background-color: #121212;
+    }
+
+    .dark .bg-accent {
+      background-color: #2d2d30;
+    }
+
+    .dark .text-gray-900 {
+      color: #f5f5f5;
+    }
+    
+    .dark .text-muted-foreground {
+      color: #a0a0a0;
+    }
+
+    .dark .border {
+      border-color: #3d3d3d;
+    }
+    
+    .dark .bg-white\/80 {
+      background-color: rgba(45, 45, 45, 0.8);
+    }
+    
+    /* Fix for the navbar in dark mode */
+    .dark header.backdrop-blur-lg {
+      background-color: rgba(26, 26, 26, 0.8);
+      border-color: #3d3d3d;
+    }
+  </style>
+</head>
+
+<body class="bg-background text-gray-900 min-h-screen">
+  <!-- Cabeçalho com ícone corrigido -->
+  <header class="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/80 border-b border-border">
+    <div class="container flex items-center justify-between h-16 px-4 md:px-6 mx-auto">
+      <div class="flex items-center gap-2">
+        <!-- Ícone de figurinha atualizado -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary animate-pulse">
+          <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/>
+          <path d="M14 3v4a2 2 0 0 0 2 2h4"/>
+          <path d="M8 13h.01"/>
+          <path d="M16 13h.01"/>
+          <path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1"/>
+        </svg>
+        <span class="text-xl font-bold tracking-tight">Order Sticker</span>
+      </div>
+      
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="#como-funciona" class="text-sm font-medium hover:text-primary transition-colors">Como Funciona</a>
+        <a href="#depoimentos" class="text-sm font-medium hover:text-primary transition-colors">Depoimentos</a>
+        <a href="#enviar-pedido" class="text-sm font-medium hover:text-primary transition-colors">Enviar Pedido</a>
+      </nav>
+      
+      <div class="flex items-center gap-4">
+        <button id="theme-toggle" class="rounded-md p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="m4.93 4.93 1.41 1.41" />
+            <path d="m17.66 17.66 1.41 1.41" />
+            <path d="M2 12h2" />
+            <path d="M20 12h2" />
+            <path d="m6.34 17.66-1.41 1.41" />
+            <path d="m19.07 4.93-1.41 1.41" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon hidden">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
+        </button>
+        <a href="#enviar-pedido" class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-opacity-90 focus:outline-none">
+          Fazer Pedido
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-20 pb-32 overflow-hidden">
+    <canvas id="hero-canvas" class="absolute inset-0 z-0 pointer-events-none opacity-50"></canvas>
+    <div id="floating-stickers" class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <!-- Floating stickers gerados via JS -->
+    </div>
+    <div class="container relative z-10 px-4 md:px-6 mx-auto">
+      <div class="flex flex-col items-center text-center space-y-10">
+        <div class="space-y-4 max-w-3xl">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-gradient animate-fade-in">
+            Figurinhas personalizadas direto no seu WhatsApp
+          </h1>
+          <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style="animation-delay: 0.2s;">
+            Peça suas figurinhas favoritas de forma rápida e receba diretamente no Canal Skur do WhatsApp.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4 animate-fade-in" style="animation-delay: 0.4s;">
+          <a
+            href="#como-funciona"
+            class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 py-3 text-sm font-medium text-white shadow transition-colors hover:bg-opacity-90 focus:outline-none"
+          >
+            Como Funciona
+          </a>
+          <a
+            href="#enviar-pedido"
+            class="inline-flex h-11 items-center justify-center rounded-md border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 px-8 py-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none"
+          >
+            Fazer Pedido
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section class="py-20 bg-accent" id="como-funciona">
+    <div class="container px-4 md:px-6 mx-auto">
+      <div class="flex flex-col items-center text-center space-y-4 mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tighter">
+          Como Funciona
+        </h2>
+        <p class="text-muted-foreground max-w-2xl">
+          Entenda como é simples pedir suas figurinhas personalizadas e recebê-las diretamente no WhatsApp.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="rounded-lg border bg-white text-gray-900 shadow-sm overflow-hidden transition-all hover:shadow-md animate-fade-in">
+          <div class="p-6 flex flex-col items-center text-center space-y-4">
+            <div class="p-3 rounded-full bg-primary/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <h3 class="font-medium text-lg">Faça seu Pedido</h3>
+            <p class="text-sm text-muted-foreground">Preencha o formulário com os detalhes das figurinhas que você deseja.</p>
+          </div>
+        </div>
+        
+        <!-- Card 2 -->
+        <div class="rounded-lg border bg-white text-gray-900 shadow-sm overflow-hidden transition-all hover:shadow-md animate-fade-in" style="animation-delay: 0.1s;">
+          <div class="p-6 flex flex-col items-center text-center space-y-4">
+            <div class="p-3 rounded-full bg-primary/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary">
+                <line x1="22" x2="11" y1="2" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </div>
+            <h3 class="font-medium text-lg">Processamos seu Pedido</h3>
+            <p class="text-sm text-muted-foreground">Nossa equipe criativa prepara suas figurinhas personalizadas com alta qualidade.</p>
+          </div>
+        </div>
+        
+        <!-- Card 3 -->
+        <div class="rounded-lg border bg-white text-gray-900 shadow-sm overflow-hidden transition-all hover:shadow-md animate-fade-in" style="animation-delay: 0.2s;">
+          <div class="p-6 flex flex-col items-center text-center space-y-4">
+            <div class="p-3 rounded-full bg-primary/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary">
+                <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.2.3-.767.967-.94 1.164-.173.197-.347.148-.646-.05-.3-.2-1.267-.468-2.414-1.495-.893-.8-1.495-1.784-1.67-2.084-.174-.3-.019-.46.13-.61.136-.137.301-.354.452-.531.15-.177.2-.304.3-.504.098-.2.049-.374-.025-.524-.075-.15-.672-1.62-.922-2.217-.242-.58-.487-.501-.672-.51-.171-.006-.367-.012-.567-.012-.2 0-.523.074-.797.374-.273.3-1.045 1.02-1.045 2.486 0 1.467 1.070 2.884 1.222 3.084.15.2 2.116 3.233 5.132 4.533.717.31 1.28.494 1.71.628.719.226 1.375.195 1.895.118.577-.086 1.767-.722 2.016-1.42.247-.7.247-1.297.173-1.422-.074-.124-.273-.198-.574-.347z" />
+                <path d="M12 1.5c5.799 0 10.5 4.7 10.5 10.5s-4.701 10.5-10.5 10.5S1.5 17.799 1.5 12 6.201 1.5 12 1.5Zm0 18.75c4.56 0 8.25-3.69 8.25-8.25 0-4.56-3.69-8.25-8.25-8.25-4.56 0-8.25 3.69-8.25 8.25 0 4.56 3.69 8.25 8.25 8.25Z" />
+              </svg>
+            </div>
+            <h3 class="font-medium text-lg">Receba no WhatsApp</h3>
+            <p class="text-sm text-muted-foreground">Suas figurinhas são enviadas diretamente para você através do Canal Skur no WhatsApp.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skur WhatsApp -->
+  <section class="py-20">
+    <div class="container px-4 md:px-6 mx-auto">
+      <div class="flex flex-col md:flex-row gap-12 items-center">
+        <div class="md:w-1/2 space-y-4">
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tighter">
+            Canal Oficial Skur no WhatsApp
+          </h2>
+          <p class="text-muted-foreground">
+            O Canal Skur é o canal oficial para receber seus pedidos de figurinhas. Através dele, você receberá suas criações diretamente no seu WhatsApp, de forma rápida e segura.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-primary">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              <span>Entrega rápida e direta</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-primary">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              <span>Acompanhamento do seu pedido</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-primary">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              <span>Atendimento personalizado</span>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <a
+              href="https://whatsapp.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-11 items-center justify-center rounded-md bg-whatsapp px-8 py-3 text-sm font-medium text-white shadow transition-colors hover:bg-opacity-90 focus:outline-none"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2">
+                <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.2.3-.767.967-.94 1.164-.173.197-.347.148-.646-.05-.3-.2-1.267-.468-2.414-1.495-.893-.8-1.495-1.784-1.67-2.084-.174-.3-.019-.46.13-.61.136-.137.301-.354.452-.531.15-.177.2-.304.3-.504.098-.2.049-.374-.025-.524-.075-.15-.672-1.62-.922-2.217-.242-.58-.487-.501-.672-.51-.171-.006-.367-.012-.567-.012-.2 0-.523.074-.797.374-.273.3-1.045 1.02-1.045 2.486 0 1.467 1.070 2.884 1.222 3.084.15.2 2.116 3.233 5.132 4.533.717.31 1.28.494 1.71.628.719.226 1.375.195 1.895.118.577-.086 1.767-.722 2.016-1.42.247-.7.247-1.297.173-1.422-.074-.124-.273-.198-.574-.347z" />
+                <path d="M12 1.5c5.799 0 10.5 4.7 10.5 10.5s-4.701 10.5-10.5 10.5S1.5 17.799 1.5 12 6.201 1.5 12 1.5Zm0 18.75c4.56 0 8.25-3.69 8.25-8.25 0-4.56-3.69-8.25-8.25-8.25-4.56 0-8.25 3.69-8.25 8.25 0 4.56 3.69 8.25 8.25 8.25Z" />
+              </svg>
+              Acessar Canal Skur
+            </a>
+          </div>
+        </div>
+        <div class="md:w-1/2 relative">
+          <div class="aspect-square max-w-sm mx-auto relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary/10 rounded-full animate-pulse"></div>
+            <div class="absolute inset-4 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-20 w-20 text-whatsapp">
+                <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.2.3-.767.967-.94 1.164-.173.197-.347.148-.646-.05-.3-.2-1.267-.468-2.414-1.495-.893-.8-1.495-1.784-1.67-2.084-.174-.3-.019-.46.13-.61.136-.137.301-.354.452-.531.15-.177.2-.304.3-.504.098-.2.049-.374-.025-.524-.075-.15-.672-1.62-.922-2.217-.242-.58-.487-.501-.672-.51-.171-.006-.367-.012-.567-.012-.2 0-.523.074-.797.374-.273.3-1.045 1.02-1.045 2.486 0 1.467 1.070 2.884 1.222 3.084.15.2 2.116 3.233 5.132 4.533.717.31 1.28.494 1.71.628.719.226 1.375.195 1.895.118.577-.086 1.767-.722 2.016-1.42.247-.7.247-1.297.173-1.422-.074-.124-.273-.198-.574-.347z" />
+                <path d="M12 1.5c5.799 0 10.5 4.7 10.5 10.5s-4.701 10.5-10.5 10.5S1.5 17.799 1.5 12 6.201 1.5 12 1.5Zm0 18.75c4.56 0 8.25-3.69 8.25-8.25 0-4.56-3.69-8.25-8.25-8.25-4.56 0-8.25 3.69-8.25 8.25 0 4.56 3.69 8.25 8.25 8.25Z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="py-20 bg-accent" id="depoimentos">
+    <div class="container px-4 md:px-6 mx-auto">
+      <div class="flex flex-col items-center text-center space-y-4 mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tighter">
+          O que nossos clientes dizem
+        </h2>
+        <p class="text-muted-foreground max-w-2xl">
+          Confira os depoimentos de quem já pediu suas figurinhas personalizadas.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="testimonials-container">
+        <!-- Testimonials serão inseridos pelo JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulário de pedido -->
+  <section class="py-20" id="enviar-pedido">
+    <div class="container px-4 md:px-6 mx-auto">
+      <div class="flex flex-col items-center text-center space-y-4 mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tighter">
+          Faça seu Pedido
+        </h2>
+        <p class="text-muted-foreground max-w-2xl">
+          Preencha o formulário abaixo para pedir suas figurinhas personalizadas.
+        </p>
+      </div>
+      <div class="w-full max-w-md mx-auto">
+        <div class="rounded-lg border bg-white text-gray-900 shadow-sm overflow-hidden">
+          <div class="p-6">
+            <h3 class="text-2xl font-semibold leading-none tracking-tight text-center mb-4">Enviar Pedido de Figurinhas</h3>
+            <form id="pedidoForm" class="space-y-4">
+              <div class="space-y-2">
+                <label for="nome" class="text-sm font-medium">Nome</label>
+                <input 
+                  id="nome" 
+                  name="nome"
+                  class="flex h-10 w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  placeholder="Seu nome" 
+                  required 
+                />
+              </div>
+              <div class="space-y-2">
+                <label for="pedido" class="text-sm font-medium">Pedido</label>
+                <textarea 
+                  id="pedido" 
+                  name="pedido"
+                  class="flex min-h-32 w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  placeholder="Descreva seu pedido de figurinhas" 
+                  required 
+                ></textarea>
+              </div>
+              <button 
+                type="submit" 
+                id="submit-button" 
+                class="w-full inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 py-3 text-sm font-medium text-white shadow transition-colors hover:bg-opacity-90 focus:outline-none disabled:opacity-50"
+              >
+                Enviar Pedido
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer class="bg-accent dark:bg-gray-900 py-12 mt-20">
+    <div class="container px-4 md:px-6 mx-auto">
+      <div class="flex flex-col items-center justify-center space-y-4 text-center">
+        <div class="flex items-center gap-2">
+          <!-- Ícone de figurinha atualizado no rodapé -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary">
+            <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/>
+            <path d="M14 3v4a2 2 0 0 0 2 2h4"/>
+            <path d="M8 13h.01"/>
+            <path d="M16 13h.01"/>
+            <path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1"/>
+          </svg>
+          <span class="text-xl font-bold tracking-tight">Order Sticker</span>
+        </div>
+        
+        <div class="text-sm text-muted-foreground">
+          <p>Feito com ♥️ para a Neext</p>
+        </div>
+
+        <div class="flex items-center gap-4 mt-4">
+          <a href="#" class="text-sm text-muted-foreground hover:text-gray-900 dark:hover:text-gray-100">Termos</a>
+          <a href="#" class="text-sm text-muted-foreground hover:text-gray-900 dark:hover:text-gray-100">Privacidade</a>
+        </div>
+        
+        <div class="text-sm text-muted-foreground">
+          &copy; <span id="current-year"></span> Order Sticker. Todos os direitos reservados.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast notification -->
+  <div id="toast" class="fixed right-4 bottom-4 px-4 py-2 rounded-md bg-green-500 text-white transform translate-y-20 opacity-0 transition-all duration-300 shadow-lg z-50">
+    Pedido enviado com sucesso!
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Tema escuro / claro
+    const themeToggle = document.getElementById('theme-toggle');
+    const sunIcon = themeToggle.querySelector('.sun');
+    const moonIcon = themeToggle.querySelector('.moon');
+    let isDarkMode = localStorage.getItem('darkMode') === 'true';
+    
+    function updateTheme() {
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      }
+    }
+    
+    updateTheme();
+    
+    themeToggle.addEventListener('click', () => {
+      isDarkMode = !isDarkMode;
+      localStorage.setItem('darkMode', isDarkMode);
+      updateTheme();
+    });
+
+    // Depoimentos
+    const testimonials = [
+      {
+        name: "Carlos Silva",
+        message: "As figurinhas são incríveis! Recebi rapidamente através do canal Skur e a qualidade é excepcional.",
+        date: "Há 3 dias"
+      },
+      {
+        name: "Mariana Costa",
+        message: "Super prático fazer o pedido e receber pelo WhatsApp. As figurinhas ficaram lindas!",
+        date: "Há 1 semana"
+      },
+      {
+        name: "Rafael Mendes",
+        message: "Já fiz diversos pedidos, cada um melhor que o outro. Entrega rápida e figurinhas de alta qualidade.",
+        date: "Há 2 semanas"
+      },
+      {
+        name: "Juliana Ribeiro",
+        message: "Adorei as figurinhas personalizadas que recebi. O processo foi super simples e o resultado ficou perfeito.",
+        date: "Há 3 semanas"
+      },
+      {
+        name: "Lucas Pereira",
+        message: "Recomendo muito! Figurinhas criativas e atendimento nota 10 pelo canal Skur.",
+        date: "Há 1 mês"
+      },
+      {
+        name: "Amanda Santos",
+        message: "As figurinhas fizeram sucesso no meu grupo! Todos perguntando onde consegui. Já recomendei para todos.",
+        date: "Há 1 mês"
+      }
+    ];
+
+    // Renderizar depoimentos
+    const testimonialContainer = document.getElementById('testimonials-container');
+    testimonials.forEach((testimonial, i) => {
+      const delay = i * 0.1;
+      const testimonialCard = document.createElement('div');
+      testimonialCard.className = 'rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm overflow-hidden transition-all hover:shadow-md hover:-translate-y-1 animate-fade-in';
+      testimonialCard.style.animationDelay = `${delay}s`;
+      
+      testimonialCard.innerHTML = `
+        <div class="p-6">
+          <div class="space-y-2">
+            <blockquote class="text-sm md:text-base leading-relaxed">
+              "${testimonial.message}"
+            </blockquote>
+            <footer class="flex items-center justify-between">
+              <div>
+                <h3 class="font-medium text-sm">${testimonial.name}</h3>
+                <p class="text-xs text-muted-foreground dark:text-gray-400">${testimonial.date}</p>
+              </div>
+            </footer>
+          </div>
+        </div>
+      `;
+      
+      testimonialContainer.appendChild(testimonialCard);
+    });
+
+    // Formulário de pedido
+    document.getElementById('pedidoForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitButton = document.getElementById('submit-button');
+      const toast = document.getElementById('toast');
+      const nome = document.getElementById('nome').value;
+      const pedido = document.getElementById('pedido').value;
+      
+      // Alterar o botão para indicar que está enviando
+      submitButton.disabled = true;
+      submitButton.textContent = 'Enviando...';
+      
+      try {
+        const dataPedido = {
+          nome: nome,
+          pedido: pedido
+        };
+
+        await fetch('https://script.google.com/macros/s/AKfycbwQW25Umk3TqMv4q47BbdJsb8frZMRa7_shbNhHDEx43xcser8OLxk8bDtgrs85P_90uQ/exec', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dataPedido),
+          mode: 'no-cors'
+        });
+        
+        // Mostrar toast de sucesso
+        toast.textContent = 'Pedido enviado com sucesso!';
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        
+        // Limpar o formulário
+        document.getElementById('nome').value = '';
+        document.getElementById('pedido').value = '';
+        
+        // Esconder o toast após 3 segundos
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+        }, 3000);
+        
+      } catch (error) {
+        console.error('Erro ao enviar o pedido:', error);
+        toast.textContent = 'Erro ao enviar o pedido. Tente novamente mais tarde.';
+        toast.classList.remove('bg-green-500');
+        toast.classList.add('bg-red-500');
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+          setTimeout(() => {
+            toast.classList.remove('bg-red-500');
+            toast.classList.add('bg-green-500');
+          }, 300);
+        }, 3000);
+      } finally {
+        // Restaurar o botão
+        submitButton.disabled = false;
+        submitButton.textContent = 'Enviar Pedido';
+      }
+    });
+
+    // Ano atual para o rodapé
+    document.getElementById('current-year').innerText = new Date().getFullYear();
+
+    // Animação do Hero
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Definir dimensões do canvas
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = 400; // Altura fixa para a animação
+    }
+
+    // Criar partículas
+    const particles = [];
+    function createParticles() {
+      particles.length = 0;
+      const particleCount = Math.min(50, Math.floor(window.innerWidth / 20));
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 3 + 1,
+          speedX: (Math.random() - 0.5) * 0.5,
+          speedY: (Math.random() - 0.5) * 0.5,
+          color: `hsla(258, 90%, 66%, ${Math.random() * 0.5 + 0.2})`
+        });
+      }
+    }
+
+    // Desenhar partículas e conectar próximas
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Desenhar e atualizar partículas
+      particles.forEach(particle => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+
+        // Mover partículas
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        // Rebater nas bordas
+        if (particle.x > canvas.width || particle.x < 0) particle.speedX *= -1;
+        if (particle.y > canvas.height || particle.y < 0) particle.speedY *= -1;
+
+        // Conectar partículas próximas
+        particles.forEach(otherParticle => {
+          const dx = particle.x - otherParticle.x;
+          const dy = particle.y - otherParticle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = `hsla(258, 90%, 66%, ${0.4 - distance / 250})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(otherParticle.x, otherParticle.y);
+            ctx.stroke();
+          }
+        });
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    // Criar floating stickers no fundo
+    function createFloatingStickers() {
+      const stickersContainer = document.getElementById('floating-stickers');
+      if (!stickersContainer) return;
+      
+      for (let i = 0; i < 8; i++) {
+        const sticker = document.createElement('div');
+        sticker.className = 'absolute text-primary/20 dark:text-primary/10 animate-float';
+        sticker.style.top = `${Math.random() * 100}%`;
+        sticker.style.left = `${Math.random() * 100}%`;
+        sticker.style.animationDelay = `${i * 0.5}s`;
+        sticker.style.opacity = '0.7';
+        
+        // SVG icon as sticker - UPDATED WITH NEW ICON
+        sticker.innerHTML = `
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="${Math.random() * 24 + 24}" 
+            height="${Math.random() * 24 + 24}" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/>
+            <path d="M14 3v4a2 2 0 0 0 2 2h4"/>
+            <path d="M8 13h.01"/>
+            <path d="M16 13h.01"/>
+            <path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1"/>
+          </svg>
+        `;
+        
+        stickersContainer.appendChild(sticker);
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createParticles();
+    });
+
+    resizeCanvas();
+    createParticles();
+    draw();
+    createFloatingStickers();
+  </script>
+  
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+</body>
+</html>
