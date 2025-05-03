@@ -1,78 +1,348 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Resgatar Conta</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neext Doações - Resgatar Código</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f1f1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
+    /* Custom spinner */
+    .spinner {
+      border: 3px solid rgba(139, 92, 246, 0.3);
+      border-top: 3px solid #8b5cf6;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+      margin-right: 0.5rem;
     }
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      width: 300px;
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+
+    /* Toast notification */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: #8b5cf6;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+      z-index: 9999;
     }
-    #resultado {
-      margin-top: 15px;
-      font-size: 14px;
-      color: green;
-      white-space: pre-wrap;
+
+    #toast.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Override Tailwind yellow colors to purple */
+    .bg-yellow-500 {
+      background-color: #8b5cf6 !important;
+    }
+    .border-yellow-500 {
+      border-color: #8b5cf6 !important;
+    }
+    .text-yellow-400 {
+      color: #a78bfa !important;
+    }
+    .focus\:ring-yellow-400:focus {
+      --tw-ring-color: #a78bfa !important;
+    }
+    .drop-shadow-\[0_0_10px_rgba\(251\,191\,36\,0\.9\)\] {
+      filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.9)) !important;
+    }
+    .drop-shadow-\[0_0_15px_rgba\(251\,191\,36\,0\.9\)\] {
+      filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.9)) !important;
+    }
+    .drop-shadow-\[0_0_8px_rgba\(251\,191\,36\,0\.8\)\] {
+      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.8)) !important;
+    }
+    .bg-yellow-900 {
+      background-color: rgba(99, 102, 241, 0.2) !important;
+    }
+
+    /* Spinner for total accounts */
+    .spinner-small {
+      border: 3px solid rgba(139, 92, 246, 0.3);
+      border-top: 3px solid #8b5cf6;
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 0.5rem;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h3>Resgatar Conta</h3>
-    <input type="text" id="codigo" placeholder="Digite o código" required>
-    <button onclick="resgatar()">Resgatar</button>
-    <div id="resultado"></div>
+<body class="bg-[#121212] font-[Roboto Mono] text-purple-400 min-h-screen flex flex-col">
+  <main class="flex-grow flex justify-center items-start p-4">
+    <section
+      class="max-w-md w-full rounded-xl border border-purple-500 p-6 flex flex-col items-center space-y-6 relative"
+      style="box-shadow: 0 0 20px 4px #8b5cf6"
+    >
+      <div class="mb-2 text-purple-400 drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ticket-check-icon lucide-ticket-check" >
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <h1
+        class="text-purple-400 text-2xl font-semibold tracking-widest drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]"
+      >
+        Neext Doações
+      </h1>
+      <button
+        class="bg-purple-500 rounded-full px-6 py-2 flex items-center space-x-2 font-semibold text-black drop-shadow-[0_0_10px_rgba(139,92,246,0.9)]"
+        type="button"
+      >
+        <i class="fas fa-star"></i>
+        <span>Conta Premium</span>
+      </button>
+
+      <div class="w-full flex flex-col items-center space-y-4">
+        <input
+          id="codigo"
+          type="text"
+          placeholder="Digite o código"
+          class="w-full rounded-lg border border-purple-500 bg-transparent px-4 py-2 text-purple-400 font-mono text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+        />
+        <button
+          id="btnResgatar"
+          onclick="resgatar()"
+          class="bg-purple-500 rounded-xl px-6 py-3 w-full flex items-center justify-center space-x-3 font-semibold text-black drop-shadow-[0_0_15px_rgba(139,92,246,0.9)]"
+          type="button"
+        >
+          <span id="btnResgatarContent">
+            <i class="fas fa-key"></i>
+            <span>Resgatar</span>
+          </span>
+        </button>
+        <button
+          id="btnCopiar"
+          onclick="copiarConta()"
+          class="bg-purple-500 rounded-xl px-6 py-3 w-full flex items-center justify-center space-x-3 font-semibold text-black drop-shadow-[0_0_15px_rgba(139,92,246,0.9)] disabled:opacity-50"
+          type="button"
+          disabled
+        >
+          <i class="far fa-copy"></i>
+          <span>Copiar Conta</span>
+        </button>
+      </div>
+
+      <div
+        id="resultado"
+        class="w-full mt-4 bg-purple-900 bg-opacity-20 rounded-lg p-4 text-left space-y-2 hidden"
+      >
+        <p id="msg" class="font-semibold"></p>
+        <p id="email"></p>
+        <p id="senha"></p>
+        <p id="tipoConta"></p>
+        <p id="resgatadoEm"></p>
+      </div>
+
+      <div class="flex items-center space-x-3 mt-4">
+        <span class="w-4 h-4 rounded-full bg-green-500 block"></span>
+        <p id="servidorMsg" class="text-purple-300 font-semibold select-none"></p>
+      </div>
+
+      <div class="flex items-center space-x-3 mt-2">
+        <span class="spinner-small"></span>
+        <p id="totalContas" class="text-purple-300 font-semibold select-none">Total de contas disponíveis: 0</p>
+      </div>
+
+      <button
+        id="btnInstagram"
+        type="button"
+        class="bg-purple-500 rounded-xl px-6 py-3 w-full flex items-center justify-center space-x-3 font-semibold text-black drop-shadow-[0_0_15px_rgba(139,92,246,0.9)] mt-6"
+      >
+        <i class="fab fa-instagram text-black"></i>
+        <span>@neet.tk</span>
+      </button>
+
+      <button
+        id="btnCanal"
+        type="button"
+        class="bg-purple-500 rounded-xl px-6 py-3 w-full flex items-center justify-center space-x-3 font-semibold text-black drop-shadow-[0_0_15px_rgba(139,92,246,0.9)] mt-4"
+      >
+        <i class="fab fa-whatsapp text-black"></i>
+        <span>Canal da Neext</span>
+      </button>
+
+      <button
+        id="btnCreditos"
+        type="button"
+        class="bg-purple-500 rounded-xl px-6 py-3 w-full flex items-center justify-center space-x-3 font-semibold text-black drop-shadow-[0_0_15px_rgba(139,92,246,0.9)] mt-4"
+      >
+        <i class="fas fa-info-circle"></i>
+        <span>Créditos</span>
+      </button>
+    </section>
+  </main>
+
+  <div id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    Conta copiada para a área de transferência!
   </div>
 
   <script>
-    function resgatar() {
+    let ultimaConta = null;
+    const btnResgatar = document.getElementById("btnResgatar");
+    const btnResgatarContent = document.getElementById("btnResgatarContent");
+    const toast = document.getElementById("toast");
+    const servidorMsg = document.getElementById("servidorMsg");
+    const totalContas = document.getElementById("totalContas");
+    const btnCreditos = document.getElementById("btnCreditos");
+
+    function atualizarSaudacao() {
+      const now = new Date();
+      const hour = now.getHours();
+      let saudacao = "Olá";
+
+      if (hour >= 5 && hour < 12) {
+        saudacao = "Bom dia";
+      } else if (hour >= 12 && hour < 18) {
+        saudacao = "Boa tarde";
+      } else {
+        saudacao = "Boa noite";
+      }
+
+      servidorMsg.textContent = `${saudacao} - Servidor online`;
+    }
+
+    function gerarTotalContas() {
+      // Generate a random number between 1000 and 9999
+      const valor = Math.floor(Math.random() * 9000) + 1000;
+      totalContas.textContent = `Total de contas disponíveis: ${valor}`;
+    }
+
+    atualizarSaudacao();
+    gerarTotalContas();
+
+    async function resgatar() {
       const codigo = document.getElementById("codigo").value.trim();
       const resultado = document.getElementById("resultado");
+      const msg = document.getElementById("msg");
+      const email = document.getElementById("email");
+      const senha = document.getElementById("senha");
+      const tipoConta = document.getElementById("tipoConta");
+      const resgatadoEm = document.getElementById("resgatadoEm");
+      const btnCopiar = document.getElementById("btnCopiar");
+
+      resultado.classList.remove("erro");
+      resultado.style.display = "none";
+      msg.textContent = "";
+      email.textContent = "";
+      senha.textContent = "";
+      tipoConta.textContent = "";
+      resgatadoEm.textContent = "";
+      btnCopiar.disabled = true;
+      ultimaConta = null;
 
       if (!codigo) {
-        resultado.textContent = "Digite um código válido.";
-        resultado.style.color = "red";
+        alert("Digite um código!");
         return;
       }
 
-      resultado.textContent = "Processando...";
-      resultado.style.color = "black";
+      // Show loading spinner and disable button
+      btnResgatar.disabled = true;
+      btnResgatarContent.innerHTML = `<span class="spinner" aria-hidden="true"></span><span>Carregando...</span>`;
 
-      const url = `https://script.google.com/macros/s/AKfycbzMGF4ydLFh9Wqz2W5j1i6Hj8_rf-N6IjZ8ogeldp_WCaBR0qHnYOgH4wnI9Db4d8On/exec?acao=resgatar&codigo=${encodeURIComponent(codigo)}`;
+      const url = `https://script.google.com/macros/s/AKfycbxBevrtJRJafWTxR79Ze4b26MQDx6vYErqUhIKTFu6KhGIY1wJ59Rbq8_5FptfIMmxH/exec?acao=resgatar&codigo=${codigo}`;
 
-      // Utiliza um elemento <script> para contornar o CORS via JSONP
-      const script = document.createElement("script");
-      script.src = url + `&callback=mostrarResultado`;
-      script.onerror = () => {
-        resultado.textContent = "Erro ao conectar com o servidor.";
-        resultado.style.color = "red";
-      };
-      document.body.appendChild(script);
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        resultado.style.display = "block";
+
+        if (data.mensagem === "Código resgatado com sucesso.") {
+          msg.textContent = data.mensagem;
+          email.textContent = `Email: ${data.email}`;
+          senha.textContent = `Senha: ${data.senha}`;
+          tipoConta.textContent = `Tipo de Conta: ${data.tipoConta}`;
+          resultado.classList.remove("erro");
+          ultimaConta = {
+            email: data.email,
+            senha: data.senha,
+            tipoConta: data.tipoConta,
+          };
+          btnCopiar.disabled = false;
+        } else if (data.mensagem === "Código já resgatado.") {
+          msg.textContent = data.mensagem;
+          resgatadoEm.textContent = `Resgatado em: ${new Date(
+            data.resgatadoEm
+          ).toLocaleString()}`;
+          resultado.classList.remove("erro");
+          ultimaConta = null;
+          btnCopiar.disabled = true;
+        } else {
+          resultado.classList.add("erro");
+          msg.textContent = "Erro inesperado.";
+          ultimaConta = null;
+          btnCopiar.disabled = true;
+        }
+      } catch (error) {
+        resultado.style.display = "block";
+        resultado.classList.add("erro");
+        msg.textContent = "Código inválido ou erro no servidor.";
+        ultimaConta = null;
+        btnCopiar.disabled = true;
+      } finally {
+        // Restore button content and enable button
+        btnResgatarContent.innerHTML = `<i class="fas fa-key"></i><span>Resgatar</span>`;
+        btnResgatar.disabled = false;
+      }
     }
 
-    function mostrarResultado(data) {
-      const resultado = document.getElementById("resultado");
-      resultado.textContent = JSON.stringify(data, null, 2);
-      resultado.style.color = data.mensagem?.includes("sucesso") ? "green" : "red";
+    function copiarConta() {
+      if (!ultimaConta) return;
+      const texto = `Email: ${ultimaConta.email}\nSenha: ${ultimaConta.senha}\nTipo de Conta: ${ultimaConta.tipoConta}`;
+      navigator.clipboard.writeText(texto).then(() => {
+        showToast();
+      });
     }
+
+    function showToast() {
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    btnCreditos.addEventListener("click", () => {
+      Swal.fire({
+        icon: "info",
+        title: "Créditos",
+        text: "Desenvolvido pela Neext",
+        confirmButtonColor: "#8b5cf6",
+      });
+    });
   </script>
+
+  <style>
+    #resultado.erro {
+      background-color: #f3e8ff;
+      color: #7c3aed;
+    }
+  </style>
 </body>
 </html>
