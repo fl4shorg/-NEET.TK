@@ -2,9 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title🎫>Neext Doações - Resgatar Código</title>
-  <meta name="description" content="Resgate agora contas grátis na Neext! Totalmente free, sem custo algum. Aproveite já essa oportunidade!" />
-  <meta property="og:image" content="https://neetk.onrender.com/preview/redeem.png?v=7">
+  <title>Neext Doações - Resgatar Código</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -19,10 +17,13 @@
       border: 3px solid rgba(139, 92, 246, 0.3);
       border-top: 3px solid #8b5cf6;
       border-radius: 50%;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       animation: spin 1s linear infinite;
-      margin-right: 0.5rem;
+      margin-right: 0.75rem;
+      box-sizing: border-box;
+      display: inline-block;
+      vertical-align: middle;
     }
 
     @keyframes spin {
@@ -94,6 +95,78 @@
       vertical-align: middle;
       margin-right: 0.5rem;
     }
+
+    /* Custom error message style */
+    #resultado.erro {
+      background-color: #fee2e2; /* Tailwind red-200 */
+      color: #b91c1c; /* Tailwind red-700 */
+      border: 2px solid #f87171; /* Tailwind red-400 */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      flex-direction: row;
+      flex-wrap: nowrap;
+    }
+
+    #resultado.erro i {
+      color: #b91c1c;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    /* Result info container */
+    #resultado {
+      max-width: 100%;
+      word-break: break-word;
+      flex-direction: column;
+      display: none;
+    }
+
+    /* Result info lines */
+    .result-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: #d8b4fe; /* Tailwind purple-300 */
+      white-space: normal;
+      flex-wrap: wrap;
+    }
+
+    .result-line i {
+      color: #a78bfa; /* Tailwind purple-400 */
+      min-width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* Container for icon and text in result */
+    .result-text {
+      flex: 1 1 auto;
+      word-break: break-word;
+    }
+
+    /* Message container for icon and text side by side */
+    #msgContainer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      color: #a3e635; /* Tailwind green-400 for success */
+      font-size: 1.125rem;
+    }
+
+    #msgContainer.error {
+      color: #b91c1c; /* Tailwind red-700 for error */
+    }
+
+    #msgContainer i {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body class="bg-[#121212] font-[Roboto Mono] text-purple-400 min-h-screen flex flex-col">
@@ -133,8 +206,10 @@
           onclick="resgatar()"
           class="bg-purple-500 rounded-xl px-6 py-3 w-full flex items-center justify-center space-x-3 font-semibold text-black drop-shadow-[0_0_15px_rgba(139,92,246,0.9)]"
           type="button"
+          aria-live="polite"
+          aria-busy="false"
         >
-          <span id="btnResgatarContent">
+          <span id="btnResgatarContent" class="flex items-center">
             <i class="fas fa-key"></i>
             <span>Resgatar</span>
           </span>
@@ -153,18 +228,24 @@
 
       <div
         id="resultado"
-        class="w-full mt-4 bg-purple-900 bg-opacity-20 rounded-lg p-4 text-left space-y-2 hidden"
+        class="w-full mt-4 rounded-lg p-4 text-left space-y-3 flex flex-col"
+        role="alert"
+        aria-live="assertive"
       >
+        <div id="msgContainer" class="flex items-center gap-2 font-semibold text-purple-300"></div>
         <p id="msg" class="font-semibold"></p>
-        <p id="email"></p>
-        <p id="senha"></p>
-        <p id="tipoConta"></p>
-        <p id="resgatadoEm"></p>
+        <p id="email" class="result-line"><i class="fas fa-user"></i><span class="result-text"></span></p>
+        <p id="senha" class="result-line"><i class="fas fa-key"></i><span class="result-text"></span></p>
+        <p id="tipoConta" class="result-line"><i class="fas fa-tv"></i><span class="result-text"></span></p>
+        <p id="resgatadoEm" class="result-line" style="padding-left: 0; display:none;"><span class="result-text"></span></p>
       </div>
 
       <div class="flex items-center space-x-3 mt-4">
         <span class="w-4 h-4 rounded-full bg-green-500 block"></span>
-        <p id="servidorMsg" class="text-purple-300 font-semibold select-none"></p>
+        <p id="servidorMsg" class="text-purple-300 font-semibold select-none flex items-center gap-2">
+          <i class="fas fa-server text-purple-400"></i>
+          <span></span>
+        </p>
       </div>
 
       <div class="flex items-center space-x-3 mt-2">
@@ -213,6 +294,14 @@
     const servidorMsg = document.getElementById("servidorMsg");
     const totalContas = document.getElementById("totalContas");
     const btnCreditos = document.getElementById("btnCreditos");
+    const resultado = document.getElementById("resultado");
+    const msg = document.getElementById("msg");
+    const email = document.getElementById("email");
+    const senha = document.getElementById("senha");
+    const tipoConta = document.getElementById("tipoConta");
+    const resgatadoEm = document.getElementById("resgatadoEm");
+    const msgContainer = document.getElementById("msgContainer");
+    const servidorMsgSpan = servidorMsg.querySelector("span");
 
     function atualizarSaudacao() {
       const now = new Date();
@@ -227,7 +316,7 @@
         saudacao = "Boa noite";
       }
 
-      servidorMsg.textContent = `${saudacao} - Servidor online`;
+      servidorMsgSpan.textContent = `${saudacao} - Servidor online`;
     }
 
     function gerarTotalContas() {
@@ -241,23 +330,21 @@
 
     async function resgatar() {
       const codigo = document.getElementById("codigo").value.trim();
-      const resultado = document.getElementById("resultado");
-      const msg = document.getElementById("msg");
-      const email = document.getElementById("email");
-      const senha = document.getElementById("senha");
-      const tipoConta = document.getElementById("tipoConta");
-      const resgatadoEm = document.getElementById("resgatadoEm");
-      const btnCopiar = document.getElementById("btnCopiar");
 
       resultado.classList.remove("erro");
       resultado.style.display = "none";
       msg.textContent = "";
-      email.textContent = "";
-      senha.textContent = "";
-      tipoConta.textContent = "";
-      resgatadoEm.textContent = "";
+      email.querySelector("span").textContent = "";
+      senha.querySelector("span").textContent = "";
+      tipoConta.querySelector("span").textContent = "";
+      resgatadoEm.querySelector("span").textContent = "";
+      resgatadoEm.style.display = "none";
+      email.style.display = "flex";
+      senha.style.display = "flex";
+      tipoConta.style.display = "flex";
       btnCopiar.disabled = true;
       ultimaConta = null;
+      msgContainer.innerHTML = "";
 
       if (!codigo) {
         alert("Digite um código!");
@@ -266,58 +353,110 @@
 
       // Show loading spinner and disable button
       btnResgatar.disabled = true;
-      btnResgatarContent.innerHTML = `<span class="spinner" aria-hidden="true"></span><span>Carregando...</span>`;
-
-      const url = `https://script.google.com/macros/s/AKfycbxBevrtJRJafWTxR79Ze4b26MQDx6vYErqUhIKTFu6KhGIY1wJ59Rbq8_5FptfIMmxH/exec?acao=resgatar&codigo=${codigo}`;
+      btnResgatar.setAttribute("aria-busy", "true");
+      btnResgatarContent.innerHTML = `
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="ml-1">Carregando...</span>
+      `;
 
       try {
+        const url = `https://script.google.com/macros/s/AKfycbxBevrtJRJafWTxR79Ze4b26MQDx6vYErqUhIKTFu6KhGIY1wJ59Rbq8_5FptfIMmxH/exec?acao=resgatar&codigo=${codigo}`;
         const res = await fetch(url);
         const data = await res.json();
 
-        resultado.style.display = "block";
+        resultado.style.display = "flex";
 
         if (data.mensagem === "Código resgatado com sucesso.") {
-          msg.textContent = data.mensagem;
-          email.textContent = `Email: ${data.email}`;
-          senha.textContent = `Senha: ${data.senha}`;
-          tipoConta.textContent = `Tipo de Conta: ${data.tipoConta}`;
           resultado.classList.remove("erro");
-          ultimaConta = {
-            email: data.email,
-            senha: data.senha,
-            tipoConta: data.tipoConta,
-          };
+          msgContainer.innerHTML = `<i class="fas fa-check-circle text-green-400 text-xl"></i><span>${data.mensagem}</span>`;
+          msg.textContent = "";
+
+          if (data.usuario && data.senha && data.servidor) {
+            // IPTV type account
+            email.style.display = "flex";
+            senha.style.display = "flex";
+            tipoConta.style.display = "flex";
+
+            email.querySelector("span").textContent = data.usuario;
+            senha.querySelector("span").textContent = data.senha;
+            tipoConta.querySelector("span").textContent = "IPTV";
+
+            ultimaConta = {
+              email: data.usuario,
+              senha: data.senha,
+              tipoConta: "IPTV",
+            };
+          } else {
+            // Old type with email, senha, tipoConta
+            email.style.display = "flex";
+            senha.style.display = "flex";
+            tipoConta.style.display = "flex";
+
+            email.querySelector("span").textContent = data.email || "";
+            senha.querySelector("span").textContent = data.senha || "";
+            tipoConta.querySelector("span").textContent = data.tipoConta || "";
+
+            ultimaConta = {
+              email: data.email || "",
+              senha: data.senha || "",
+              tipoConta: data.tipoConta || "",
+            };
+          }
+          resgatadoEm.style.display = "none";
+          resgatadoEm.querySelector("span").textContent = "";
           btnCopiar.disabled = false;
         } else if (data.mensagem === "Código já resgatado.") {
-          msg.textContent = data.mensagem;
-          resgatadoEm.textContent = `Resgatado em: ${new Date(
+          resultado.classList.remove("erro");
+          msgContainer.innerHTML = `<i class="fas fa-info-circle text-yellow-400 text-xl"></i><span>${data.mensagem}</span>`;
+          msg.textContent = "";
+          email.style.display = "none";
+          senha.style.display = "none";
+          tipoConta.style.display = "none";
+          resgatadoEm.querySelector("span").textContent = `Resgatado em: ${new Date(
             data.resgatadoEm
           ).toLocaleString()}`;
-          resultado.classList.remove("erro");
+          resgatadoEm.style.display = "flex";
           ultimaConta = null;
           btnCopiar.disabled = true;
         } else {
           resultado.classList.add("erro");
-          msg.textContent = "Erro inesperado.";
+          msgContainer.innerHTML = `<i class="fas fa-exclamation-triangle"></i><span>Gift card inválido.</span>`;
+          msg.textContent = "";
+          email.querySelector("span").textContent = "";
+          senha.querySelector("span").textContent = "";
+          tipoConta.querySelector("span").textContent = "";
+          resgatadoEm.style.display = "none";
+          email.style.display = "flex";
+          senha.style.display = "flex";
+          tipoConta.style.display = "flex";
           ultimaConta = null;
           btnCopiar.disabled = true;
         }
       } catch (error) {
-        resultado.style.display = "block";
+        resultado.style.display = "flex";
         resultado.classList.add("erro");
-        msg.textContent = "Código inválido ou erro no servidor.";
+        msgContainer.innerHTML = `<i class="fas fa-exclamation-triangle"></i><span>Gift card inválido.</span>`;
+        msg.textContent = "";
+        email.querySelector("span").textContent = "";
+        senha.querySelector("span").textContent = "";
+        tipoConta.querySelector("span").textContent = "";
+        resgatadoEm.style.display = "none";
+        email.style.display = "flex";
+        senha.style.display = "flex";
+        tipoConta.style.display = "flex";
         ultimaConta = null;
         btnCopiar.disabled = true;
       } finally {
         // Restore button content and enable button
         btnResgatarContent.innerHTML = `<i class="fas fa-key"></i><span>Resgatar</span>`;
         btnResgatar.disabled = false;
+        btnResgatar.removeAttribute("aria-busy");
       }
     }
 
     function copiarConta() {
       if (!ultimaConta) return;
-      const texto = `Email: ${ultimaConta.email}\nSenha: ${ultimaConta.senha}\nTipo de Conta: ${ultimaConta.tipoConta}`;
+      const texto = `Usuário: ${ultimaConta.email}\nSenha: ${ultimaConta.senha}\nTipo de Conta: ${ultimaConta.tipoConta}`;
       navigator.clipboard.writeText(texto).then(() => {
         showToast();
       });
@@ -339,12 +478,5 @@
       });
     });
   </script>
-
-  <style>
-    #resultado.erro {
-      background-color: #f3e8ff;
-      color: #7c3aed;
-    }
-  </style>
 </body>
 </html>
