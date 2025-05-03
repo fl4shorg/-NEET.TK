@@ -5,7 +5,6 @@
   <title>🎫𝗡𝗘𝗘𝗫𝗧 𝗚𝗜𝗙𝗧 </title>
   <meta property="og:image" content="https://neetk.onrender.com/preview/redeem.png?v=7">
   <meta name="description" content="Resgate seus códigos agora, simples e rápido, com milhares de contas para você escolher!"/>
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -240,6 +239,7 @@
         <p id="email" class="result-line"><i class="fas fa-user"></i><span class="result-text"></span></p>
         <p id="senha" class="result-line"><i class="fas fa-key"></i><span class="result-text"></span></p>
         <p id="tipoConta" class="result-line"><i class="fas fa-tv"></i><span class="result-text"></span></p>
+        <p id="servidor" class="result-line"><i class="fas fa-server"></i><span class="result-text"></span></p>
         <p id="resgatadoEm" class="result-line" style="padding-left: 0; display:none;"><span class="result-text"></span></p>
       </div>
 
@@ -302,6 +302,7 @@
     const email = document.getElementById("email");
     const senha = document.getElementById("senha");
     const tipoConta = document.getElementById("tipoConta");
+    const servidor = document.getElementById("servidor");
     const resgatadoEm = document.getElementById("resgatadoEm");
     const msgContainer = document.getElementById("msgContainer");
     const servidorMsgSpan = servidorMsg.querySelector("span");
@@ -340,11 +341,13 @@
       email.querySelector("span").textContent = "";
       senha.querySelector("span").textContent = "";
       tipoConta.querySelector("span").textContent = "";
+      servidor.querySelector("span").textContent = "";
       resgatadoEm.querySelector("span").textContent = "";
       resgatadoEm.style.display = "none";
       email.style.display = "flex";
       senha.style.display = "flex";
       tipoConta.style.display = "flex";
+      servidor.style.display = "flex";
       btnCopiar.disabled = true;
       ultimaConta = null;
       msgContainer.innerHTML = "";
@@ -379,30 +382,36 @@
             email.style.display = "flex";
             senha.style.display = "flex";
             tipoConta.style.display = "flex";
+            servidor.style.display = "flex";
 
             email.querySelector("span").textContent = data.usuario;
             senha.querySelector("span").textContent = data.senha;
             tipoConta.querySelector("span").textContent = "IPTV";
+            servidor.querySelector("span").textContent = data.servidor;
 
             ultimaConta = {
               email: data.usuario,
               senha: data.senha,
               tipoConta: "IPTV",
+              servidor: data.servidor,
             };
           } else {
             // Old type with email, senha, tipoConta
             email.style.display = "flex";
             senha.style.display = "flex";
             tipoConta.style.display = "flex";
+            servidor.style.display = "none";
 
             email.querySelector("span").textContent = data.email || "";
             senha.querySelector("span").textContent = data.senha || "";
             tipoConta.querySelector("span").textContent = data.tipoConta || "";
+            servidor.querySelector("span").textContent = "";
 
             ultimaConta = {
               email: data.email || "",
               senha: data.senha || "",
               tipoConta: data.tipoConta || "",
+              servidor: "",
             };
           }
           resgatadoEm.style.display = "none";
@@ -415,6 +424,7 @@
           email.style.display = "none";
           senha.style.display = "none";
           tipoConta.style.display = "none";
+          servidor.style.display = "none";
           resgatadoEm.querySelector("span").textContent = `Resgatado em: ${new Date(
             data.resgatadoEm
           ).toLocaleString()}`;
@@ -428,10 +438,12 @@
           email.querySelector("span").textContent = "";
           senha.querySelector("span").textContent = "";
           tipoConta.querySelector("span").textContent = "";
+          servidor.querySelector("span").textContent = "";
           resgatadoEm.style.display = "none";
           email.style.display = "flex";
           senha.style.display = "flex";
           tipoConta.style.display = "flex";
+          servidor.style.display = "none";
           ultimaConta = null;
           btnCopiar.disabled = true;
         }
@@ -443,10 +455,12 @@
         email.querySelector("span").textContent = "";
         senha.querySelector("span").textContent = "";
         tipoConta.querySelector("span").textContent = "";
+        servidor.querySelector("span").textContent = "";
         resgatadoEm.style.display = "none";
         email.style.display = "flex";
         senha.style.display = "flex";
         tipoConta.style.display = "flex";
+        servidor.style.display = "none";
         ultimaConta = null;
         btnCopiar.disabled = true;
       } finally {
@@ -459,7 +473,12 @@
 
     function copiarConta() {
       if (!ultimaConta) return;
-      const texto = `Usuário: ${ultimaConta.email}\nSenha: ${ultimaConta.senha}\nTipo de Conta: ${ultimaConta.tipoConta}`;
+      let texto = "";
+      if (ultimaConta.tipoConta === "IPTV") {
+        texto = `Usuário: ${ultimaConta.email}\nSenha: ${ultimaConta.senha}\nServidor: ${ultimaConta.servidor}\nTipo de Conta: IPTV`;
+      } else {
+        texto = `Email: ${ultimaConta.email}\nSenha: ${ultimaConta.senha}\nTipo de Conta: ${ultimaConta.tipoConta}`;
+      }
       navigator.clipboard.writeText(texto).then(() => {
         showToast();
       });
