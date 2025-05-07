@@ -1,17 +1,17 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content=" O Melhor tem nome">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content=" O Melhor tem nome" />
   <title>Faça perguntas anonimamente!</title>
-  <link rel="icon" href="https://i.imgur.com/nTqoKxv.png" type="image/png">
-
-  <!-- Open Graph (Preview para WhatsApp, Facebook, etc.) -->
-  <meta property="og:title" content="Faça perguntas anonimamente">
-  <meta property="og:description" content="Envie perguntas sem se identificar. Uma forma leve e segura de se expressar.">
-  <meta property="og:image" content="https://neetk.onrender.com/preview/nxt.png?v=7">
-  <meta property="og:url" content="https://neetk.onrender.com/?v=7">
+  <link rel="icon" href="https://i.imgur.com/nTqoKxv.png" type="image/png" />
+  <meta property="og:title" content="Faça perguntas anonimamente" />
+  <meta
+    property="og:description"
+    content="Envie perguntas sem se identificar. Uma forma leve e segura de se expressar."
+  />
+  <meta property="og:image" content="https://neetk.onrender.com/preview/nxt.png?v=7" />
+  <meta property="og:url" content="https://neetk.onrender.com/?v=7" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -23,7 +23,6 @@
     body {
       font-family: "Inter", sans-serif;
     }
-    /* Center spinner inside button */
     #sendBtn {
       position: relative;
     }
@@ -31,18 +30,22 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      margin-top: -0.625rem; /* half spinner height (5px) */
-      margin-left: -0.625rem; /* half spinner width (5px) */
+      margin-top: -0.625rem;
+      margin-left: -0.625rem;
       display: none;
     }
   </style>
 </head>
 <body
-  class="min-h-screen bg-gradient-to-br from-purple-700 via-indigo-700 to-blue-500 flex flex-col justify-between"
+  class="min-h-screen flex flex-col justify-between relative overflow-hidden"
 >
-  <div
-    class="pt-14 px-6 pb-10 flex flex-col items-center w-full max-w-md mx-auto"
-  >
+  <img
+    src="https://i.postimg.cc/4y6pQf6V/file-00000000592061f78fc93dc4c4ec528c.png"
+    alt="Imagem de fundo abstrata com tons escuros e detalhes em azul e roxo, estilo artístico digital"
+    class="fixed inset-0 w-full h-full object-cover -z-10"
+    aria-hidden="true"
+  />
+  <div class="pt-14 px-6 pb-10 flex flex-col items-center w-full max-w-md mx-auto">
     <div class="rounded-3xl w-full max-w-md bg-white relative">
       <div class="flex items-center gap-4 px-5 py-4">
         <div
@@ -185,7 +188,7 @@
       Receba suas mensagens!
     </button>
     <div
-      class="mt-6 mb-4 flex justify-center items-center gap-6 text-white text-xs opacity-50 font-normal"
+      class="mt-6 mb-4 flex justify-center items-center gap-6 text-white text-xs opacity-50 font-normal flex-wrap max-w-md mx-auto"
     >
       <a class="hover:underline" href="#">Terms</a>
       <a class="hover:underline" href="#">Privacy</a>
@@ -224,7 +227,6 @@
       });
     });
 
-    // Close emoji picker if clicked outside
     document.addEventListener("click", (e) => {
       if (
         !emojiPicker.contains(e.target) &&
@@ -254,9 +256,8 @@
       messageInput.focus();
     });
 
-    // Update random clicks number every second
     function updateRandomClicks() {
-      const randomNum = Math.floor(Math.random() * 900 + 100); // 100 to 999
+      const randomNum = Math.floor(Math.random() * 900 + 100);
       randomClicks.textContent = randomNum;
     }
     setInterval(updateRandomClicks, 1000);
@@ -279,7 +280,6 @@
       loadingSpinner.style.display = "inline-block";
 
       try {
-        // Send message to Google Script API (adapted from your provided code)
         await fetch(
           "https://script.google.com/macros/s/AKfycbyMh9YnzKtxF9Nc_awc9w8KSPyXa4OzXf0iiW748b8-dY4W0SxkoYy77Wcudn7ky9xUJg/exec",
           {
