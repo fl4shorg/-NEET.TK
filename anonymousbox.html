@@ -1,8 +1,7 @@
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content=" O Melhor tem nome" />
   <title>Faça perguntas anonimamente!</title>
   <link rel="icon" href="https://i.imgur.com/nTqoKxv.png" type="image/png" />
   <meta property="og:title" content="Faça perguntas anonimamente" />
@@ -36,16 +35,14 @@
     }
   </style>
 </head>
-<body
-  class="min-h-screen flex flex-col justify-between relative overflow-hidden"
->
+<body class="min-h-screen flex flex-col justify-between relative overflow-hidden">
   <img
     src="https://i.postimg.cc/4y6pQf6V/file-00000000592061f78fc93dc4c4ec528c.png"
     alt="Imagem de fundo abstrata com tons escuros e detalhes em azul e roxo, estilo artístico digital"
     class="fixed inset-0 w-full h-full object-cover -z-10"
     aria-hidden="true"
   />
-  <div class="pt-14 px-6 pb-10 flex flex-col items-center w-full max-w-md mx-auto">
+  <div id="mainScreen" class="pt-14 px-6 pb-10 flex flex-col items-center w-full max-w-md mx-auto">
     <div class="rounded-3xl w-full max-w-md bg-white relative">
       <div class="flex items-center gap-4 px-5 py-4">
         <div
@@ -178,7 +175,7 @@
       class="mt-10 text-white font-bold text-base text-center px-4"
       aria-live="polite"
     >
-      👇 <span id="randomClicks">299</span> pessoas acabaram de clicar no botão 👇
+      👇 <span id="randomClicksMain">299</span> pessoas acabaram de clicar no botão 👇
     </p>
     <button
       id="receiveBtn"
@@ -199,16 +196,70 @@
       <span>desenvolvido pela neext</span>
     </div>
   </div>
+
+  <div id="confirmationScreen" class="hidden min-h-screen flex flex-col items-center justify-start px-6 pt-12 pb-20 text-white font-sans relative overflow-hidden max-w-md mx-auto w-full">
+    <img
+      src="https://i.postimg.cc/4y6pQf6V/file-00000000592061f78fc93dc4c4ec528c.png"
+      alt="Fundo colorido com gradiente e textura abstrata"
+      class="absolute inset-0 w-full h-full object-cover -z-10"
+      aria-hidden="true"
+    />
+
+    <button
+      id="backBtn"
+      aria-label="Voltar"
+      class="self-start mb-12 text-white text-4xl font-bold relative z-10"
+      type="button"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <div
+      class="flex items-center justify-center w-40 h-40 rounded-full bg-white mb-6 relative z-10"
+      aria-hidden="true"
+    >
+      <i class="fas fa-check text-[#f44336] text-[7rem]"></i>
+    </div>
+
+    <h1 class="text-3xl font-extrabold mb-6 relative z-10">Enviado!</h1>
+
+    <p id="randomClicksConfirm" class="text-xl font-extrabold mb-10 text-center max-w-md relative z-10">
+      👇 291 pessoas acabaram de clicar no botão 👇
+    </p>
+
+    <button
+      id="receiveBtnConfirm"
+      class="bg-black text-white font-extrabold text-xl rounded-full py-5 px-14 mb-10 w-full max-w-md relative z-10"
+      type="button"
+    >
+      Receba suas mensagens!
+    </button>
+
+    <button
+      id="sendAnotherBtn"
+      class="underline text-white font-extrabold text-xl max-w-md relative z-10"
+      type="button"
+    >
+      Enviar outra mensagem
+    </button>
+  </div>
+
   <script>
     const emojiBtn = document.getElementById("emojiBtn");
     const emojiPicker = document.getElementById("emojiPicker");
     const messageInput = document.getElementById("messageInput");
     const randomQuestionBtn = document.getElementById("randomQuestionBtn");
-    const randomClicks = document.getElementById("randomClicks");
+    const randomClicksMain = document.getElementById("randomClicksMain");
+    const randomClicksConfirm = document.getElementById("randomClicksConfirm");
     const receiveBtn = document.getElementById("receiveBtn");
+    const receiveBtnConfirm = document.getElementById("receiveBtnConfirm");
     const sendBtn = document.getElementById("sendBtn");
     const loadingSpinner = document.getElementById("loadingSpinner");
     const sendBtnText = document.getElementById("sendBtnText");
+    const mainScreen = document.getElementById("mainScreen");
+    const confirmationScreen = document.getElementById("confirmationScreen");
+    const backBtn = document.getElementById("backBtn");
+    const sendAnotherBtn = document.getElementById("sendAnotherBtn");
 
     emojiBtn.addEventListener("click", () => {
       emojiPicker.classList.toggle("hidden");
@@ -258,13 +309,28 @@
 
     function updateRandomClicks() {
       const randomNum = Math.floor(Math.random() * 900 + 100);
-      randomClicks.textContent = randomNum;
+      randomClicksMain.textContent = randomNum;
+      randomClicksConfirm.textContent = `👇 ${randomNum} pessoas acabaram de clicar no botão 👇`;
     }
     setInterval(updateRandomClicks, 1000);
     updateRandomClicks();
 
     receiveBtn.addEventListener("click", () => {
       window.location.href = "https://whatsapp.com/channel/0029Vb4TCsr002T1QXrzMK0W";
+    });
+    receiveBtnConfirm.addEventListener("click", () => {
+      window.location.href = "https://whatsapp.com/channel/0029Vb4TCsr002T1QXrzMK0W";
+    });
+
+    backBtn.addEventListener("click", () => {
+      confirmationScreen.classList.add("hidden");
+      mainScreen.classList.remove("hidden");
+    });
+
+    sendAnotherBtn.addEventListener("click", () => {
+      confirmationScreen.classList.add("hidden");
+      mainScreen.classList.remove("hidden");
+      messageInput.focus();
     });
 
     sendBtn.addEventListener("click", async () => {
@@ -293,12 +359,9 @@
         );
 
         messageInput.value = "";
-        Swal.fire({
-          icon: "success",
-          title: "Mensagem anônima enviada com sucesso",
-          text: "Confira o canal da neext",
-          confirmButtonColor: "#000",
-        });
+        // Instead of Swal, show confirmation screen
+        mainScreen.classList.add("hidden");
+        confirmationScreen.classList.remove("hidden");
       } catch (error) {
         Swal.fire({
           icon: "error",
