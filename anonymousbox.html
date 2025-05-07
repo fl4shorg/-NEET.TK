@@ -117,20 +117,16 @@
         </button>
         <div
           id="emojiPicker"
-          class="hidden absolute bottom-16 right-14 bg-white rounded-lg shadow-lg p-2 grid grid-cols-6 gap-2 max-w-xs max-h-40 overflow-y-auto z-50"
+          class="hidden absolute bottom-16 right-14 bg-white rounded-lg shadow-lg p-2 grid grid-cols-8 gap-2 max-w-[320px] max-h-48 overflow-y-auto z-50"
         >
-          <button class="text-2xl" type="button">😀</button>
-          <button class="text-2xl" type="button">😂</button>
-          <button class="text-2xl" type="button">😍</button>
-          <button class="text-2xl" type="button">😎</button>
-          <button class="text-2xl" type="button">😢</button>
-          <button class="text-2xl" type="button">😡</button>
-          <button class="text-2xl" type="button">👍</button>
-          <button class="text-2xl" type="button">🙏</button>
-          <button class="text-2xl" type="button">🎉</button>
-          <button class="text-2xl" type="button">💖</button>
-          <button class="text-2xl" type="button">🔥</button>
-          <button class="text-2xl" type="button">🌟</button>
+          <button
+            id="closeEmojiPicker"
+            type="button"
+            aria-label="Fechar seletor de emojis"
+            class="col-span-8 text-right text-xl font-bold text-gray-600 hover:text-gray-900"
+          >
+            ×
+          </button>
         </div>
       </div>
     </div>
@@ -260,22 +256,63 @@
     const confirmationScreen = document.getElementById("confirmationScreen");
     const backBtn = document.getElementById("backBtn");
     const sendAnotherBtn = document.getElementById("sendAnotherBtn");
+    const closeEmojiPickerBtn = document.getElementById("closeEmojiPicker");
+
+    // Large emoji list covering many common emojis
+    const allEmojis = [
+      "😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚",
+      "😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🥸","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","☹️",
+      "😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓",
+      "🤗","🤔","🤭","🤫","🤥","😶","😐","😑","😬","🙄","😯","😦","😧","😮","😲","🥱","😴","🤤","😪","😵",
+      "🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","🤑","🤠","😈","👿","👹","👺","🤡","💩","👻","💀","☠️","👽",
+      "👾","🤖","🎃","😺","😸","😹","😻","😼","😽","🙀","😿","😾","👶","🧒","👦","👧","🧑","👱‍♂️","👱‍♀️","👨",
+      "👩","🧓","👴","👵","🙍‍♂️","🙍‍♀️","🙎‍♂️","🙎‍♀️","🙅‍♂️","🙅‍♀️","🙆‍♂️","🙆‍♀️","💁‍♂️","💁‍♀️","🙋‍♂️","🙋‍♀️","🧏‍♂️","🧏‍♀️","🙇‍♂️","🙇‍♀️",
+      "🤦‍♂️","🤦‍♀️","🤷‍♂️","🤷‍♀️","🧑‍⚕️","👨‍⚕️","👩‍⚕️","🧑‍🎓","👨‍🎓","👩‍🎓","🧑‍🏫","👨‍🏫","👩‍🏫","🧑‍⚖️","👨‍⚖️","👩‍⚖️","🧑‍🌾","👨‍🌾","👩‍🌾","🧑‍🍳",
+      "👨‍🍳","👩‍🍳","🧑‍🔧","👨‍🔧","👩‍🔧","🧑‍🏭","👨‍🏭","👩‍🏭","🧑‍💼","👨‍💼","👩‍💼","🧑‍🔬","👨‍🔬","👩‍🔬","🧑‍💻","👨‍💻","👩‍💻","🧑‍🎤","👨‍🎤","👩‍🎤",
+      "🧑‍🎨","👨‍🎨","👩‍🎨","🧑‍✈️","👨‍✈️","👩‍✈️","🧑‍🚀","👨‍🚀","👩‍🚀","🧑‍🚒","👨‍🚒","👩‍🚒","👮‍♂️","👮‍♀️","🕵️‍♂️","🕵️‍♀️","💂‍♂️","💂‍♀️","👷‍♂️","👷‍♀️",
+      "🤴","👸","👳‍♂️","👳‍♀️","👲","🧕","🤵","👰","🤰","🤱","👼","🎅","🤶","🦸‍♂️","🦸‍♀️","🦹‍♂️","🦹‍♀️","🧙‍♂️","🧙‍♀️","🧚‍♂️",
+      "🧚‍♀️","🧛‍♂️","🧛‍♀️","🧜‍♂️","🧜‍♀️","🧝‍♂️","🧝‍♀️","🧞‍♂️","🧞‍♀️","🧟‍♂️","🧟‍♀️","💆‍♂️","💆‍♀️","💇‍♂️","💇‍♀️","🚶‍♂️","🚶‍♀️","🏃‍♂️","🏃‍♀️","💃",
+      "🕺","🧖‍♂️","🧖‍♀️","🧗‍♂️","🧗‍♀️","🤺","🏇","⛷️","🏂","🏌️‍♂️","🏌️‍♀️","🏄‍♂️","🏄‍♀️","🚣‍♂️","🚣‍♀️","🏊‍♂️","🏊‍♀️","⛹️‍♂️","⛹️‍♀️","🏋️‍♂️",
+      "🏋️‍♀️","🚴‍♂️","🚴‍♀️","🚵‍♂️","🚵‍♀️","🤸‍♂️","🤸‍♀️","🤼‍♂️","🤼‍♀️","🤽‍♂️","🤽‍♀️","🤾‍♂️","🤾‍♀️","🤹‍♂️","🤹‍♀️","🧘‍♂️","🧘‍♀️","🛀","🛌","🧑‍🤝‍🧑",
+      "👭","👫","👬","💏","💑","👪","👨‍👩‍👦","👨‍👩‍👧","👨‍👩‍👧‍👦","👨‍👨‍👦","👨‍👨‍👧","👨‍👨‍👧‍👦","👩‍👩‍👦","👩‍👩‍👧","👩‍👩‍👧‍👦","👣","🐶","🐱","🐭","🐹",
+      "🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🐔","🐧","🐦","🐤","🐣","🐥","🦆","🦅","🦉",
+      "🦇","🐺","🐗","🐴","🦄","🐝","🐛","🦋","🐌","🐞","🐜","🦗","🕷️","🦂","🐢","🐍","🦎","🐙","🦑","🦐",
+      "🦞","🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🐊","🐅","🐆","🦓","🦍","🐘","🦏","🦛","🐪","🐫","🦙",
+      "🦒","🐃","🐂","🐄","🐎","🐖","🐐","🐏","🐑","🐕","🐩","🐈","🐓","🦃","🕊️","🐇","🐁","🐀","🐿️","🦔"
+    ];
+
+    // Populate emoji picker with all emojis plus close button at top
+    function populateEmojiPicker() {
+      // Clear all except close button
+      emojiPicker.querySelectorAll("button:not(#closeEmojiPicker)").forEach(btn => btn.remove());
+      allEmojis.forEach(emoji => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "text-2xl";
+        btn.textContent = emoji;
+        btn.setAttribute("aria-label", `Emoji ${emoji}`);
+        emojiPicker.appendChild(btn);
+        btn.addEventListener("click", () => {
+          const start = messageInput.selectionStart;
+          const end = messageInput.selectionEnd;
+          const text = messageInput.value;
+          messageInput.value = text.substring(0, start) + emoji + text.substring(end);
+          messageInput.selectionStart = messageInput.selectionEnd = start + emoji.length;
+          messageInput.focus();
+          emojiPicker.classList.add("hidden");
+        });
+      });
+    }
+
+    populateEmojiPicker();
 
     emojiBtn.addEventListener("click", () => {
       emojiPicker.classList.toggle("hidden");
     });
 
-    emojiPicker.querySelectorAll("button").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const emoji = btn.textContent;
-        const start = messageInput.selectionStart;
-        const end = messageInput.selectionEnd;
-        const text = messageInput.value;
-        messageInput.value =
-          text.substring(0, start) + emoji + text.substring(end);
-        messageInput.selectionStart = messageInput.selectionEnd = start + emoji.length;
-        messageInput.focus();
-      });
+    closeEmojiPickerBtn.addEventListener("click", () => {
+      emojiPicker.classList.add("hidden");
+      messageInput.focus();
     });
 
     document.addEventListener("click", (e) => {
@@ -359,7 +396,6 @@
         );
 
         messageInput.value = "";
-        // Instead of Swal, show confirmation screen
         mainScreen.classList.add("hidden");
         confirmationScreen.classList.remove("hidden");
       } catch (error) {
