@@ -1,802 +1,1241 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mensagens Anônimas</title>
-  <meta name="description" content="Leia as mensagens anônimas e salve-as quando quiser." />
-  <meta name="author" content="Mensagens Anônimas" />
-  
-  <!-- Tailwind CDN para estilização -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script>
-    // Configure Tailwind with custom colors and theme
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: {
-              DEFAULT: '#a855f7',
-              foreground: '#ffffff'
-            },
-            background: {
-              DEFAULT: '#ffffff',
-              dark: '#111827'
-            },
-            foreground: {
-              DEFAULT: '#111827',
-              dark: '#f9fafb'
-            },
-            card: {
-              DEFAULT: '#ffffff',
-              dark: '#1f2937'
-            },
-            border: {
-              DEFAULT: '#e5e7eb',
-              dark: '#374151'
-            },
-            muted: {
-              DEFAULT: '#f3f4f6',
-              foreground: '#6b7280',
-              dark: '#374151',
-              'dark-foreground': '#9ca3af'
-            }
-          }
-        }
-      }
-    };
-  </script>
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inbox Wave App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Animações e estilos personalizados */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    /* Base Styles */
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --radius: 0.5rem;
     }
-    
-    @keyframes slideUp {
-      from { transform: translateY(10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+
+    /* Theme Variables */
+    .gradient-purple {
+      --gradient-from: 271 91% 65%;
+      --gradient-to: 262 83% 58%;
     }
-    
-    @keyframes slideDown {
-      from { transform: translateY(-10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+
+    .gradient-blue {
+      --gradient-from: 217 91% 60%;
+      --gradient-to: 199 89% 48%;
     }
-    
-    @keyframes pulseSlight {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
+
+    .gradient-pink {
+      --gradient-from: 336 80% 58%;
+      --gradient-to: 345 83% 41%;
     }
-    
-    .animate-fade-in {
-      animation: fadeIn 0.4s ease-out;
+
+    .gradient-green {
+      --gradient-from: 142 71% 45%;
+      --gradient-to: 160 84% 39%;
     }
-    
-    .animate-slide-up {
-      animation: slideUp 0.6s ease-out;
+
+    .gradient-orange {
+      --gradient-from: 27 96% 61%;
+      --gradient-to: 43 96% 50%;
     }
-    
-    .animate-slide-down {
-      animation: slideDown 0.6s ease-out;
+
+    .dark {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
     }
-    
-    .animate-pulse-subtle {
-      animation: pulseSlight 2s ease-in-out infinite;
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
     }
-    
-    /* Estilo de mensagens e cartões */
-    .message-card {
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
       background-color: white;
-      border-radius: 1rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark .app {
+      background-color: #1a1a1a;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 1rem 0;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .dark header {
+      border-bottom-color: #333;
+    }
+
+    header h2 {
+      font-weight: 800;
+      font-size: 1.25rem;
+      text-align: center;
+    }
+
+    .dark header h2 {
+      color: white;
+    }
+
+    header .left-button, header .right-buttons {
+      position: absolute;
+      display: flex;
+      align-items: center;
+    }
+
+    header .left-button {
+      left: 1.5rem;
+    }
+
+    header .right-buttons {
+      right: 1.5rem;
+      gap: 0.75rem;
+    }
+
+    .gradient-circle {
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: linear-gradient(to right, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+      color: white;
+    }
+
+    .icon-button {
+      background-color: #f3f4f6;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      color: #6b7280;
+      transition: background-color 0.2s;
+    }
+
+    .dark .icon-button {
+      background-color: #333;
+      color: #d1d5db;
+    }
+
+    .icon-button:hover {
+      background-color: #e5e7eb;
+    }
+
+    .dark .icon-button:hover {
+      background-color: #444;
+    }
+
+    /* Main Content */
+    main {
+      padding: 1.5rem 1.5rem;
+      padding-bottom: 5rem;
+      overflow-y: auto;
+      min-height: calc(100vh - 4rem);
+    }
+
+    /* Message Item */
+    .message-item {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 9999px;
+      transition: background-color 0.2s;
+      border: 1px solid transparent;
       margin-bottom: 0.5rem;
+    }
+
+    .message-item:hover {
+      background-color: #f3f4f6;
+    }
+
+    .dark .message-item:hover {
+      background-color: #333;
+    }
+
+    .message-item.active {
+      background-color: #f87171; /* red-400 */
+      color: white;
+      border-color: #ef4444; /* red-500 */
+    }
+
+    .dark .message-item.active {
+      background-color: #b91c1c; /* red-700 */
+      border-color: #dc2626; /* red-600 */
+    }
+
+    .message-item .avatar {
+      background-color: #f3f4f6;
+      border-radius: 50%;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .dark .message-item .avatar {
+      background-color: #333;
+    }
+
+    .message-item img {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .message-item .text-group {
+      flex-grow: 1;
       overflow: hidden;
-      border: 1px solid #e5e7eb;
     }
-    
-    .dark .message-card {
+
+    .message-item .title {
+      font-weight: 700;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .message-item .subtitle {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .dark .message-item .subtitle {
+      color: #9ca3af;
+    }
+
+    .message-item.active .subtitle {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .message-item .chevron {
+      color: #d1d5db;
+    }
+
+    /* Message Card - Updated to match new design */
+    .message-card {
       background-color: #1f2937;
-      border-color: #374151;
+      border-radius: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      margin-top: 1rem;
+      overflow: hidden;
+      border: 1px solid #374151;
+      animation: slideDown 0.3s ease-out forwards;
+      user-select: none;
     }
-    
+
+    .light .message-card {
+      background-color: white;
+      border-color: #e5e5e5;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
     .message-header {
       padding: 1rem;
-      font-weight: 500;
+      font-weight: 700;
+      font-size: 1.25rem;
       text-align: center;
       color: white;
-      background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);
+      background-image: linear-gradient(90deg, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+      user-select: text;
+      line-height: 1.2;
     }
-    
+
     .message-content {
       padding: 1.5rem;
-      text-align: center;
+      font-weight: 600;
       font-size: 1.25rem;
-      font-weight: 500;
-    }
-    
-    .dark .message-content {
+      text-align: center;
       color: #f9fafb;
+      line-height: 1.4;
+      user-select: text;
     }
-    
+
+    .light .message-content {
+      color: #111827;
+    }
+
     .message-actions {
       display: flex;
       justify-content: center;
       gap: 1rem;
       padding: 1rem;
     }
-    
+
     .action-button {
       width: 3rem;
       height: 3rem;
-      border-radius: 9999px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      transition: transform 0.2s;
+      cursor: pointer;
+      border: none;
+      outline-offset: 2px;
     }
-    
+
+    .action-button:focus-visible {
+      outline: 2px solid #8B5CF6;
+      outline-offset: 2px;
+    }
+
     .action-button:hover {
       transform: scale(1.05);
     }
-    
+
     .info-button {
-      background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);
+      background-image: linear-gradient(90deg, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
       color: white;
     }
-    
+
     .share-button {
       background-color: #22c55e;
       color: white;
     }
-    
+
     .arrow-button {
-      background-color: #f3f4f6;
-      color: #6b7280;
-    }
-    
-    .dark .arrow-button {
       background-color: #374151;
       color: #d1d5db;
     }
+
+    .gray-button {
+      background-color: #6b7280;
+      color: white;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      background-color: white;
+      border-top: 1px solid #e5e5e5;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 2.5rem;
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+      margin: 0 auto;
+      z-index: 10;
+    }
+
+    .dark .bottom-nav {
+      background-color: #333;
+      border-top-color: #444;
+    }
+
+    .nav-button {
+      color: #6b7280;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .dark .nav-button {
+      color: #9ca3af;
+    }
+
+    .nav-button.active-underline {
+      position: relative;
+    }
+
+    .nav-button.active-underline::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 9999px;
+      background-image: linear-gradient(to right, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+    }
+
+    .btn-gradient {
+      background-image: linear-gradient(to right, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+      color: white;
+      padding: 1rem;
+      border-radius: 50%;
+      margin-top: -2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: box-shadow 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-gradient:hover {
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-button.active-shadow {
+      box-shadow: 0 8px 15px rgba(var(--gradient-from), 0.6), 0 0 10px 3px rgba(var(--gradient-to), 0.5);
+    }
+
+    /* Theme Selector */
+    .theme-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      padding: 1rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      top: 4rem;
+      right: 1.5rem;
+      z-index: 100;
+      width: 160px;
+    }
+
+    .dark .theme-selector {
+      background-color: #333;
+    }
+
+    .theme-button {
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .theme-button:hover {
+      transform: scale(1.05);
+    }
+
+    .theme-button.active {
+      box-shadow: 0 0 0 2px white;
+    }
+
+    .theme-button span {
+      color: white;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 2.5rem 0;
+      color: #6b7280;
+    }
+
+    .dark .loading {
+      color: #9ca3af;
+    }
+
+    /* Empty State */
+    .empty {
+      text-align: center;
+      padding: 2.5rem 0;
+      color: #6b7280;
+    }
+
+    .dark .empty {
+      color: #9ca3af;
+    }
     
-    /* Modo escuro */
-    .dark {
-      background-color: #111827;
+    /* Settings Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background-color: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 400px;
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+
+    .dark .modal-content {
+      background-color: #222;
+    }
+
+    .modal.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .dark .modal-header h3 {
       color: #f9fafb;
     }
-    
-    .dark header,
-    .dark .toast {
-      background-color: #1f2937;
-      border-color: #374151;
+
+    .close-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: #6b7280;
     }
-    
-    .dark footer {
-      border-color: #374151;
+
+    .dark .close-button {
+      color: #9ca3af;
+    }
+
+    /* Profile Page Styles */
+    .profile-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 1rem;
+      padding-bottom: 2rem;
+    }
+
+    .profile-avatar {
+      width: 6rem;
+      height: 6rem;
+      border-radius: 50%;
+      background-color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .dark .profile-avatar {
+      background-color: #333;
+    }
+
+    .card {
+      background-color: white;
+      border: 1px solid #e5e5e5;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .dark .card {
+      background-color: #333;
+      border-color: #444;
+    }
+
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    .theme-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e5e5;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s;
+    }
+
+    .dark .theme-option {
+      border-color: #444;
+    }
+
+    .theme-option:hover {
+      background-color: #f9fafb;
+    }
+
+    .dark .theme-option:hover {
+      background-color: #222;
+    }
+
+    .theme-option.selected {
+      border: 2px solid #111827;
+    }
+
+    .dark .theme-option.selected {
+      border: 2px solid #f9fafb;
+    }
+
+    .theme-color {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background-image: linear-gradient(to right, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+    }
+
+    .theme-details {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .preview-section {
+      margin-top: 0.5rem;
+    }
+
+    .preview-description {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+
+    .dark .preview-description {
+      color: #9ca3af;
+    }
+
+    .preview-item {
+      margin-bottom: 1rem;
+    }
+
+    .preview-header {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      color: white;
+      font-weight: 500;
+      text-align: center;
+      background-image: linear-gradient(to right, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+    }
+
+    .preview-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .preview-profile-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: linear-gradient(to right, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+      color: white;
+    }
+
+    .preview-message {
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .preview-message-header {
+      padding: 0.5rem;
+      background-color: white;
+      border: 1px solid #e5e5e5;
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .dark .preview-message-header {
+      background-color: #333;
+      border-color: #444;
+    }
+
+    .preview-message-content {
+      padding: 1rem;
+      color: white;
+      font-weight: 500;
+      text-align: center;
+      background-image: linear-gradient(to right, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+
+    /* Radio Button Visually Hidden */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col transition-colors duration-300">
-  <!-- Barra de navegação e pesquisa -->
-  <header class="border-b border-border sticky top-0 z-10 bg-white dark:bg-gray-900 dark:border-gray-700">
-    <div class="container px-4 sm:px-6 lg:px-8 mx-auto">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center gap-3">
-          <div class="h-10 w-10 rounded-full flex items-center justify-center text-white" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-          </div>
-          <h1 class="text-xl font-semibold tracking-tight">Mensagens Anônimas</h1>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="relative hidden sm:block">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-2.5 top-2.5 text-gray-400">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </svg>
-            <input 
-              type="text" 
-              id="searchInput"
-              placeholder="Buscar mensagens..." 
-              class="w-64 pl-9 pr-4 py-2 text-sm rounded-md border bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-            />
-          </div>
-          <button
-            id="themeToggle"
-            class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Alternar tema"
-          >
-            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-            </svg>
-            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
-              <circle cx="12" cy="12" r="4"/>
-              <path d="M12 2v2"/>
-              <path d="M12 20v2"/>
-              <path d="m4.93 4.93 1.41 1.41"/>
-              <path d="m17.66 17.66 1.41 1.41"/>
-              <path d="M2 12h2"/>
-              <path d="M20 12h2"/>
-              <path d="m6.34 17.66-1.41 1.41"/>
-              <path d="m19.07 4.93-1.41 1.41"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Layout principal - Sidebar e conteúdo -->
-  <div class="flex-1 flex">
-    <!-- Sidebar -->
-    <aside class="w-64 border-r border-border hidden md:block p-4 bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
-      <div class="space-y-1">
-        <button class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-100 text-gray-900 font-medium dark:bg-gray-800 dark:text-gray-100">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="20" height="16" x="2" y="4" rx="2"/>
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-          </svg>
-          <span>Caixa de entrada</span>
-          <span id="messageCount" class="ml-auto text-xs rounded-full px-2 py-0.5 text-white" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);">
-            0
-          </span>
-        </button>
-        <button class="flex items-center gap-2 w-full p-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors dark:text-gray-300 dark:hover:bg-gray-800">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          <span>Enviadas</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Conteúdo principal -->
-    <main class="flex-1 overflow-auto bg-white dark:bg-gray-900">
-      <div class="container mx-auto px-4 py-6 max-w-4xl">
-        <!-- Cabeçalho da caixa de entrada -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-          <div>
-            <h2 class="text-2xl font-bold tracking-tight dark:text-white">Caixa de entrada</h2>
-            <p class="text-gray-500 mt-1 dark:text-gray-400">
-              <span id="messageCountText">0</span> mensagens anônimas recebidas
-            </p>
-          </div>
-          
-          <!-- Barra de pesquisa visível apenas em mobile -->
-          <div class="relative block sm:hidden w-full">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-2.5 top-2.5 text-gray-400">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </svg>
-            <input 
-              type="text" 
-              id="mobileSearchInput"
-              placeholder="Buscar mensagens..." 
-              class="w-full pl-9 pr-4 py-2 text-sm rounded-md border bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-            />
-          </div>
-          
-          <!-- Botões de navegação e filtro -->
-          <div class="flex items-center gap-2 self-end sm:self-auto">
-            <button 
-              id="filterButton"
-              class="p-2 rounded-md hover:bg-gray-100 transition-colors relative dark:hover:bg-gray-800"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" x2="4" y1="21" y2="14"/>
-                <line x1="4" x2="4" y1="10" y2="3"/>
-                <line x1="12" x2="12" y1="21" y2="12"/>
-                <line x1="12" x2="12" y1="8" y2="3"/>
-                <line x1="20" x2="20" y1="21" y2="16"/>
-                <line x1="20" x2="20" y1="12" y2="3"/>
-                <line x1="2" x2="6" y1="14" y2="14"/>
-                <line x1="10" x2="14" y1="8" y2="8"/>
-                <line x1="18" x2="22" y1="16" y2="16"/>
-              </svg>
-              <span id="filterIndicator" class="absolute -top-1 -right-1 h-2 w-2 rounded-full hidden" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);"></span>
-            </button>
-            <button class="p-2 rounded-md hover:bg-gray-100 transition-colors dark:hover:bg-gray-800">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m15 18-6-6 6-6"/>
-              </svg>
-            </button>
-            <button class="p-2 rounded-md hover:bg-gray-100 transition-colors dark:hover:bg-gray-800">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        <!-- Menu de filtros -->
-        <div id="filterMenu" class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-3 mb-4 shadow-sm animate-fade-in hidden">
-          <h3 class="text-sm font-medium mb-2 dark:text-gray-200">Filtrar mensagens por:</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-            <button 
-              data-filter="all"
-              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-purple-500 text-white"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-              <span>Todas</span>
-            </button>
-            <button 
-              data-filter="today"
-              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              <span>Hoje</span>
-            </button>
-            <button 
-              data-filter="week"
-              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-                <line x1="16" x2="16" y1="2" y2="6"/>
-                <line x1="8" x2="8" y1="2" y2="6"/>
-                <line x1="3" x2="21" y1="10" y2="10"/>
-              </svg>
-              <span>Esta semana</span>
-            </button>
-            <button 
-              data-filter="month"
-              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-                <line x1="16" x2="16" y1="2" y2="6"/>
-                <line x1="8" x2="8" y1="2" y2="6"/>
-                <line x1="3" x2="21" y1="10" y2="10"/>
-              </svg>
-              <span>Este mês</span>
-            </button>
-            <button 
-              data-filter="new"
-              class="filter-button text-xs py-2 px-3 rounded-md flex items-center justify-center gap-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m5 12 7-7 7 7"/>
-                <path d="M12 19V5"/>
-              </svg>
-              <span>Novas</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Carregando mensagens -->
-        <div id="loadingState" class="flex flex-col items-center justify-center py-20">
-          <div class="flex items-center justify-center space-x-2">
-            <div class="h-3 w-3 rounded-full animate-pulse" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%); opacity: 0.8;"></div>
-            <div class="h-3 w-3 rounded-full animate-pulse" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%); opacity: 0.6; animation-delay: 0.2s;"></div>
-            <div class="h-3 w-3 rounded-full animate-pulse" style="background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%); opacity: 0.4; animation-delay: 0.4s;"></div>
-          </div>
-          <p class="text-gray-500 mt-4 animate-pulse-subtle dark:text-gray-400">Carregando mensagens...</p>
-        </div>
-
-        <!-- Estado de erro -->
-        <div id="errorState" class="flex flex-col items-center justify-center py-16 text-center hidden">
-          <div class="rounded-full bg-red-100 p-3 text-red-500 mb-4 dark:bg-red-900/30 dark:text-red-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" x2="12" y1="8" y2="12"/>
-              <line x1="12" x2="12.01" y1="16" y2="16"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-medium mb-2 dark:text-white">Não foi possível carregar as mensagens</h3>
-          <p class="text-gray-500 max-w-md dark:text-gray-400">
-            Ocorreu um erro ao tentar buscar as mensagens. Por favor, verifique sua conexão e tente novamente.
-          </p>
-        </div>
-
-        <!-- Estado vazio (depois de pesquisa/filtro) -->
-        <div id="emptyFilterState" class="flex flex-col items-center justify-center py-16 text-center hidden">
-          <div class="rounded-full bg-gray-100 p-3 text-gray-500 mb-4 dark:bg-gray-800 dark:text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <path d="m21 21-4.3-4.3"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-medium mb-2 dark:text-white">Nenhuma mensagem encontrada</h3>
-          <p class="text-gray-500 max-w-md dark:text-gray-400">
-            Nenhuma mensagem corresponde aos seus critérios de pesquisa ou filtro.
-            <span id="searchTerm"></span>
-          </p>
-        </div>
-
-        <!-- Estado vazio (sem mensagens) -->
-        <div id="emptyState" class="flex flex-col items-center justify-center py-16 text-center hidden">
-          <div class="rounded-full bg-gray-100 p-3 text-gray-500 mb-4 dark:bg-gray-800 dark:text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <path d="m21 21-4.3-4.3"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-medium mb-2 dark:text-white">Nenhuma mensagem encontrada</h3>
-          <p class="text-gray-500 max-w-md dark:text-gray-400">
-            Não há mensagens registradas no momento. Volte mais tarde para verificar novamente.
-          </p>
-        </div>
-
-        <!-- Lista de mensagens -->
-        <div id="questionsList" class="space-y-4 hidden"></div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Rodapé -->
-  <footer class="py-6 px-4 text-center text-sm text-gray-500 border-t dark:text-gray-400 dark:border-gray-700">
-    <p>© <span id="currentYear"></span> NEEXT LTDA. Todos os direitos reservados.</p>
-  </footer>
-
-  <!-- Container de toast -->
-  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+<body>
+  <div id="app" class="app"></div>
 
   <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
   <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   
   <script>
-    // Configurar o ano atual no footer
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-    
-    // Estado global
+    // Main application state
     const state = {
-      questions: [],
-      filteredQuestions: [],
-      searchQuery: "",
-      filterType: "all", // "all", "today", "week", "month", "new"
+      currentView: 'inbox', // inbox, messages, profile
+      theme: localStorage.getItem('theme') || 'light', // light, dark
+      gradientTheme: localStorage.getItem('gradientTheme') || 'purple', // purple, blue, pink, green, orange
+      messages: [],
+      expandedIndex: null,
       loading: true,
-      error: false,
-      showFilters: false
+      showThemeSelector: false,
+      showSettingsModal: false
     };
-    
-    // Elementos DOM
-    const elements = {
-      loadingState: document.getElementById('loadingState'),
-      errorState: document.getElementById('errorState'),
-      emptyState: document.getElementById('emptyState'),
-      emptyFilterState: document.getElementById('emptyFilterState'),
-      questionsList: document.getElementById('questionsList'),
-      messageCount: document.getElementById('messageCount'),
-      messageCountText: document.getElementById('messageCountText'),
-      searchInput: document.getElementById('searchInput'),
-      mobileSearchInput: document.getElementById('mobileSearchInput'),
-      filterButton: document.getElementById('filterButton'),
-      filterMenu: document.getElementById('filterMenu'),
-      filterIndicator: document.getElementById('filterIndicator'),
-      filterButtons: document.querySelectorAll('.filter-button'),
-      searchTerm: document.getElementById('searchTerm'),
-      themeToggle: document.getElementById('themeToggle'),
-      moonIcon: document.getElementById('moonIcon'),
-      sunIcon: document.getElementById('sunIcon')
-    };
-    
-    // Função para alternar tema claro/escuro
-    function setupThemeToggle() {
-      // Verificar tema inicial
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const storedTheme = localStorage.getItem('theme');
-      
-      // Definir tema inicial
-      if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-        document.documentElement.classList.add('dark');
-        elements.moonIcon.classList.add('hidden');
-        elements.sunIcon.classList.remove('hidden');
-      }
-      
-      // Alternar tema ao clicar no botão
-      elements.themeToggle.addEventListener('click', () => {
-        if (document.documentElement.classList.contains('dark')) {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-          elements.moonIcon.classList.remove('hidden');
-          elements.sunIcon.classList.add('hidden');
-        } else {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-          elements.moonIcon.classList.add('hidden');
-          elements.sunIcon.classList.remove('hidden');
-        }
-      });
-    }
-    
-    // Função para mostrar toast de notificação
-    function showToast(title, description, variant = 'default') {
-      const toast = document.createElement('div');
-      toast.className = `p-4 rounded-lg shadow-lg max-w-md animate-slide-up flex gap-3 items-start ${
-        variant === 'destructive' 
-          ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200' 
-          : 'bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700'
-      }`;
-      
-      toast.innerHTML = `
-        <div class="flex-shrink-0">
-          ${variant === 'destructive' 
-            ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>' 
-            : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>'
-          }
-        </div>
-        <div class="flex-1">
-          <h4 class="font-medium mb-1">${title}</h4>
-          <p class="text-sm opacity-90">${description}</p>
-        </div>
-      `;
-      
-      document.getElementById('toastContainer').appendChild(toast);
-      
-      // Remover o toast após 5 segundos
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(10px)';
-        toast.style.transition = 'opacity 0.3s, transform 0.3s';
-        
-        setTimeout(() => {
-          toast.remove();
-        }, 300);
-      }, 5000);
-    }
-    
-    // Função para criar um cartão de pergunta
-    function createQuestionCard(question, index) {
-      const card = document.createElement('div');
-      card.className = 'message-card opacity-0 animate-slide-up';
-      card.style.animationDelay = `${0.1 + index * 0.05}s`;
-      card.style.animationFillMode = 'forwards';
-      
-      card.innerHTML = `
-        <div class="message-header">
-          me mande mensagens anônimas!
-        </div>
-        <div class="message-content">
-          ${question.pergunta}
-        </div>
-        <div class="message-actions">
-          <button class="action-button info-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
-              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
-              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
-              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
-              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
-            </svg>
-          </button>
-          <button class="action-button share-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>
-              <circle cx="12" cy="12" r="10"/>
-            </svg>
-          </button>
-          <button class="action-button arrow-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
-              <path d="M12 22v-4"/>
-              <path d="M7 12c-1.5 0-4.5 1.5-5 3 3.5 1.5 6 1 6 1-1.5 1.5-2 3.5-2 5 2.5 0 4.5-1.5 6-3 1.5 1.5 3.5 3 6 3 0-1.5-.5-3.5-2-5 0 0 2.5.5 6-1-.5-1.5-3.5-3-5-3 1.5-1 4-4 4-6-2.5 0-5.5 1.5-7 3 0-2.5-.5-5-2-7-1.5 2-2 4.5-2 7-1.5-1.5-4.5-3-7-3 0 2 2.5 5 4 6"/>
-            </svg>
-          </button>
-          <button class="action-button share-button" style="background-color: #6b7280;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/>
-              <path d="M6.453 15h11.094"/>
-              <path d="M8.5 2h7"/>
-            </svg>
-          </button>
-        </div>
-      `;
-      
-      return card;
-    }
-    
-    // Função para mostrar/ocultar elementos
-    function showElement(element, show = true) {
-      if (show) {
-        element.classList.remove('hidden');
+
+    // Gradient themes configuration
+    const gradientThemes = [
+      { name: "purple", label: "Roxo" },
+      { name: "blue", label: "Azul" },
+      { name: "pink", label: "Rosa" },
+      { name: "green", label: "Verde" },
+      { name: "orange", label: "Laranja" }
+    ];
+
+    // Apply initial theme
+    document.body.classList.toggle('dark', state.theme === 'dark');
+    document.documentElement.classList.add(`gradient-${state.gradientTheme.toLowerCase()}`);
+
+    // Time formatter utility
+    function timeAgo(date) {
+      const now = new Date();
+      const past = new Date(date);
+      const diffInSeconds = Math.floor((now - past) / 1000);
+
+      if (diffInSeconds < 60) {
+        return 'Agora mesmo';
+      } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes} ${minutes === 1 ? 'minuto' : 'minutos'} atrás`;
+      } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours} ${hours === 1 ? 'hora' : 'horas'} atrás`;
+      } else if (diffInSeconds < 604800) {
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days} ${days === 1 ? 'dia' : 'dias'} atrás`;
       } else {
-        element.classList.add('hidden');
+        const options = { day: 'numeric', month: 'short' };
+        return past.toLocaleDateString('pt-BR', options);
       }
     }
-    
-    // Função para atualizar a exibição com base no estado atual
-    function updateDisplay() {
-      // Atualizar contadores de mensagens
-      elements.messageCount.textContent = state.filteredQuestions.length;
-      elements.messageCountText.textContent = state.filteredQuestions.length;
-      
-      // Limpar a lista de perguntas
-      elements.questionsList.innerHTML = '';
-      
-      // Esconder todos os estados
-      showElement(elements.loadingState, false);
-      showElement(elements.errorState, false);
-      showElement(elements.emptyState, false);
-      showElement(elements.emptyFilterState, false);
-      showElement(elements.questionsList, false);
-      
-      // Mostrar o estado apropriado
-      if (state.loading) {
-        showElement(elements.loadingState, true);
-        return;
-      }
-      
-      if (state.error) {
-        showElement(elements.errorState, true);
-        return;
-      }
-      
-      if (state.questions.length === 0) {
-        showElement(elements.emptyState, true);
-        return;
-      }
-      
-      if (state.filteredQuestions.length === 0) {
-        // Atualizar a mensagem de busca
-        if (state.searchQuery) {
-          elements.searchTerm.textContent = ` Tente outra palavra-chave.`;
-        } else {
-          elements.searchTerm.textContent = '';
-        }
-        showElement(elements.emptyFilterState, true);
-        return;
-      }
-      
-      // Adicionar cada pergunta à lista
-      state.filteredQuestions.forEach((question, index) => {
-        const card = createQuestionCard(question, index);
-        elements.questionsList.appendChild(card);
-      });
-      
-      showElement(elements.questionsList, true);
-    }
-    
-    // Função para aplicar filtros e pesquisa
-    function applyFilters() {
-      if (state.questions.length === 0) return;
-      
-      let result = [...state.questions];
-      
-      // Aplicar filtro de tempo
-      if (state.filterType !== "all") {
-        // Como não temos data nas perguntas, vamos simular com slices
-        if (state.filterType === "today") {
-          // Simular perguntas de hoje (primeiras 3)
-          result = result.slice(0, Math.min(3, result.length));
-        } else if (state.filterType === "week") {
-          // Simular perguntas da semana (primeiras 7)
-          result = result.slice(0, Math.min(7, result.length));
-        } else if (state.filterType === "month") {
-          // Simular perguntas do mês (primeiras 15)
-          result = result.slice(0, Math.min(15, result.length));
-        } else if (state.filterType === "new") {
-          // Simular novas perguntas (primeiras 5)
-          result = result.slice(0, Math.min(5, result.length));
-        }
-      }
-      
-      // Aplicar pesquisa
-      if (state.searchQuery.trim() !== "") {
-        const query = state.searchQuery.toLowerCase();
-        result = result.filter(q => 
-          q.pergunta.toLowerCase().includes(query)
-        );
-      }
-      
-      state.filteredQuestions = result;
-      updateDisplay();
-    }
-    
-    // Função para definir o tipo de filtro
-    function setFilterType(type) {
-      state.filterType = type;
-      
-      // Atualizar indicador de filtro ativo
-      if (type === "all") {
-        showElement(elements.filterIndicator, false);
-      } else {
-        showElement(elements.filterIndicator, true);
-      }
-      
-      // Atualizar aparência dos botões de filtro
-      elements.filterButtons.forEach(button => {
-        const buttonType = button.getAttribute('data-filter');
-        
-        if (buttonType === type) {
-          button.style.background = 'linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%)';
-          button.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:hover:bg-gray-600');
-          button.classList.add('text-white');
-        } else {
-          button.style.background = '';
-          button.classList.remove('text-white');
-          button.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:hover:bg-gray-600');
-        }
-      });
-      
-      applyFilters();
-    }
-    
-    // Função para buscar as perguntas
-    async function fetchQuestions() {
-      state.loading = true;
-      state.error = false;
-      updateDisplay();
-      
+
+    // Fetch messages from API
+    async function fetchMessages() {
       try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbyMh9YnzKtxF9Nc_awc9w8KSPyXa4OzXf0iiW748b8-dY4W0SxkoYy77Wcudn7ky9xUJg/exec');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch questions');
-        }
-        
-        const data = await response.json();
-        
-        // Verificar se há perguntas
-        if (!data.perguntas || data.perguntas.length === 0) {
-          state.questions = [];
-          state.filteredQuestions = [];
-        } else {
-          // Inverter a ordem das perguntas para mostrar as mais recentes primeiro
-          state.questions = [...data.perguntas].reverse();
-          state.filteredQuestions = [...state.questions];
-        }
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-        state.error = true;
-        showToast(
-          "Erro ao carregar mensagens", 
-          "Houve um problema ao carregar as mensagens. Tente novamente mais tarde.",
-          "destructive"
-        );
-      } finally {
-        state.loading = false;
-        applyFilters();
+        const res = await fetch('https://script.google.com/macros/s/AKfycbyMh9YnzKtxF9Nc_awc9w8KSPyXa4OzXf0iiW748b8-dY4W0SxkoYy77Wcudn7ky9xUJg/exec');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        return data.perguntas ? data.perguntas.reverse().map((msg, index) => ({
+          ...msg,
+          id: `msg-${index}`
+        })) : [];
+      } catch (e) {
+        console.error(e);
+        return [];
       }
     }
-    
-    // Configurar manipuladores de eventos
-    function setupEventHandlers() {
-      // Pesquisa (desktop)
-      elements.searchInput.addEventListener('input', (e) => {
-        state.searchQuery = e.target.value;
-        elements.mobileSearchInput.value = e.target.value; // Sincronizar com mobile
-        applyFilters();
-      });
-      
-      // Pesquisa (mobile)
-      elements.mobileSearchInput.addEventListener('input', (e) => {
-        state.searchQuery = e.target.value;
-        elements.searchInput.value = e.target.value; // Sincronizar com desktop
-        applyFilters();
-      });
-      
-      // Botão de filtro
-      elements.filterButton.addEventListener('click', () => {
-        state.showFilters = !state.showFilters;
-        showElement(elements.filterMenu, state.showFilters);
-      });
-      
-      // Botões de tipo de filtro
-      elements.filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const filterType = button.getAttribute('data-filter');
-          setFilterType(filterType);
-        });
-      });
+
+    // Toggle theme between light and dark
+    function toggleTheme() {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      document.body.classList.toggle('dark', state.theme === 'dark');
+      localStorage.setItem('theme', state.theme);
+      renderApp();
     }
-    
-    // Inicializar aplicação
-    function init() {
-      setupThemeToggle();
-      setupEventHandlers();
-      fetchQuestions();
+
+    // Set gradient theme
+    function setGradientTheme(themeName) {
+      document.documentElement.classList.remove(`gradient-${state.gradientTheme.toLowerCase()}`);
+      document.documentElement.classList.add(`gradient-${themeName.toLowerCase()}`);
+      state.gradientTheme = themeName;
+      localStorage.setItem('gradientTheme', themeName);
+      state.showThemeSelector = false;
+      renderApp();
     }
-    
-    // Iniciar quando o DOM estiver pronto
-    document.addEventListener('DOMContentLoaded', init);
+
+    // Toggle theme selector visibility
+    function toggleThemeSelector() {
+      state.showThemeSelector = !state.showThemeSelector;
+      renderApp();
+    }
+
+    // Toggle settings modal visibility
+    function toggleSettingsModal() {
+      state.showSettingsModal = !state.showSettingsModal;
+      renderApp();
+    }
+
+    // Navigate between views
+    function navigate(view) {
+      state.currentView = view;
+      state.expandedIndex = null;
+      renderApp();
+    }
+
+    // Toggle message expansion
+    function toggleExpand(index) {
+      state.expandedIndex = state.expandedIndex === index ? null : index;
+      renderApp();
+    }
+
+    // Initial app load
+    async function loadApp() {
+      state.loading = true;
+      renderApp();
+      state.messages = await fetchMessages();
+      state.loading = false;
+      renderApp();
+    }
+
+    // Render the message item
+    function renderMessageItem(message, index) {
+      const isActive = state.expandedIndex === index;
+      const timeText = timeAgo(message.data);
+      const avatarUrl = 'https://storage.googleapis.com/a1aa/image/e40343bf-df76-4d75-b5e8-5c994ba061d0.jpg';
+      
+      return `
+        <div class="message-item ${isActive ? 'active' : ''}" 
+            onclick="toggleExpand(${index})">
+          <div class="avatar">
+            <img src="${avatarUrl}" alt="Avatar">
+          </div>
+          <div class="text-group">
+            <div class="title">
+              ${message.pergunta.length > 20 ? message.pergunta.slice(0, 20) + '...' : message.pergunta}
+            </div>
+            <div class="subtitle">
+              ${timeText}
+            </div>
+          </div>
+          <div class="chevron">
+            ${isActive ? 
+              '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>' : 
+              '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>'
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    // Render the message card - Updated with new icons and style
+    function renderMessageCard(message, index) {
+      return `
+        <div class="message-card" id="message-card-${index}">
+          <div class="message-header">me mande mensagens anônimas!</div>
+          <div class="message-content">${message.pergunta}</div>
+          <div class="message-actions">
+            <button class="action-button info-button" title="Info" aria-label="Informações">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+              </svg>
+            </button>
+            <button class="action-button share-button" title="Compartilhar" aria-label="Compartilhar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>
+                <circle cx="12" cy="12" r="10"/>
+              </svg>
+            </button>
+            <button class="action-button arrow-button" title="Outro" aria-label="Seta para baixo">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 22v-4"/>
+                <path d="M7 12c-1.5 0-4.5 1.5-5 3 3.5 1.5 6 1 6 1-1.5 1.5-2 3.5-2 5 2.5 0 4.5-1.5 6-3 1.5 1.5 3.5 3 6 3 0-1.5-.5-3.5-2-5 0 0 2.5.5 6-1-.5-1.5-3.5-3-5-3 1.5-1 4-4 4-6-2.5 0-5.5 1.5-7 3 0-2.5-.5-5-2-7-1.5 2-2 4.5-2 7-1.5-1.5-4.5-3-7-3 0 2 2.5 5 4 6"/>
+              </svg>
+            </button>
+            <button class="action-button gray-button" title="Mais" aria-label="Botão cinza">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/>
+                <path d="M6.453 15h11.094"/>
+                <path d="M8.5 2h7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render the inbox view
+    function renderInbox() {
+      let content = '';
+      
+      if (state.loading) {
+        content = '<p class="loading">Loading messages...</p>';
+      } else if (state.messages.length === 0) {
+        content = '<p class="empty">Nenhuma mensagem encontrada.</p>';
+      } else {
+        content = state.messages.map((message, index) => {
+          let output = renderMessageItem(message, index);
+          if (state.expandedIndex === index) {
+            output += renderMessageCard(message, index);
+          }
+          return output;
+        }).join('');
+      }
+
+      return `
+        <header>
+          <div class="left-button gradient-circle" aria-label="Messages">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h2>INBOX</h2>
+          <div class="right-buttons">
+            <button class="icon-button" onclick="toggleTheme()" aria-label="Toggle theme">
+              ${state.theme === 'dark' ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' : 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
+              }
+            </button>
+            <button class="icon-button" onclick="toggleSettingsModal()" aria-label="Settings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </header>
+        <main>${content}</main>
+      `;
+    }
+
+    // Render the messages view
+    function renderMessages() {
+      let content = '';
+      
+      if (state.loading) {
+        content = '<p class="loading">Loading messages...</p>';
+      } else if (state.messages.length === 0) {
+        content = '<p class="empty">Nenhuma mensagem encontrada.</p>';
+      } else {
+        content = state.messages.map((message, index) => {
+          return renderMessageCard(message, index);
+        }).join('');
+      }
+
+      return `
+        <header>
+          <div class="left-button gradient-circle" aria-label="Messages">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h2>MENSAGENS</h2>
+          <div class="right-buttons">
+            <button class="icon-button" onclick="toggleTheme()" aria-label="Toggle theme">
+              ${state.theme === 'dark' ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' : 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
+              }
+            </button>
+            <button class="icon-button" onclick="toggleSettingsModal()" aria-label="Settings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </header>
+        <main>${content}</main>
+      `;
+    }
+
+    // Render the profile view
+    function renderProfile() {
+      return `
+        <header>
+          <div class="left-button gradient-circle" aria-label="User">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h2>PERFIL</h2>
+          <div class="right-buttons">
+            <button class="icon-button" onclick="toggleTheme()" aria-label="Toggle theme">
+              ${state.theme === 'dark' ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' : 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
+              }
+            </button>
+            <button class="icon-button" onclick="toggleSettingsModal()" aria-label="Settings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </header>
+        <main>
+          <div class="profile-container">
+            <div class="profile-header">
+              <div class="profile-avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 dark:text-gray-400">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold" style="color: ${state.theme === 'dark' ? 'white' : '#111827'}">Meu Perfil</h2>
+            </div>
+
+            <div class="card">
+              <div class="card-content">
+                <h3 style="font-size: 1.125rem; font-weight: 500; margin-bottom: 1rem; color: ${state.theme === 'dark' ? 'white' : '#111827'}">Escolha um tema</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  ${gradientThemes.map(theme => {
+                    const isSelected = state.gradientTheme === theme.name;
+                    return `
+                      <div 
+                        class="theme-option ${isSelected ? 'selected' : ''}"
+                        onclick="setGradientTheme('${theme.name}')"
+                      >
+                        <div class="theme-details">
+                          <div class="theme-color ${theme.name}-gradient"></div>
+                          <div style="font-weight: 500; color: ${state.theme === 'dark' ? 'white' : '#111827'}">${theme.label}</div>
+                        </div>
+                        ${isSelected ? 
+                          `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${state.theme === 'dark' ? 'white' : '#111827'}">
+                            <path d="M20 6 9 17l-5-5"></path>
+                          </svg>` : 
+                          ''
+                        }
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-content">
+                <h3 style="font-size: 1.125rem; font-weight: 500; margin-bottom: 0.5rem; color: ${state.theme === 'dark' ? 'white' : '#111827'}">Previsualização</h3>
+                <p class="preview-description">Como seus gradientes aparecerão no aplicativo:</p>
+                
+                <div class="preview-section">
+                  <div class="preview-item">
+                    <div class="preview-header">
+                      Cabeçalho com Gradiente
+                    </div>
+                  </div>
+                  
+                  <div class="preview-item preview-profile">
+                    <div class="preview-profile-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    </div>
+                    <div style="font-weight: 500; color: ${state.theme === 'dark' ? 'white' : '#111827'}">Ícone de Perfil</div>
+                  </div>
+                  
+                  <div class="preview-item">
+                    <div class="preview-message">
+                      <div class="preview-message-header">
+                        me mande mensagens anônimas!
+                      </div>
+                      <div class="preview-message-content">
+                        Caixa de Mensagem Anônima
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      `;
+    }
+
+    // Render the bottom navigation
+    function renderBottomNav() {
+      return `
+        <nav class="bottom-nav">
+          <button class="nav-button ${state.currentView === 'messages' ? 'active-underline' : ''}" 
+                  onclick="navigate('messages')" 
+                  aria-label="Messages">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          
+          <button class="btn-gradient ${state.currentView === 'inbox' ? 'active-shadow' : ''}" 
+                  onclick="navigate('inbox')" 
+                  aria-label="Mailbox">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </button>
+          
+          <button class="nav-button ${state.currentView === 'profile' ? 'active-underline' : ''}" 
+                  onclick="navigate('profile')" 
+                  aria-label="Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
+        </nav>
+      `;
+    }
+
+    // Render the theme selector
+    function renderThemeSelector() {
+      if (!state.showThemeSelector) return '';
+      
+      return `
+        <div class="theme-selector">
+          ${gradientThemes.map(theme => {
+            const isActive = state.gradientTheme === theme.name;
+            return `
+              <button 
+                class="theme-button ${isActive ? 'active' : ''} ${theme.name}-gradient" 
+                onclick="setGradientTheme('${theme.name}')">
+                <span>${theme.label}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    // Render settings modal
+    function renderSettingsModal() {
+      if (!state.showSettingsModal) return '';
+      
+      return `
+        <div class="modal active">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Settings</h3>
+              <button class="close-button" onclick="toggleSettingsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div style="margin-bottom: 1rem;">
+                <h4 style="margin-bottom: 0.5rem; font-weight: 500; color: ${state.theme === 'dark' ? '#f3f4f6' : '#111827'}">Theme</h4>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button 
+                    onclick="toggleTheme()" 
+                    style="padding: 0.5rem 1rem; border-radius: 0.5rem; background-color: ${state.theme === 'light' ? '#f3f4f6' : '#333'}; color: ${state.theme === 'light' ? '#111827' : '#f3f4f6'}; border: none; cursor: pointer;">
+                    ${state.theme === 'light' ? 'Light Mode' : 'Dark Mode'}
+                  </button>
+                </div>
+              </div>
+              
+              <div>
+                <h4 style="margin-bottom: 0.5rem; font-weight: 500; color: ${state.theme === 'dark' ? '#f3f4f6' : '#111827'}">Gradient Theme</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                  ${gradientThemes.map(theme => {
+                    const isActive = state.gradientTheme === theme.name;
+                    return `
+                      <button 
+                        class="theme-button ${isActive ? 'active' : ''} ${theme.name}-gradient"
+                        onclick="setGradientTheme('${theme.name}')">
+                        <span>${theme.label}</span>
+                      </button>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Master render function
+    function renderApp() {
+      const app = document.getElementById('app');
+      let content = '';
+      
+      switch (state.currentView) {
+        case 'inbox':
+          content = renderInbox();
+          break;
+        case 'messages':
+          content = renderMessages();
+          break;
+        case 'profile':
+          content = renderProfile();
+          break;
+        default:
+          content = renderInbox();
+      }
+      
+      app.innerHTML = `
+        ${content}
+        ${renderBottomNav()}
+        ${renderThemeSelector()}
+        ${renderSettingsModal()}
+      `;
+    }
+
+    // Make functions accessible to inline event handlers
+    window.toggleTheme = toggleTheme;
+    window.toggleExpand = toggleExpand;
+    window.navigate = navigate;
+    window.toggleThemeSelector = toggleThemeSelector;
+    window.setGradientTheme = setGradientTheme;
+    window.toggleSettingsModal = toggleSettingsModal;
+
+    // Initialize the app
+    loadApp();
   </script>
 </body>
 </html>
