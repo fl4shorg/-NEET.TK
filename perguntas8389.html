@@ -1,15 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inbox</title>
+  <title>Zen Gradient Inbox</title>
   <meta name="description" content="Anonymous messaging inbox application" />
   <meta name="author" content="Lovable" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 
-  <meta property="og:title" content="Anon Inbox Zen" />
+  <meta property="og:title" content="Zen Gradient Inbox" />
   <meta property="og:description" content="Anonymous messaging inbox application" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
@@ -52,6 +51,10 @@
       --gradient-green-to: 160 84% 39%;
       --gradient-orange-from: 27 96% 61%;
       --gradient-orange-to: 43 96% 50%;
+      
+      /* Custom gradient variables */
+      --custom-gradient: linear-gradient(90deg, #7c3aed 0%, #2563eb 100%);
+      --custom-gradient-text: #ffffff;
     }
 
     .dark {
@@ -94,115 +97,246 @@
       margin: 0 auto;
       min-height: 100vh;
       position: relative;
-      background-color: white;
     }
 
     .dark .app {
-      background-color: #1a1a1a;
+      background-color: rgb(24, 24, 27);
     }
 
     /* Header Styles */
     header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      padding: 1rem 0;
-      border-bottom: 1px solid #e5e5e5;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid hsl(var(--border));
     }
 
     .dark header {
-      border-bottom-color: #333;
+      border-bottom-color: hsl(var(--border));
     }
 
     header h2 {
       font-weight: 800;
       font-size: 1.25rem;
       text-align: center;
-      color: #111827;
+      color: hsl(var(--foreground));
     }
 
-    .dark header h2 {
-      color: white;
-    }
-
-    header .left-button, header .right-buttons {
-      position: absolute;
+    .header-left {
       display: flex;
       align-items: center;
     }
 
-    header .left-button {
-      left: 1.5rem;
-    }
-
-    header .right-buttons {
-      right: 1.5rem;
+    .header-right {
+      display: flex;
+      align-items: center;
       gap: 0.75rem;
     }
 
     .gradient-circle {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-right: 0.75rem;
+    }
+
+    .icon-button {
+      background-color: hsl(var(--secondary));
       border-radius: 50%;
       width: 2rem;
       height: 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-    }
-
-    .gradient-purple {
-      background-image: linear-gradient(to right, hsl(var(--gradient-purple-from)), hsl(var(--gradient-purple-to)));
-    }
-
-    .gradient-blue {
-      background-image: linear-gradient(to right, hsl(var(--gradient-blue-from)), hsl(var(--gradient-blue-to)));
-    }
-
-    .gradient-pink {
-      background-image: linear-gradient(to right, hsl(var(--gradient-pink-from)), hsl(var(--gradient-pink-to)));
-    }
-
-    .gradient-green {
-      background-image: linear-gradient(to right, hsl(var(--gradient-green-from)), hsl(var(--gradient-green-to)));
-    }
-
-    .gradient-orange {
-      background-image: linear-gradient(to right, hsl(var(--gradient-orange-from)), hsl(var(--gradient-orange-to)));
-    }
-
-    .icon-button {
-      background-color: #f3f4f6;
-      border-radius: 50%;
-      width: 2.5rem;
-      height: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       cursor: pointer;
       border: none;
-      color: #6b7280;
+      color: hsl(var(--foreground));
       transition: background-color 0.2s;
     }
 
     .dark .icon-button {
-      background-color: #333;
-      color: #d1d5db;
+      color: hsl(var(--foreground));
     }
 
     .icon-button:hover {
-      background-color: #e5e7eb;
-    }
-
-    .dark .icon-button:hover {
-      background-color: #444;
+      background-color: hsl(var(--accent));
     }
 
     /* Main Content */
     main {
-      padding: 1.5rem;
+      padding: 1rem;
       padding-bottom: 5rem;
-      min-height: calc(100vh - 4rem);
+    }
+
+    /* Message Card */
+    .message-card {
+      background-color: hsl(var(--card));
+      border-radius: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      overflow: hidden;
+      border: 1px solid hsl(var(--border));
+      width: 100%;
+      max-width: 24rem;
+      margin-left: auto;
+      margin-right: auto;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .message-header {
+      background: var(--custom-gradient);
+      color: #ffffff; /* Ensuring the text is white */
+      font-weight: 700;
+      font-size: 1.25rem;
+      padding: 1rem;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .message-content {
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: hsl(var(--card-foreground));
+      line-height: 1.4;
+    }
+
+    .message-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .action-button {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .action-button:hover {
+      transform: scale(1.05);
+    }
+
+    .action-button.info {
+      background: var(--custom-gradient);
+      color: white;
+    }
+
+    .action-button.share {
+      background-color: #22c55e;
+      color: white;
+    }
+
+    .action-button.arrow {
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+    }
+
+    .dark .action-button.arrow {
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+    }
+
+    .action-button.other {
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+    }
+
+    .dark .action-button.other {
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      background-color: hsl(var(--background));
+      border-top: 1px solid hsl(var(--border));
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 2.5rem;
+      margin: 0 auto;
+      z-index: 10;
+    }
+
+    .dark .bottom-nav {
+      background-color: rgb(24, 24, 27);
+      border-top-color: hsl(var(--border));
+    }
+
+    .nav-button {
+      color: hsl(var(--muted-foreground));
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-button.active::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 9999px;
+      background: var(--custom-gradient);
+    }
+
+    .btn-gradient {
+      background: var(--custom-gradient);
+      color: var(--custom-gradient-text);
+      padding: 1rem;
+      border-radius: 50%;
+      margin-top: -2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: box-shadow 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-gradient:hover {
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
     }
 
     /* Message Item */
@@ -219,11 +353,7 @@
     }
 
     .message-item:hover {
-      background-color: #f3f4f6;
-    }
-
-    .dark .message-item:hover {
-      background-color: #333;
+      background-color: hsl(var(--secondary));
     }
 
     .message-item.active {
@@ -238,17 +368,13 @@
     }
 
     .message-item .avatar {
-      background-color: #f3f4f6;
+      background-color: hsl(var(--secondary));
       border-radius: 50%;
       padding: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-    }
-
-    .dark .message-item .avatar {
-      background-color: #333;
     }
 
     .message-item img {
@@ -273,11 +399,7 @@
 
     .message-item .subtitle {
       font-size: 0.875rem;
-      color: #6b7280;
-    }
-
-    .dark .message-item .subtitle {
-      color: #9ca3af;
+      color: hsl(var(--muted-foreground));
     }
 
     .message-item.active .subtitle {
@@ -285,318 +407,11 @@
     }
 
     .message-item .chevron {
-      color: #d1d5db;
+      color: hsl(var(--muted-foreground));
     }
 
     .message-item.active .chevron {
       color: rgba(255, 255, 255, 0.8);
-    }
-
-    /* Message Card */
-    .message-card {
-      background-color: white;
-      border-radius: 1rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      margin-top: 1rem;
-      overflow: hidden;
-      border: 1px solid #e5e5e5;
-      animation: slideDown 0.3s ease-out;
-      user-select: none;
-    }
-
-    .dark .message-card {
-      background-color: #1f2937;
-      border-color: #374151;
-    }
-
-    @keyframes slideDown {
-      from {
-        transform: translateY(-10px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .message-header {
-      background: linear-gradient(90deg, #7c3aed 0%, #2563eb 100%);
-      color: white;
-      font-weight: 700;
-      font-size: 1.25rem;
-      padding: 1rem;
-      text-align: center;
-      line-height: 1.2;
-      user-select: text;
-    }
-
-    .message-content {
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #111827;
-      line-height: 1.4;
-      user-select: text;
-    }
-
-    .dark .message-content {
-      color: #f9fafb;
-    }
-
-    .message-actions {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem;
-    }
-
-    .action-button {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s;
-      cursor: pointer;
-      border: none;
-      color: white;
-      outline-offset: 2px;
-    }
-
-    .action-button:hover {
-      transform: scale(1.05);
-    }
-
-    .action-button:focus-visible {
-      outline: 2px solid #8B5CF6;
-      outline-offset: 2px;
-    }
-
-    .action-button.info {
-      background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);
-    }
-
-    .action-button.share {
-      background-color: #22c55e;
-    }
-
-    .action-button.arrow {
-      background-color: #374151;
-      color: #d1d5db;
-    }
-
-    .action-button.gray {
-      background-color: #6b7280;
-    }
-
-    /* Bottom Navigation */
-    .bottom-nav {
-      background-color: white;
-      border-top: 1px solid #e5e5e5;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      max-width: 430px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 2.5rem;
-      border-top-left-radius: 1.5rem;
-      border-top-right-radius: 1.5rem;
-      margin: 0 auto;
-      z-index: 10;
-    }
-
-    .dark .bottom-nav {
-      background-color: #333;
-      border-top-color: #444;
-    }
-
-    .nav-button {
-      color: #6b7280;
-      font-size: 1.5rem;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      transition: all 0.2s;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .dark .nav-button {
-      color: #9ca3af;
-    }
-
-    .nav-button.active-underline {
-      position: relative;
-    }
-
-    .nav-button.active-underline::after {
-      content: "";
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      right: 0;
-      height: 3px;
-      border-radius: 9999px;
-    }
-
-    .btn-gradient {
-      color: white;
-      padding: 1rem;
-      border-radius: 50%;
-      margin-top: -2rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: box-shadow 0.2s;
-      border: none;
-      cursor: pointer;
-    }
-
-    .btn-gradient:hover {
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn-secondary {
-      background-color: #f3f4f6;
-      color: #6b7280;
-    }
-
-    .dark .btn-secondary {
-      background-color: #333;
-      color: #d1d5db;
-    }
-
-    /* Settings Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-content {
-      background-color: white;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      width: 90%;
-      max-width: 400px;
-      transform: scale(0.95);
-      transition: transform 0.2s;
-    }
-
-    .dark .modal-content {
-      background-color: #222;
-    }
-
-    .modal-overlay.active .modal-content {
-      transform: scale(1);
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-header h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #111827;
-    }
-
-    .dark .modal-header h3 {
-      color: #f9fafb;
-    }
-
-    .close-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.5rem;
-      color: #6b7280;
-    }
-
-    .dark .close-button {
-      color: #9ca3af;
-    }
-
-    /* Theme Settings */
-    .theme-setting {
-      margin-bottom: 1.5rem;
-    }
-
-    .theme-setting h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #111827;
-    }
-
-    .dark .theme-setting h4 {
-      color: #f9fafb;
-    }
-
-    .theme-toggle {
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      border: 1px solid #e5e7eb;
-      cursor: pointer;
-      background-color: #f3f4f6;
-      color: #111827;
-    }
-
-    .dark .theme-toggle {
-      background-color: #333;
-      color: #f9fafb;
-      border-color: #444;
-    }
-
-    .theme-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-    }
-
-    .theme-button {
-      border-radius: 0.5rem;
-      padding: 1rem;
-      text-align: center;
-      color: white;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .theme-button.active {
-      outline: 2px solid white;
-      outline-offset: 2px;
-    }
-
-    .theme-button:hover {
-      transform: scale(1.05);
     }
 
     /* Pagination */
@@ -615,38 +430,21 @@
       width: 2.5rem;
       height: 2.5rem;
       border-radius: 0.5rem;
-      border: 1px solid #e5e7eb;
-      background-color: white;
-      color: #6b7280;
+      border: 1px solid hsl(var(--border));
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .dark .pagination button {
-      background-color: #333;
-      border-color: #444;
-      color: #d1d5db;
-    }
-
     .pagination button:hover:not(:disabled) {
-      background-color: #f3f4f6;
-      border-color: #d1d5db;
-    }
-
-    .dark .pagination button:hover:not(:disabled) {
-      background-color: #444;
-      border-color: #555;
+      background-color: hsl(var(--accent));
     }
 
     .pagination button.active {
-      background-color: #f3f4f6;
-      color: #111827;
+      background-color: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
       font-weight: 600;
-    }
-
-    .dark .pagination button.active {
-      background-color: #444;
-      color: white;
     }
 
     .pagination button:disabled {
@@ -657,12 +455,8 @@
     /* Loading skeletons */
     .skeleton {
       animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      background-color: #e5e7eb;
+      background-color: hsl(var(--secondary));
       border-radius: 0.375rem;
-    }
-
-    .dark .skeleton {
-      background-color: #374151;
     }
 
     @keyframes pulse {
@@ -697,42 +491,308 @@
       margin-top: 0.5rem;
     }
 
-    .scroll-area {
-      overflow-y: auto;
-      max-height: calc(100vh - 14rem);
-      padding-right: 0.5rem;
+    /* Gradient Picker */
+    .gradient-picker {
+      position: relative;
     }
 
-    .scroll-area::-webkit-scrollbar {
-      width: 0.5rem;
+    .gradient-picker-button {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    .scroll-area::-webkit-scrollbar-track {
+    .gradient-picker-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: hsl(var(--background));
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 50;
+    }
+
+    .gradient-picker-dropdown.show {
+      display: block;
+    }
+
+    .gradient-option {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      margin: 0.25rem;
+      cursor: pointer;
+      border: 2px solid transparent;
+      display: inline-block;
+    }
+
+    .gradient-option.active {
+      border-color: white;
+      box-shadow: 0 0 0 2px hsl(var(--primary));
+    }
+
+    /* Custom Gradient Picker */
+    .custom-gradient-picker {
+      padding: 1rem;
+      border-top: 1px solid hsl(var(--border));
+      margin-top: 0.5rem;
+    }
+
+    .custom-gradient-picker h4 {
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      color: hsl(var(--foreground));
+    }
+
+    .color-inputs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .color-input {
+      flex: 1;
+    }
+
+    .color-input input {
+      width: 100%;
+      height: 1.5rem;
+      border: none;
+      padding: 0;
       background: transparent;
     }
 
-    .scroll-area::-webkit-scrollbar-thumb {
-      background-color: #d1d5db;
-      border-radius: 9999px;
+    .color-input label {
+      display: block;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+      color: hsl(var(--muted-foreground));
     }
 
-    .dark .scroll-area::-webkit-scrollbar-thumb {
-      background-color: #4b5563;
+    .apply-button {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      background: var(--custom-gradient);
+      color: white;
+      border-radius: 0.25rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .apply-button:hover {
+      opacity: 0.9;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background-color: hsl(var(--background));
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      padding: 1.5rem;
+      transform: scale(0.95);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: hsl(var(--foreground));
     }
 
     .no-messages {
       text-align: center;
-      padding: 2.5rem 0;
-      color: #6b7280;
+      padding: 2rem 0;
+      color: hsl(var(--muted-foreground));
     }
 
-    .dark .no-messages {
-      color: #9ca3af;
+    /* Custom Gradient Dialog */
+    .gradient-dialog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .gradient-dialog.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .gradient-dialog-content {
+      background-color: hsl(var(--background));
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      padding: 1.5rem;
+      transform: scale(0.95);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .gradient-dialog.active .gradient-dialog-content {
+      transform: scale(1);
+    }
+    
+    .gradient-preview {
+      height: 6rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .angle-control {
+      margin-bottom: 1rem;
+    }
+    
+    .angle-control label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    .angle-control input {
+      width: 100%;
+    }
+    
+    .separator {
+      height: 1px;
+      background-color: hsl(var(--border));
+      margin: 1rem 0;
+    }
+    
+    .colors-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .color-stop {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .color-preview {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.25rem;
+      border: 1px solid hsl(var(--border));
+    }
+    
+    .color-input-group {
+      flex: 1;
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .position-input {
+      width: 4rem;
+    }
+    
+    .add-color-button {
+      padding: 0.25rem 0.5rem;
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+    }
+    
+    .remove-color-button {
+      background: none;
+      border: none;
+      color: hsl(var(--muted-foreground));
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+    
+    .save-button-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+    
+    .save-gradient-button {
+      padding: 0.5rem 1rem;
+      background: var(--custom-gradient);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <div id="app" class="app"></div>
+  <div id="app" class="app">
+    <!-- App content will be rendered here -->
+  </div>
 
   <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
   <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
@@ -743,26 +803,173 @@
       currentView: 'inbox', // inbox, messages, profile
       theme: localStorage.getItem('theme') || 'light', // light, dark
       gradientTheme: localStorage.getItem('gradientTheme') || 'purple', // purple, blue, pink, green, orange
+      customGradient: localStorage.getItem('customGradient') || { from: '#7c3aed', to: '#2563eb', textColor: '#ffffff' },
       messages: [],
       expandedIndex: null,
       loading: true,
-      showSettingsModal: false,
+      showGradientPicker: false,
       currentPage: 1,
       totalPages: 1,
-      pageSize: 10
+      pageSize: 10,
+      gradientColors: [
+        { color: "#7c3aed", position: 0 },
+        { color: "#2563eb", position: 100 }
+      ],
+      gradientAngle: 90,
+      showGradientDialog: false
     };
-
-    // Gradient themes configuration
-    const gradientThemes = [
-      { name: "purple", displayName: "Purple" },
-      { name: "blue", displayName: "Blue" },
-      { name: "pink", displayName: "Pink" },
-      { name: "green", displayName: "Green" },
-      { name: "orange", displayName: "Orange" }
-    ];
-
+    
     // Apply initial theme
     document.body.classList.toggle('dark', state.theme === 'dark');
+    
+    // Update the custom gradient variables
+    function updateCustomGradient(colors, angle, textColor) {
+      const sortedColors = [...colors].sort((a, b) => a.position - b.position);
+      const gradientStr = `linear-gradient(${angle}deg, ${sortedColors.map(c => `${c.color} ${c.position}%`).join(', ')})`;
+      
+      document.documentElement.style.setProperty('--custom-gradient', gradientStr);
+      document.documentElement.style.setProperty('--custom-gradient-text', textColor);
+      
+      // Save to state and localStorage
+      state.customGradient = { colors: sortedColors, angle, textColor };
+      localStorage.setItem('customGradient', JSON.stringify({ colors: sortedColors, angle, textColor }));
+    }
+    
+    // Load custom gradient from localStorage if available
+    function loadCustomGradient() {
+      try {
+        const savedGradient = localStorage.getItem('customGradient');
+        if (savedGradient) {
+          const parsed = JSON.parse(savedGradient);
+          if (parsed.colors) {
+            state.gradientColors = parsed.colors;
+            state.gradientAngle = parsed.angle || 90;
+            updateCustomGradient(parsed.colors, parsed.angle || 90, parsed.textColor || '#ffffff');
+          } else if (parsed.from) {
+            // Legacy format support
+            state.gradientColors = [
+              { color: parsed.from, position: 0 },
+              { color: parsed.to, position: 100 }
+            ];
+            updateCustomGradient(state.gradientColors, 90, parsed.textColor || '#ffffff');
+          }
+        }
+      } catch (error) {
+        console.error("Error loading custom gradient:", error);
+      }
+    }
+    
+    // Initialize the custom gradient
+    loadCustomGradient();
+    
+    // Predefined gradient themes
+    const gradientThemes = {
+      purple: { colors: [{ color: 'hsl(271, 91%, 65%)', position: 0 }, { color: 'hsl(262, 83%, 58%)', position: 100 }], textColor: '#ffffff' },
+      blue: { colors: [{ color: 'hsl(217, 91%, 60%)', position: 0 }, { color: 'hsl(199, 89%, 48%)', position: 100 }], textColor: '#ffffff' },
+      pink: { colors: [{ color: 'hsl(336, 80%, 58%)', position: 0 }, { color: 'hsl(345, 83%, 41%)', position: 100 }], textColor: '#ffffff' },
+      green: { colors: [{ color: 'hsl(142, 71%, 45%)', position: 0 }, { color: 'hsl(160, 84%, 39%)', position: 100 }], textColor: '#ffffff' },
+      orange: { colors: [{ color: 'hsl(27, 96%, 61%)', position: 0 }, { color: 'hsl(43, 96%, 50%)', position: 100 }], textColor: '#ffffff' }
+    };
+    
+    // Apply a predefined gradient theme
+    function setGradientTheme(themeName) {
+      if (gradientThemes[themeName]) {
+        const { colors, textColor } = gradientThemes[themeName];
+        state.gradientColors = colors;
+        updateCustomGradient(colors, state.gradientAngle, textColor);
+        state.gradientTheme = themeName;
+        localStorage.setItem('gradientTheme', themeName);
+      }
+      
+      toggleGradientPicker(false);
+      renderApp();
+    }
+    
+    // Toggle the gradient picker dropdown
+    function toggleGradientPicker(forceState = null) {
+      if (forceState !== null) {
+        state.showGradientPicker = forceState;
+      } else {
+        state.showGradientPicker = !state.showGradientPicker;
+      }
+      renderApp();
+    }
+    
+    // Toggle the gradient dialog
+    function toggleGradientDialog(forceState = null) {
+      if (forceState !== null) {
+        state.showGradientDialog = forceState;
+      } else {
+        state.showGradientDialog = !state.showGradientDialog;
+      }
+      renderApp();
+    }
+    
+    // Add a new color stop
+    function addColorStop() {
+      if (state.gradientColors.length >= 10) {
+        alert("Você pode adicionar no máximo 10 cores.");
+        return;
+      }
+      
+      // Find middle position
+      const positions = state.gradientColors.map(c => c.position);
+      const min = Math.min(...positions);
+      const max = Math.max(...positions);
+      const middle = Math.floor((min + max) / 2);
+      
+      state.gradientColors.push({ color: "#ffffff", position: middle });
+      renderApp();
+    }
+    
+    // Remove a color stop
+    function removeColorStop(index) {
+      if (state.gradientColors.length <= 2) {
+        alert("Um gradiente precisa de pelo menos 2 cores.");
+        return;
+      }
+      
+      state.gradientColors.splice(index, 1);
+      renderApp();
+    }
+    
+    // Update color at index
+    function updateColorStop(index, newColor) {
+      state.gradientColors[index].color = newColor;
+      renderApp();
+    }
+    
+    // Update position at index
+    function updateColorPosition(index, newPosition) {
+      state.gradientColors[index].position = Math.max(0, Math.min(100, newPosition));
+      renderApp();
+    }
+    
+    // Update gradient angle
+    function updateGradientAngle(newAngle) {
+      state.gradientAngle = newAngle;
+      renderApp();
+    }
+    
+    // Apply custom gradient
+    function applyCustomGradient() {
+      // Determine text color based on luminance
+      const getContrastYIQ = (hexcolor) => {
+        hexcolor = hexcolor.replace('#', '');
+        const r = parseInt(hexcolor.substr(0, 2), 16);
+        const g = parseInt(hexcolor.substr(2, 2), 16);
+        const b = parseInt(hexcolor.substr(4, 2), 16);
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return yiq >= 128 ? '#000000' : '#ffffff';
+      };
+      
+      const firstColor = state.gradientColors.sort((a, b) => a.position - b.position)[0].color;
+      const textColor = getContrastYIQ(firstColor);
+      
+      updateCustomGradient(state.gradientColors, state.gradientAngle, textColor);
+      toggleGradientDialog(false);
+      renderApp();
+    }
 
     // Time formatter utility
     function timeAgo(date) {
@@ -793,21 +1000,23 @@
         state.loading = true;
         renderApp();
         
-        const res = await fetch('https://script.google.com/macros/s/AKfycbyMh9YnzKtxF9Nc_awc9w8KSPyXa4OzXf0iiW748b8-dY4W0SxkoYy77Wcudn7ky9xUJg/exec');
+        const response = await fetch('https://script.google.com/macros/s/AKfycbyMh9YnzKtxF9Nc_awc9w8KSPyXa4OzXf0iiW748b8-dY4W0SxkoYy77Wcudn7ky9xUJg/exec');
         
-        if (!res.ok) throw new Error('Failed to fetch messages');
+        if (!response.ok) {
+          throw new Error('Failed to fetch messages');
+        }
         
-        const data = await res.json();
+        const data = await response.json();
         
         // Process all messages
         const allMessages = data.perguntas ? data.perguntas.reverse().map((msg, index) => ({
-          ...msg,
-          id: `msg-${index}`
+          id: `msg-${index}`,
+          pergunta: msg.pergunta,
+          data: msg.data
         })) : [];
         
         // Calculate pagination
-        const totalCount = allMessages.length;
-        state.totalPages = Math.ceil(totalCount / pageSize);
+        state.totalPages = Math.ceil(allMessages.length / pageSize);
         
         // Get current page messages
         const startIndex = (page - 1) * pageSize;
@@ -820,6 +1029,7 @@
         return [];
       } finally {
         state.loading = false;
+        renderApp();
       }
     }
 
@@ -831,25 +1041,15 @@
       renderApp();
     }
 
-    // Set gradient theme
-    function setGradientTheme(themeName) {
-      state.gradientTheme = themeName;
-      localStorage.setItem('gradientTheme', themeName);
-      state.showSettingsModal = false;
-      renderApp();
-    }
-
-    // Toggle settings modal visibility
-    function toggleSettingsModal() {
-      state.showSettingsModal = !state.showSettingsModal;
-      renderApp();
-    }
-
     // Navigate between views
     function navigate(view) {
       state.currentView = view;
       state.expandedIndex = null;
       renderApp();
+      
+      if (view === 'inbox' || view === 'messages') {
+        loadMessages();
+      }
     }
 
     // Toggle message expansion
@@ -879,6 +1079,140 @@
       state.messages = await fetchMessages(state.currentPage, state.pageSize);
       state.loading = false;
       renderApp();
+    }
+
+    // Render the message box
+    function renderMessageBox(message = "Sua mensagem anônima aparecerá aqui.") {
+      return `
+        <div class="message-card">
+          <div class="message-header">
+            me mande mensagens anônimas!
+          </div>
+          <div class="message-content">
+            ${message}
+          </div>
+          <div class="message-actions">
+            <button class="action-button info" title="Info">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+              </svg>
+            </button>
+            <button class="action-button share" title="Share">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>
+                <circle cx="12" cy="12" r="10"/>
+              </svg>
+            </button>
+            <button class="action-button arrow" title="Arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 22v-4"/>
+                <path d="M7 12c-1.5 0-4.5 1.5-5 3 3.5 1.5 6 1 6 1-1.5 1.5-2 3.5-2 5 2.5 0 4.5-1.5 6-3 1.5 1.5 3.5 3 6 3 0-1.5-.5-3.5-2-5 0 0 2.5.5 6-1-.5-1.5-3.5-3-5-3 1.5-1 4-4 4-6-2.5 0-5.5 1.5-7 3 0-2.5-.5-5-2-7-1.5 2-2 4.5-2 7-1.5-1.5-4.5-3-7-3 0 2 2.5 5 4 6"/>
+              </svg>
+            </button>
+            <button class="action-button other" onclick="toggleGradientDialog()" title="Custom Gradient">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical">
+                <path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/>
+                <path d="M6.453 15h11.094"/>
+                <path d="M8.5 2h7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render the custom gradient dialog
+    function renderGradientDialog() {
+      // If dialog is not active, don't render it
+      if (!state.showGradientDialog) return '';
+      
+      // Sort colors by position
+      const sortedColors = [...state.gradientColors].sort((a, b) => a.position - b.position);
+      
+      // Create gradient string for preview
+      const gradientStr = `linear-gradient(${state.gradientAngle}deg, ${sortedColors.map(c => `${c.color} ${c.position}%`).join(', ')})`;
+      
+      return `
+        <div class="gradient-dialog active">
+          <div class="gradient-dialog-content">
+            <h3 style="margin-bottom: 1rem; font-weight: bold;">Personalizar Gradiente</h3>
+            
+            <div class="gradient-preview" style="background: ${gradientStr}"></div>
+            
+            <div class="angle-control">
+              <label>Ângulo: ${state.gradientAngle}°</label>
+              <input 
+                type="range" 
+                min="0" 
+                max="360" 
+                value="${state.gradientAngle}" 
+                oninput="updateGradientAngle(this.value)" 
+              />
+            </div>
+            
+            <div class="separator"></div>
+            
+            <div class="colors-header">
+              <h4>Cores</h4>
+              <button class="add-color-button" onclick="addColorStop()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Adicionar
+              </button>
+            </div>
+            
+            <div class="color-stops-container">
+              ${state.gradientColors.map((color, index) => `
+                <div class="color-stop">
+                  <div class="color-preview" style="background-color: ${color.color}"></div>
+                  <div class="color-input-group">
+                    <input 
+                      type="color" 
+                      value="${color.color}" 
+                      oninput="updateColorStop(${index}, this.value)" 
+                      style="flex: 1; min-width: 0;"
+                    />
+                    <input 
+                      type="number" 
+                      value="${color.position}" 
+                      min="0" 
+                      max="100" 
+                      oninput="updateColorPosition(${index}, this.value)" 
+                      class="position-input" 
+                    />
+                    <span>%</span>
+                  </div>
+                  <button 
+                    class="remove-color-button" 
+                    onclick="removeColorStop(${index})" 
+                    ${state.gradientColors.length <= 2 ? 'disabled' : ''}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+            
+            <div class="save-button-container">
+              <button class="save-gradient-button" onclick="applyCustomGradient()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m16 3 5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  <path d="M17 21v-8H7v8"/>
+                  <path d="M7 3v5h8"/>
+                </svg>
+                Salvar Gradiente
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     // Render the message item
@@ -911,56 +1245,16 @@
       `;
     }
 
-    // Render the message card
-    function renderMessageCard(message) {
-      return `
-        <div class="message-card">
-          <div class="message-header">me mande mensagens anônimas!</div>
-          <div class="message-content">${message.pergunta}</div>
-          <div class="message-actions">
-            <button class="action-button info" title="Info">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
-                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
-                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
-                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
-                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
-              </svg>
-            </button>
-            <button class="action-button share" title="Compartilhar">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>
-                <circle cx="12" cy="12" r="10"/>
-              </svg>
-            </button>
-            <button class="action-button arrow" title="Seta">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="text-green-500">
-                <path d="M12 22v-4"/>
-                <path d="M7 12c-1.5 0-4.5 1.5-5 3 3.5 1.5 6 1 6 1-1.5 1.5-2 3.5-2 5 2.5 0 4.5-1.5 6-3 1.5 1.5 3.5 3 6 3 0-1.5-.5-3.5-2-5 0 0 2.5.5 6-1-.5-1.5-3.5-3-5-3 1.5-1 4-4 4-6-2.5 0-5.5 1.5-7 3 0-2.5-.5-5-2-7-1.5 2-2 4.5-2 7-1.5-1.5-4.5-3-7-3 0 2 2.5 5 4 6"/>
-              </svg>
-            </button>
-            <button class="action-button gray" title="Outros">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/>
-                <path d="M6.453 15h11.094"/>
-                <path d="M8.5 2h7"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
     // Render loading skeletons
-    function renderSkeletons(count = 5) {
+    function renderSkeletons(count = 3) {
       let skeletons = '';
       for (let i = 0; i < count; i++) {
         skeletons += `
           <div class="skeleton-item">
             <div class="skeleton skeleton-circle"></div>
             <div style="flex-grow: 1;">
-              <div class="skeleton skeleton-line" style="max-width: 14rem;"></div>
-              <div class="skeleton skeleton-line skeleton-line-short" style="max-width: 8rem;"></div>
+              <div class="skeleton skeleton-line"></div>
+              <div class="skeleton skeleton-line skeleton-line-short"></div>
             </div>
           </div>
         `;
@@ -1029,6 +1323,88 @@
       return pagination;
     }
 
+    // Render the gradient picker
+    function renderGradientPicker() {
+      const gradientOptions = Object.keys(gradientThemes).map(name => {
+        const { colors } = gradientThemes[name];
+        const isActive = state.gradientTheme === name;
+        const from = colors[0].color;
+        const to = colors[colors.length - 1].color;
+        return `
+          <div 
+            class="gradient-option ${isActive ? 'active' : ''}"
+            style="background-image: linear-gradient(90deg, ${from} 0%, ${to} 100%);"
+            onclick="setGradientTheme('${name}')"
+            title="${name}"
+          ></div>
+        `;
+      }).join('');
+      
+      return `
+        <div class="gradient-picker">
+          <div 
+            class="gradient-picker-button"
+            style="background-image: var(--custom-gradient);"
+            onclick="toggleGradientPicker()"
+          ></div>
+          <div class="gradient-picker-dropdown ${state.showGradientPicker ? 'show' : ''}">
+            <div>
+              ${gradientOptions}
+            </div>
+            <div class="custom-gradient-picker">
+              <h4>Gradiente Personalizado</h4>
+              <button class="apply-button" onclick="toggleGradientDialog(true)">
+                Editar Cores
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render the header
+    function renderHeader() {
+      let icon = '';
+      let title = '';
+      
+      switch (state.currentView) {
+        case 'inbox':
+          icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>';
+          title = 'INBOX';
+          break;
+        case 'messages':
+          icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+          title = 'MENSAGENS';
+          break;
+        case 'profile':
+          icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+          title = 'PERFIL';
+          break;
+      }
+      
+      return `
+        <header>
+          <div class="header-left">
+            <div class="gradient-circle" style="background: var(--custom-gradient);">
+              ${icon}
+            </div>
+            <h2>${title}</h2>
+          </div>
+          
+          <div class="header-right">
+            ${renderGradientPicker()}
+            
+            <button class="icon-button" onclick="toggleTheme()" aria-label="Toggle theme">
+              ${state.theme === 'dark' ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' : 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
+              }
+            </button>
+          </div>
+        </header>
+      `;
+    }
+
     // Render the inbox view
     function renderInbox() {
       let content = '';
@@ -1038,38 +1414,17 @@
       } else if (state.messages.length === 0) {
         content = '<p class="no-messages">Nenhuma mensagem encontrada.</p>';
       } else {
-        content = `<div class="scroll-area">`;
-        content += state.messages.map((message, index) => {
+        content = state.messages.map((message, index) => {
           let output = renderMessageItem(message, index);
           if (state.expandedIndex === index) {
-            output += renderMessageCard(message);
+            output += renderMessageBox(message.pergunta);
           }
           return output;
         }).join('');
-        content += `</div>`;
         content += renderPagination();
       }
 
-      return `
-        <header>
-          <div class="left-button gradient-circle gradient-${state.gradientTheme}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-          </div>
-          <h2>INBOX</h2>
-          <div class="right-buttons">
-            <button class="icon-button" onclick="toggleTheme()" aria-label="Toggle theme">
-              ${state.theme === 'dark' ? 
-                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' : 
-                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
-              }
-            </button>
-            <button class="icon-button" onclick="toggleSettingsModal()" aria-label="Settings">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </header>
-        <main>${content}</main>
-      `;
+      return content;
     }
 
     // Render the messages view
@@ -1077,109 +1432,76 @@
       let content = '';
       
       if (state.loading) {
-        content = `
-          <div class="space-y-6">
-            ${[...Array(3)].map(() => `
-              <div style="margin-bottom: 1.5rem;">
-                <div class="skeleton" style="height: 2rem; width: 100%; margin-bottom: 0.75rem;"></div>
-                <div class="skeleton" style="height: 6rem; width: 100%; border-radius: 0.5rem; margin-bottom: 0.75rem;"></div>
-                <div style="display: flex; justify-content: center; gap: 1rem;">
-                  <div class="skeleton" style="height: 2.5rem; width: 2.5rem; border-radius: 9999px;"></div>
-                  <div class="skeleton" style="height: 2.5rem; width: 2.5rem; border-radius: 9999px;"></div>
-                  <div class="skeleton" style="height: 2.5rem; width: 2.5rem; border-radius: 9999px;"></div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
+        content = renderSkeletons(3);
       } else if (state.messages.length === 0) {
         content = '<p class="no-messages">Nenhuma mensagem encontrada.</p>';
       } else {
-        content = `<div class="scroll-area">`;
-        content += state.messages.map((message) => renderMessageCard(message)).join('');
-        content += `</div>`;
+        content = state.messages.map(message => renderMessageBox(message.pergunta)).join('');
         content += renderPagination();
       }
 
-      return `
-        <header>
-          <div class="left-button gradient-circle gradient-${state.gradientTheme}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <h2>MENSAGENS</h2>
-          <div class="right-buttons">
-            <button class="icon-button" onclick="toggleTheme()" aria-label="Toggle theme">
-              ${state.theme === 'dark' ? 
-                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' : 
-                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
-              }
-            </button>
-            <button class="icon-button" onclick="toggleSettingsModal()" aria-label="Settings">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </header>
-        <main>${content}</main>
-      `;
+      return content;
     }
 
     // Render the profile view
     function renderProfile() {
       return `
-        <header>
-          <div class="left-button gradient-circle gradient-${state.gradientTheme}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <div style="display: flex; flex-direction: column; align-items: center; padding: 2rem 0;">
+          <div style="width: 6rem; height: 6rem; border-radius: 50%; background-image: var(--custom-gradient); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
           </div>
-          <h2>PERFIL</h2>
-          <div class="right-buttons">
-            <button class="icon-button" onclick="toggleTheme()" aria-label="Toggle theme">
-              ${state.theme === 'dark' ? 
-                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' : 
-                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
-              }
-            </button>
-            <button class="icon-button" onclick="toggleSettingsModal()" aria-label="Settings">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
+          <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">Usuário</h2>
+          <p style="color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem;">@username</p>
+          
+          <div class="message-card" style="width: 100%; max-width: 18rem;">
+            <div style="padding: 1.5rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="text-align: center; padding: 0.75rem; background-color: hsl(var(--secondary)); border-radius: 0.5rem;">
+                  <p style="color: hsl(var(--muted-foreground)); font-size: 0.875rem; margin-bottom: 0.25rem;">Mensagens</p>
+                  <p style="font-size: 1.5rem; font-weight: 700;">
+                    ${state.loading ? '<span style="display: inline-block; width: 3rem; height: 1.5rem;" class="skeleton"></span>' : state.messages.length}
+                  </p>
+                </div>
+                <div style="text-align: center; padding: 0.75rem; background-color: hsl(var(--secondary)); border-radius: 0.5rem;">
+                  <p style="color: hsl(var(--muted-foreground)); font-size: 0.875rem; margin-bottom: 0.25rem;">Seguidores</p>
+                  <p style="font-size: 1.5rem; font-weight: 700;">0</p>
+                </div>
+                <div style="text-align: center; padding: 0.75rem; background-color: hsl(var(--secondary)); border-radius: 0.5rem;">
+                  <p style="color: hsl(var(--muted-foreground)); font-size: 0.875rem; margin-bottom: 0.25rem;">Seguindo</p>
+                  <p style="font-size: 1.5rem; font-weight: 700;">0</p>
+                </div>
+                <div style="text-align: center; padding: 0.75rem; background-color: hsl(var(--secondary)); border-radius: 0.5rem;">
+                  <p style="color: hsl(var(--muted-foreground)); font-size: 0.875rem; margin-bottom: 0.25rem;">Likes</p>
+                  <p style="font-size: 1.5rem; font-weight: 700;">0</p>
+                </div>
+              </div>
+            </div>
           </div>
-        </header>
-        <main>
-          <div style="text-align: center; padding: 5rem 1rem;">
-            <h2 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 600; color: ${state.theme === 'dark' ? '#f3f4f6' : '#111827'}">Perfil</h2>
-            <p style="color: ${state.theme === 'dark' ? '#9ca3af' : '#6b7280'}">Conteúdo do perfil virá aqui.</p>
-          </div>
-        </main>
+          
+          <p style="color: hsl(var(--muted-foreground)); margin-top: 1.5rem;">Mais funcionalidades em breve.</p>
+        </div>
       `;
     }
 
     // Render the bottom navigation
     function renderBottomNav() {
-      const messagesUnderline = state.currentView === 'messages' 
-        ? `<span style="position: absolute; bottom: -6px; left: 0; right: 0; height: 3px; border-radius: 9999px; background-image: linear-gradient(to right, hsl(var(--gradient-${state.gradientTheme}-from)), hsl(var(--gradient-${state.gradientTheme}-to)));"></span>` 
-        : '';
-      
-      const profileUnderline = state.currentView === 'profile'
-        ? `<span style="position: absolute; bottom: -6px; left: 0; right: 0; height: 3px; border-radius: 9999px; background-image: linear-gradient(to right, hsl(var(--gradient-${state.gradientTheme}-from)), hsl(var(--gradient-${state.gradientTheme}-to)));"></span>`
-        : '';
-
       return `
         <nav class="bottom-nav">
           <button 
-            class="nav-button ${state.currentView === 'messages' ? 'active-underline' : ''}"
+            class="nav-button ${state.currentView === 'messages' ? 'active' : ''}"
             onclick="navigate('messages')" 
             aria-label="Messages"
-            style="position: relative;"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
-            ${messagesUnderline}
           </button>
           
           <button 
-            class="${state.currentView === 'inbox' 
-              ? `btn-gradient gradient-${state.gradientTheme}` 
-              : 'btn-gradient btn-secondary'}"
+            class="btn-gradient ${state.currentView !== 'inbox' ? 'btn-secondary' : ''}"
             onclick="navigate('inbox')" 
             aria-label="Inbox"
           >
@@ -1190,62 +1512,16 @@
           </button>
           
           <button 
-            class="nav-button ${state.currentView === 'profile' ? 'active-underline' : ''}"
+            class="nav-button ${state.currentView === 'profile' ? 'active' : ''}"
             onclick="navigate('profile')" 
             aria-label="Profile"
-            style="position: relative;"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
-            ${profileUnderline}
           </button>
         </nav>
-      `;
-    }
-
-    // Render settings modal
-    function renderSettingsModal() {
-      if (!state.showSettingsModal) return '';
-      
-      return `
-        <div class="modal-overlay active">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h3>Settings</h3>
-              <button class="close-button" onclick="toggleSettingsModal()">&times;</button>
-            </div>
-            <div>
-              <div class="theme-setting">
-                <h4>Theme</h4>
-                <button 
-                  class="theme-toggle"
-                  onclick="toggleTheme()"
-                >
-                  ${state.theme === 'light' ? 'Light Mode' : 'Dark Mode'}
-                </button>
-              </div>
-              
-              <div class="theme-setting">
-                <h4>Gradient Theme</h4>
-                <div class="theme-grid">
-                  ${gradientThemes.map(theme => {
-                    const isActive = state.gradientTheme === theme.name;
-                    return `
-                      <button 
-                        class="theme-button gradient-${theme.name} ${isActive ? 'active' : ''}" 
-                        onclick="setGradientTheme('${theme.name}')"
-                      >
-                        ${theme.displayName}
-                      </button>
-                    `;
-                  }).join('')}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       `;
     }
 
@@ -1254,25 +1530,33 @@
       const app = document.getElementById('app');
       let content = '';
       
+      // Render header
+      content += renderHeader();
+      
+      // Render main content
+      content += '<main>';
       switch (state.currentView) {
         case 'inbox':
-          content = renderInbox();
+          content += renderInbox();
           break;
         case 'messages':
-          content = renderMessages();
+          content += renderMessages();
           break;
         case 'profile':
-          content = renderProfile();
+          content += renderProfile();
           break;
         default:
-          content = renderInbox();
+          content += renderInbox();
       }
+      content += '</main>';
       
-      app.innerHTML = `
-        ${content}
-        ${renderBottomNav()}
-        ${renderSettingsModal()}
-      `;
+      // Render bottom navigation
+      content += renderBottomNav();
+      
+      // Render the gradient dialog if active
+      content += renderGradientDialog();
+      
+      app.innerHTML = content;
     }
 
     // Make functions accessible to inline event handlers
@@ -1280,11 +1564,21 @@
     window.toggleExpand = toggleExpand;
     window.navigate = navigate;
     window.setGradientTheme = setGradientTheme;
-    window.toggleSettingsModal = toggleSettingsModal;
+    window.toggleGradientPicker = toggleGradientPicker;
+    window.toggleGradientDialog = toggleGradientDialog;
     window.changePage = changePage;
+    window.addColorStop = addColorStop;
+    window.removeColorStop = removeColorStop;
+    window.updateColorStop = updateColorStop;
+    window.updateColorPosition = updateColorPosition;
+    window.updateGradientAngle = updateGradientAngle;
+    window.applyCustomGradient = applyCustomGradient;
 
     // Initialize the app
-    loadApp();
+    document.addEventListener('DOMContentLoaded', () => {
+      renderApp();
+      loadApp();
+    });
   </script>
 </body>
 </html>
