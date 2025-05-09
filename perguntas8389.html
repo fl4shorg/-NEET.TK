@@ -3,14 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inbox</title>
+  <title>Zen Gradient Inbox</title>
   <meta name="description" content="Anonymous messaging inbox application" />
-
+  <meta name="author" content="Lovable" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 
   <meta property="og:title" content="Zen Gradient Inbox" />
   <meta property="og:description" content="Anonymous messaging inbox application" />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@lovable_dev" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
   <style>
     /* Base Styles */
     :root {
@@ -138,40 +143,6 @@
       border-radius: 50%;
       margin-right: 0.75rem;
     }
-    
-    /* Novo estilo para o círculo com ícone */
-    .icon-gradient-circle {
-      width: 2.5rem;
-      height: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      margin-right: 0.75rem;
-      background: var(--custom-gradient);
-      color: var(--custom-gradient-text);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-    
-    .icon-gradient-circle::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 50%;
-      background: var(--custom-gradient);
-      opacity: 0.7;
-      z-index: 1;
-    }
-    
-    .icon-gradient-circle svg {
-      position: relative;
-      z-index: 2;
-    }
 
     .icon-button {
       background-color: hsl(var(--secondary));
@@ -193,23 +164,6 @@
 
     .icon-button:hover {
       background-color: hsl(var(--accent));
-    }
-
-    /* NEW: Message count badge on navbar */
-    .navbar-message-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #22c55e; /* green-500 */
-      color: white;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      height: 1.25rem;
-      min-width: 1.25rem;
-      padding: 0 0.25rem;
-      margin-left: 0.5rem;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     /* Main Content */
@@ -246,15 +200,13 @@
 
     .message-header {
       background: var(--custom-gradient);
-      color: #ffffff; /* Ensuring the text is white */
+      color: var(--custom-gradient-text);
       font-weight: 700;
       font-size: 1.25rem;
       padding: 1rem;
       text-align: center;
-      line-height: 1.4;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      line-height: 1.2;
+      user-select: text;
     }
 
     .message-content {
@@ -264,6 +216,7 @@
       font-weight: 600;
       color: hsl(var(--card-foreground));
       line-height: 1.4;
+      user-select: text;
     }
 
     .message-actions {
@@ -271,6 +224,7 @@
       justify-content: center;
       gap: 1rem;
       padding: 1rem;
+      align-items: center;
     }
 
     .action-button {
@@ -283,6 +237,15 @@
       transition: transform 0.2s;
       cursor: pointer;
       border: none;
+      outline-offset: 2px;
+      background: none;
+      color: white;
+      position: relative;
+    }
+
+    .action-button:focus-visible {
+      outline: 2px solid #8B5CF6;
+      outline-offset: 2px;
     }
 
     .action-button:hover {
@@ -291,32 +254,18 @@
 
     .action-button.info {
       background: var(--custom-gradient);
-      color: white;
     }
 
     .action-button.share {
-      background-color: #22c55e;
-      color: white;
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
     }
 
     .action-button.arrow {
-      background-color: hsl(var(--secondary));
-      color: hsl(var(--secondary-foreground));
-    }
-
-    .dark .action-button.arrow {
-      background-color: hsl(var(--secondary));
-      color: hsl(var(--secondary-foreground));
+      background-color: #22c55e;
     }
 
     .action-button.other {
-      background-color: hsl(var(--secondary));
-      color: hsl(var(--secondary-foreground));
-    }
-
-    .dark .action-button.other {
-      background-color: hsl(var(--secondary));
-      color: hsl(var(--secondary-foreground));
+      background-color: #f97316;
     }
 
     /* Bottom Navigation */
@@ -860,7 +809,6 @@
       currentPage: 1,
       totalPages: 1,
       pageSize: 10,
-      totalMessages: 0, // New state property for total messages count
       gradientColors: [
         { color: "#7c3aed", position: 0 },
         { color: "#2563eb", position: 100 }
@@ -1065,9 +1013,6 @@
           data: msg.data
         })) : [];
         
-        // Set total messages count
-        state.totalMessages = allMessages.length;
-        
         // Calculate pagination
         state.totalPages = Math.ceil(allMessages.length / pageSize);
         
@@ -1147,31 +1092,32 @@
           </div>
           <div class="message-actions">
             <button class="action-button info" title="Info">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
-                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
-                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
-                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
-                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift">
+                <rect x="3" y="8" width="18" height="4" rx="1"/>
+                <path d="M12 8v13"/>
+                <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/>
+                <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>
               </svg>
             </button>
             <button class="action-button share" title="Share">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>
-                <circle cx="12" cy="12" r="10"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plug">
+                <path d="M12 22v-5"/>
+                <path d="M9 8V2"/>
+                <path d="M15 8V2"/>
+                <path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/>
               </svg>
             </button>
             <button class="action-button arrow" title="Arrow">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cannabis">
                 <path d="M12 22v-4"/>
                 <path d="M7 12c-1.5 0-4.5 1.5-5 3 3.5 1.5 6 1 6 1-1.5 1.5-2 3.5-2 5 2.5 0 4.5-1.5 6-3 1.5 1.5 3.5 3 6 3 0-1.5-.5-3.5-2-5 0 0 2.5.5 6-1-.5-1.5-3.5-3-5-3 1.5-1 4-4 4-6-2.5 0-5.5 1.5-7 3 0-2.5-.5-5-2-7-1.5 2-2 4.5-2 7-1.5-1.5-4.5-3-7-3 0 2 2.5 5 4 6"/>
               </svg>
             </button>
             <button class="action-button other" onclick="toggleGradientDialog()" title="Custom Gradient">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical">
-                <path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/>
-                <path d="M6.453 15h11.094"/>
-                <path d="M8.5 2h7"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pill-bottle">
+                <path d="M18 11h-4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4"/>
+                <path d="M6 7v13a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7"/>
+                <rect width="16" height="5" x="4" y="2" rx="1"/>
               </svg>
             </button>
           </div>
@@ -1418,25 +1364,18 @@
 
     // Render the header
     function renderHeader() {
+      let icon = '';
       let title = '';
-      let badge = '';
       
       switch (state.currentView) {
         case 'inbox':
           title = 'INBOX';
-          // Fix badge display for inbox view
-          if (state.totalMessages > 0) {
-            badge = `<span class="navbar-message-count">${state.totalMessages}</span>`;
-          }
           break;
         case 'messages':
           title = 'MENSAGENS';
-          // Show message count badge for messages view
-          if (state.totalMessages > 0) {
-            badge = `<span class="navbar-message-count">${state.totalMessages}</span>`;
-          }
           break;
         case 'profile':
+          icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
           title = 'PERFIL';
           break;
       }
@@ -1444,15 +1383,12 @@
       return `
         <header>
           <div class="header-left">
-            <div class="icon-gradient-circle">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open">
-                <path d="M12 22v-9"/>
-                <path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/>
-                <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/>
-                <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/>
-              </svg>
-            </div>
-            <h2>${title}${badge}</h2>
+            ${state.currentView === 'profile' ? `
+              <div class="gradient-circle" style="background: var(--custom-gradient);">
+                ${icon}
+              </div>
+            ` : ''}
+            <h2>${title}</h2>
           </div>
           
           <div class="header-right">
@@ -1526,7 +1462,7 @@
                 <div style="text-align: center; padding: 0.75rem; background-color: hsl(var(--secondary)); border-radius: 0.5rem;">
                   <p style="color: hsl(var(--muted-foreground)); font-size: 0.875rem; margin-bottom: 0.25rem;">Mensagens</p>
                   <p style="font-size: 1.5rem; font-weight: 700;">
-                    ${state.loading ? '<span style="display: inline-block; width: 3rem; height: 1.5rem;" class="skeleton"></span>' : state.totalMessages}
+                    ${state.loading ? '<span style="display: inline-block; width: 3rem; height: 1.5rem;" class="skeleton"></span>' : state.messages.length}
                   </p>
                 </div>
                 <div style="text-align: center; padding: 0.75rem; background-color: hsl(var(--secondary)); border-radius: 0.5rem;">
@@ -1559,16 +1495,14 @@
             onclick="navigate('messages')" 
             aria-label="Messages"
           >
-            <div class="icon-container">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-heart">
-                <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
-                <path d="M15.8 9.2a2.5 2.5 0 0 0-3.5 0l-.3.4-.35-.3a2.42 2.42 0 1 0-3.2 3.6l3.6 3.5 3.6-3.5c1.2-1.2 1.1-2.7.2-3.7"/>
-              </svg>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <path d="M14.8 7.5a1.84 1.84 0 0 0-2.6 0l-.2.3-.3-.3a1.84 1.84 0 1 0-2.4 2.8L12 13l2.7-2.7c.9-.9.8-2.1.1-2.8"/>
+            </svg>
           </button>
           
           <button 
-            class="btn-gradient ${state.currentView === 'inbox' ? 'custom-gradient' : ''}"
+            class="btn-gradient ${state.currentView !== 'inbox' ? 'btn-secondary' : ''}"
             onclick="navigate('inbox')" 
             aria-label="Inbox"
           >
@@ -1583,26 +1517,25 @@
             onclick="navigate('profile')" 
             aria-label="Profile"
           >
-            <div class="icon-container">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
           </button>
         </nav>
       `;
     }
 
-    // Render the entire app
+    // Master render function
     function renderApp() {
       const app = document.getElementById('app');
-      if (!app) return;
+      let content = '';
       
-      let content = renderHeader();
+      // Render header
+      content += renderHeader();
       
-      content += `<main>`;
-      
+      // Render main content
+      content += '<main>';
       switch (state.currentView) {
         case 'inbox':
           content += renderInbox();
@@ -1613,21 +1546,40 @@
         case 'profile':
           content += renderProfile();
           break;
+        default:
+          content += renderInbox();
       }
+      content += '</main>';
       
-      content += `</main>`;
-      
+      // Render bottom navigation
       content += renderBottomNav();
       
-      // Add gradient dialog
+      // Render the gradient dialog if active
       content += renderGradientDialog();
       
       app.innerHTML = content;
     }
 
-    // Initial load
-    loadApp();
-    renderApp();
+    // Make functions accessible to inline event handlers
+    window.toggleTheme = toggleTheme;
+    window.toggleExpand = toggleExpand;
+    window.navigate = navigate;
+    window.setGradientTheme = setGradientTheme;
+    window.toggleGradientPicker = toggleGradientPicker;
+    window.toggleGradientDialog = toggleGradientDialog;
+    window.changePage = changePage;
+    window.addColorStop = addColorStop;
+    window.removeColorStop = removeColorStop;
+    window.updateColorStop = updateColorStop;
+    window.updateColorPosition = updateColorPosition;
+    window.updateGradientAngle = updateGradientAngle;
+    window.applyCustomGradient = applyCustomGradient;
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+      renderApp();
+      loadApp();
+    });
   </script>
 </body>
 </html>
