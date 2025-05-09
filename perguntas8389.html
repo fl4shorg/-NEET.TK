@@ -174,7 +174,7 @@
 
     /* Message Card */
     .message-card {
-      background-color: hsl(var(--card));
+      background-color: hsl(var(--background));
       border-radius: 1rem;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       margin-bottom: 2rem;
@@ -785,11 +785,85 @@
       align-items: center;
       gap: 0.5rem;
     }
+
+    /* Blurred Background Modal */
+    .modal-blur-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-blur-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-blur-content {
+      width: 90%;
+      max-width: 500px;
+      animation: modal-slide-up 0.3s ease-out forwards;
+      position: relative;
+    }
+
+    @keyframes modal-slide-up {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close-button {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--custom-gradient);
+      color: var(--custom-gradient-text);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Correção para a caixa de mensagens no tema escuro */
+    .dark .message-card {
+      background-color: rgb(24, 24, 27);
+    }
   </style>
 </head>
 <body>
   <div id="app" class="app">
     <!-- App content will be rendered here -->
+  </div>
+
+  <!-- Modal with blurred background -->
+  <div id="messageModal" class="modal-blur-overlay">
+    <div class="modal-blur-content">
+      <div id="modalMessageContent">
+        <!-- Message card will be cloned here -->
+      </div>
+    </div>
   </div>
 
   <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
@@ -1091,7 +1165,7 @@
             ${message}
           </div>
           <div class="message-actions">
-            <button class="action-button info" title="Info">
+            <button class="action-button info" title="Info" onclick="toggleMessageModal('${message.replace(/'/g, "\\'")}')">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift">
                 <rect x="3" y="8" width="18" height="4" rx="1"/>
                 <path d="M12 8v13"/>
@@ -1560,6 +1634,24 @@
       app.innerHTML = content;
     }
 
+    // Toggle message modal with blurred background
+    function toggleMessageModal(message = null, show = true) {
+      const modal = document.getElementById('messageModal');
+      const modalContent = document.getElementById('modalMessageContent');
+      
+      if (show) {
+        // Create message box in modal
+        modalContent.innerHTML = renderMessageBox(message || "Sua mensagem anônima aparecerá aqui.");
+        
+        // Show modal
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      } else {
+        modal.classList.remove('active');
+        document.body.style.overflow = ''; // Re-enable scrolling
+      }
+    }
+
     // Make functions accessible to inline event handlers
     window.toggleTheme = toggleTheme;
     window.toggleExpand = toggleExpand;
@@ -1574,11 +1666,19 @@
     window.updateColorPosition = updateColorPosition;
     window.updateGradientAngle = updateGradientAngle;
     window.applyCustomGradient = applyCustomGradient;
+    window.toggleMessageModal = toggleMessageModal;
 
     // Initialize the app
     document.addEventListener('DOMContentLoaded', () => {
       renderApp();
       loadApp();
+      
+      // Close modal when clicking close button or outside the modal
+      document.getElementById('messageModal').addEventListener('click', (event) => {
+        if (event.target === document.getElementById('messageModal')) {
+          toggleMessageModal(null, false);
+        }
+      });
     });
   </script>
 </body>
