@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neextube - Gerenciar Vídeos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .form-container {
+      margin-bottom: 20px;
+    }
+    .form-container input,
+    .form-container button,
+    .form-container select,
+    .form-container textarea {
+      margin: 5px 0;
+      padding: 10px;
+      width: 100%;
+    }
+    button {
+      cursor: pointer;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-danger {
+      background-color: #f44336;
+      color: white;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .video-container {
+      margin-bottom: 20px;
+    }
+    .video-container hr {
+      border: 1px solid #ddd;
+    }
+    .status-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .gear-icon {
+      cursor: pointer;
+      font-size: 20px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Neextube - Gerenciar Vídeos</h1>
+
+  <!-- Formulário para adicionar novos vídeos -->
+  <div class="form-container">
+    <h2>Adicionar Novo Vídeo</h2>
+    <form id="addVideoForm">
+      <input type="text" id="nome" placeholder="Nome do Vídeo" required>
+      <input type="text" id="url" placeholder="URL do Vídeo" required>
+      <input type="text" id="capa" placeholder="URL da Capa" required>
+      <textarea id="descricao" placeholder="Descrição do Vídeo"></textarea>
+      <div class="status-container">
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+        <span id="statusToggle" class="gear-icon">&#9881;</span> <!-- Ícone de engrenagem -->
+      </div>
+      <button type="submit" class="btn-primary">Adicionar Vídeo</button>
+    </form>
+  </div>
+
+  <!-- Opções para gerenciar vídeos -->
+  <div class="form-container">
+    <button class="btn-secondary" onclick="fetchVideos()">Carregar Todos os Vídeos</button>
+    <button class="btn-secondary" onclick="fetchVideos(true)">Ver Vídeos Desativados</button>
+  </div>
+
+  <!-- Lista de Vídeos -->
+  <div id="videosList"></div>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbyRGk-xlKaaJtopAoRHptsKgHPyKNBdy_6wh9bjeOS8M0LsWfihPbeuDrog49Q3fINA/exec";
+
+    // Função para carregar os vídeos
+    async function fetchVideos(showInactive = false) {
+      const response = await fetch(apiUrl + `?administrador=true&showInactive=${showInactive}`);
+      const videos = await response.json();
+
+      let videoListHtml = `<h2>Lista de Vídeos</h2>`;
+      videos.forEach(video => {
+        videoListHtml += `
+          <div class="video-container">
+            <h3>${video["Nome do vídeo"]}</h3>
+            <p><strong>URL:</strong> <a href="${video.URL}" target="_blank">${video.URL}</a></p>
+            <p><strong>Capa:</strong> <a href="${video.Capa}" target="_blank">${video.Capa}</a></p>
+            <div class="status-container">
+              <p><strong>Status:</strong> <span id="status-${video.ID}">${video.Status}</span></p>
+              <span id="gear-${video.ID}" class="gear-icon" onclick="toggleStatus(${video.ID})">&#9881;</span>
+            </div>
+            <p><strong>Descrição:</strong> ${video.Descrição || 'Sem descrição'}</p>
+            <p><strong>Visualizações:</strong> ${video.Visualizações}</p>
+            <p><strong>Data:</strong> ${video.Data}</p>
+            <p><strong>Hora:</strong> ${video.Hora}</p>
+            <button class="btn-primary" onclick="editarVideo(${video.ID})">Editar Vídeo</button>
+            <button class="btn-danger" onclick="excluirVideo(${video.ID})">Excluir</button>
+            <hr>
+          </div>
+        `;
+      });
+
+      document.getElementById("videosList").innerHTML = videoListHtml;
+    }
+
+    // Função para editar todos os dados de um vídeo
+    async function editarVideo(id) {
+      const nome = prompt("Digite o novo nome do vídeo:");
+      const url = prompt("Digite a nova URL do vídeo:");
+      const capa = prompt("Digite a nova URL da capa:");
+      const descricao = prompt("Digite a nova descrição do vídeo:");
+      const status = prompt("Digite o novo status (ativo/inativo):");
+
+      if (nome && url && capa && status) {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          body: new URLSearchParams({
+            modo: 'editar',
+            id: id,
+            nome: nome,
+            url: url,
+            capa: capa,
+            descricao: descricao,
+            status: status
+          })
+        });
+        const data = await response.json();
+        alert(data.status || 'Erro ao editar vídeo');
+        fetchVideos(); // Recarregar lista
+      } else {
+        alert("Todos os campos precisam ser preenchidos.");
+      }
+    }
+
+    // Função para excluir um vídeo
+    async function excluirVideo(id) {
+      const confirmDelete = confirm("Tem certeza que deseja excluir este vídeo?");
+      if (confirmDelete) {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          body: new URLSearchParams({
+            modo: 'excluir',
+            id: id
+          })
+        });
+        const data = await response.json();
+        alert(data.status || 'Erro ao excluir vídeo');
+        fetchVideos(); // Recarregar lista
+      }
+    }
+
+    // Função para adicionar um novo vídeo
+    document.getElementById("addVideoForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById("nome").value;
+      const url = document.getElementById("url").value;
+      const capa = document.getElementById("capa").value;
+      const descricao = document.getElementById("descricao").value;
+      const status = document.getElementById("status").value;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: new URLSearchParams({
+          modo: 'inserir',
+          nome: nome,
+          url: url,
+          capa: capa,
+          descricao: descricao,
+          status: status
+        })
+      });
+
+      const data = await response.json();
+      alert(data.status || 'Erro ao adicionar vídeo');
+      fetchVideos(); // Recarregar lista
+    });
+
+    // Função para alternar o status de um vídeo (Ativo/Inativo)
+    async function toggleStatus(videoId) {
+      const statusElement = document.getElementById(`status-${videoId}`);
+      const currentStatus = statusElement.textContent.trim();
+
+      const newStatus = currentStatus === "ativo" ? "inativo" : "ativo";
+      statusElement.textContent = newStatus; // Atualiza na interface
+
+      // Atualiza o status no banco de dados
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: new URLSearchParams({
+          modo: 'editar',
+          id: videoId,
+          status: newStatus
+        })
+      });
+
+      const data = await response.json();
+      if (data.status === "editado") {
+        alert("Status alterado com sucesso!");
+      } else {
+        alert("Erro ao alterar status.");
+      }
+    }
+  </script>
+
+</body>
+</html>
