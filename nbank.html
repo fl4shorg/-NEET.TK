@@ -5,8 +5,7 @@
   <title>
    Nbank - Sistema de Transferência
   </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
   <style>
@@ -36,7 +35,7 @@
     <div class="flex items-center space-x-3">
      <img alt="Logo NeextCoins, letra N estilizada em azul e branco" class="w-10 h-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/d3c9187d-eb57-4dad-4b0d-b04b1cc8d396.jpg" width="40"/>
      <h1 class="text-white text-xl font-bold select-none">
-      Bank
+      Nbank
      </h1>
     </div>
     <nav class="hidden md:flex space-x-6 text-white font-semibold text-sm">
@@ -198,8 +197,7 @@
        ID do Destinatário
       </label>
       <input autocomplete="off" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="transfer-id-destino" oninput="buscarNomeDestinatario()" placeholder="Digite o ID do destinatário" type="text"/>
-      <p class="mt-1 text-sm font-semibold text-blue-600 min-h-[1.5rem]" id="nome-destinatario">
-      </p>
+      <p class="mt-1 text-sm font-semibold min-h-[1.5rem]" id="nome-destinatario"></p>
      </div>
      <div>
       <label class="block text-gray-700 font-semibold mb-1" for="transfer-valor">
@@ -213,11 +211,27 @@
       </label>
       <input autocomplete="current-password" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="transfer-senha" placeholder="Digite sua senha" type="password"/>
      </div>
-     <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-md transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300" type="submit">
+     <button id="transfer-submit-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-md transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300" type="submit">
       Transferir
      </button>
     </form>
+    <!-- Loading -->
+    <div id="transfer-loading" class="hidden mt-6 flex flex-col items-center space-y-3 text-blue-600 font-semibold">
+      <i class="fas fa-spinner fa-spin text-3xl"></i>
+      <p>Processando transferência...</p>
+    </div>
    </div>
+  </div>
+
+  <!-- Confirmation Popup -->
+  <div id="confirmation-popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 hidden">
+    <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 text-center space-y-4">
+      <i class="fas fa-check-circle text-green-600 text-5xl"></i>
+      <p id="confirmation-text" class="text-lg font-semibold text-gray-800"></p>
+      <button id="confirmation-close" class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md focus:outline-none focus:ring-4 focus:ring-green-300">
+        Fechar
+      </button>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -260,6 +274,14 @@
     const transferModal = document.getElementById("transfer-modal");
     const openTransferModalBtn = document.getElementById("open-transfer-modal");
     const closeTransferModalBtn = document.getElementById("close-transfer-modal");
+    const transferForm = document.getElementById("transfer-form");
+    const transferLoading = document.getElementById("transfer-loading");
+    const transferSubmitBtn = document.getElementById("transfer-submit-btn");
+
+    // Confirmation popup elements
+    const confirmationPopup = document.getElementById("confirmation-popup");
+    const confirmationText = document.getElementById("confirmation-text");
+    const confirmationClose = document.getElementById("confirmation-close");
 
     // Toggle mobile menu
     btnMenu.addEventListener("click", () => {
@@ -353,10 +375,17 @@
       document.getElementById("login-id").value = "";
       document.getElementById("login-senha").value = "";
       // Transferência
+      clearTransferForm();
+    }
+
+    function clearTransferForm() {
       document.getElementById("transfer-id-destino").value = "";
       document.getElementById("transfer-valor").value = "";
       document.getElementById("transfer-senha").value = "";
       document.getElementById("nome-destinatario").textContent = "";
+      transferLoading.classList.add("hidden");
+      transferForm.classList.remove("hidden");
+      transferSubmitBtn.disabled = false;
     }
 
     // Register user
@@ -396,13 +425,13 @@
     }
 
     // Login user
-    function fazerLogin() {
+    async function fazerLogin() {
       const id = document.getElementById("login-id").value.trim();
       const senha = document.getElementById("login-senha").value;
 
       if (!id || !senha) {
         alert("Preencha todos os campos.");
-        return;
+        throw new Error("Campos de login incompletos");
       }
 
       responseEl.textContent = "Validando login...";
@@ -412,30 +441,33 @@
         senha: senha
       });
 
-      fetch(apiUrl + "?" + params.toString())
-        .then(response => response.json())
-        .then(data => {
-          if (data.nome) {
-            responseEl.textContent = `Bem-vindo(a), ${data.nome}!`;
-            sessionStorage.setItem("id", data.id);
-            sessionStorage.setItem("nome", data.nome);
-            sessionStorage.setItem("saldo", data.saldo);
-            sessionStorage.setItem("historico", JSON.stringify(data.historico || []));
+      try {
+        const response = await fetch(apiUrl + "?" + params.toString());
+        const data = await response.json();
 
-            userNomeDashboard.textContent = data.nome;
-            userIdDashboard.textContent = data.id;
-            userSaldoDashboard.textContent = data.saldo + " NeextCoins";
+        if (data.nome) {
+          responseEl.textContent = `Bem-vindo(a), ${data.nome}!`;
+          sessionStorage.setItem("id", data.id);
+          sessionStorage.setItem("nome", data.nome);
+          sessionStorage.setItem("saldo", data.saldo);
+          sessionStorage.setItem("historico", JSON.stringify(data.historico || []));
 
-            carregarHistorico(data.historico);
-            showDashboard();
-          } else {
-            responseEl.textContent = "Login inválido.";
-          }
-        })
-        .catch(error => {
-          responseEl.textContent = "Erro ao fazer login.";
-          console.error("Erro ao fazer login:", error);
-        });
+          userNomeDashboard.textContent = data.nome;
+          userIdDashboard.textContent = data.id;
+          userSaldoDashboard.textContent = data.saldo + " NeextCoins";
+
+          carregarHistorico(data.historico);
+          showDashboard();
+          return data;
+        } else {
+          responseEl.textContent = "Login inválido.";
+          throw new Error("Login inválido");
+        }
+      } catch (error) {
+        responseEl.textContent = "Erro ao fazer login.";
+        console.error("Erro ao fazer login:", error);
+        throw error;
+      }
     }
 
     // Logout user
@@ -446,7 +478,7 @@
     }
 
     // Realizar transferência
-    function realizarTransferencia() {
+    async function realizarTransferencia() {
       const idDestino = document.getElementById("transfer-id-destino").value.trim();
       const valor = document.getElementById("transfer-valor").value.trim();
       const senha = document.getElementById("transfer-senha").value;
@@ -461,7 +493,11 @@
         return;
       }
 
-      responseEl.textContent = "Processando transferência...";
+      // Disable submit button and show loading
+      transferSubmitBtn.disabled = true;
+      transferForm.classList.add("hidden");
+      transferLoading.classList.remove("hidden");
+
       const params = new URLSearchParams({
         action: "transferir",
         idOrigem: sessionStorage.getItem("id"),
@@ -470,19 +506,69 @@
         senha: senha
       });
 
-      fetch(apiUrl + "?" + params.toString())
-        .then(response => response.text())
-        .then(data => {
-          responseEl.textContent = data;
-          clearAllFields();
-          closeTransferModal();
+      try {
+        const response = await fetch(apiUrl + "?" + params.toString());
+        const data = await response.text();
+
+        // Hide loading and close transfer modal
+        transferLoading.classList.add("hidden");
+        closeTransferModal();
+
+        const lowerData = data.toLowerCase();
+        if (lowerData.includes("sucesso") || lowerData.includes("transferido") || lowerData.includes("confirmado")) {
           // Atualizar saldo e histórico após transferência
-          fazerLogin();
-        })
-        .catch(error => {
-          responseEl.textContent = "Erro na transferência.";
-          console.error("Erro na transferência:", error);
-        });
+          try {
+            const idOrigem = sessionStorage.getItem("id");
+            if (!idOrigem) throw new Error("Usuário não logado");
+
+            // Fetch fresh user data with idOrigem and senha (transfer password)
+            const loginParams = new URLSearchParams({
+              action: "login",
+              id: idOrigem,
+              senha: senha
+            });
+
+            const loginResponse = await fetch(apiUrl + "?" + loginParams.toString());
+            const loginData = await loginResponse.json();
+
+            if (loginData.nome) {
+              sessionStorage.setItem("saldo", loginData.saldo);
+              sessionStorage.setItem("historico", JSON.stringify(loginData.historico || []));
+
+              userSaldoDashboard.textContent = loginData.saldo + " NeextCoins";
+              carregarHistorico(loginData.historico);
+            } else {
+              alert("Não foi possível atualizar os dados após a transferência. Faça login novamente.");
+            }
+
+            let nomeDest = document.getElementById("nome-destinatario").textContent;
+            if (!nomeDest || nomeDest.toLowerCase().includes("não encontrado") || nomeDest.toLowerCase().includes("erro")) {
+              nomeDest = idDestino;
+            } else {
+              nomeDest = nomeDest.replace(/^Nome:\s*/i, "");
+            }
+
+            // Show confirmation popup with message
+            confirmationText.textContent = `Transferido com sucesso para ${nomeDest}: ${valor} NeextCoins.`;
+            confirmationPopup.classList.remove("hidden");
+            clearTransferForm();
+          } catch (err) {
+            confirmationText.textContent = `Transferência de ${valor} NeextCoins para ${idDestino} realizada com sucesso! (Erro ao atualizar dados)`;
+            confirmationPopup.classList.remove("hidden");
+            clearTransferForm();
+          }
+        } else {
+          alert(data);
+          transferForm.classList.remove("hidden");
+          transferSubmitBtn.disabled = false;
+        }
+      } catch (error) {
+        transferLoading.classList.add("hidden");
+        alert("Erro na transferência.");
+        console.error("Erro na transferência:", error);
+        transferForm.classList.remove("hidden");
+        transferSubmitBtn.disabled = false;
+      }
     }
 
     // Carregar histórico de transferências
@@ -511,6 +597,7 @@
 
       if (id === "") {
         nomeEl.textContent = "";
+        nomeEl.classList.remove("text-red-600", "text-blue-600");
         return;
       }
 
@@ -549,20 +636,25 @@
       transferModal.classList.add("hidden");
       clearTransferForm();
     }
-    function clearTransferForm() {
-      document.getElementById("transfer-id-destino").value = "";
-      document.getElementById("transfer-valor").value = "";
-      document.getElementById("transfer-senha").value = "";
-      document.getElementById("nome-destinatario").textContent = "";
-    }
 
     openTransferModalBtn.addEventListener("click", openTransferModal);
     closeTransferModalBtn.addEventListener("click", closeTransferModal);
+
+    // Confirmation popup close
+    confirmationClose.addEventListener("click", () => {
+      confirmationPopup.classList.add("hidden");
+    });
 
     // Close modal on outside click
     transferModal.addEventListener("click", (e) => {
       if (e.target === transferModal) {
         closeTransferModal();
+      }
+    });
+
+    confirmationPopup.addEventListener("click", (e) => {
+      if (e.target === confirmationPopup) {
+        confirmationPopup.classList.add("hidden");
       }
     });
 
