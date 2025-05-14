@@ -1,0 +1,585 @@
+<html class="scroll-smooth" lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Nbank - Sistema de Transferência
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+      background: #f3f6f9;
+      min-height: 100vh;
+    }
+    /* Scrollbar for desktop */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3f6f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #3b82f6;
+      border-radius: 10px;
+      border: 2px solid #f3f6f9;
+    }
+  </style>
+ </head>
+ <body class="flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-md">
+   <div class="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+     <img alt="Logo NeextCoins, letra N estilizada em azul e branco" class="w-10 h-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/d3c9187d-eb57-4dad-4b0d-b04b1cc8d396.jpg" width="40"/>
+     <h1 class="text-white text-xl font-bold select-none">
+      Bank
+     </h1>
+    </div>
+    <nav class="hidden md:flex space-x-6 text-white font-semibold text-sm">
+     <button class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="btn-login">
+      Login
+     </button>
+     <button class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="btn-register">
+      Registrar
+     </button>
+     <button class="hidden hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="btn-dashboard">
+      Dashboard
+     </button>
+     <button class="hidden hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="btn-logout">
+      Sair
+     </button>
+    </nav>
+    <button aria-label="Abrir menu" class="md:hidden text-white text-2xl focus:outline-none focus:ring-2 focus:ring-white rounded" id="btn-menu">
+     <i class="fas fa-bars">
+     </i>
+    </button>
+   </div>
+   <!-- Mobile menu -->
+   <nav class="hidden md:hidden bg-blue-700 text-white px-6 py-4 space-y-3" id="mobile-menu">
+    <button class="w-full text-left font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="m-btn-login">
+     Login
+    </button>
+    <button class="w-full text-left font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="m-btn-register">
+     Registrar
+    </button>
+    <button class="hidden w-full text-left font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="m-btn-dashboard">
+     Dashboard
+    </button>
+    <button class="hidden w-full text-left font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded" id="m-btn-logout">
+     Sair
+    </button>
+   </nav>
+  </header>
+  <!-- Main Content -->
+  <main class="flex-grow max-w-4xl mx-auto px-6 py-8 w-full">
+   <!-- Login Section -->
+   <section class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 space-y-6" id="login-section">
+    <h2 class="text-2xl font-bold text-gray-800 text-center">
+     Login de Usuário
+    </h2>
+    <div class="space-y-4">
+     <label class="block text-gray-700 font-semibold" for="login-id">
+      ID
+     </label>
+     <input autocomplete="username" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="login-id" placeholder="Digite o ID" type="text"/>
+    </div>
+    <div class="space-y-4">
+     <label class="block text-gray-700 font-semibold" for="login-senha">
+      Senha
+     </label>
+     <input autocomplete="current-password" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="login-senha" placeholder="Digite a senha" type="password"/>
+    </div>
+    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-md transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300" onclick="fazerLogin()">
+     Entrar
+    </button>
+    <p class="text-center text-sm text-gray-600">
+     Ainda não tem conta?
+     <button class="text-blue-600 font-semibold hover:underline focus:outline-none" id="link-to-register">
+      Registrar-se
+     </button>
+    </p>
+   </section>
+   <!-- Register Section -->
+   <section class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 space-y-6 mt-10 hidden" id="registro-section">
+    <h2 class="text-2xl font-bold text-gray-800 text-center">
+     Registrar Novo Usuário
+    </h2>
+    <div class="space-y-4">
+     <label class="block text-gray-700 font-semibold" for="registro-id">
+      ID
+     </label>
+     <input autocomplete="username" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="registro-id" placeholder="Digite o ID" type="text"/>
+    </div>
+    <div class="space-y-4">
+     <label class="block text-gray-700 font-semibold" for="registro-nome">
+      Nome
+     </label>
+     <input autocomplete="name" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="registro-nome" placeholder="Digite o nome" type="text"/>
+    </div>
+    <div class="space-y-4">
+     <label class="block text-gray-700 font-semibold" for="registro-senha">
+      Senha
+     </label>
+     <input autocomplete="new-password" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="registro-senha" placeholder="Digite a senha" type="password"/>
+    </div>
+    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-md transition-colors focus:outline-none focus:ring-4 focus:ring-green-300" onclick="registrarUsuario()">
+     Registrar
+    </button>
+    <p class="text-center text-sm text-gray-600">
+     Já tem conta?
+     <button class="text-green-600 font-semibold hover:underline focus:outline-none" id="link-to-login">
+      Entrar
+     </button>
+    </p>
+   </section>
+   <!-- Dashboard Section -->
+   <section class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 mt-10 hidden" id="dashboard-section">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
+     <div>
+      <h2 class="text-3xl font-bold text-gray-800">
+       Olá,
+       <span class="text-blue-600" id="user-nome-dashboard">
+       </span>
+      </h2>
+      <p class="text-gray-600 mt-1">
+       ID:
+       <span class="font-mono" id="user-id-dashboard">
+       </span>
+      </p>
+     </div>
+     <div class="mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg px-6 py-4 shadow-lg w-full md:w-auto text-center">
+      <p class="text-sm font-semibold uppercase tracking-wide">
+       Saldo de NeextCoins
+      </p>
+      <p class="text-4xl font-extrabold mt-1" id="user-saldo-dashboard">
+       0
+      </p>
+     </div>
+    </div>
+    <!-- Transfer Button -->
+    <div class="text-center">
+     <button id="open-transfer-modal" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300">
+      Transferir NeextCoins
+     </button>
+    </div>
+    <!-- Transfer History -->
+    <div class="mt-10">
+     <h3 class="text-xl font-semibold text-gray-700 mb-4">
+      Histórico de Transferências
+     </h3>
+     <ul class="divide-y divide-gray-200 max-h-64 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-inner" id="historico-transferencias">
+      <li class="p-4 text-gray-500 text-center select-none">
+       Nenhuma transferência registrada.
+      </li>
+     </ul>
+    </div>
+   </section>
+   <!-- Response Message -->
+   <div class="max-w-md mx-auto mt-6 text-center text-sm font-semibold text-red-600" id="response">
+   </div>
+  </main>
+
+  <!-- Transfer Modal -->
+  <div id="transfer-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+   <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6 relative">
+    <button aria-label="Fechar modal" id="close-transfer-modal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded">
+     <i class="fas fa-times text-xl"></i>
+    </button>
+    <h3 class="text-xl font-semibold text-gray-700 mb-6 text-center">
+     Transferir NeextCoins
+    </h3>
+    <form class="space-y-5" id="transfer-form" onsubmit="event.preventDefault(); realizarTransferencia();">
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="transfer-id-destino">
+       ID do Destinatário
+      </label>
+      <input autocomplete="off" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="transfer-id-destino" oninput="buscarNomeDestinatario()" placeholder="Digite o ID do destinatário" type="text"/>
+      <p class="mt-1 text-sm font-semibold text-blue-600 min-h-[1.5rem]" id="nome-destinatario">
+      </p>
+     </div>
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="transfer-valor">
+       Valor (NeextCoins)
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="transfer-valor" min="1" placeholder="Digite o valor a transferir" type="number"/>
+     </div>
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="transfer-senha">
+       Senha
+      </label>
+      <input autocomplete="current-password" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="transfer-senha" placeholder="Digite sua senha" type="password"/>
+     </div>
+     <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-md transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300" type="submit">
+      Transferir
+     </button>
+    </form>
+   </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-blue-600 to-blue-800 text-white text-center py-4 select-none">
+   <p class="text-sm">
+    © 2024 NeextCoins. Todos os direitos reservados.
+   </p>
+  </footer>
+  <script>
+   const apiUrl = "https://script.google.com/macros/s/AKfycbytyx8BhVRDLErBs7pT0I9zdk0eESmHIjja4U4y-gHab5Ay7P3vXoLJTBfY66axJ_H_/exec";
+
+    // Elements
+    const loginSection = document.getElementById("login-section");
+    const registroSection = document.getElementById("registro-section");
+    const dashboardSection = document.getElementById("dashboard-section");
+    const responseEl = document.getElementById("response");
+
+    const userNomeDashboard = document.getElementById("user-nome-dashboard");
+    const userIdDashboard = document.getElementById("user-id-dashboard");
+    const userSaldoDashboard = document.getElementById("user-saldo-dashboard");
+    const historicoList = document.getElementById("historico-transferencias");
+
+    const btnLogin = document.getElementById("btn-login");
+    const btnRegister = document.getElementById("btn-register");
+    const btnDashboard = document.getElementById("btn-dashboard");
+    const btnLogout = document.getElementById("btn-logout");
+
+    const mBtnLogin = document.getElementById("m-btn-login");
+    const mBtnRegister = document.getElementById("m-btn-register");
+    const mBtnDashboard = document.getElementById("m-btn-dashboard");
+    const mBtnLogout = document.getElementById("m-btn-logout");
+
+    const btnMenu = document.getElementById("btn-menu");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    const linkToRegister = document.getElementById("link-to-register");
+    const linkToLogin = document.getElementById("link-to-login");
+
+    // Modal elements
+    const transferModal = document.getElementById("transfer-modal");
+    const openTransferModalBtn = document.getElementById("open-transfer-modal");
+    const closeTransferModalBtn = document.getElementById("close-transfer-modal");
+
+    // Toggle mobile menu
+    btnMenu.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+
+    // Navigation functions
+    function showLogin() {
+      registroSection.classList.add("hidden");
+      dashboardSection.classList.add("hidden");
+      loginSection.classList.remove("hidden");
+      responseEl.textContent = "";
+      clearAllFields();
+      updateNav(false);
+      if (!mobileMenu.classList.contains("hidden")) mobileMenu.classList.add("hidden");
+    }
+    function showRegister() {
+      loginSection.classList.add("hidden");
+      dashboardSection.classList.add("hidden");
+      registroSection.classList.remove("hidden");
+      responseEl.textContent = "";
+      clearAllFields();
+      updateNav(false);
+      if (!mobileMenu.classList.contains("hidden")) mobileMenu.classList.add("hidden");
+    }
+    function showDashboard() {
+      loginSection.classList.add("hidden");
+      registroSection.classList.add("hidden");
+      dashboardSection.classList.remove("hidden");
+      responseEl.textContent = "";
+      updateNav(true);
+      if (!mobileMenu.classList.contains("hidden")) mobileMenu.classList.add("hidden");
+    }
+    function updateNav(loggedIn) {
+      if (loggedIn) {
+        btnLogin.classList.add("hidden");
+        btnRegister.classList.add("hidden");
+        btnDashboard.classList.remove("hidden");
+        btnLogout.classList.remove("hidden");
+
+        mBtnLogin.classList.add("hidden");
+        mBtnRegister.classList.add("hidden");
+        mBtnDashboard.classList.remove("hidden");
+        mBtnLogout.classList.remove("hidden");
+      } else {
+        btnLogin.classList.remove("hidden");
+        btnRegister.classList.remove("hidden");
+        btnDashboard.classList.add("hidden");
+        btnLogout.classList.add("hidden");
+
+        mBtnLogin.classList.remove("hidden");
+        mBtnRegister.classList.remove("hidden");
+        mBtnDashboard.classList.add("hidden");
+        mBtnLogout.classList.add("hidden");
+      }
+    }
+
+    // Event listeners for nav buttons
+    btnLogin.addEventListener("click", showLogin);
+    btnRegister.addEventListener("click", showRegister);
+    btnDashboard.addEventListener("click", () => {
+      if (sessionStorage.getItem("id")) {
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    });
+    btnLogout.addEventListener("click", logout);
+
+    mBtnLogin.addEventListener("click", showLogin);
+    mBtnRegister.addEventListener("click", showRegister);
+    mBtnDashboard.addEventListener("click", () => {
+      if (sessionStorage.getItem("id")) {
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    });
+    mBtnLogout.addEventListener("click", logout);
+
+    linkToRegister.addEventListener("click", showRegister);
+    linkToLogin.addEventListener("click", showLogin);
+
+    // Clear all input fields
+    function clearAllFields() {
+      // Registro
+      document.getElementById("registro-id").value = "";
+      document.getElementById("registro-nome").value = "";
+      document.getElementById("registro-senha").value = "";
+      // Login
+      document.getElementById("login-id").value = "";
+      document.getElementById("login-senha").value = "";
+      // Transferência
+      document.getElementById("transfer-id-destino").value = "";
+      document.getElementById("transfer-valor").value = "";
+      document.getElementById("transfer-senha").value = "";
+      document.getElementById("nome-destinatario").textContent = "";
+    }
+
+    // Register user
+    function registrarUsuario() {
+      const id = document.getElementById("registro-id").value.trim();
+      const nome = document.getElementById("registro-nome").value.trim();
+      const senha = document.getElementById("registro-senha").value;
+
+      if (!id || !nome || !senha) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      responseEl.textContent = "Registrando usuário...";
+      const params = new URLSearchParams({
+        action: "registro",
+        id: id,
+        nome: nome,
+        senha: senha
+      });
+
+      fetch(apiUrl + "?" + params.toString())
+        .then(response => response.text())
+        .then(data => {
+          responseEl.textContent = data;
+          clearAllFields();
+          if (data.toLowerCase().includes("sucesso") || data.toLowerCase().includes("registrado")) {
+            setTimeout(() => {
+              showLogin();
+            }, 2000);
+          }
+        })
+        .catch(error => {
+          responseEl.textContent = "Erro ao registrar usuário.";
+          console.error("Erro ao registrar:", error);
+        });
+    }
+
+    // Login user
+    function fazerLogin() {
+      const id = document.getElementById("login-id").value.trim();
+      const senha = document.getElementById("login-senha").value;
+
+      if (!id || !senha) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      responseEl.textContent = "Validando login...";
+      const params = new URLSearchParams({
+        action: "login",
+        id: id,
+        senha: senha
+      });
+
+      fetch(apiUrl + "?" + params.toString())
+        .then(response => response.json())
+        .then(data => {
+          if (data.nome) {
+            responseEl.textContent = `Bem-vindo(a), ${data.nome}!`;
+            sessionStorage.setItem("id", data.id);
+            sessionStorage.setItem("nome", data.nome);
+            sessionStorage.setItem("saldo", data.saldo);
+            sessionStorage.setItem("historico", JSON.stringify(data.historico || []));
+
+            userNomeDashboard.textContent = data.nome;
+            userIdDashboard.textContent = data.id;
+            userSaldoDashboard.textContent = data.saldo + " NeextCoins";
+
+            carregarHistorico(data.historico);
+            showDashboard();
+          } else {
+            responseEl.textContent = "Login inválido.";
+          }
+        })
+        .catch(error => {
+          responseEl.textContent = "Erro ao fazer login.";
+          console.error("Erro ao fazer login:", error);
+        });
+    }
+
+    // Logout user
+    function logout() {
+      sessionStorage.clear();
+      responseEl.textContent = "Você saiu da conta.";
+      showLogin();
+    }
+
+    // Realizar transferência
+    function realizarTransferencia() {
+      const idDestino = document.getElementById("transfer-id-destino").value.trim();
+      const valor = document.getElementById("transfer-valor").value.trim();
+      const senha = document.getElementById("transfer-senha").value;
+
+      if (!idDestino || !valor || !senha) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      if (isNaN(valor) || Number(valor) <= 0) {
+        alert("Digite um valor válido para transferência.");
+        return;
+      }
+
+      responseEl.textContent = "Processando transferência...";
+      const params = new URLSearchParams({
+        action: "transferir",
+        idOrigem: sessionStorage.getItem("id"),
+        idDestino: idDestino,
+        valor: valor,
+        senha: senha
+      });
+
+      fetch(apiUrl + "?" + params.toString())
+        .then(response => response.text())
+        .then(data => {
+          responseEl.textContent = data;
+          clearAllFields();
+          closeTransferModal();
+          // Atualizar saldo e histórico após transferência
+          fazerLogin();
+        })
+        .catch(error => {
+          responseEl.textContent = "Erro na transferência.";
+          console.error("Erro na transferência:", error);
+        });
+    }
+
+    // Carregar histórico de transferências
+    function carregarHistorico(historico) {
+      historicoList.innerHTML = "";
+      if (Array.isArray(historico) && historico.length > 0) {
+        historico.forEach(entry => {
+          const item = document.createElement("li");
+          item.className = "px-4 py-3 hover:bg-gray-100 cursor-default select-text";
+          const dataFormatada = new Date(entry.data).toLocaleString("pt-BR");
+          item.textContent = `De ${entry.de} para ${entry.para} - ${entry.valor} NeextCoins em ${dataFormatada}`;
+          historicoList.appendChild(item);
+        });
+      } else {
+        const li = document.createElement("li");
+        li.className = "p-4 text-gray-500 text-center select-none";
+        li.textContent = "Nenhuma transferência registrada.";
+        historicoList.appendChild(li);
+      }
+    }
+
+    // Buscar nome do destinatário
+    function buscarNomeDestinatario() {
+      const id = document.getElementById("transfer-id-destino").value.trim();
+      const nomeEl = document.getElementById("nome-destinatario");
+
+      if (id === "") {
+        nomeEl.textContent = "";
+        return;
+      }
+
+      const params = new URLSearchParams({
+        action: "getNomePorId",
+        id: id
+      });
+
+      fetch(apiUrl + "?" + params.toString())
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.nome) {
+            nomeEl.textContent = "Nome: " + data.nome;
+            nomeEl.classList.remove("text-red-600");
+            nomeEl.classList.add("text-blue-600");
+          } else {
+            nomeEl.textContent = "Usuário não encontrado.";
+            nomeEl.classList.remove("text-blue-600");
+            nomeEl.classList.add("text-red-600");
+          }
+        })
+        .catch(err => {
+          nomeEl.textContent = "Erro ao buscar nome.";
+          nomeEl.classList.remove("text-blue-600");
+          nomeEl.classList.add("text-red-600");
+          console.error(err);
+        });
+    }
+
+    // Modal open/close functions
+    function openTransferModal() {
+      transferModal.classList.remove("hidden");
+      clearTransferForm();
+    }
+    function closeTransferModal() {
+      transferModal.classList.add("hidden");
+      clearTransferForm();
+    }
+    function clearTransferForm() {
+      document.getElementById("transfer-id-destino").value = "";
+      document.getElementById("transfer-valor").value = "";
+      document.getElementById("transfer-senha").value = "";
+      document.getElementById("nome-destinatario").textContent = "";
+    }
+
+    openTransferModalBtn.addEventListener("click", openTransferModal);
+    closeTransferModalBtn.addEventListener("click", closeTransferModal);
+
+    // Close modal on outside click
+    transferModal.addEventListener("click", (e) => {
+      if (e.target === transferModal) {
+        closeTransferModal();
+      }
+    });
+
+    // On page load, check if user is logged in
+    window.addEventListener("load", () => {
+      const id = sessionStorage.getItem("id");
+      if (id) {
+        userNomeDashboard.textContent = sessionStorage.getItem("nome") || "";
+        userIdDashboard.textContent = id;
+        userSaldoDashboard.textContent = (sessionStorage.getItem("saldo") || "0") + " NeextCoins";
+        const historico = JSON.parse(sessionStorage.getItem("historico") || "[]");
+        carregarHistorico(historico);
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    });
+  </script>
+ </body>
+</html>
