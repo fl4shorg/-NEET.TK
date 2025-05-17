@@ -231,19 +231,22 @@
           id="featureVideo"
           class="w-full h-auto"
           poster="/placeholder.svg"
-          onclick="toggleVideo()"
         >
           <source src="https://res.cloudinary.com/ds24tgzw1/video/upload/v1747178960/lv_0_20250513194559_qznhft.mp4" type="video/mp4" />
           Seu navegador não suporta vídeos.
         </video>
         
-        <div id="videoOverlay" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 hover:bg-opacity-30 transition-opacity">
+        <button 
+          id="videoOverlay" 
+          class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 hover:bg-opacity-30 transition-opacity"
+          onclick="toggleVideo()"
+        >
           <div class="w-20 h-20 rounded-full bg-[#9b87f5] flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
             </svg>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   </section>
@@ -316,11 +319,11 @@
 
         <form id="recruitmentForm" class="space-y-6">
           <div class="space-y-2">
-            <label for="nome" class="block text-white">Nome completo</label>
+            <label for="nome" class="block text-white">Nome</label>
             <input
               id="nome"
               name="nome"
-              placeholder="Digite seu nome completo"
+              placeholder="Digite seu nome"
               required
               class="w-full h-10 px-3 py-2 rounded-md bg-black bg-opacity-50 border border-[#7E69AB] text-white"
             />
@@ -433,19 +436,30 @@
       }
     }
     
-    // Toggle video play/pause
+    // Toggle video play/pause with proper functionality
     function toggleVideo() {
       const video = document.getElementById('featureVideo');
       const overlay = document.getElementById('videoOverlay');
       
       if (video.paused) {
-        video.play();
-        overlay.style.display = 'none';
+        video.play()
+          .then(() => {
+            overlay.style.display = 'none';
+          })
+          .catch(error => {
+            console.error("Error playing video:", error);
+            showToast('Erro ao reproduzir o vídeo. Tente novamente.', 'error');
+          });
       } else {
         video.pause();
         overlay.style.display = 'flex';
       }
     }
+
+    // If video ends, show the play button again
+    document.getElementById('featureVideo').addEventListener('ended', function() {
+      document.getElementById('videoOverlay').style.display = 'flex';
+    });
     
     // Show toast notification
     function showToast(message, type = 'default') {
@@ -470,7 +484,7 @@
       }, 3000);
     }
     
-    // Form submission
+    // Form submission - Properly connected to Google Sheets API
     document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -490,38 +504,26 @@
       formData.append('numero', numero);
       formData.append('idade', idade);
       
-      // Simulate API call (since the actual API uses no-cors which can't be tested directly)
-      setTimeout(() => {
-        // Reset form
+      // Actual API call to Google Sheets
+      fetch('https://script.google.com/macros/s/AKfycbyHuGCK8HG2-Fsk7jlcCkdApI5eJLck4Kmym3RpKBlOwNfHZThErK_rBz1xBB2gYh9fsQ/exec', {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Sheets
+        body: formData
+      })
+      .then(() => {
+        // Since no-cors doesn't allow us to see the response details,
+        // we'll assume success if the request doesn't throw an error
         document.getElementById('recruitmentForm').reset();
-        
-        // Show success toast
         showToast('Inscrição recebida! Entraremos em contato em breve.', 'success');
-        
-        // Reset button state
+      })
+      .catch(error => {
+        console.error("Form submission error:", error);
+        showToast('Ocorreu um erro ao enviar o formulário. Tente novamente.', 'error');
+      })
+      .finally(() => {
         submitButton.textContent = originalButtonText;
         submitButton.disabled = false;
-        
-        // Note: In a real implementation, you would use fetch() to send to the API:
-        /*
-        fetch('https://script.google.com/macros/s/AKfycbyHuGCK8HG2-Fsk7jlcCkdApI5eJLck4Kmym3RpKBlOwNfHZThErK_rBz1xBB2gYh9fsQ/exec', {
-          method: 'POST',
-          mode: 'no-cors',
-          body: formData
-        })
-        .then(() => {
-          showToast('Inscrição recebida! Entraremos em contato em breve.', 'success');
-        })
-        .catch(error => {
-          showToast('Ocorreu um erro ao enviar o formulário. Tente novamente.', 'error');
-          console.error(error);
-        })
-        .finally(() => {
-          submitButton.textContent = originalButtonText;
-          submitButton.disabled = false;
-        });
-        */
-      }, 1500);
+      });
     });
   </script>
 </body>
