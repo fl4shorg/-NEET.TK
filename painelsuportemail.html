@@ -1,0 +1,609 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Suporte da Neext</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React e ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel Standalone para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        /* Animações customizadas */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .hover\\:scale-105:hover {
+            transform: scale(1.05);
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        .transition-colors {
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .transition-transform {
+            transition: transform 0.2s ease;
+        }
+        .duration-200 {
+            transition-duration: 0.2s;
+        }
+        .duration-300 {
+            transition-duration: 0.3s;
+        }
+        .hover\\:shadow-lg:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .hover\\:shadow-xl:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .backdrop-blur-sm {
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Utility functions
+        const formatTimeAgo = (dateString) => {
+            try {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffInSeconds = Math.floor((now - date) / 1000);
+
+                if (diffInSeconds < 60) {
+                    return 'Agora mesmo';
+                } else if (diffInSeconds < 3600) {
+                    const minutes = Math.floor(diffInSeconds / 60);
+                    return `${minutes} min atrás`;
+                } else if (diffInSeconds < 86400) {
+                    const hours = Math.floor(diffInSeconds / 3600);
+                    return `${hours}h atrás`;
+                } else {
+                    const days = Math.floor(diffInSeconds / 86400);
+                    return `${days}d atrás`;
+                }
+            } catch (error) {
+                console.error('Erro ao formatar data:', error);
+                return 'Data inválida';
+            }
+        };
+
+        // Custom Hook useTheme
+        const useTheme = () => {
+            const [isDark, setIsDark] = useState(() => {
+                if (typeof window !== 'undefined') {
+                    const saved = localStorage.getItem('theme');
+                    if (saved) {
+                        return saved === 'dark';
+                    }
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+                }
+                return false;
+            });
+
+            useEffect(() => {
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [isDark]);
+
+            const toggleTheme = () => setIsDark(!isDark);
+
+            return { isDark, toggleTheme };
+        };
+
+        // Icons from Lucide (simulando imports)
+        const Icon = ({ name, className = "", size = 24, ...props }) => {
+            const iconPaths = {
+                Moon: "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z",
+                Sun: "M12 2v2m0 16v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M6.05 6.05 4.636 4.636m12.728 0-1.414 1.414M6.05 17.95l-1.414 1.414M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z",
+                Search: "m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z",
+                Filter: "M3 6h18M7 12h10m-7 6h4",
+                Send: "m22 2-7 20-4-9-9-4 20-7z",
+                MessageCircle: "M7.9 20A9 9 0 1 0 4 16.1L2 22z",
+                Settings: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+                CheckCircle: "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4 12 14.01l-3-3",
+                Activity: "M22 12h-4l-3 9L9 3l-3 9H2",
+                Calendar: "M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",
+                User: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2 M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z",
+                Mail: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6",
+                Phone: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z",
+                MessageSquare: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
+                Clock: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M12 6v6l4 2"
+            };
+
+            return (
+                <svg
+                    className={className}
+                    width={size}
+                    height={size}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    {...props}
+                >
+                    <path d={iconPaths[name]} />
+                </svg>
+            );
+        };
+
+        // SearchAndFilter Component
+        const SearchAndFilter = ({ searchTerm, setSearchTerm, filterType, setFilterType, isDark }) => {
+            return (
+                <div className="mb-6 space-y-4 sm:space-y-0 sm:flex sm:items-center sm:space-x-4">
+                    {/* Search Bar */}
+                    <div className="relative flex-1">
+                        <Icon name="Search" className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${
+                            isDark ? 'text-gray-400' : 'text-gray-500'
+                        }`} />
+                        <input
+                            type="text"
+                            placeholder="Buscar por nome, email ou descrição..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className={`w-full pl-10 pr-4 py-2.5 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                isDark
+                                    ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400'
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
+                        />
+                    </div>
+
+                    {/* Filter */}
+                    <div className="relative">
+                        <Icon name="Filter" className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${
+                            isDark ? 'text-gray-400' : 'text-gray-500'
+                        }`} />
+                        <select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                            className={`pl-10 pr-8 py-2.5 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                                isDark
+                                    ? 'bg-gray-800 border-gray-700 text-white'
+                                    : 'bg-white border-gray-300 text-gray-900'
+                            }`}
+                        >
+                            <option value="all">Todos os envios</option>
+                            <option value="recent">Últimas 24h</option>
+                            <option value="older">Mais antigos</option>
+                        </select>
+                    </div>
+                </div>
+            );
+        };
+
+        // StatusIndicators Component
+        const StatusIndicators = ({ totalEnvios, isDark, data }) => {
+            // Função para saudação baseada no horário
+            const getGreeting = () => {
+                const hour = new Date().getHours();
+                if (hour < 12) return 'Bom Dia';
+                if (hour < 18) return 'Boa Tarde';
+                return 'Boa Noite';
+            };
+
+            // Função para calcular envios de hoje baseado nos dados reais
+            const getTodaySubmissions = () => {
+                const today = new Date().toDateString();
+                const todaySubmissions = data.filter(item => {
+                    try {
+                        const itemDate = new Date(item.dataHora);
+                        return itemDate.toDateString() === today;
+                    } catch (error) {
+                        console.error('Erro ao processar data:', error);
+                        return false;
+                    }
+                });
+                return todaySubmissions.length;
+            };
+
+            const indicators = [
+                {
+                    icon: 'Send',
+                    label: 'Total de Enviados',
+                    value: totalEnvios,
+                    color: 'blue',
+                    bgColor: isDark ? 'bg-blue-600/20' : 'bg-blue-50',
+                    iconColor: 'text-blue-600',
+                    borderColor: isDark ? 'border-blue-600/30' : 'border-blue-200'
+                },
+                {
+                    icon: 'Calendar',
+                    label: getGreeting(),
+                    value: `${getTodaySubmissions()} hoje`,
+                    color: 'emerald',
+                    bgColor: isDark ? 'bg-emerald-600/20' : 'bg-emerald-50',
+                    iconColor: 'text-emerald-600',
+                    borderColor: isDark ? 'border-emerald-600/30' : 'border-emerald-200'
+                },
+                {
+                    icon: 'CheckCircle',
+                    label: 'Status do Sistema',
+                    value: 'Online',
+                    color: 'green',
+                    bgColor: isDark ? 'bg-green-600/20' : 'bg-green-50',
+                    iconColor: 'text-green-600',
+                    borderColor: isDark ? 'border-green-600/30' : 'border-green-200'
+                },
+                {
+                    icon: 'Activity',
+                    label: 'Monitoramento',
+                    value: 'Ativo',
+                    color: 'purple',
+                    bgColor: isDark ? 'bg-purple-600/20' : 'bg-purple-50',
+                    iconColor: 'text-purple-600',
+                    borderColor: isDark ? 'border-purple-600/30' : 'border-purple-200'
+                }
+            ];
+
+            return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    {indicators.map((indicator, index) => (
+                        <div
+                            key={index}
+                            className={`p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                                indicator.bgColor
+                            } ${
+                                indicator.borderColor
+                            } ${
+                                isDark
+                                    ? 'hover:bg-gray-800/50'
+                                    : 'hover:bg-white/80'
+                            } backdrop-blur-sm`}
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-4">
+                                    <div className={`p-3 rounded-lg ${
+                                        isDark ? 'bg-gray-800/50' : 'bg-white/80'
+                                    } shadow-lg border ${
+                                        isDark ? 'border-gray-700' : 'border-gray-200'
+                                    }`}>
+                                        <Icon name={indicator.icon} className={`h-6 w-6 ${indicator.iconColor}`} />
+                                    </div>
+                                    <div>
+                                        <p className={`text-sm font-medium ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>
+                                            {indicator.label}
+                                        </p>
+                                        <p className={`text-2xl font-bold ${
+                                            isDark ? 'text-white' : 'text-gray-900'
+                                        }`}>
+                                            {indicator.value}
+                                        </p>
+                                    </div>
+                                </div>
+                                {indicator.color === 'blue' && (
+                                    <div className="flex flex-col items-end">
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                            <span className={`text-xs font-medium ${
+                                                isDark ? 'text-blue-400' : 'text-blue-600'
+                                            }`}>
+                                                Tempo real
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                                {indicator.color === 'emerald' && (
+                                    <div className="flex flex-col items-end">
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                                            <span className={`text-xs font-medium ${
+                                                isDark ? 'text-emerald-400' : 'text-emerald-600'
+                                            }`}>
+                                                Atualizado
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                                {indicator.color === 'green' && (
+                                    <div className="flex flex-col items-end">
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                            <span className={`text-xs font-medium ${
+                                                isDark ? 'text-green-400' : 'text-green-600'
+                                            }`}>
+                                                Operacional
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                                {indicator.color === 'purple' && (
+                                    <div className="flex flex-col items-end">
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                                            <span className={`text-xs font-medium ${
+                                                isDark ? 'text-purple-400' : 'text-purple-600'
+                                            }`}>
+                                                Monitorando
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // SupportCard Component
+        const SupportCard = ({ data, isDark }) => {
+            return (
+                <div className={`p-4 rounded-xl border transition-all duration-200 hover:scale-105 hover:shadow-lg ${
+                    isDark
+                        ? 'bg-gray-800 border-gray-700 hover:bg-gray-750'
+                        : 'bg-white border-gray-200 hover:bg-gray-50'
+                }`}>
+                    {/* Header com nome e tempo */}
+                    <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center space-x-2">
+                            <div className={`p-1.5 rounded-lg ${
+                                isDark ? 'bg-blue-600' : 'bg-blue-500'
+                            }`}>
+                                <Icon name="User" className="h-4 w-4 text-white" />
+                            </div>
+                            <h3 className={`font-semibold text-sm ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
+                                {data.nome}
+                            </h3>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                            <Icon name="Clock" className={`h-3 w-3 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`} />
+                            <span className={`text-xs ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                {formatTimeAgo(data.dataHora)}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Informações de contato */}
+                    <div className="space-y-2 mb-3">
+                        <div className="flex items-center space-x-2">
+                            <Icon name="Mail" className={`h-3 w-3 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`} />
+                            <span className={`text-xs truncate ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                                {data.email}
+                            </span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Icon name="Phone" className={`h-3 w-3 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`} />
+                            <span className={`text-xs ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                                {data.numero}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Descrição */}
+                    <div className={`p-3 rounded-lg ${
+                        isDark ? 'bg-gray-700' : 'bg-gray-50'
+                    }`}>
+                        <div className="flex items-start space-x-2">
+                            <Icon name="MessageSquare" className={`h-3 w-3 mt-0.5 flex-shrink-0 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`} />
+                            <p className={`text-xs leading-relaxed ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                                {data.descricao}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Footer com status */}
+                    <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span className={`text-xs ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                Recebido
+                            </span>
+                        </div>
+                        <button className={`text-xs px-2 py-1 rounded transition-colors duration-200 ${
+                            isDark
+                                ? 'text-blue-400 hover:bg-gray-700'
+                                : 'text-blue-600 hover:bg-blue-50'
+                        }`}>
+                            Ver detalhes
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            const { isDark, toggleTheme } = useTheme();
+            const [data, setData] = useState([]);
+            const [filteredData, setFilteredData] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [filterType, setFilterType] = useState('all');
+
+            const url = "https://script.google.com/macros/s/AKfycbztTvhKIOzfdXfN6sGBkYSiR5t71xN4CyDT0VbDmZ6_xZe0dZgJHrj73tP_3zM809kMcg/exec?exibirDados=true";
+
+            useEffect(() => {
+                fetchData();
+            }, []);
+
+            useEffect(() => {
+                applyFilters();
+            }, [data, searchTerm, filterType]);
+
+            const fetchData = async () => {
+                try {
+                    setLoading(true);
+                    const response = await fetch(url);
+                    const result = await response.json();
+                    // Inverter a ordem dos dados para mostrar os mais recentes primeiro
+                    setData(result.reverse());
+                } catch (error) {
+                    console.error("Erro ao buscar dados:", error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const applyFilters = () => {
+                let filtered = data;
+
+                // Aplicar filtro de busca
+                if (searchTerm) {
+                    filtered = filtered.filter(item => 
+                        item.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                }
+
+                // Aplicar filtro por tipo (você pode expandir isso baseado em seus critérios)
+                if (filterType !== 'all') {
+                    // Exemplo de filtro por período
+                    const now = new Date();
+                    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                    
+                    if (filterType === 'recent') {
+                        filtered = filtered.filter(item => {
+                            const itemDate = new Date(item.dataHora);
+                            return itemDate >= oneDayAgo;
+                        });
+                    }
+                }
+
+                setFilteredData(filtered);
+            };
+
+            return (
+                <div className={`min-h-screen transition-colors duration-300 ${
+                    isDark ? 'bg-gray-900' : 'bg-gray-50'
+                }`}>
+                    {/* Header */}
+                    <header className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+                        isDark 
+                            ? 'bg-gray-800 border-gray-700' 
+                            : 'bg-white border-gray-200'
+                    }`}>
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex items-center justify-between h-16">
+                                <div className="flex items-center space-x-3">
+                                    <div className={`p-2 rounded-lg ${
+                                        isDark ? 'bg-blue-600' : 'bg-blue-500'
+                                    }`}>
+                                        <Icon name="MessageCircle" className="h-6 w-6 text-white" />
+                                    </div>
+                                    <h1 className={`text-xl font-bold ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>
+                                        Central de Suporte da Neext
+                                    </h1>
+                                </div>
+                                
+                                <button
+                                    onClick={toggleTheme}
+                                    className={`p-2 rounded-lg transition-colors duration-200 ${
+                                        isDark 
+                                            ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
+                                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                                    }`}
+                                >
+                                    <Icon name={isDark ? "Sun" : "Moon"} className="h-5 w-5" />
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        {/* Status Indicators */}
+                        <StatusIndicators totalEnvios={data.length} isDark={isDark} data={data} />
+
+                        {/* Search and Filter */}
+                        <SearchAndFilter
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            filterType={filterType}
+                            setFilterType={setFilterType}
+                            isDark={isDark}
+                        />
+
+                        {/* Cards Grid */}
+                        {loading ? (
+                            <div className="flex justify-center items-center py-12">
+                                <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
+                                    isDark ? 'border-blue-400' : 'border-blue-500'
+                                }`}></div>
+                            </div>
+                        ) : (
+                            <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                                {filteredData.map((item, index) => (
+                                    <SupportCard
+                                        key={index}
+                                        data={item}
+                                        isDark={isDark}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {filteredData.length === 0 && !loading && (
+                            <div className={`text-center py-12 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                <Icon name="MessageCircle" className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                                <p className="text-lg">Nenhum envio encontrado</p>
+                                <p className="text-sm">Tente ajustar os filtros de busca</p>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        };
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
