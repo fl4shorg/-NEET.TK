@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enviar Números</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    textarea, button, input[type="file"] { width: 100%; padding: 10px; margin: 10px 0; }
+    #mensagemErro, #mensagemSucesso, #contadorNumeros { margin-top: 10px; }
+    #mensagemErro { color: red; }
+    #mensagemSucesso { color: green; }
+    #contadorNumeros { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Enviar Números</h2>
+  <input type="file" id="vcfInput" accept=".vcf" />
+  <textarea id="numerosInput" rows="12" placeholder="Cole ou abra arquivo .vcf com os números..."></textarea>
+  <div id="contadorNumeros">Total de números: 0</div>
+  <button id="btnEnviar">Enviar</button>
+  <div id="mensagemErro"></div>
+  <div id="mensagemSucesso"></div>
+
+  <h3>Resumo</h3>
+  <div id="resumoEnvio"></div>
+
+  <script>
+    const URL = 'https://script.google.com/macros/s/AKfycbwKZXfhXnQw0j586veBhqQQo0xqJ9OIcj21iS_jaFy_61SpnfTKn5RS3m3hcN-urLua0g/exec';
+    const mensagemErro = document.getElementById('mensagemErro');
+    const mensagemSucesso = document.getElementById('mensagemSucesso');
+    const numerosInput = document.getElementById('numerosInput');
+    const contadorNumeros = document.getElementById('contadorNumeros');
+    const vcfInput = document.getElementById('vcfInput');
+
+    function atualizarContador() {
+      const linhas = numerosInput.value.split(/\r?\n/).map(l => l.trim()).filter(l => l);
+      contadorNumeros.textContent = `Total de números: ${linhas.length}`;
+    }
+
+    // Cola os números e formata automaticamente
+    numerosInput.addEventListener('paste', function (e) {
+      e.preventDefault();
+      const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+
+      const linhas = pastedData.split(/\r?\n/).map(linha =>
+        linha.trim().replace(/^\+/, '')
+      ).filter(l => l);
+
+      if (linhas.length > 1000) {
+        mensagemErro.textContent = 'Você colou mais de 1000 números. O limite é 1000.';
+        return;
+      }
+
+      numerosInput.value = linhas.map(l => l + ',').join('\n');
+      atualizarContador();
+    });
+
+    numerosInput.addEventListener('input', atualizarContador);
+
+    // Abrir e processar VCF
+    vcfInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file || !file.name.endsWith('.vcf')) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const content = e.target.result;
+        const linhas = content.split(/\r?\n/);
+        const numerosExtraidos = [];
+
+        for (const linha of linhas) {
+          if (linha.startsWith('TEL')) {
+            const partes = linha.split(':');
+            if (partes.length > 1) {
+              let numero = partes[1].trim().replace(/^\+/, '');
+              
+              // Mantém espaços e traços como no vCard original
+              numerosExtraidos.push(numero);
+            }
+          }
+        }
+
+        if (numerosExtraidos.length === 0) {
+          mensagemErro.textContent = 'Nenhum número encontrado no arquivo.';
+          return;
+        }
+
+        if (numerosExtraidos.length > 1000) {
+          mensagemErro.textContent = 'O arquivo contém mais de 1000 números. Somente os 1000 primeiros serão usados.';
+          numerosExtraidos.length = 1000;
+        }
+
+        // Aplica mesma formatação do colar: cada número + vírgula no final
+        numerosInput.value = numerosExtraidos.map(n => n + ',').join('\n');
+        atualizarContador();
+      };
+
+      reader.readAsText(file);
+    });
+
+    // Botão Enviar
+    document.getElementById('btnEnviar').addEventListener('click', async () => {
+      mensagemErro.textContent = '';
+      mensagemSucesso.textContent = '';
+
+      const linhas = numerosInput.value.split(/\r?\n/).map(l => l.trim().replace(/,$/, '')).filter(l => l);
+
+      if (linhas.length === 0) {
+        mensagemErro.textContent = 'Digite ou carregue pelo menos um número.';
+        return;
+      }
+
+      if (linhas.length > 1000) {
+        mensagemErro.textContent = 'Você só pode enviar até 1000 números por vez.';
+        return;
+      }
+
+      try {
+        await fetch(URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ numeros: linhas }),
+          mode: 'no-cors'
+        });
+
+        mensagemSucesso.textContent = 'Números enviados com sucesso.';
+        numerosInput.value = '';
+        atualizarContador();
+        carregarResumo();
+
+      } catch (err) {
+        mensagemErro.textContent = 'Erro ao enviar números: ' + err.message;
+      }
+    });
+
+    // Carrega resumo
+    async function carregarResumo() {
+      try {
+        const res = await fetch(URL);
+        const data = await res.json();
+        if (!data.sucesso) return;
+
+        const r = data.resumo;
+        document.getElementById('resumoEnvio').innerHTML = `
+          <strong>Total Enviados:</strong> ${r.totalEnviados}<br>
+          <strong>Total Pendentes:</strong> ${r.totalPendentes}<br>
+          <strong>Total Recrutados:</strong> ${r.totalRecrutados}<br>
+          <strong>Total Recusados:</strong> ${r.totalRecusados}<br>
+          ${r.ultimoRecrutado ? `<strong>Último Recrutado:</strong> ${r.ultimoRecrutado.numero} (${r.ultimoRecrutado.dataHora})` : ''}
+        `;
+      } catch (e) {
+        mensagemErro.textContent = 'Erro ao carregar resumo.';
+      }
+    }
+
+    window.onload = () => {
+      atualizarContador();
+      carregarResumo();
+    };
+  </script>
+</body>
+</html>
