@@ -1,0 +1,853 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXION RECRUITMENT - Sistema de Recrutamento da Guilda</title>
+    <meta name="description" content="Sistema de Recrutamento da Guilda NEXION">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Date-fns -->
+    <script src="https://unpkg.com/date-fns@2.29.3/index.min.js"></script>
+    <script src="https://unpkg.com/date-fns@2.29.3/locale/pt-BR/index.min.js"></script>
+    
+    <style>
+        /* Custom CSS Variables for Theme */
+        :root {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --primary: 210 40% 98%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 212.7 26.8% 83.9%;
+            --radius: 0.5rem;
+        }
+
+        .light {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            border: 1px solid hsl(var(--border));
+            background-color: transparent;
+            color: hsl(var(--foreground));
+            padding: 0.375rem 0.75rem;
+        }
+
+        .btn-outline:hover {
+            background-color: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: calc(var(--radius) - 2px);
+            padding: 0.125rem 0.625rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            gap: 0.25rem;
+        }
+
+        .badge-outline {
+            color: hsl(var(--foreground));
+            border-color: hsl(var(--border));
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #9333ea, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-card {
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--border));
+            background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+        }
+
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 400px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .rank-display {
+            background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--accent)));
+            border: 2px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid hsl(var(--border));
+            background-color: transparent;
+            color: hsl(var(--foreground));
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background-color: hsl(var(--accent));
+        }
+
+        .pagination button.active {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .md\\:grid-cols-2 {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            
+            .lg\\:grid-cols-3 {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="dark">
+    <!-- Main Container -->
+    <div id="app" class="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 transition-all duration-500">
+        <!-- Header -->
+        <div class="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10" style="border-color: hsl(var(--border));">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 flex items-center justify-center">
+                                <i data-lucide="crown" class="h-6 w-6 text-white"></i>
+                            </div>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full border-2" style="border-color: hsl(var(--background));"></div>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold gradient-text">NEXION RECRUITMENT</h1>
+                            <p class="text-sm opacity-70">Sistema de Recrutamento da Guilda</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <span class="badge badge-outline">
+                            <i data-lucide="shield" class="h-3 w-3"></i>
+                            GUILD MASTER
+                        </span>
+                        <button id="themeToggle" class="btn btn-outline btn-sm">
+                            <i data-lucide="moon" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 py-6">
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center py-8">
+                <i data-lucide="refresh-cw" class="h-8 w-8 loading mx-auto mb-4" style="color: hsl(var(--muted-foreground));"></i>
+                <p style="color: hsl(var(--muted-foreground));">Carregando dados...</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div id="statsContainer" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" style="display: none;">
+                <div class="stats-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium opacity-70">Total Enviados</p>
+                            <p id="totalEnviados" class="text-2xl font-bold">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+                            <i data-lucide="users" class="h-4 w-4 text-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium opacity-70">Recrutados</p>
+                            <p id="totalRecrutados" class="text-2xl font-bold">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center">
+                            <i data-lucide="user-check" class="h-4 w-4 text-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium opacity-70">Recusados</p>
+                            <p id="totalRecusados" class="text-2xl font-bold">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-rose-500 flex items-center justify-center">
+                            <i data-lucide="user-x" class="h-4 w-4 text-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium opacity-70">Pendentes</p>
+                            <p id="totalPendentes" class="text-2xl font-bold">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center">
+                            <i data-lucide="clock" class="h-4 w-4 text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rank System -->
+            <div id="rankContainer" class="mb-6" style="display: none;">
+                <div class="rank-display">
+                    <div class="flex items-center justify-center gap-3 mb-4">
+                        <span id="rankIcon" class="text-4xl">🌍</span>
+                        <div>
+                            <h3 id="rankName" class="text-xl font-bold">Terra</h3>
+                            <p class="text-sm opacity-70">Rank Atual</p>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div id="rankProgress" class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <p id="rankProgressText" class="text-sm mt-2 opacity-70">0 recrutamentos para o próximo rank</p>
+                </div>
+            </div>
+
+            <!-- Last Recruited -->
+            <div id="lastRecruitedContainer" class="card mb-6 p-6" style="display: none;">
+                <h4 class="flex items-center gap-2 text-lg font-bold mb-4">
+                    <i data-lucide="user-check" class="h-5 w-5 text-green-500"></i>
+                    Último Recrutado
+                </h4>
+                <div class="flex items-center gap-4">
+                    <span class="badge" style="background-color: rgba(34, 197, 94, 0.2); color: rgb(34, 197, 94); border-color: rgba(34, 197, 94, 0.3);">
+                        Nº <span id="lastRecruitedNumber">-</span>
+                    </span>
+                    <span id="lastRecruitedTime" class="text-sm opacity-70">-</span>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="card mb-6 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="flex items-center gap-2 text-lg font-bold">
+                        <i data-lucide="sword" class="h-5 w-5"></i>
+                        Pendentes para Aprovação
+                    </h4>
+                    <button id="refreshBtn" class="btn btn-outline btn-sm">
+                        <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                        Atualizar Lista
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorContainer" class="card mb-6 p-4" style="display: none; background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.5);">
+                <p id="errorMessage" style="color: rgb(239, 68, 68);"></p>
+            </div>
+
+            <!-- Contacts List -->
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h4 class="flex items-center gap-2 text-lg font-bold">
+                        <i data-lucide="sword" class="h-5 w-5"></i>
+                        Quadro de Missões (<span id="totalContacts">0</span>)
+                    </h4>
+                    <div class="flex items-center gap-2">
+                        <span id="pageInfo" class="badge badge-outline text-xs">Página 1 de 1</span>
+                        <span class="badge badge-outline text-xs">RANK S</span>
+                    </div>
+                </div>
+
+                <!-- Contacts Grid -->
+                <div id="contactsGrid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <!-- Contacts will be populated here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-12" style="display: none;">
+                    <div class="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color: hsl(var(--muted));">
+                        <i data-lucide="clock" class="h-8 w-8" style="color: hsl(var(--muted-foreground));"></i>
+                    </div>
+                    <p style="color: hsl(var(--muted-foreground));">Nenhuma missão pendente encontrada</p>
+                </div>
+
+                <!-- Pagination -->
+                <div id="paginationContainer" class="pagination" style="display: none;">
+                    <button id="prevPageBtn">
+                        <i data-lucide="chevron-left" class="h-4 w-4"></i>
+                        Anterior
+                    </button>
+                    <div id="pageNumbers"></div>
+                    <button id="nextPageBtn">
+                        Próximo
+                        <i data-lucide="chevron-right" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script>
+        // Global variables
+        let currentData = null;
+        let currentPage = 1;
+        const itemsPerPage = 50;
+        let loadingActions = {};
+
+        // API Configuration
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwKZXfhXnQw0j586veBhqQQo0xqJ9OIcj21iS_jaFy_61SpnfTKn5RS3m3hcN-urLua0g/exec';
+
+        // Rank System
+        const ranks = [
+            { name: "Terra", icon: "🌍", color: "from-amber-700 to-yellow-600", minRecruits: 0 },
+            { name: "Pedra", icon: "🪨", color: "from-gray-500 to-gray-600", minRecruits: 10 },
+            { name: "Bronze", icon: "🥉", color: "from-amber-600 to-orange-600", minRecruits: 30 },
+            { name: "Ouro", icon: "🥇", color: "from-yellow-400 to-yellow-500", minRecruits: 40 },
+            { name: "Diamante", icon: "💎", color: "from-blue-400 to-cyan-500", minRecruits: 50 },
+            { name: "Mediável", icon: "⚡", color: "from-purple-500 to-purple-600", minRecruits: 100 },
+            { name: "Supremo", icon: "👑", color: "from-red-500 to-pink-500", minRecruits: 200 }
+        ];
+
+        // Initialize Lucide icons
+        function initializeIcons() {
+            lucide.createIcons();
+        }
+
+        // Theme management
+        function initializeTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            themeToggle.addEventListener('click', () => {
+                if (body.classList.contains('dark')) {
+                    body.classList.remove('dark');
+                    body.classList.add('light');
+                    themeToggle.innerHTML = '<i data-lucide="sun" class="h-4 w-4"></i>';
+                } else {
+                    body.classList.remove('light');
+                    body.classList.add('dark');
+                    themeToggle.innerHTML = '<i data-lucide="moon" class="h-4 w-4"></i>';
+                }
+                initializeIcons();
+            });
+        }
+
+        // Toast notification system
+        function showToast(title, description, variant = 'default') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            
+            toast.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-semibold">${title}</h4>
+                        <p class="text-sm opacity-90">${description}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4">
+                        <i data-lucide="x" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            initializeIcons();
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // Format time ago
+        function formatTimeAgo(dateString) {
+            try {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+                
+                if (diffInMinutes < 1) return 'agora mesmo';
+                if (diffInMinutes < 60) return `há ${diffInMinutes} minuto${diffInMinutes > 1 ? 's' : ''}`;
+                
+                const diffInHours = Math.floor(diffInMinutes / 60);
+                if (diffInHours < 24) return `há ${diffInHours} hora${diffInHours > 1 ? 's' : ''}`;
+                
+                const diffInDays = Math.floor(diffInHours / 24);
+                return `há ${diffInDays} dia${diffInDays > 1 ? 's' : ''}`;
+            } catch {
+                return dateString;
+            }
+        }
+
+        // Get rank by recruits
+        function getRankByRecruits(recruits) {
+            const achievedRanks = ranks.filter(rank => recruits >= rank.minRecruits);
+            return achievedRanks.length > 0 ? achievedRanks[achievedRanks.length - 1] : ranks[0];
+        }
+
+        // Get next rank
+        function getNextRank(currentRecruits) {
+            return ranks.find(rank => currentRecruits < rank.minRecruits) || null;
+        }
+
+        // Get progress to next rank
+        function getProgressToNextRank(currentRecruits) {
+            const nextRank = getNextRank(currentRecruits);
+            if (!nextRank) return 100;
+            
+            const currentRank = getRankByRecruits(currentRecruits);
+            const progress = ((currentRecruits - currentRank.minRecruits) / (nextRank.minRecruits - currentRank.minRecruits)) * 100;
+            return Math.max(0, Math.min(100, progress));
+        }
+
+        // Update rank display
+        function updateRankDisplay(totalRecrutados) {
+            const currentRank = getRankByRecruits(totalRecrutados);
+            const nextRank = getNextRank(totalRecrutados);
+            const progress = getProgressToNextRank(totalRecrutados);
+            
+            document.getElementById('rankIcon').textContent = currentRank.icon;
+            document.getElementById('rankName').textContent = currentRank.name;
+            document.getElementById('rankProgress').style.width = `${progress}%`;
+            
+            if (nextRank) {
+                const remaining = nextRank.minRecruits - totalRecrutados;
+                document.getElementById('rankProgressText').textContent = `${remaining} recrutamentos para ${nextRank.name}`;
+            } else {
+                document.getElementById('rankProgressText').textContent = 'Rank máximo alcançado!';
+            }
+        }
+
+        // Load pending contacts
+        async function loadPendingContacts() {
+            const loadingState = document.getElementById('loadingState');
+            const statsContainer = document.getElementById('statsContainer');
+            const rankContainer = document.getElementById('rankContainer');
+            const lastRecruitedContainer = document.getElementById('lastRecruitedContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            
+            loadingState.style.display = 'block';
+            statsContainer.style.display = 'none';
+            rankContainer.style.display = 'none';
+            lastRecruitedContainer.style.display = 'none';
+            errorContainer.style.display = 'none';
+            
+            try {
+                console.log('Carregando dados da API...');
+                const response = await fetch(API_URL);
+                const result = await response.json();
+                console.log('Dados recebidos:', result);
+                
+                if (result.sucesso) {
+                    currentData = result;
+                    updateUI(result);
+                    loadingState.style.display = 'none';
+                    statsContainer.style.display = 'grid';
+                    rankContainer.style.display = 'block';
+                    
+                    if (result.resumo.ultimoRecrutado) {
+                        lastRecruitedContainer.style.display = 'block';
+                    }
+                } else {
+                    throw new Error('API retornou sucesso: false');
+                }
+            } catch (err) {
+                const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
+                console.error('Erro ao carregar pendentes:', err);
+                loadingState.style.display = 'none';
+                errorContainer.style.display = 'block';
+                document.getElementById('errorMessage').textContent = `Erro ao carregar dados: ${errorMsg}`;
+                showToast("Erro", `Erro ao carregar dados: ${errorMsg}`, "destructive");
+            }
+        }
+
+        // Update UI with data
+        function updateUI(data) {
+            // Update stats
+            document.getElementById('totalEnviados').textContent = data.resumo.totalEnviados;
+            document.getElementById('totalRecrutados').textContent = data.resumo.totalRecrutados;
+            document.getElementById('totalRecusados').textContent = data.resumo.totalRecusados;
+            document.getElementById('totalPendentes').textContent = data.resumo.totalPendentes;
+            
+            // Update rank
+            updateRankDisplay(data.resumo.totalRecrutados);
+            
+            // Update last recruited
+            if (data.resumo.ultimoRecrutado) {
+                document.getElementById('lastRecruitedNumber').textContent = data.resumo.ultimoRecrutado.numero;
+                document.getElementById('lastRecruitedTime').textContent = formatTimeAgo(data.resumo.ultimoRecrutado.dataHora);
+            }
+            
+            // Update contacts
+            updateContactsList(data.pendentes);
+        }
+
+        // Update contacts list
+        function updateContactsList(contacts) {
+            const totalItems = contacts.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentItems = contacts.slice(startIndex, endIndex);
+            
+            document.getElementById('totalContacts').textContent = totalItems;
+            document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+            
+            const contactsGrid = document.getElementById('contactsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const paginationContainer = document.getElementById('paginationContainer');
+            
+            if (currentItems.length === 0) {
+                contactsGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                paginationContainer.style.display = 'none';
+            } else {
+                contactsGrid.style.display = 'grid';
+                emptyState.style.display = 'none';
+                
+                contactsGrid.innerHTML = currentItems.map(contact => `
+                    <div class="card p-4 fade-in">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start">
+                                <span class="badge" style="background-color: rgba(234, 179, 8, 0.2); color: rgb(234, 179, 8); border-color: rgba(234, 179, 8, 0.3);">
+                                    <i data-lucide="clock" class="h-3 w-3"></i>
+                                    ${contact.status}
+                                </span>
+                                <span class="badge badge-outline text-xs font-mono" style="background-color: hsl(var(--muted));">
+                                    ID: ${contact.id}
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                                    <i data-lucide="message-circle" class="h-5 w-5 text-white"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-mono text-sm font-semibold flex items-center gap-2">
+                                        <i data-lucide="message-circle" class="h-4 w-4 text-green-500"></i>
+                                        ${contact.numero}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="text-xs opacity-70">
+                                ${formatTimeAgo(contact.dataHora)}
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="handleWhatsApp('${contact.numero}')" class="btn btn-outline btn-sm" style="background-color: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: rgb(34, 197, 94);">
+                                    <i data-lucide="message-circle" class="h-3 w-3"></i>
+                                    Chamar
+                                </button>
+                                
+                                <button onclick="handleCopy('${contact.numero}')" class="btn btn-outline btn-sm">
+                                    <i data-lucide="copy" class="h-3 w-3"></i>
+                                    Copiar
+                                </button>
+                                
+                                <button onclick="handleRecrutar('${contact.id}')" class="btn btn-outline btn-sm" style="background-color: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: rgb(59, 130, 246);">
+                                    <i data-lucide="user-check" class="h-3 w-3"></i>
+                                    Recrutar
+                                </button>
+                                
+                                <button onclick="handleRecusar('${contact.id}')" class="btn btn-outline btn-sm" style="background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: rgb(239, 68, 68);">
+                                    <i data-lucide="user-x" class="h-3 w-3"></i>
+                                    Recusar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Update pagination
+                if (totalPages > 1) {
+                    paginationContainer.style.display = 'flex';
+                    updatePagination(totalPages);
+                } else {
+                    paginationContainer.style.display = 'none';
+                }
+            }
+            
+            initializeIcons();
+        }
+
+        // Update pagination
+        function updatePagination(totalPages) {
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            const pageNumbers = document.getElementById('pageNumbers');
+            
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            
+            // Generate page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            pageNumbers.innerHTML = '';
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                pageBtn.className = currentPage === i ? 'active' : '';
+                pageBtn.onclick = () => handlePageChange(i);
+                pageNumbers.appendChild(pageBtn);
+            }
+        }
+
+        // Handle page change
+        function handlePageChange(page) {
+            currentPage = page;
+            if (currentData) {
+                updateContactsList(currentData.pendentes);
+            }
+        }
+
+        // Handle WhatsApp
+        function handleWhatsApp(numero) {
+            const numeroStr = String(numero).replace(/\D/g, '');
+            const url = `https://wa.me/${numeroStr}`;
+            window.open(url, '_blank');
+            showToast("WhatsApp Aberto", `Iniciando conversa com ${numero}`);
+        }
+
+        // Handle copy
+        async function handleCopy(numero) {
+            try {
+                const numeroStr = String(numero);
+                await navigator.clipboard.writeText(numeroStr);
+                showToast("Copiado!", "Número copiado para a área de transferência");
+            } catch (err) {
+                showToast("Erro", "Não foi possível copiar o número", "destructive");
+            }
+        }
+
+        // Handle recruit
+        async function handleRecrutar(id) {
+            if (loadingActions[id]) return;
+            
+            loadingActions[id] = 'recruiting';
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, novoStatus: 'recrutado' }),
+                    mode: 'no-cors'
+                });
+
+                showToast("Status Atualizado", `ID ${id} alterado para recrutado`);
+                loadPendingContacts();
+            } catch (err) {
+                const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
+                showToast("Erro", `Erro ao alterar status: ${errorMsg}`, "destructive");
+            } finally {
+                delete loadingActions[id];
+            }
+        }
+
+        // Handle reject
+        async function handleRecusar(id) {
+            if (loadingActions[id]) return;
+            
+            loadingActions[id] = 'rejecting';
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, novoStatus: 'recusado' }),
+                    mode: 'no-cors'
+                });
+
+                showToast("Status Atualizado", `ID ${id} alterado para recusado`);
+                loadPendingContacts();
+            } catch (err) {
+                const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
+                showToast("Erro", `Erro ao alterar status: ${errorMsg}`, "destructive");
+            } finally {
+                delete loadingActions[id];
+            }
+        }
+
+        // Initialize application
+        function initializeApp() {
+            initializeTheme();
+            initializeIcons();
+            
+            // Add event listeners
+            document.getElementById('refreshBtn').addEventListener('click', loadPendingContacts);
+            document.getElementById('prevPageBtn').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    handlePageChange(currentPage - 1);
+                }
+            });
+            document.getElementById('nextPageBtn').addEventListener('click', () => {
+                const totalPages = Math.ceil((currentData?.pendentes.length || 0) / itemsPerPage);
+                if (currentPage < totalPages) {
+                    handlePageChange(currentPage + 1);
+                }
+            });
+            
+            // Load initial data
+            loadPendingContacts();
+        }
+
+        // Start the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
