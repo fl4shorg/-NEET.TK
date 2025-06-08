@@ -1,0 +1,779 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neext VCF - Extrator Profissional de Telefones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
+                        primary: {
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
+                        },
+                        card: {
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 221.2 83.2% 53.3%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96%;
+            --secondary-foreground: 222.2 84% 4.9%;
+            --muted: 210 40% 96%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96%;
+            --accent-foreground: 222.2 84% 4.9%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 221.2 83.2% 53.3%;
+        }
+
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --primary: 217.2 91.2% 59.8%;
+            --primary-foreground: 222.2 84% 4.9%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 224.3 76.3% 94.1%;
+        }
+
+        * {
+            border-color: hsl(var(--border));
+        }
+
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen transition-colors duration-300">
+    <div id="app">
+        <!-- Header -->
+        <header class="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                            <i data-lucide="phone" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                Neext VCF
+                            </h1>
+                            <p class="text-sm text-muted-foreground">Extrator Profissional de Telefones</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                            <i data-lucide="star" class="w-3 h-3 mr-1"></i>
+                            Premium
+                        </span>
+                        <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-accent transition-colors">
+                            <i data-lucide="moon" class="w-4 h-4" id="darkModeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container mx-auto px-4 py-8">
+            <!-- Greeting -->
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2" id="greeting">
+                    Bom dia! 👋
+                </h2>
+                <p class="text-lg text-muted-foreground">
+                    Extraia números de telefone profissionalmente com tecnologia OCR avançada
+                </p>
+            </div>
+
+            <!-- Features -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-card border-2 rounded-lg p-6 hover:shadow-lg transition-all duration-300">
+                    <div class="text-center">
+                        <div class="mx-auto bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-fit mb-4">
+                            <i data-lucide="zap" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2 text-card-foreground">Ultra Rápido</h3>
+                        <p class="text-muted-foreground">Processamento em lote de até 1000 imagens</p>
+                    </div>
+                </div>
+
+                <div class="bg-card border-2 rounded-lg p-6 hover:shadow-lg transition-all duration-300">
+                    <div class="text-center">
+                        <div class="mx-auto bg-green-100 dark:bg-green-900 p-3 rounded-full w-fit mb-4">
+                            <i data-lucide="shield" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2 text-card-foreground">100% Seguro</h3>
+                        <p class="text-muted-foreground">Processamento local, seus dados não saem do seu dispositivo</p>
+                    </div>
+                </div>
+
+                <div class="bg-card border-2 rounded-lg p-6 hover:shadow-lg transition-all duration-300">
+                    <div class="text-center">
+                        <div class="mx-auto bg-purple-100 dark:bg-purple-900 p-3 rounded-full w-fit mb-4">
+                            <i data-lucide="star" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2 text-card-foreground">Formato VCF</h3>
+                        <p class="text-muted-foreground">Exportação direta para contatos do telefone</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Image Processing -->
+                <div class="bg-card border-2 rounded-lg">
+                    <div class="p-6 border-b">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="image" class="w-5 h-5 text-blue-600"></i>
+                                <h3 class="text-xl font-semibold text-card-foreground">Extração por Imagem</h3>
+                            </div>
+                            <button onclick="showImageHelp()" class="p-2 hover:bg-accent rounded-lg transition-colors">
+                                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <p class="text-muted-foreground mt-2">
+                            Envie até 1000 imagens com números de telefone para extração automática
+                        </p>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label for="images" class="block text-sm font-medium mb-2 text-card-foreground">Selecionar Imagens (máximo 1000)</label>
+                            <input
+                                id="images"
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                class="w-full p-3 border rounded-lg transition-colors bg-background text-foreground"
+                                onchange="handleFileChange(event)"
+                            />
+                            <p id="fileCount" class="text-sm text-muted-foreground mt-2" style="display: none;"></p>
+                        </div>
+
+                        <div id="ocrLoading" class="bg-muted rounded-lg p-4" style="display: none;">
+                            <div class="flex items-center">
+                                <i data-lucide="alert-circle" class="w-4 h-4 mr-2"></i>
+                                <div>
+                                    <h4 class="font-medium text-muted-foreground">Carregando OCR</h4>
+                                    <p class="text-sm text-muted-foreground">Aguarde o carregamento da biblioteca de reconhecimento de texto...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="progressContainer" class="space-y-2" style="display: none;">
+                            <div class="flex items-center justify-between text-sm">
+                                <span id="progressStatus" class="text-muted-foreground">Iniciando processamento...</span>
+                                <span id="progressPercent" class="text-muted-foreground">0%</span>
+                            </div>
+                            <div class="bg-secondary w-full h-2 rounded-full">
+                                <div id="progressBar" class="bg-primary h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button 
+                                id="processBtn"
+                                onclick="processImages()" 
+                                disabled
+                                class="bg-primary text-primary-foreground flex-1 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
+                            >
+                                <i data-lucide="upload" class="w-4 h-4 mr-2 inline"></i>
+                                Extrair Números
+                            </button>
+                            <button onclick="resetFiles()" class="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg font-medium transition-colors border hover:bg-secondary/80">
+                                Limpar
+                            </button>
+                        </div>
+
+                        <div id="imageSuccess" class="bg-green-50 border border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200 rounded-lg p-4" style="display: none;">
+                            <div class="flex items-center">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 mr-2"></i>
+                                <div>
+                                    <h4 class="font-medium">Sucesso!</h4>
+                                    <p class="text-sm" id="imageSuccessText"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="imageResults" class="space-y-4" style="display: none;">
+                            <hr class="border-border">
+                            <div>
+                                <h4 class="font-semibold mb-3 text-card-foreground">Números Encontrados:</h4>
+                                <div id="imageNumbersList" class="max-h-40 overflow-y-auto space-y-2"></div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button 
+                                    onclick="copyImageNumbers()"
+                                    class="bg-secondary text-secondary-foreground flex-1 px-4 py-2 rounded-lg font-medium transition-colors border hover:bg-secondary/80"
+                                >
+                                    <i data-lucide="copy" class="w-4 h-4 mr-2 inline"></i>
+                                    Copiar Lista
+                                </button>
+                                <button 
+                                    onclick="downloadImageVCF()"
+                                    class="bg-primary text-primary-foreground flex-1 px-4 py-2 rounded-lg font-medium transition-colors hover:bg-primary/90"
+                                >
+                                    <i data-lucide="download" class="w-4 h-4 mr-2 inline"></i>
+                                    Baixar VCF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Input -->
+                <div class="bg-card border-2 rounded-lg">
+                    <div class="p-6 border-b">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="file-text" class="w-5 h-5 text-purple-600"></i>
+                                <h3 class="text-xl font-semibold text-card-foreground">Entrada Manual</h3>
+                            </div>
+                            <button onclick="showManualHelp()" class="p-2 hover:bg-accent rounded-lg transition-colors">
+                                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <p class="text-muted-foreground mt-2">
+                            Cole números manualmente para formatação e geração de VCF
+                        </p>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label for="manual-input" class="block text-sm font-medium mb-2 text-card-foreground">Números de Telefone</label>
+                            <textarea
+                                id="manual-input"
+                                placeholder="Cole seus números aqui...&#10;Ex: +55 11 99999-9999&#10;(11) 88888-8888&#10;+1 800 123 4567"
+                                class="w-full p-3 border rounded-lg transition-colors resize-none bg-background text-foreground"
+                                rows="6"
+                            ></textarea>
+                        </div>
+
+                        <button 
+                            onclick="processManualInput()"
+                            class="bg-primary text-primary-foreground w-full px-4 py-2 rounded-lg font-medium transition-colors hover:bg-primary/90"
+                        >
+                            <i data-lucide="zap" class="w-4 h-4 mr-2 inline"></i>
+                            Processar Números
+                        </button>
+
+                        <div id="manualSuccess" class="bg-green-50 border border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200 rounded-lg p-4" style="display: none;">
+                            <div class="flex items-center">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 mr-2"></i>
+                                <div>
+                                    <h4 class="font-medium">Processado!</h4>
+                                    <p class="text-sm" id="manualSuccessText"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="manualResults" class="space-y-4" style="display: none;">
+                            <hr class="border-border">
+                            <div>
+                                <h4 class="font-semibold mb-3 text-card-foreground">Números Processados:</h4>
+                                <div id="manualNumbersList" class="max-h-40 overflow-y-auto space-y-2"></div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button 
+                                    onclick="copyManualNumbers()"
+                                    class="bg-secondary text-secondary-foreground flex-1 px-4 py-2 rounded-lg font-medium transition-colors border hover:bg-secondary/80"
+                                >
+                                    <i data-lucide="copy" class="w-4 h-4 mr-2 inline"></i>
+                                    Copiar com Vírgulas
+                                </button>
+                                <button 
+                                    onclick="downloadManualVCF()"
+                                    class="bg-primary text-primary-foreground flex-1 px-4 py-2 rounded-lg font-medium transition-colors hover:bg-primary/90"
+                                >
+                                    <i data-lucide="download" class="w-4 h-4 mr-2 inline"></i>
+                                    Baixar VCF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mt-16 text-center text-muted-foreground">
+                <hr class="border-border mb-6">
+                <p class="text-sm">
+                    © 2024 Neext VCF - Extrator Profissional de Telefones
+                </p>
+                <p class="text-xs mt-2">
+                    Processamento 100% local e seguro • Tecnologia OCR avançada • Até 1000 imagens
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="imageHelpModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center p-4" onclick="closeModal('imageHelpModal')">
+        <div class="bg-card max-w-md w-full rounded-lg p-6" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-card-foreground">Como funciona a extração por imagem?</h3>
+                <button onclick="closeModal('imageHelpModal')" class="p-1 hover:bg-accent rounded">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-sm text-muted-foreground">
+                <p>1. Selecione até 1000 imagens que contenham números de telefone</p>
+                <p>2. Nossa tecnologia OCR irá analisar cada imagem</p>
+                <p>3. Os números encontrados serão automaticamente formatados</p>
+                <p>4. Você pode copiar ou baixar como arquivo VCF</p>
+                <p class="pt-2"><strong>Dica:</strong> Use imagens com boa qualidade e texto legível para melhores resultados.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="manualHelpModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center p-4" onclick="closeModal('manualHelpModal')">
+        <div class="bg-card max-w-md w-full rounded-lg p-6" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-card-foreground">Como usar a entrada manual?</h3>
+                <button onclick="closeModal('manualHelpModal')" class="p-1 hover:bg-accent rounded">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-sm text-muted-foreground">
+                <p>1. Cole ou digite os números de telefone no campo abaixo</p>
+                <p>2. Use qualquer formato: +55 11 99999-9999, (11) 99999-9999, etc.</p>
+                <p>3. Separe múltiplos números por espaço, vírgula ou nova linha</p>
+                <p>4. Clique em "Processar" para extrair e formatar</p>
+                <div class="pt-2">
+                    <p><strong>Exemplos aceitos:</strong></p>
+                    <p>• +55 11 99999-9999</p>
+                    <p>• (11) 99999-9999</p>
+                    <p>• 11 999999999</p>
+                    <p>• +1 800 123 4567</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-4 right-4 z-50 transform translate-y-full opacity-0 transition-all duration-300"></div>
+
+    <script>
+        // Global variables
+        let files = null;
+        let extractedNumbers = [];
+        let manualNumbers = [];
+        let isProcessing = false;
+        let tesseractLoaded = false;
+        let isDarkMode = false;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            initializeDarkMode();
+            setGreeting();
+            loadTesseract();
+        });
+
+        // Dark mode functionality
+        function initializeDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const darkModeIcon = document.getElementById('darkModeIcon');
+            
+            // Check for saved dark mode preference
+            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+            isDarkMode = savedDarkMode;
+            
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                darkModeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                document.documentElement.classList.remove('dark');
+                darkModeIcon.setAttribute('data-lucide', 'moon');
+            }
+            
+            lucide.createIcons();
+            
+            darkModeToggle.addEventListener('click', function() {
+                isDarkMode = !isDarkMode;
+                localStorage.setItem('darkMode', isDarkMode);
+                
+                if (isDarkMode) {
+                    document.documentElement.classList.add('dark');
+                    darkModeIcon.setAttribute('data-lucide', 'sun');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    darkModeIcon.setAttribute('data-lucide', 'moon');
+                }
+                
+                lucide.createIcons();
+            });
+        }
+
+        // Set greeting based on time
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour >= 5 && hour < 12) greeting = 'Bom dia';
+            else if (hour >= 12 && hour < 18) greeting = 'Boa tarde';
+            else if (hour >= 18 && hour < 23) greeting = 'Boa noite';
+            else greeting = 'Boa madrugada';
+            
+            document.getElementById('greeting').textContent = greeting + '! 👋';
+        }
+
+        // Load Tesseract.js
+        function loadTesseract() {
+            const checkTesseract = () => {
+                if (window.Tesseract) {
+                    tesseractLoaded = true;
+                    updateProcessButton();
+                    hideOCRLoading();
+                    console.log('Tesseract.js carregado com sucesso');
+                } else {
+                    showOCRLoading();
+                    setTimeout(checkTesseract, 100);
+                }
+            };
+            checkTesseract();
+        }
+
+        function showOCRLoading() {
+            document.getElementById('ocrLoading').style.display = 'block';
+        }
+
+        function hideOCRLoading() {
+            document.getElementById('ocrLoading').style.display = 'none';
+        }
+
+        // Phone regex
+        const phoneRegex = /\+?[\d\s\-\(\)]{8,}/g;
+
+        // File handling
+        function handleFileChange(event) {
+            const selectedFiles = event.target.files;
+            if (selectedFiles && selectedFiles.length > 1000) {
+                showToast('Máximo de 1000 imagens permitidas', 'error');
+                event.target.value = '';
+                return;
+            }
+            
+            files = selectedFiles;
+            const fileCount = document.getElementById('fileCount');
+            
+            if (files && files.length > 0) {
+                fileCount.textContent = `${files.length} imagem(ns) selecionada(s) - máximo 1000`;
+                fileCount.style.display = 'block';
+            } else {
+                fileCount.style.display = 'none';
+            }
+            
+            updateProcessButton();
+        }
+
+        function updateProcessButton() {
+            const processBtn = document.getElementById('processBtn');
+            processBtn.disabled = !files || files.length === 0 || isProcessing || !tesseractLoaded;
+            
+            if (isProcessing) {
+                processBtn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 mr-2 inline animate-spin"></i>Processando...';
+            } else {
+                processBtn.innerHTML = '<i data-lucide="upload" class="w-4 h-4 mr-2 inline"></i>Extrair Números';
+            }
+            lucide.createIcons();
+        }
+
+        // Image processing
+        async function processImages() {
+            if (!files || files.length === 0) {
+                showToast('Por favor, selecione pelo menos uma imagem', 'error');
+                return;
+            }
+
+            if (!tesseractLoaded) {
+                showToast('Aguarde o carregamento da biblioteca OCR', 'error');
+                return;
+            }
+
+            isProcessing = true;
+            extractedNumbers = [];
+            updateProcessButton();
+            showProgress();
+            updateProgress(0, 'Iniciando processamento...');
+            
+            hideImageResults();
+
+            let allText = '';
+            const totalFiles = files.length;
+
+            try {
+                for (let i = 0; i < totalFiles; i++) {
+                    updateProgress(Math.round((i / totalFiles) * 90), `Processando imagem ${i + 1} de ${totalFiles}...`);
+                    
+                    try {
+                        const { data: { text } } = await Tesseract.recognize(files[i], 'por+eng', {
+                            logger: (m) => {
+                                if (m.status === 'recognizing text') {
+                                    const currentProgress = Math.round(((i + m.progress) / totalFiles) * 90);
+                                    updateProgress(currentProgress, `Processando imagem ${i + 1} de ${totalFiles}...`);
+                                }
+                            }
+                        });
+                        allText += text + '\n';
+                        console.log(`Imagem ${i + 1} processada`);
+                    } catch (error) {
+                        console.error(`Erro ao processar imagem ${i + 1}:`, error);
+                    }
+                }
+
+                updateProgress(95, 'Extraindo números...');
+
+                const foundNumbers = allText.match(phoneRegex);
+                if (foundNumbers && foundNumbers.length > 0) {
+                    extractedNumbers = [...new Set(foundNumbers.map(n => n.trim()))];
+                    updateProgress(100, `✅ Processamento concluído! ${extractedNumbers.length} números encontrados`);
+                    showImageSuccess(extractedNumbers.length);
+                    displayImageResults(extractedNumbers);
+                    showToast(`${extractedNumbers.length} números extraídos com sucesso`, 'success');
+                } else {
+                    updateProgress(100, 'Nenhum número encontrado nas imagens');
+                    showToast('Nenhum número encontrado. Tente com imagens de melhor qualidade', 'error');
+                }
+            } catch (error) {
+                console.error('Erro durante o processamento:', error);
+                updateProgress(100, 'Erro durante o processamento');
+                showToast('Ocorreu um erro ao processar as imagens', 'error');
+            }
+
+            isProcessing = false;
+            updateProcessButton();
+            setTimeout(hideProgress, 2000);
+        }
+
+        function showProgress() {
+            document.getElementById('progressContainer').style.display = 'block';
+        }
+
+        function hideProgress() {
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function updateProgress(percent, status) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressStatus').textContent = status;
+        }
+
+        function showImageSuccess(count) {
+            const success = document.getElementById('imageSuccess');
+            document.getElementById('imageSuccessText').textContent = `${count} números extraídos com sucesso`;
+            success.style.display = 'block';
+        }
+
+        function displayImageResults(numbers) {
+            const results = document.getElementById('imageResults');
+            const list = document.getElementById('imageNumbersList');
+            
+            list.innerHTML = '';
+            numbers.forEach(number => {
+                const div = document.createElement('div');
+                div.className = 'bg-secondary text-secondary-foreground flex items-center gap-2 p-2 rounded border';
+                div.innerHTML = `
+                    <i data-lucide="phone" class="w-3 h-3 text-muted-foreground"></i>
+                    <span class="text-sm font-mono">${number}</span>
+                `;
+                list.appendChild(div);
+            });
+            
+            results.style.display = 'block';
+            lucide.createIcons();
+        }
+
+        function hideImageResults() {
+            document.getElementById('imageSuccess').style.display = 'none';
+            document.getElementById('imageResults').style.display = 'none';
+        }
+
+        function copyImageNumbers() {
+            const text = extractedNumbers.join('\n');
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`${extractedNumbers.length} números copiados para a área de transferência`, 'success');
+            });
+        }
+
+        function downloadImageVCF() {
+            generateVCF(extractedNumbers);
+        }
+
+        // Manual input processing
+        function processManualInput() {
+            const input = document.getElementById('manual-input').value;
+            
+            if (!input.trim()) {
+                showToast('Digite alguns números para processar', 'error');
+                return;
+            }
+
+            const foundNumbers = input.match(phoneRegex);
+            if (foundNumbers && foundNumbers.length > 0) {
+                manualNumbers = [...new Set(foundNumbers.map(n => n.trim()))];
+                showManualSuccess(manualNumbers.length);
+                displayManualResults(manualNumbers);
+                showToast(`${manualNumbers.length} números válidos encontrados`, 'success');
+            } else {
+                showToast('Verifique o formato dos números digitados', 'error');
+            }
+        }
+
+        function showManualSuccess(count) {
+            const success = document.getElementById('manualSuccess');
+            document.getElementById('manualSuccessText').textContent = `${count} números válidos encontrados`;
+            success.style.display = 'block';
+        }
+
+        function displayManualResults(numbers) {
+            const results = document.getElementById('manualResults');
+            const list = document.getElementById('manualNumbersList');
+            
+            list.innerHTML = '';
+            numbers.forEach(number => {
+                const div = document.createElement('div');
+                div.className = 'bg-secondary text-secondary-foreground flex items-center gap-2 p-2 rounded border';
+                div.innerHTML = `
+                    <i data-lucide="phone" class="w-3 h-3 text-muted-foreground"></i>
+                    <span class="text-sm font-mono">${number}</span>
+                `;
+                list.appendChild(div);
+            });
+            
+            results.style.display = 'block';
+            lucide.createIcons();
+        }
+
+        function copyManualNumbers() {
+            const text = manualNumbers.join(', ');
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`${manualNumbers.length} números copiados para a área de transferência`, 'success');
+            });
+        }
+
+        function downloadManualVCF() {
+            generateVCF(manualNumbers);
+        }
+
+        // VCF generation
+        function generateVCF(numbers) {
+            const today = new Date().toISOString().split('T')[0];
+            let vcfContent = '';
+            
+            numbers.forEach((number, index) => {
+                vcfContent += `BEGIN:VCARD\nVERSION:3.0\nFN:Neext Contact ${index + 1}\nTEL;TYPE=CELL:${number}\nEND:VCARD\n`;
+            });
+
+            const blob = new Blob([vcfContent], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `neext-vcf-${today}.vcf`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showToast(`Arquivo com ${numbers.length} contatos baixado`, 'success');
+        }
+
+        // Reset functions
+        function resetFiles() {
+            files = null;
+            extractedNumbers = [];
+            document.getElementById('images').value = '';
+            document.getElementById('fileCount').style.display = 'none';
+            hideImageResults();
+            hideProgress();
+            updateProcessButton();
+        }
+
+        // Modal functions
+        function showImageHelp() {
+            document.getElementById('imageHelpModal').classList.remove('hidden');
+            document.getElementById('imageHelpModal').classList.add('flex');
+        }
+
+        function showManualHelp() {
+            document.getElementById('manualHelpModal').classList.remove('hidden');
+            document.getElementById('manualHelpModal').classList.add('flex');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+            
+            toast.innerHTML = `
+                <div class="${bgColor} text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+                    <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info'}" class="w-4 h-4"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            lucide.createIcons();
+            
+            // Show toast
+            toast.classList.remove('translate-y-full', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('translate-y-full', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
