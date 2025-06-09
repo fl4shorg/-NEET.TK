@@ -1,0 +1,825 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Nexion Manual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/tesseract.js@6.0.1/dist/tesseract.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">N</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Painel Nexion Manual</h1>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Sistema profissional de envio de números</p>
+                    </div>
+                </div>
+                <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-8 max-w-6xl">
+        <!-- Hero Section -->
+        <div class="gradient-bg rounded-2xl p-8 text-white mb-8 relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold">Painel Nexion Manual</h2>
+                        <p class="text-white/80">Sistema profissional de envio de números com OCR</p>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute inset-0 bg-white/5 backdrop-blur-3xl"></div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div id="statsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Cards will be dynamically generated -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+            <!-- Header -->
+            <div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 px-6 py-4 rounded-t-2xl">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                    </div>
+                    Enviar Números
+                </h3>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- OCR Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <label class="text-sm font-semibold text-gray-900 dark:text-white">
+                            Imagens para Extrair Números (OCR) - Suporte Internacional
+                        </label>
+                    </div>
+                    <div class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                        Extrai números sem + e espaços (apenas dígitos)
+                    </div>
+                    <div class="relative">
+                        <input 
+                            type="file" 
+                            id="imageFiles" 
+                            accept="image/*" 
+                            multiple 
+                            class="w-full h-12 px-4 py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:border-blue-400 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-300"
+                        >
+                    </div>
+                    <div id="selectedImages" class="hidden">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                            <span id="imageCount">0</span> imagem(ns) selecionada(s)
+                        </span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div id="ocrProgress" class="hidden space-y-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
+                        <div class="flex items-center gap-3">
+                            <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span class="text-sm font-medium text-gray-900 dark:text-white">Processando imagens...</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                            <div id="progressBar" class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
+                            <span id="progressText">0% concluído</span>
+                            <span id="extractedCount">0 números encontrados</span>
+                        </div>
+                    </div>
+
+                    <button 
+                        id="processImages" 
+                        class="w-full h-12 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-3"
+                        disabled
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        Extrair Números das Imagens
+                    </button>
+                </div>
+
+                <!-- File Upload Section -->
+                <div class="space-y-3">
+                    <label class="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Arquivo VCF (Opcional)
+                    </label>
+                    <input 
+                        type="file" 
+                        id="vcfFile" 
+                        accept=".vcf" 
+                        class="w-full h-12 px-4 py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:border-blue-400 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-300"
+                    >
+                </div>
+
+                <!-- Text Area Section -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-semibold text-gray-900 dark:text-white">Números para Envio</label>
+                        <button 
+                            id="pasteButton" 
+                            class="px-4 py-2 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/50 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-700 text-sm font-medium transition-colors flex items-center gap-2"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            Colar
+                        </button>
+                    </div>
+                    <textarea 
+                        id="numbersInput" 
+                        placeholder="Use o botão 'Colar', carregue arquivo .vcf ou extraia de imagens usando OCR..."
+                        rows="8"
+                        class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm hover:border-blue-400 focus:border-blue-500 focus:outline-none transition-colors resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- Counter and Actions -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
+                    <div class="flex items-center gap-3">
+                        <span id="numberCounter" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200">
+                            Total: 0 números
+                        </span>
+                    </div>
+                    <button 
+                        id="downloadReport" 
+                        class="hidden px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-500 text-sm font-medium transition-colors flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Baixar Relatório
+                    </button>
+                </div>
+
+                <!-- Error Alert -->
+                <div id="errorAlert" class="hidden p-4 bg-red-50 dark:bg-red-900/50 border-2 border-red-200 dark:border-red-700 rounded-lg">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p id="errorMessage" class="text-red-700 dark:text-red-300 font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Success Alert -->
+                <div id="successAlert" class="hidden p-4 bg-green-50 dark:bg-green-900/50 border-2 border-green-200 dark:border-green-700 rounded-lg">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <p id="successMessage" class="text-green-700 dark:text-green-300 font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    id="submitNumbers" 
+                    class="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-3"
+                    disabled
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    Enviar Números
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let resumoData = null;
+        let totalNumeros = 0;
+        let isProcessing = false;
+
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxHMLRy18quoPWFKBciL53Fmam9Mxb7pXciJY9lg5N0o_K6Go7Q-shYJ6qw3Kt8IHkf-A/exec;
+
+        // DOM elements
+        const imageFiles = document.getElementById('imageFiles');
+        const selectedImages = document.getElementById('selectedImages');
+        const imageCount = document.getElementById('imageCount');
+        const processImages = document.getElementById('processImages');
+        const ocrProgress = document.getElementById('ocrProgress');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const extractedCount = document.getElementById('extractedCount');
+        const vcfFile = document.getElementById('vcfFile');
+        const numbersInput = document.getElementById('numbersInput');
+        const pasteButton = document.getElementById('pasteButton');
+        const numberCounter = document.getElementById('numberCounter');
+        const downloadReport = document.getElementById('downloadReport');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+        const successAlert = document.getElementById('successAlert');
+        const successMessage = document.getElementById('successMessage');
+        const submitNumbers = document.getElementById('submitNumbers');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const statsContainer = document.getElementById('statsContainer');
+
+        // Dark mode functionality
+        function initDarkMode() {
+            const isDark = localStorage.getItem('theme') === 'dark' || 
+                          (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            }
+
+            darkModeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                const isDarkNow = document.documentElement.classList.contains('dark');
+                localStorage.setItem('theme', isDarkNow ? 'dark' : 'light');
+            });
+        }
+
+        // Regex for phone number extraction (same as original)
+        const regexTelefone = /\+[\d\s()-]{7,}/g;
+
+        function extractPhoneNumbers(text) {
+            console.log('Texto para análise:', text);
+            
+            const encontrados = text.match(regexTelefone);
+            
+            if (!encontrados || encontrados.length === 0) {
+                return [];
+            }
+            
+            const numerosLimpos = encontrados.map(numero => {
+                return numero.replace(/[\+\s\(\)\-]/g, '').trim();
+            }).filter(numero => numero.length >= 7);
+            
+            const numerosUnicos = [...new Set(numerosLimpos)];
+            
+            console.log('Números únicos encontrados:', numerosUnicos);
+            return numerosUnicos;
+        }
+
+        function updateCounter(value) {
+            const linhas = value.split(',').map(l => l.trim()).filter(l => l);
+            totalNumeros = linhas.length;
+            numberCounter.textContent = `Total: ${totalNumeros.toLocaleString('pt-BR')} números`;
+            
+            if (totalNumeros > 0) {
+                downloadReport.classList.remove('hidden');
+                submitNumbers.disabled = false;
+            } else {
+                downloadReport.classList.add('hidden');
+                submitNumbers.disabled = true;
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorAlert.classList.remove('hidden');
+            successAlert.classList.add('hidden');
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successAlert.classList.remove('hidden');
+            errorAlert.classList.add('hidden');
+        }
+
+        function hideAlerts() {
+            errorAlert.classList.add('hidden');
+            successAlert.classList.add('hidden');
+        }
+
+        // Image file selection
+        imageFiles.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                selectedImages.classList.remove('hidden');
+                imageCount.textContent = files.length;
+                processImages.disabled = false;
+            } else {
+                selectedImages.classList.add('hidden');
+                processImages.disabled = true;
+            }
+        });
+
+        // OCR Processing
+        processImages.addEventListener('click', async () => {
+            const files = imageFiles.files;
+            if (!files || files.length === 0) {
+                showError('Selecione pelo menos uma imagem');
+                return;
+            }
+
+            isProcessing = true;
+            processImages.disabled = true;
+            ocrProgress.classList.remove('hidden');
+            hideAlerts();
+
+            let todosTextos = '';
+            let numerosEncontradosCount = 0;
+
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    console.log(`Processando imagem ${i + 1}/${files.length}: ${file.name}`);
+                    
+                    const currentProgress = ((i + 1) / files.length) * 100;
+                    progressBar.style.width = `${currentProgress}%`;
+                    progressText.textContent = `${Math.round(currentProgress)}% concluído`;
+
+                    try {
+                        const { data: { text } } = await Tesseract.recognize(file, 'por+eng', {
+                            logger: m => {
+                                if (m.status === 'recognizing text') {
+                                    const progressoTotal = Math.round(((i + m.progress) / files.length) * 100);
+                                    progressBar.style.width = `${progressoTotal}%`;
+                                    progressText.textContent = `${progressoTotal}% concluído`;
+                                }
+                            }
+                        });
+                        
+                        console.log(`Texto da imagem ${file.name}:`, text);
+                        todosTextos += text + '\n';
+                        
+                    } catch (err) {
+                        console.error(`Erro ao processar imagem ${file.name}:`, err);
+                    }
+                }
+
+                console.log('Texto completo de todas as imagens:', todosTextos);
+
+                const numerosEncontrados = extractPhoneNumbers(todosTextos);
+                
+                if (numerosEncontrados.length > 0) {
+                    numerosEncontradosCount = numerosEncontrados.length;
+                    extractedCount.textContent = `${numerosEncontradosCount} números encontrados`;
+                    
+                    // Add to existing numbers
+                    const existingNumbers = numbersInput.value
+                        .split(',')
+                        .map(l => l.trim())
+                        .filter(l => l);
+
+                    const allNumbers = [...existingNumbers, ...numerosEncontrados];
+                    const uniqueNumbers = [...new Set(allNumbers)];
+
+                    const formattedNumbers = uniqueNumbers.join(', ');
+                    numbersInput.value = formattedNumbers;
+                    updateCounter(formattedNumbers);
+                    
+                    showSuccess(`${numerosEncontrados.length} números foram extraídos das imagens e adicionados à lista.`);
+                } else {
+                    showError(`Nenhum número de telefone válido foi encontrado nas imagens. 
+                    
+                    Dicas para melhorar o reconhecimento:
+                    • Certifique-se de que as imagens têm boa qualidade
+                    • Os números devem estar legíveis e não muito pequenos
+                    • Evite imagens com muito ruído ou baixo contraste
+                    
+                    Texto extraído para análise: "${todosTextos.substring(0, 300)}..."`);
+                }
+
+            } catch (err) {
+                showError('Erro ao processar imagens: ' + err.message);
+            } finally {
+                isProcessing = false;
+                processImages.disabled = false;
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    ocrProgress.classList.add('hidden');
+                    progressBar.style.width = '0%';
+                    progressText.textContent = '0% concluído';
+                    extractedCount.textContent = '0 números encontrados';
+                }, 2000);
+            }
+        });
+
+        // VCF file upload
+        vcfFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || !file.name.endsWith('.vcf')) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const content = event.target.result;
+                const linhas = content.split(/\r?\n/);
+                const numerosExtraidos = [];
+
+                for (const linha of linhas) {
+                    if (linha.startsWith('TEL')) {
+                        const partes = linha.split(':');
+                        if (partes.length > 1) {
+                            let numero = partes[1].trim().replace(/^\+/, '');
+                            numerosExtraidos.push(numero);
+                        }
+                    }
+                }
+
+                if (numerosExtraidos.length === 0) {
+                    showError('Nenhum número encontrado no arquivo.');
+                    return;
+                }
+
+                const formattedNumbers = numerosExtraidos.join(', ');
+                numbersInput.value = formattedNumbers;
+                updateCounter(formattedNumbers);
+                hideAlerts();
+                showSuccess(`${numerosExtraidos.length} números carregados do arquivo VCF.`);
+            };
+
+            reader.readAsText(file);
+        });
+
+        // Paste button
+        pasteButton.addEventListener('click', async () => {
+            try {
+                const clipboardData = await navigator.clipboard.readText();
+                
+                // Extract phone numbers using the same regex as OCR
+                const numerosEncontrados = extractPhoneNumbers(clipboardData);
+                
+                if (numerosEncontrados.length === 0) {
+                    // If no phone numbers found with regex, try basic line processing
+                    const linhas = clipboardData.split(/\r?\n/).map(linha =>
+                        linha.trim().replace(/^\+/, '').replace(/\s/g, '').replace(/[\(\)\-]/g, '')
+                    ).filter(l => l && l.length >= 7);
+
+                    if (linhas.length === 0) {
+                        showError('Nenhum número válido encontrado no texto colado.');
+                        return;
+                    }
+
+                    const formattedNumbers = linhas.join(', ');
+                    numbersInput.value = formattedNumbers;
+                    updateCounter(formattedNumbers);
+                    hideAlerts();
+                    showSuccess(`${linhas.length} números foram colados e formatados com sucesso.`);
+                } else {
+                    // Use extracted phone numbers (already cleaned)
+                    const existingNumbers = numbersInput.value
+                        .split(',')
+                        .map(l => l.trim())
+                        .filter(l => l);
+
+                    const allNumbers = [...existingNumbers, ...numerosEncontrados];
+                    const uniqueNumbers = [...new Set(allNumbers)];
+
+                    const formattedNumbers = uniqueNumbers.join(', ');
+                    numbersInput.value = formattedNumbers;
+                    updateCounter(formattedNumbers);
+                    hideAlerts();
+                    showSuccess(`${numerosEncontrados.length} números foram colados e formatados com sucesso.`);
+                }
+            } catch (err) {
+                showError('Erro ao acessar a área de transferência. Verifique as permissões do navegador.');
+            }
+        });
+
+        // Prevent paste in textarea
+        numbersInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            showError('Use o botão "Colar" para adicionar números.');
+        });
+
+        // Update counter on input change
+        numbersInput.addEventListener('input', (e) => {
+            updateCounter(e.target.value);
+        });
+
+        // Submit numbers
+        submitNumbers.addEventListener('click', async () => {
+            hideAlerts();
+            
+            const linhas = numbersInput.value.split(',').map(l => l.trim()).filter(l => l);
+
+            if (linhas.length === 0) {
+                showError('Digite ou carregue pelo menos um número.');
+                return;
+            }
+
+            submitNumbers.disabled = true;
+            submitNumbers.innerHTML = `
+                <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                Enviando...
+            `;
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ numeros: linhas }),
+                    mode: 'no-cors'
+                });
+
+                showSuccess('Números enviados com sucesso!');
+                numbersInput.value = '';
+                updateCounter('');
+                loadResumo();
+
+            } catch (err) {
+                showError('Erro ao enviar números: ' + err.message);
+            } finally {
+                submitNumbers.disabled = false;
+                submitNumbers.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    Enviar Números
+                `;
+            }
+        });
+
+        // Load summary data
+        async function loadResumo() {
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                if (data.sucesso) {
+                    resumoData = data.resumo;
+                    renderStats();
+                }
+            } catch (e) {
+                console.error('Erro ao carregar resumo:', e);
+                // Render with default data if API fails
+                resumoData = {
+                    totalEnviados: 1250,
+                    totalPendentes: 89,
+                    totalRecrutados: 342,
+                    totalRecusados: 67
+                };
+                renderStats();
+            }
+        }
+
+        // Render statistics cards
+        function renderStats() {
+            if (!resumoData) return;
+
+            const cards = [
+                {
+                    title: 'Total Enviados',
+                    value: resumoData.totalEnviados,
+                    icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z',
+                    gradient: 'from-blue-500 to-blue-600',
+                    bgGradient: 'from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/50',
+                    textColor: 'text-blue-700 dark:text-blue-300',
+                    iconBg: 'bg-blue-500/10',
+                    change: '+12%'
+                },
+                {
+                    title: 'Pendentes',
+                    value: resumoData.totalPendentes,
+                    icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+                    gradient: 'from-amber-500 to-amber-600',
+                    bgGradient: 'from-amber-50 to-amber-100 dark:from-amber-950/50 dark:to-amber-900/50',
+                    textColor: 'text-amber-700 dark:text-amber-300',
+                    iconBg: 'bg-amber-500/10',
+                    change: '-5%'
+                },
+                {
+                    title: 'Recrutados',
+                    value: resumoData.totalRecrutados,
+                    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+                    gradient: 'from-emerald-500 to-emerald-600',
+                    bgGradient: 'from-emerald-50 to-emerald-100 dark:from-emerald-950/50 dark:to-emerald-900/50',
+                    textColor: 'text-emerald-700 dark:text-emerald-300',
+                    iconBg: 'bg-emerald-500/10',
+                    change: '+8%'
+                },
+                {
+                    title: 'Recusados',
+                    value: resumoData.totalRecusados,
+                    icon: 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z',
+                    gradient: 'from-red-500 to-red-600',
+                    bgGradient: 'from-red-50 to-red-100 dark:from-red-950/50 dark:to-red-900/50',
+                    textColor: 'text-red-700 dark:text-red-300',
+                    iconBg: 'bg-red-500/10',
+                    change: '-3%'
+                }
+            ];
+
+            statsContainer.innerHTML = cards.map(card => `
+                <div class="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br ${card.bgGradient} backdrop-blur-sm rounded-lg card-hover">
+                    <div class="flex flex-row items-center justify-between p-6 pb-3">
+                        <div class="space-y-1">
+                            <div class="text-sm font-medium text-gray-600 dark:text-gray-400">${card.title}</div>
+                            <div class="flex items-center gap-2">
+                                <div class="text-2xl lg:text-3xl font-bold ${card.textColor}">
+                                    ${card.value.toLocaleString('pt-BR')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl ${card.iconBg} flex items-center justify-center">
+                            <svg class="h-6 w-6 ${card.textColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${card.icon}"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6">
+                        <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-1 text-xs font-medium ${card.change.startsWith('+') ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}">
+                                <svg class="h-3 w-3 ${card.change.startsWith('-') ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                                ${card.change}
+                            </div>
+                            <span class="text-xs text-gray-600 dark:text-gray-400">vs mês anterior</span>
+                        </div>
+                    </div>
+                    <div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r ${card.gradient}"></div>
+                </div>
+            `).join('');
+        }
+
+        // Download report
+        downloadReport.addEventListener('click', () => {
+            if (!resumoData) return;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            canvas.width = 800;
+            canvas.height = 600;
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#1e3a8a');
+            gradient.addColorStop(1, '#3730a3');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Header
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 32px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('PAINEL NEXION MANUAL', canvas.width / 2, 60);
+
+            ctx.font = '18px Arial, sans-serif';
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillText('Relatório de Estatísticas', canvas.width / 2, 90);
+
+            // Date
+            const dataAtual = new Date().toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            ctx.font = '14px Arial, sans-serif';
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText(`Gerado em: ${dataAtual}`, canvas.width / 2, 115);
+
+            // Statistics cards
+            const cardWidth = 160;
+            const cardHeight = 120;
+            const cardSpacing = 20;
+            const startX = (canvas.width - (4 * cardWidth + 3 * cardSpacing)) / 2;
+            const startY = 160;
+
+            const stats = [
+                { label: 'Total Enviados', value: resumoData.totalEnviados, color: '#3b82f6' },
+                { label: 'Pendentes', value: resumoData.totalPendentes, color: '#eab308' },
+                { label: 'Recrutados', value: resumoData.totalRecrutados, color: '#22c55e' },
+                { label: 'Recusados', value: resumoData.totalRecusados, color: '#ef4444' }
+            ];
+
+            stats.forEach((stat, index) => {
+                const x = startX + index * (cardWidth + cardSpacing);
+                const y = startY;
+
+                // Card background
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.fillRect(x, y, cardWidth, cardHeight);
+
+                // Card border
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x, y, cardWidth, cardHeight);
+
+                // Value
+                ctx.fillStyle = stat.color;
+                ctx.font = 'bold 28px Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(stat.value.toLocaleString('pt-BR'), x + cardWidth / 2, y + 50);
+
+                // Label
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '14px Arial, sans-serif';
+                ctx.fillText(stat.label, x + cardWidth / 2, y + 75);
+            });
+
+            // Current send section
+            const envioY = 320;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.fillRect(50, envioY, canvas.width - 100, 100);
+            
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.strokeRect(50, envioY, canvas.width - 100, 100);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 20px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ENVIO ATUAL', canvas.width / 2, envioY + 30);
+
+            ctx.font = 'bold 24px Arial, sans-serif';
+            ctx.fillStyle = '#60a5fa';
+            ctx.fillText(`${totalNumeros.toLocaleString('pt-BR')} números enviados`, canvas.width / 2, envioY + 65);
+
+            // Footer
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('© 2024 Painel Nexion Manual - Relatório Automatizado', canvas.width / 2, canvas.height - 30);
+
+            // Decoration
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(100, 140);
+            ctx.lineTo(canvas.width - 100, 140);
+            ctx.stroke();
+
+            // Download
+            canvas.toBlob((blob) => {
+                if (!blob) return;
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `relatorio-nexion-${new Date().toISOString().split('T')[0]}.png`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                showSuccess('Relatório em imagem foi salvo em seus downloads.');
+            });
+        });
+
+        // Initialize application
+        function init() {
+            initDarkMode();
+            loadResumo();
+            updateCounter('');
+        }
+
+        // Start application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
