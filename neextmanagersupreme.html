@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador de Logins</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      /* Cores do tema claro */
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --warning: #f8961e;
+      --info: #43aa8b;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --white: #ffffff;
+      --bg-color: #f0f2f5;
+      --card-bg: #ffffff;
+      --text-color: #212529;
+      --border-color: #e0e0e0;
+    }
+
+    [data-theme="dark"] {
+      /* Cores do tema escuro */
+      --primary: #5a72e0;
+      --primary-light: #6d8aed;
+      --secondary: #4f47d1;
+      --success: #5fd5f7;
+      --danger: #ff3d8b;
+      --warning: #ffaa4a;
+      --info: #4fc4a1;
+      --light: #2d3748;
+      --dark: #e2e8f0;
+      --gray: #a0aec0;
+      --white: #1a202c;
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #e2e8f0;
+      --border-color: #2d3748;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    /* Navbar */
+    .navbar {
+      background-color: var(--primary);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: white;
+    }
+    
+    .navbar-brand i {
+      margin-right: 10px;
+      font-size: 1.8rem;
+    }
+    
+    .navbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    h1 {
+      color: var(--primary);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-card.total {
+      border-left: 5px solid var(--primary);
+    }
+    
+    .stat-card.ativos {
+      border-left: 5px solid var(--success);
+    }
+    
+    .stat-card.desativados {
+      border-left: 5px solid var(--danger);
+    }
+    
+    .stat-card.grupos {
+      border-left: 5px solid var(--warning);
+    }
+    
+    .stat-card h3 {
+      font-size: 1rem;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+    
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .total .value {
+      color: var(--primary);
+    }
+    
+    .ativos .value {
+      color: var(--success);
+    }
+    
+    .desativados .value {
+      color: var(--danger);
+    }
+    
+    .grupos .value {
+      color: var(--warning);
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      transition: background-color 0.3s;
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border 0.3s ease;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn:hover {
+      background-color: var(--secondary);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+    }
+    
+    .btn-danger:hover {
+      background-color: #d1145a;
+    }
+    
+    .btn-success {
+      background-color: var(--success);
+    }
+    
+    .btn-success:hover {
+      background-color: #3aa8d8;
+    }
+    
+    .btn-warning {
+      background-color: var(--warning);
+    }
+    
+    .btn-warning:hover {
+      background-color: #e0871b;
+    }
+    
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 0.875rem;
+    }
+    
+    .btn + .btn {
+      margin-left: 10px;
+    }
+    
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .status-ativo {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+    
+    .status-desativado {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 5px;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      overflow: auto;
+    }
+    
+    .modal-content {
+      background-color: var(--card-bg);
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      animation: modalopen 0.3s;
+    }
+    
+    @keyframes modalopen {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .close {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--gray);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    
+    .close:hover {
+      color: var(--danger);
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+      
+      .actions .btn {
+        margin-bottom: 5px;
+        margin-left: 0;
+      }
+    }
+    
+    /* Grupo select */
+    .select2-container {
+      width: 100% !important;
+      margin-bottom: 20px;
+    }
+    
+    .select2-selection {
+      height: 45px !important;
+      display: flex !important;
+      align-items: center !important;
+      background-color: var(--card-bg) !important;
+      border-color: var(--border-color) !important;
+    }
+    
+    .select2-selection__rendered {
+      color: var(--text-color) !important;
+    }
+    
+    .select2-dropdown {
+      background-color: var(--card-bg) !important;
+      border-color: var(--border-color) !important;
+    }
+    
+    .select2-results__option {
+      color: var(--text-color) !important;
+    }
+    
+    .select2-results__option--highlighted {
+      background-color: var(--primary) !important;
+      color: white !important;
+    }
+    
+    /* Alertas */
+    .alert {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .alert-success {
+      background-color: #d1fae5;
+      color: #065f46;
+      border-left: 5px solid #10b981;
+    }
+    
+    .alert-danger {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      border-left: 5px solid #ef4444;
+    }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--success);
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--success);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-toggle-label {
+      font-size: 0.9rem;
+      color: white;
+    }
+
+    /* Cards de login */
+    .login-cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transition: background-color 0.3s;
+    }
+
+    .login-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .login-card-title {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .login-card-body {
+      margin-bottom: 15px;
+    }
+
+    .login-card-field {
+      margin-bottom: 10px;
+    }
+
+    .login-card-field strong {
+      display: inline-block;
+      width: 70px;
+      color: var(--gray);
+    }
+
+    .login-card-actions {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-color);
+      padding-top: 15px;
+    }
+
+    /* Search bar */
+    .search-container {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 15px 12px 40px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 1rem;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      color: var(--text-color);
+    }
+
+    .tab.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="#" class="navbar-brand">
+      <i class="fas fa-user-shield"></i> neext ltda
+    </a>
+    <div class="navbar-actions">
+      <div class="theme-toggle">
+        <span class="theme-toggle-label"><i class="fas fa-sun"></i></span>
+        <label class="switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="theme-toggle-label"><i class="fas fa-moon"></i></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-user-shield"></i> Gerenciador de Logins</h1>
+      <p>Gerencie todos os seus acessos em um único lugar</p>
+    </header>
+    
+    <div id="alert" class="alert"></div>
+    
+    <div class="stats-container">
+      <div class="stat-card total">
+        <h3><i class="fas fa-users"></i> Total de Logins</h3>
+        <div class="value" id="total-logins">0</div>
+      </div>
+      
+      <div class="stat-card ativos">
+        <h3><i class="fas fa-check-circle"></i> Logins Ativos</h3>
+        <div class="value" id="ativos-logins">0</div>
+      </div>
+      
+      <div class="stat-card desativados">
+        <h3><i class="fas fa-times-circle"></i> Logins Desativados</h3>
+        <div class="value" id="desativados-logins">0</div>
+      </div>
+      
+      <div class="stat-card grupos">
+        <h3><i class="fas fa-tags"></i> Painéis</h3>
+        <div class="value" id="total-grupos">0</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 class="card-title"><i class="fas fa-list"></i> Lista de Logins</h2>
+        <button class="btn" onclick="abrirModalCriacao()">
+          <i class="fas fa-plus"></i> Criar Login
+        </button>
+      </div>
+
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar logins..." onkeyup="filtrarLogins()">
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="mudarTab('ativos')">Ativos</div>
+        <div class="tab" onclick="mudarTab('desativados')">Desativados</div>
+      </div>
+
+      <div id="ativos-tab" class="tab-content active">
+        <div class="login-cards-container" id="ativos-container"></div>
+      </div>
+
+      <div id="desativados-tab" class="tab-content">
+        <div class="login-cards-container" id="desativados-container"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de criação -->
+  <div id="createModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-plus-circle"></i> Criar Novo Login</h3>
+        <span class="close" onclick="fecharModalCriacao()">&times;</span>
+      </div>
+      
+      <form id="form-login" onsubmit="criarLogin(event)">
+        <div class="form-group">
+          <label for="novoUsuario">Usuário</label>
+          <input type="text" id="novoUsuario" class="form-control" placeholder="Digite o nome de usuário" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="novaSenha">Senha</label>
+          <input type="text" id="novaSenha" class="form-control" placeholder="Digite a senha" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="novoGrupo">Painel</label>
+          <select id="novoGrupo" class="form-control" required>
+            <option value="">Selecione um painel</option>
+            <!-- Grupos serão preenchidos via JavaScript -->
+          </select>
+        </div>
+        
+        <div class="form-group text-right">
+          <button type="button" class="btn btn-warning" onclick="fecharModalCriacao()">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> Criar Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Modal de edição -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-edit"></i> Editar Login</h3>
+        <span class="close" onclick="fecharModal()">&times;</span>
+      </div>
+      
+      <form id="form-edit">
+        <input type="hidden" id="editId">
+        
+        <div class="form-group">
+          <label for="editUsuario">Usuário</label>
+          <input type="text" id="editUsuario" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editSenha">Senha</label>
+          <input type="text" id="editSenha" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editGrupo">Painel</label>
+          <select id="editGrupo" class="form-control" required>
+            <!-- Grupos serão preenchidos via JavaScript -->
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="editStatus">Status</label>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label class="switch">
+              <input type="checkbox" id="editStatus">
+              <span class="slider"></span>
+            </label>
+            <span id="statusLabel">Ativo</span>
+          </div>
+        </div>
+        
+        <div class="form-group text-right">
+          <button type="button" class="btn btn-warning" onclick="fecharModal()">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="button" class="btn btn-success" onclick="salvarEdicao()">
+            <i class="fas fa-save"></i> Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbxeX7nXOzD2nvBgCjlaI11gO4OnKVgOkzl8geUU1GfVYmYR9SqJsU8eDQ7gRg9HwZ-33Q/exec";
+    let gruposDisponiveis = [];
+    let allLogins = [];
+    let currentTab = 'ativos'; // Variável para controlar a aba atual
+
+    $(document).ready(function() {
+      // Inicializa o Select2
+      $('#novoGrupo, #editGrupo').select2({
+        placeholder: "Selecione um painel",
+        allowClear: true
+      });
+      
+      // Carrega os dados iniciais
+      carregarLogins();
+      carregarStatusContagem();
+      
+      // Verifica o tema salvo no localStorage
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggle').checked = savedTheme === 'dark';
+      
+      // Configura o evento do toggle de tema
+      document.getElementById('themeToggle').addEventListener('change', function() {
+        if (this.checked) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    });
+
+    function showAlert(message, type) {
+      const alert = $('#alert');
+      alert.removeClass('alert-success alert-danger').addClass(`alert-${type}`);
+      alert.html(message).fadeIn();
+      setTimeout(() => alert.fadeOut(), 5000);
+    }
+
+    async function carregarLogins() {
+      try {
+        const res = await fetch(url + "?action=list");
+        allLogins = await res.json();
+        atualizarExibicaoLogins();
+      } catch (error) {
+        console.error("Erro ao carregar logins:", error);
+        showAlert("Erro ao carregar a lista de logins. Por favor, tente novamente.", "danger");
+      }
+    }
+
+    function atualizarExibicaoLogins() {
+      const ativosContainer = document.getElementById("ativos-container");
+      const desativadosContainer = document.getElementById("desativados-container");
+      
+      ativosContainer.innerHTML = "";
+      desativadosContainer.innerHTML = "";
+
+      // Filtra os logins de acordo com a aba atual
+      const loginsFiltrados = currentTab === 'ativos' 
+        ? allLogins.filter(login => login.status === 'ativo')
+        : allLogins.filter(login => login.status === 'desativado');
+
+      loginsFiltrados.forEach(login => {
+        const card = criarCardLogin(login);
+        
+        if (login.status === 'ativo') {
+          ativosContainer.appendChild(card);
+        } else {
+          desativadosContainer.appendChild(card);
+        }
+      });
+    }
+
+    function criarCardLogin(login) {
+      const card = document.createElement("div");
+      card.className = "login-card";
+      
+      card.innerHTML = `
+        <div class="login-card-header">
+          <h3 class="login-card-title">${login.usuario}</h3>
+          <span class="status ${login.status === 'ativo' ? 'status-ativo' : 'status-desativado'}">
+            <i class="fas ${login.status === 'ativo' ? 'fa-check-circle' : 'fa-times-circle'}"></i> ${login.status}
+          </span>
+        </div>
+        <div class="login-card-body">
+          <div class="login-card-field"><strong>Painel:</strong> ${login.grupo}</div>
+          <div class="login-card-field"><strong>Senha:</strong> ${login.senha}</div>
+        </div>
+        <div class="login-card-actions">
+          <label class="switch">
+            <input type="checkbox" ${login.status === 'ativo' ? 'checked' : ''} onchange="trocarStatus('${login.id}', '${login.status}')">
+            <span class="slider"></span>
+          </label>
+          <div>
+            <button class="btn btn-sm" onclick="abrirModal('${login.id}', '${login.usuario}', '${login.senha}', '${login.grupo}', '${login.status}')">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deletarLogin('${login.id}')">
+              <i class="fas fa-trash"></i> Excluir
+            </button>
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    async function carregarStatusContagem() {
+      try {
+        const res = await fetch(url + "?action=status");
+        const dados = await res.json();
+        
+        // Atualiza os cards
+        document.getElementById("total-logins").textContent = dados.total;
+        document.getElementById("ativos-logins").textContent = dados.ativos;
+        document.getElementById("desativados-logins").textContent = dados.desativados;
+        document.getElementById("total-grupos").textContent = dados.grupos.length;
+        
+        // Atualiza a lista de grupos nos selects
+        gruposDisponiveis = dados.grupos;
+        updateGroupSelects();
+      } catch (error) {
+        console.error("Erro ao carregar estatísticas:", error);
+        showAlert("Erro ao carregar as estatísticas. Por favor, tente novamente.", "danger");
+      }
+    }
+
+    function updateGroupSelects() {
+      const novoGrupoSelect = $('#novoGrupo');
+      const editGrupoSelect = $('#editGrupo');
+      
+      // Limpa os selects
+      novoGrupoSelect.empty();
+      editGrupoSelect.empty();
+      
+      // Adiciona a opção padrão
+      novoGrupoSelect.append(new Option("Selecione um painel", "", true, true));
+      editGrupoSelect.append(new Option("Selecione um painel", "", true, true));
+      
+      // Adiciona os grupos
+      gruposDisponiveis.forEach(grupo => {
+        novoGrupoSelect.append(new Option(grupo, grupo));
+        editGrupoSelect.append(new Option(grupo, grupo));
+      });
+      
+      // Atualiza o Select2
+      novoGrupoSelect.trigger('change');
+      editGrupoSelect.trigger('change');
+    }
+
+    async function trocarStatus(id, statusAtual) {
+      try {
+        const novoStatus = statusAtual === "ativo" ? "desativado" : "ativo";
+        await fetch(`${url}?action=changestatus&id=${id}&status=${novoStatus}`);
+        showAlert(`Status do login alterado para ${novoStatus} com sucesso!`, "success");
+        await carregarLogins();
+        await carregarStatusContagem();
+      } catch (error) {
+        console.error("Erro ao alterar status:", error);
+        showAlert("Erro ao alterar o status do login. Por favor, tente novamente.", "danger");
+      }
+    }
+
+    function abrirModal(id, usuario, senha, grupo, status) {
+      document.getElementById("editId").value = id;
+      document.getElementById("editUsuario").value = usuario;
+      document.getElementById("editSenha").value = senha;
+      $('#editGrupo').val(grupo).trigger('change');
+      document.getElementById("editStatus").checked = status === "ativo";
+      document.getElementById("statusLabel").textContent = status === "ativo" ? "Ativo" : "Desativado";
+      document.getElementById("editModal").style.display = "block";
+    }
+
+    function fecharModal() {
+      document.getElementById("editModal").style.display = "none";
+    }
+
+    function abrirModalCriacao() {
+      document.getElementById("createModal").style.display = "block";
+    }
+
+    function fecharModalCriacao() {
+      document.getElementById("createModal").style.display = "none";
+    }
+
+    async function salvarEdicao() {
+      try {
+        const id = document.getElementById("editId").value;
+        const usuario = document.getElementById("editUsuario").value;
+        const senha = document.getElementById("editSenha").value;
+        const grupo = $('#editGrupo').val();
+        const status = document.getElementById("editStatus").checked ? "ativo" : "desativado";
+
+        if (!usuario || !senha || !grupo) {
+          showAlert("Por favor, preencha todos os campos obrigatórios.", "danger");
+          return;
+        }
+
+        await fetch(`${url}?action=edit&id=${id}&username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(senha)}&group=${encodeURIComponent(grupo)}&status=${status}`);
+        showAlert("Login atualizado com sucesso!", "success");
+        fecharModal();
+        await carregarLogins();
+        await carregarStatusContagem();
+      } catch (error) {
+        console.error("Erro ao salvar edição:", error);
+        showAlert("Erro ao salvar as alterações. Por favor, tente novamente.", "danger");
+      }
+    }
+
+    async function criarLogin(event) {
+      event.preventDefault();
+      try {
+        const u = document.getElementById("novoUsuario").value;
+        const p = document.getElementById("novaSenha").value;
+        const g = $('#novoGrupo').val();
+
+        if (!u || !p || !g) {
+          showAlert("Por favor, preencha todos os campos obrigatórios.", "danger");
+          return;
+        }
+
+        await fetch(`${url}?action=create&username=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&group=${encodeURIComponent(g)}`);
+        showAlert("Login criado com sucesso!", "success");
+        document.getElementById("novoUsuario").value = "";
+        document.getElementById("novaSenha").value = "";
+        $('#novoGrupo').val('').trigger('change');
+        fecharModalCriacao();
+        await carregarLogins();
+        await carregarStatusContagem();
+      } catch (error) {
+        console.error("Erro ao criar login:", error);
+        showAlert("Erro ao criar o login. Por favor, tente novamente.", "danger");
+      }
+    }
+
+    async function deletarLogin(id) {
+      if (confirm("Tem certeza que deseja excluir esse login? Esta ação não pode ser desfeita.")) {
+        try {
+          await fetch(`${url}?action=delete&id=${id}`);
+          showAlert("Login excluído com sucesso!", "success");
+          await carregarLogins();
+          await carregarStatusContagem();
+        } catch (error) {
+          console.error("Erro ao excluir login:", error);
+          showAlert("Erro ao excluir o login. Por favor, tente novamente.", "danger");
+        }
+      }
+    }
+
+    function filtrarLogins() {
+      const termo = document.getElementById("searchInput").value.toLowerCase();
+      
+      if (!termo) {
+        atualizarExibicaoLogins();
+        return;
+      }
+      
+      const loginsFiltrados = allLogins.filter(login => 
+        (login.usuario.toLowerCase().includes(termo) || 
+         login.grupo.toLowerCase().includes(termo) ||
+         login.senha.toLowerCase().includes(termo)) &&
+        (currentTab === 'ativos' ? login.status === 'ativo' : login.status === 'desativado')
+      );
+      
+      const ativosContainer = document.getElementById("ativos-container");
+      const desativadosContainer = document.getElementById("desativados-container");
+      
+      ativosContainer.innerHTML = "";
+      desativadosContainer.innerHTML = "";
+
+      loginsFiltrados.forEach(login => {
+        const card = criarCardLogin(login);
+        
+        if (login.status === 'ativo') {
+          ativosContainer.appendChild(card);
+        } else {
+          desativadosContainer.appendChild(card);
+        }
+      });
+    }
+
+    function mudarTab(tab) {
+      currentTab = tab; // Atualiza a aba atual
+      
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      document.querySelector(`.tab[onclick="mudarTab('${tab}')"]`).classList.add('active');
+      document.getElementById(`${tab}-tab`).classList.add('active');
+      
+      // Atualiza a exibição dos logins de acordo com a aba selecionada
+      atualizarExibicaoLogins();
+    }
+  </script>
+</body>
+</html>
