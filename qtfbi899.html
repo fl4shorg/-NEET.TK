@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema Desconectado - Painel Administrativo</title>
+    <meta name="description" content="Sessão expirada - Refaça seu login para continuar" />
+    <meta name="author" content="Painel Administrativo" />
+
+    <meta property="og:title" content="Sistema Desconectado - Painel Administrativo" />
+    <meta property="og:description" content="Sessão expirada - Refaça seu login para continuar" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+      /* Custom animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .fade-in {
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      .hover-scale:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s ease;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="w-full max-w-md fade-in">
+        <!-- Card Principal -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-2xl border-0 hover-scale">
+          <div class="p-8 text-center space-y-6">
+            
+            <!-- Ícone de Aviso -->
+            <div class="flex justify-center">
+              <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-600"></i>
+              </div>
+            </div>
+
+            <!-- Título Principal -->
+            <div class="space-y-2">
+              <h1 class="text-2xl font-bold text-slate-800">
+                Você foi desconectado do painel
+              </h1>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                Sua sessão expirou por motivos de segurança. Para continuar utilizando o sistema, é necessário realizar o login novamente.
+              </p>
+            </div>
+
+            <!-- Ícone de Segurança -->
+            <div class="flex justify-center py-4">
+              <i data-lucide="shield" class="w-12 h-12 text-slate-400"></i>
+            </div>
+
+            <!-- Botão de Ação -->
+            <button 
+              onclick="handleLoginRedirect()"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+            >
+              Refazer Login
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Informação Adicional -->
+            <div class="pt-4 border-t border-slate-200">
+              <p class="text-xs text-slate-500">
+                Por sua segurança, todas as sessões são automaticamente encerradas após um período de inatividade.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6">
+          <p class="text-xs text-slate-500">
+            Sistema Administrativo • Acesso Seguro
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Função para redirecionar para login
+      function handleLoginRedirect() {
+        window.location.href = "https://neetk.onrender.com/login";
+      }
+
+      // Inicializar ícones Lucide após carregar a página
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
+      });
+
+      // Adicionar efeito de hover nos ícones
+      document.addEventListener('DOMContentLoaded', function() {
+        const icons = document.querySelectorAll('[data-lucide]');
+        icons.forEach(icon => {
+          icon.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.transition = 'transform 0.2s ease';
+          });
+          
+          icon.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
