@@ -1,971 +1,1977 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𝗗𝗔𝗦𝗛𝗗𝗕𝗢𝗔𝗥𝗗</title>
-    <meta name="description" content=" Painel ">
-<link rel="icon" href="https://www.exemplo.com/caminho/para/o/icone.jpg" type="image/jpg">
-<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-  <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
-        h1, h2 { text-align: center; color: #333; }
-        .navbar { display: flex; justify-content: center; align-items: center; background-color: #007BFF; padding: 20px 0; color: #fff; }
-        .navbar-brand { font-size: 28px; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; }
-        .navbar-brand i { font-size: 30px; }
-        .navbar-menu { list-style-type: none; display: flex; gap: 20px; margin: 0; padding: 0; }
-        .navbar-menu li a { color: #fff; text-decoration: none; font-size: 18px; transition: color 0.3s ease; }
-        .navbar-menu li a:hover { color: #f8d7da; }
-        @media (max-width: 768px) { .navbar-menu { flex-direction: column; align-items: flex-start; gap: 10px; } }
-        #users-cards { margin: 10px auto; padding: 10px; max-width: 500px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        .user-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); background: #fff; }
-        .actions { margin-top: 10px; display: flex; justify-content: space-between; }
-        @media (max-width: 600px) { #users-cards { padding: 15px; margin: 10px; } }
-        button { background-color: #007BFF; color: #fff; padding: 10px 15px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        
-        
-    .swal2-popup {
-        width: 400px !important; /* Define a largura do pop-up */
-        font-size: 16px; /* Define o tamanho da fonte */
-    }
-
-    .swal2-title {
-        font-size: 20px; /* Tamanho do título */
-    }
-
-    .swal2-content {
-        font-size: 14px; /* Tamanho do conteúdo */
-    }
-    
-    /* Estilos para o modo escuro */
-body.dark-mode {
-    background-color: #121212;
-    color: #fff;
-}
-
-body.dark-mode .navbar {
-    background-color: #333;
-}
-
-body.dark-mode .navbar-menu li a {
-    color: #fff;
-}
-
-body.dark-mode #users-cards,
-body.dark-mode .user-card {
-    background-color: #333;
-    color: #fff;
-    border-color: #555;
-}
-
-body.dark-mode button {
-    background-color: #444;
-    color: #fff;
-}
-
-body.dark-mode button:hover {
-    background-color: #666;
-}
-
-body.dark-mode .swal2-popup {
-    background-color: #333 !important;
-    color: #fff !important;
-}
-
-
-    body { 
-        font-family: Arial, sans-serif; 
-        background-color: #f5f5f5; 
-        color: #333;
-        transition: background-color 0.3s, color 0.3s;
-    }
-    body.dark-mode {
-        background-color: #121212;
-        color: #fff;
-    }
-    .navbar { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        background-color: #007BFF; 
-        padding: 20px; 
-    }
-    .navbar a { 
-        color: #fff; 
-        text-decoration: none; 
-        font-size: 18px; 
-    }
-    .toggle-btn {
-        cursor: pointer;
-        font-size: 20px;
-        color: #fff;
-        background: none;
-        border: none;
-    }
-
-
-    </style>
-</head>
-<body>
-    <!-- Navbar -->
-<!-- Navbar com opção de Modo Escuro -->
-
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-<!-- Inclusão do SweetAlert2 (CSS e JS) -->
-<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.9/dist/sweetalert2.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.9/dist/sweetalert2.min.js"></script>
-
-<div class="navbar" style="background: linear-gradient(90deg, #2575fc, #ff4081); padding: 20px; color: white; font-size: 36px; font-weight: bold;">
-    <div class="navbar-brand" style="display: flex; align-items: center; gap: 12px;">
-        <img src="svg/navbar.svg" alt="Navbar Icon" style="width: 1.5em; height: 1.5em; display: inline-block; vertical-align: middle;"> 
-        DASHBOARD
-    </div>
-    <button id="darkModeToggle" onclick="toggleDarkMode()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
-        <i id="icon" class="fas fa-moon moon-icon"></i> <!-- Ícone inicial de lua para o modo escuro -->
-    </button>
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <div id="profileWrapper" style="position: relative; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; background-color: #ccc;">
-            <i class="fas fa-user" id="defaultIcon" style="font-size: 24px; color: white;"></i>
-            <img id="profilePic" src="" alt="Profile" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: none;">
-        </div>
-        <input type="file" id="profileInput" style="display: none;" accept="image/*" onchange="changeProfilePic()">
-    </div>
-    <!-- Botão de sair com ícone de sair -->
-    <button onclick="confirmExit()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; padding: 5px; margin-left: 10px; display: flex; align-items: center;">
-        <i class="fas fa-sign-out-alt" style="font-size: 20px;"></i> <!-- Ícone de sair -->
-    </button>
-</div>
-
-<!-- Estilos para o efeito de corte -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermit Purple - Enterprise Management</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-    /* Animação de corte do ícone */
-    @keyframes cutEffect {
-        0% {
-            transform: rotate(0deg);
-            clip-path: inset(0 0 0 0);
-        }
-        50% {
-            transform: rotate(180deg);
-            clip-path: inset(0 50% 0 50%); /* Divide o ícone */
-        }
-        100% {
-            transform: rotate(360deg);
-            clip-path: inset(0 0 0 0); /* Volta ao normal */
-        }
-    }
+/* Custom CSS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    /* Aplica o efeito de corte ao ícone da lua */
-    .moon-icon.cut {
-        animation: cutEffect 0.5s ease-in-out;
-    }
-
-    /* Estilo para o ícone do sol */
-    .fa-sun {
-        font-size: 20px;
-    }
-</style>
-
-<script>
-    // Função para alternar entre modo escuro e claro
-    function toggleDarkMode() {
-        const body = document.body;
-        const icon = document.getElementById("icon");
-
-        // Alterna a classe 'dark-mode' no corpo da página
-        body.classList.toggle("dark-mode");
-
-        // Alterna o ícone entre lua e sol
-        if (body.classList.contains("dark-mode")) {
-            icon.classList.remove("fa-moon");
-            icon.classList.add("fa-sun");
-
-            // Salva no localStorage
-            localStorage.setItem('darkMode', 'enabled');
-            console.log("Modo escuro ativado e salvo no localStorage.");
-        } else {
-            icon.classList.remove("fa-sun");
-            icon.classList.add("fa-moon");
-
-            // Salva no localStorage
-            localStorage.setItem('darkMode', 'disabled');
-            console.log("Modo claro ativado e salvo no localStorage.");
-        }
-    }
-
-    // Função para carregar configurações do localStorage e fotos de perfil
-    window.onload = function() {
-        console.log("Página carregada. Verificando configurações no localStorage.");
-
-        // Carregar a foto de perfil do localStorage (se houver)
-        const savedProfilePic = localStorage.getItem("profilePic");
-        const profilePic = document.getElementById("profilePic");
-        const defaultIcon = document.getElementById("defaultIcon");
-
-        // Verificar se existe foto de perfil salva no localStorage
-        if (savedProfilePic) {
-            profilePic.src = savedProfilePic;
-            profilePic.style.display = "block";
-            defaultIcon.style.display = "none";
-            console.log("Foto de perfil carregada do localStorage.");
-        } else {
-            console.log("Nenhuma foto de perfil encontrada no localStorage.");
-        }
-
-        // Verifica se o modo escuro está salvo no localStorage e aplica
-        const darkModeStatus = localStorage.getItem('darkMode');
-        if (darkModeStatus === 'enabled') {
-            document.body.classList.add('dark-mode');
-            document.getElementById("icon").classList.remove('fa-moon');
-            document.getElementById("icon").classList.add('fa-sun');
-            console.log("Modo escuro ativado.");
-        } else if (darkModeStatus === 'disabled') {
-            document.body.classList.remove('dark-mode');
-            document.getElementById("icon").classList.remove('fa-sun');
-            document.getElementById("icon").classList.add('fa-moon');
-            console.log("Modo claro ativado.");
-        } else {
-            console.log("Modo escuro não encontrado no localStorage.");
-        }
-    };
-
-    // Função para alterar a foto de perfil
-    function changeProfilePic() {
-        const fileInput = document.getElementById("profileInput");
-        const profilePic = document.getElementById("profilePic");
-        const defaultIcon = document.getElementById("defaultIcon");
-        const file = fileInput.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                // Define a imagem carregada como foto de perfil
-                profilePic.src = reader.result;
-                profilePic.style.display = "block";
-                defaultIcon.style.display = "none";
-
-                // Salva a nova foto de perfil no localStorage
-                localStorage.setItem("profilePic", reader.result);
-                console.log("Foto de perfil salva no localStorage.");
-            };
-            reader.readAsDataURL(file);
-        } else {
-            console.log("Nenhum arquivo selecionado para foto de perfil.");
-        }
-    }
-
-    // Quando clicar no perfil, abre o seletor de arquivos
-    document.getElementById("profileWrapper").onclick = function() {
-        document.getElementById("profileInput").click();
-    };
-</script>
-
-
-
-<script>
-    // Função de Logout com confirmação antes de sair utilizando SweetAlert2
-    function confirmExit() {
-        // Exibe o SweetAlert2 com a confirmação
-        Swal.fire({
-            title: 'Você tem certeza?',
-            text: "Você deseja encerrar a sessão?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Limpar as preferências do modo escuro
-                localStorage.removeItem('darkMode');
-                console.log("Modo escuro removido do localStorage.");
-
-                // Limpar a foto de perfil
-                localStorage.removeItem('profilePic');
-                console.log("Foto de perfil removida do localStorage.");
-
-                // Redireciona para a página neext.ltda.com
-                window.location.href = "https://neetk.onrender.com/login";  // Redireciona para a página de logout
-                console.log("Redirecionando para neext.ltda.com após logout.");
-            } else {
-                console.log("Logout cancelado.");
-            }
-        });
-    }
-</script>
-
-
-<!-- Container para os cards -->
-<div id="summary-cards" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 20px; padding: 0 10px;"></div>
-
-
-
-<!-- Container para os gráficos -->
-<div style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px; padding: 0 10px;">
-    <div id="graph-container" style="width: 100%; height: 400px;">
-        <canvas id="ctsChart"></canvas> <!-- Gráfico de Coluna -->
-    </div>
-    <div id="graph-pizza-container" style="width: 100%; height: 400px;">
-        <canvas id="pizzaChart"></canvas> <!-- Gráfico de Pizza -->
-    </div>
-</div>
-
-<!-- Link para Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-<!-- Link para o Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-
-
-<script>
-    const API_URL_2 = 'https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec?action=summary';  // Substitua por sua URL
-
-    function loadSummaryData() {
-        fetch(API_URL_2)
-            .then(response => response.json())
-            .then(data => {
-                const summaryCards = document.getElementById('summary-cards');
-                
-                // Checa se o card da situação já existe. Se não, cria o card.
-                let situationCard = document.getElementById('situation-card');
-                if (!situationCard) {
-                    situationCard = document.createElement('div');
-                    situationCard.id = 'situation-card';  // Garantindo que o card de situação tenha um ID único
-                    summaryCards.appendChild(situationCard);
-                }
-
-                // Atualizar a situação do grupo
-                const totalAdmins = data["Total de Administradores"];
-let groupStatus = '';
-let statusColor = '';
-let statusIcon = '';
-
-if (totalAdmins <= 20) {
-    groupStatus = 'Situação Péssima';
-    statusColor = '#e74c3c'; // Vermelho
-    statusIcon = 'fas fa-angry'; // Ícone de carinha zangada
-} else if (totalAdmins <= 40) {
-    groupStatus = 'Situação Muito Ruim';
-    statusColor = '#e67e22'; // Laranja
-    statusIcon = 'fas fa-frown'; // Ícone de carinha triste
-} else if (totalAdmins <= 49) {
-    groupStatus = 'Situação Estável';
-    statusColor = '#f1c40f'; // Amarelo
-    statusIcon = 'fas fa-meh'; // Ícone de carinha neutra
-} else if (totalAdmins === 50) {
-    groupStatus = 'Situação Boa';
-    statusColor = '#27ae60'; // Verde escuro
-    statusIcon = 'fas fa-smile'; // Ícone de carinha feliz
-} else if (totalAdmins <= 60) {
-    groupStatus = 'Situação Muito Boa';
-    statusColor = '#2ecc71'; // Verde
-    statusIcon = 'fas fa-laugh'; // Ícone de carinha risonha
-} else if (totalAdmins >= 70) {
-    groupStatus = 'Situação Ultra Boa';
-    statusColor = '#9b59b6'; // Roxo
-    statusIcon = 'fas fa-grin-stars'; // Ícone de carinha animada
+* {
+    font-family: 'Inter', sans-serif;
 }
 
-situationCard.innerHTML = `
-    <div style="text-align: center;">
-        <i class="${statusIcon}" style="font-size: 30px; color: #fff;"></i>
+.glass-morphism {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+.glass-morphism-dark {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translate3d(30px, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease-out forwards;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(229, 231, 235, 0.3);
+}
+
+.dark .modal-content {
+    background: rgb(30, 41, 59);
+    color: white;
+    border-color: rgba(71, 85, 105, 0.5);
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background: #4caf50;
+    color: white;
+    border-radius: 8px;
+    z-index: 2000;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.toast.error {
+    background: #f44336;
+}
+
+.toast.loading {
+    background: #2196f3;
+}
+
+/* Dark mode styles */
+.dark {
+    color-scheme: dark;
+}
+
+.dark body {
+    background: linear-gradient(135deg, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 50%, rgb(15, 23, 42) 100%);
+}
+
+.dark .section-bg {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(71, 85, 105, 0.5);
+}
+
+.dark .text-primary {
+    color: white;
+}
+
+.dark .text-secondary {
+    color: rgb(148, 163, 184);
+}
+
+.dark .bg-card {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(71, 85, 105, 0.3);
+}
+
+.dark .bg-input {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(71, 85, 105, 0.5);
+    color: white;
+}
+
+.dark .bg-input::placeholder {
+    color: rgb(148, 163, 184);
+}
+
+/* Light mode styles */
+.light body {
+    background: linear-gradient(135deg, rgb(249, 250, 251) 0%, white 50%, rgb(249, 250, 251) 100%);
+}
+
+.light .section-bg {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(229, 231, 235, 0.3);
+}
+
+.light .text-primary {
+    color: rgb(17, 24, 39);
+}
+
+.light .text-secondary {
+    color: rgb(107, 114, 128);
+}
+
+.light .bg-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(229, 231, 235, 0.2);
+}
+
+.light .bg-input {
+    background: white;
+    border-color: rgb(209, 213, 219);
+    color: rgb(17, 24, 39);
+}
+
+.light .bg-input::placeholder {
+    color: rgb(107, 114, 128);
+}
+
+/* Card styles for light mode */
+.light .user-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(229, 231, 235, 0.3);
+    color: rgb(17, 24, 39);
+}
+
+.dark .user-card {
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+    color: white;
+}
+
+/* Info row styles */
+.light .info-row-bg {
+    background: rgba(243, 244, 246, 0.8);
+}
+
+.dark .info-row-bg {
+    background: rgba(51, 65, 85, 0.8);
+}
+
+.light .info-label {
+    color: rgb(107, 114, 128);
+}
+
+.dark .info-label {
+    color: rgb(148, 163, 184);
+}
+
+.light .info-value {
+    color: rgb(17, 24, 39);
+}
+
+.dark .info-value {
+    color: white;
+}
+
+/* Modal input styles */
+.light .modal-input {
+    background: white;
+    border: 1px solid rgb(209, 213, 219);
+    color: rgb(17, 24, 39);
+}
+
+.dark .modal-input {
+    background: rgb(51, 65, 85);
+    border: 1px solid rgba(71, 85, 105, 0.5);
+    color: white;
+}
+
+.light .modal-input::placeholder {
+    color: rgb(107, 114, 128);
+}
+
+.dark .modal-input::placeholder {
+    color: rgb(148, 163, 184);
+}
+
+/* Navbar light mode fix */
+.light .navbar-icon {
+    background: rgba(243, 244, 246, 0.8);
+    color: rgb(75, 85, 99);
+}
+
+.dark .navbar-icon {
+    background: rgba(51, 65, 85, 0.8);
+    color: rgb(148, 163, 184);
+}
+
+/* Joestar birthmark icon */
+.joestar-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.joestar-icon-large {
+    width: 48px;
+    height: 48px;
+}
+
+/* Search result styles */
+.light .search-result-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(229, 231, 235, 0.3);
+    color: rgb(17, 24, 39);
+}
+
+.dark .search-result-card {
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+    color: white;
+}
+
+.light .modal-action-button {
+    background: linear-gradient(to right, rgb(134, 239, 172) 0%, rgb(59, 130, 246) 100%); /* Light green to blue gradient */
+    color: rgb(17, 24, 39); /* Black text */
+}
+
+.dark .modal-action-button {
+    background: linear-gradient(to right, rgb(16, 185, 129) 0%, rgb(5, 150, 105) 100%); /* Darker green to emerald gradient */
+    color: white;
+}
+
+/* Specific fixes for light mode visibility */
+.light #editId {
+    background: white; /* Fundo branco para o campo de ID readonly */
+    color: black; /* Texto preto para o campo de ID readonly */
+}
+
+.light .modal-action-button {
+    color: black; /* Texto preto para o botão de ação no modal de edição */
+}
+
+/* Fix for "Editar" and "Desativar" buttons on user cards in light mode */
+.light .user-card button.text-white {
+    color: black !important; /* Garante texto preto para botões nos cartões de usuário no tema claro */
+}
+
+/* Fix for "Editar Registro" title in edit modal in light mode */
+.light #editModal .modal-content h2 {
+    color: black !important; /* Garante texto preto para o título do modal de edição no tema claro */
+}
+
+/* SweetAlert2 Dark Mode */
+.swal2-dark-mode {
+    background-color: rgb(30, 41, 59) !important;
+    color: white !important;
+}
+
+.swal2-dark-mode .swal2-title {
+    color: white !important;
+}
+
+.swal2-dark-mode .swal2-html-container {
+    color: rgb(148, 163, 184) !important;
+}
+
+.swal2-dark-mode .swal2-styled {
+    background-color: #3085d6 !important;
+    color: white !important;
+}
+
+.swal2-dark-mode .swal2-cancel {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+/* Fix for inactive search input color in light mode */
+.light #inactiveSearch {
+    background-color: white !important;
+    color: rgb(17, 24, 39) !important; /* text-primary color */
+    border-color: rgb(209, 213, 219) !important; /* border color */
+}
+.dark #inactiveSearch {
+    background-color: rgb(30, 41, 59) !important; /* bg-input dark color */
+    color: white !important; /* text-primary dark color */
+    border-color: rgba(71, 85, 105, 0.5) !important; /* border color */
+}
+/* Removed previous custom CSS for tabs to rely on JS class manipulation */
+</style>
+</head>
+<body class="min-h-screen transition-all duration-300">
+<!-- Loading Screen -->
+<div id="loadingScreen" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center z-50">
+<div class="text-center">
+    <div class="relative mb-8">
+        <div class="w-24 h-24 mx-auto flex items-center justify-center animate-pulse">
+            <!-- Joestar Birthmark SVG sem fundo -->
+            <svg class="joestar-icon-large text-white" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                <path style="fill:#ffffff; stroke:none;" d="M348 27C345.809 34.4124 346.443 43.2732 345.91 51C345.083 63.0098 343.734 74.9893 342.91 87C340.259 125.678 336.739 164.318 334.09 203C332.927 219.981 332.282 237.086 330.285 254C329.634 259.522 330.717 266.909 327.973 271.945C325.312 276.829 317.794 278.791 313 280.85C299.836 286.503 286.435 291.709 273 296.681C230.098 312.56 185.422 323.702 140 329.155C124.489 331.017 108.638 333.871 119 339.475C137.866 344.163 156.795 349.56 175 356.425C200.509 366.045 225.849 377.859 250 390.486C259.247 395.321 268.582 399.777 278 404.255C284.015 407.116 290.428 410.828 297 412C297 493.213 284 573.888 271.576 654C267.695 679.021 263.456 703.982 259.576 729C257.442 742.76 254.288 757.068 254 771C260.579 766.154 264.816 758.508 269.629 752C280.281 737.598 289.983 722.622 300.294 708C334.166 659.967 366.642 610.95 403.4 565C416.258 548.927 429.674 533.439 443.285 518C447.756 512.93 455.087 502.777 462 501.357C467.174 500.295 474.153 503.401 479 505.001C491.909 509.262 504.42 514.271 517 519.397C552.095 533.694 585.916 552.966 618 573.05C630.241 580.713 642.633 588.142 655 595.601C661.777 599.689 668.324 604.785 676 607C671.326 590.773 660.644 574.894 652.781 560C634.204 524.814 614.085 489.637 591.28 457C582.12 443.891 573.212 430.208 562.866 418C558.707 413.093 549.995 405.641 549.322 399C548.572 391.611 554.729 382.542 557.576 376C565.669 357.397 574.681 339.144 583.753 321C609.851 268.805 639.875 219.139 669.603 169C678.003 154.833 686.9 140.933 695.681 127C700.621 119.162 707.371 110.934 710 102C696.153 103.866 683.141 110.249 670 114.645C627.186 128.969 585.707 150.101 547 173.201C531.806 182.268 516.673 191.779 502 201.67C497.854 204.464 490.295 212.459 485 211.828C480.73 211.319 475.996 205.701 473 202.911C463.513 194.074 454.624 184.59 445.925 175C420.006 146.424 400.711 113.23 381.424 80C374.448 67.9796 367.773 55.7989 360.424 44C356.745 38.0947 353.237 31.652 348 27z"/>
+            </svg>
+        </div>
+        <div class="absolute -inset-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl blur-xl animate-pulse"></div>
     </div>
-    <h4 style="color: #fff; font-size: 14px; text-align: center;">Situação do Grupo</h4>
-    <p style="color: #fff; font-size: 18px; font-weight: bold; text-align: center;">${groupStatus}</p>
-`;
-situationCard.style.backgroundColor = statusColor;
-                situationCard.style.padding = '10px';
-                situationCard.style.borderRadius = '8px';
-                situationCard.style.flex = '1 1 calc(50% - 10px)';
-                situationCard.style.boxSizing = 'border-box';
+    <h1 class="text-3xl font-bold text-white mb-2">Hermit Purple</h1>
+    <p class="text-slate-400 mb-8">Enterprise Management</p>
+    <div class="flex items-center justify-center space-x-3">
+        <div class="loading-spinner border-purple-400"></div>
+        <span class="text-slate-300">Carregando sistema...</span>
+    </div>
+</div>
+</div>
 
-                // Atualizar os outros cards
-                const cards = [
-                    { title: "Número do Grupo", value: data["Número do Grupo"], color: "#3498db", icon: "fa-users" },
-                    { title: "Total de Administradores", value: data["Total de Administradores"], color: "#e74c3c", icon: "fa-user-shield" },
-                    { title: "Jovens", value: data["Faixa Etária"].Jovens, color: "#2ecc71", icon: "fa-child" },
-                    { title: "Adolescentes", value: data["Faixa Etária"].Adolescentes, color: "#9b59b6", icon: "fa-user-graduate" },
-                    { title: "Adultos", value: data["Faixa Etária"].Adultos, color: "#f39c12", icon: "fa-user" },
-                    { title: "Último ID", value: data["Último ID Enviado"], color: "#16a085", icon: "fa-id-card" },
-                    { title: "Taxa de Crescimento", value: data["Taxa de Crescimento"], color: "#f1c40f", icon: "fa-chart-line" }
-                ];
+<!-- Main App -->
+<div id="mainApp" class="hidden">
+<!-- Navbar -->
+<nav id="navbar" class="sticky top-0 z-50 transition-all duration-300 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center space-x-4">
+                <div class="relative p-3 rounded-2xl transition-all duration-300 bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg hover:shadow-xl group">
+                    <!-- Joestar Birthmark SVG na navbar com fundo roxo -->
+                    <svg class="joestar-icon text-white transition-transform duration-300 group-hover:scale-110" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                        <path style="fill:#ffffff; stroke:none;" d="M348 27C345.809 34.4124 346.443 43.2732 345.91 51C345.083 63.0098 343.734 74.9893 342.91 87C340.259 125.678 336.739 164.318 334.09 203C332.927 219.981 332.282 237.086 330.285 254C329.634 259.522 330.717 266.909 327.973 271.945C325.312 276.829 317.794 278.791 313 280.85C299.836 286.503 286.435 291.709 273 296.681C230.098 312.56 185.422 323.702 140 329.155C124.489 331.017 108.638 333.871 119 339.475C137.866 344.163 156.795 349.56 175 356.425C200.509 366.045 225.849 377.859 250 390.486C259.247 395.321 268.582 399.777 278 404.255C284.015 407.116 290.428 410.828 297 412C297 493.213 284 573.888 271.576 654C267.695 679.021 263.456 703.982 259.576 729C257.442 742.76 254.288 757.068 254 771C260.579 766.154 264.816 758.508 269.629 752C280.281 737.598 289.983 722.622 300.294 708C334.166 659.967 366.642 610.95 403.4 565C416.258 548.927 429.674 533.439 443.285 518C447.756 512.93 455.087 502.777 462 501.357C467.174 500.295 474.153 503.401 479 505.001C491.909 509.262 504.42 514.271 517 519.397C552.095 533.694 585.916 552.966 618 573.05C630.241 580.713 642.633 588.142 655 595.601C661.777 599.689 668.324 604.785 676 607C671.326 590.773 660.644 574.894 652.781 560C634.204 524.814 614.085 489.637 591.28 457C582.12 443.891 573.212 430.208 562.866 418C558.707 413.093 549.995 405.641 549.322 399C548.572 391.611 554.729 382.542 557.576 376C565.669 357.397 574.681 339.144 583.753 321C609.851 268.805 639.875 219.139 669.603 169C678.003 154.833 686.9 140.933 695.681 127C700.621 119.162 707.371 110.934 710 102C696.153 103.866 683.141 110.249 670 114.645C627.186 128.969 585.707 150.101 547 173.201C531.806 182.268 516.673 191.779 502 201.67C497.854 204.464 490.295 212.459 485 211.828C480.73 211.319 475.996 205.701 473 202.911C463.513 194.074 454.624 184.59 445.925 175C420.006 146.424 400.711 113.23 381.424 80C374.448 67.9796 367.773 55.7989 360.424 44C356.745 38.0947 353.237 31.652 348 27z"/>
+                    </svg>
+                    <div class="absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight transition-colors duration-300 text-primary">Hermit Purple</h1>
+                    <div class="text-xs font-medium text-secondary">Enterprise Management</div>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Sun Icon -->
+                <div id="sunIcon" class="p-2 rounded-lg transition-colors duration-300 navbar-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun-medium-icon lucide-sun-medium w-4 h-4 transition-colors duration-300 text-amber-500">
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 3v1"/>
+    <path d="M12 20v1"/>
+    <path d="M3 12h1"/>
+    <path d="M20 12h1"/>
+    <path d="m18.364 5.636-.707.707"/>
+    <path d="m6.343 17.657-.707.707"/>
+    <path d="m5.636 5.636.707.707"/>
+    <path d="m17.657 17.657.707.707"/>
+</svg>
+</div>
+                
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="relative w-12 h-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-inner group">
+                    <div id="themeToggleKnob" class="absolute w-4 h-4 bg-white rounded-full shadow-md transform transition-all duration-300 top-1 group-hover:scale-110">
+                        <div class="absolute inset-0 rounded-full bg-gradient-to-br from-white to-gray-100"></div>
+                    </div>
+                </button>
+                
+                <!-- Moon Icon -->
+                <div id="moonIcon" class="p-2 rounded-lg transition-colors duration-300 navbar-icon">
+                    <svg class="w-4 h-4 transition-colors duration-300 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 
-                // Remover e recriar os outros cards
-                summaryCards.innerHTML = '';
-                summaryCards.appendChild(situationCard);  // Re-add the situation card at the top
-                cards.forEach(card => {
-                    const cardElement = document.createElement('div');
-                    cardElement.classList.add('card');
-                    cardElement.style.backgroundColor = card.color;
-                    cardElement.style.padding = '10px';
-                    cardElement.style.borderRadius = '8px';
-                    cardElement.style.flex = '1 1 calc(50% - 10px)';
-                    cardElement.style.boxSizing = 'border-box';
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8 fade-in-up">
+        <h1 class="text-3xl font-bold tracking-tight mb-2 text-primary">Dashboard Executivo</h1>
+        <p class="text-lg text-secondary">Gerencie seus registros com tecnologia de ponta</p>
+    </div>
 
-                    cardElement.innerHTML = `
-                        <div style="text-align: center;">
-                            <i class="fas ${card.icon}" style="font-size: 30px; color: #fff;"></i>
-                        </div>
-                        <h4 style="color: #fff; font-size: 14px; text-align: center;">${card.title}</h4>
-                        <p style="color: #fff; font-size: 18px; font-weight: bold; text-align: center;">${card.value}</p>
-                    `;
-                    summaryCards.appendChild(cardElement);
-                });
+    <!-- Stats Section -->
+    <section id="statsSection" class="p-4 sm:p-6 rounded-2xl shadow-2xl backdrop-blur-sm border transition-all duration-300 section-bg mb-8 slide-in-right">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-bold text-primary">Estatísticas Gerais</h2>
+            </div>
+        </div>
 
-                // Cálculo da Pontuação de CTS
-                const growthRate = parseFloat(data["Taxa de Crescimento"].replace('%', '').trim()) / 100;
-                const ctsScore = (totalAdmins + growthRate * 100) / 10;  // Calculando a pontuação
-                const finalScore = Math.min(Math.max(ctsScore, 0), 10);
-
-                // Criando o gráfico de barras (Coluna)
-                const ctxBar = document.getElementById('ctsChart').getContext('2d'); // Obtendo o contexto do canvas
-                new Chart(ctxBar, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Pontuação de CTS'],
-                        datasets: [{
-                            label: 'Pontuação',
-                            data: [finalScore],
-                            backgroundColor: '#3498db',
-                            borderColor: '#2980b9',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                min: 0,
-                                max: 10,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        }
-                    }
-                });
-
-// Gráfico de Pizza para Total de Administradores (50 como meta)
-const remainingAdmins = Math.max(0, 50 - totalAdmins); // Garante que não fique negativo
-const ctxPizza = document.getElementById('pizzaChart').getContext('2d');
-const pizzaData = {
-    labels: ['Admins atingidos', 'Faltando Administradores'],
-    datasets: [{
-        data: [totalAdmins, remainingAdmins],
-        backgroundColor: ['#2ecc71', '#e74c3c'],
-        borderColor: ['#27ae60', '#c0392b'],
-        borderWidth: 1
-    }]
-};
-
-new Chart(ctxPizza, {
-    type: 'doughnut',
-    data: pizzaData,
-    options: {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function(tooltipItem) {
-                        return tooltipItem.label + ': ' + tooltipItem.raw + ' Administradores';
-                    }
-                }
-            }
-        }
-    }
-});
-            })
-            .catch(error => {
-                console.error("Erro ao carregar os dados:", error);
-            });
-    }
-
-    // Alteração do evento de carregamento para 'DOMContentLoaded'
-    document.addEventListener('DOMContentLoaded', loadSummaryData);
-
-    // Atualiza os dados a cada 30 segundos (30000ms)
-    setInterval(loadSummaryData, 30000);
-</script>
-
-
-
-
-    <!-- Container para os Cards dos Usuários -->
-    
-<!-- Contêiner com a pesquisa e os botões -->
-<div id="search-container" style="text-align: center; margin: 20px;">
-    <!-- Linha de Pesquisa -->
-    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-        <!-- Caixa de texto com visual moderno -->
-        <input type="text" id="search-input" placeholder="Pesquisar pelo ID"
-               style="padding: 12px 20px; font-size: 16px; width: 350px; border: 2px solid #ddd; 
-                      border-radius: 25px; background-color: #fff; 
-                      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-                      transition: all 0.3s ease;">
+        <div class="flex flex-col sm:flex-row gap-3 mb-6 pb-4 border-b border-gray-200/30 dark:border-slate-600/30">
+            <button id="downloadReport" class="flex-1 sm:flex-none bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white transform hover:scale-105 transition-all duration-300 px-4 py-2 rounded-lg font-medium text-sm sm:text-base">
+                <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3"/>
+                </svg>
+                Baixar Relatório
+            </button>
+            <button id="generatePDF" class="flex-1 sm:flex-none bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white transform hover:scale-105 transition-all duration-300 px-4 py-2 rounded-lg font-medium text-sm sm:text-base">
+                <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10,9 9,9 8,9"/>
+                </svg>
+                Gerar PDF
+            </button>
+        </div>
         
-        <!-- Botão de pesquisa roxo -->
-        <button onclick="searchUsers()" 
-                style="background-color: #9b59b6; color: white; padding: 12px 20px; 
-                       border: none; cursor: pointer; border-radius: 50%; 
-                       margin-left: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-                       transition: box-shadow 0.3s ease, transform 0.2s ease;">
-            <i class="fas fa-search"></i> 
+        <div id="statsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-4">
+            <!-- Stats cards will be populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section id="searchSection" class="p-4 sm:p-6 rounded-2xl shadow-2xl backdrop-blur-sm border transition-all duration-300 section-bg mb-8 slide-in-right">
+        <div class="flex items-center space-x-3 mb-6">
+            <div class="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-primary">Buscar por ID</h2>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
+            <input id="searchInput" type="text" placeholder="Digite o ID" class="flex-1 bg-input border rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-sm sm:text-base">
+            <button id="searchButton" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg transform hover:-translate-y-1 transition-all duration-300 px-4 sm:px-6 py-2 rounded-lg font-medium text-sm sm:text-base whitespace-nowrap">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                Buscar
+            </button>
+        </div>
+
+        <div id="searchResult" class="hidden"></div>
+    </section>
+
+    <!-- Management Section -->
+    <section id="managementSection" class="p-4 sm:p-6 rounded-2xl shadow-2xl backdrop-blur-sm border transition-all duration-300 section-bg mb-8 slide-in-right">
+        <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <line x1="19" y1="8" x2="19" y2="14"/>
+                        <line x1="22" y1="11" x2="16" y2="11"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-bold text-primary">Gerenciamento de Registros</h2>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="downloadVCF" class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold shadow-lg transform hover:-translate-y-1 transition-all duration-300 px-4 py-2 rounded-lg text-sm sm:text-base">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3"/>
+                    </svg>
+                    Baixar Contatos VCF
+                </button>
+                
+                <button id="openCreateModal" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold shadow-lg transform hover:-translate-y-1 transition-all duration-300 px-4 py-2 rounded-lg text-sm sm:text-base">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Criar Registro
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Listing Section -->
+    <section id="listingSection" class="p-4 sm:p-6 rounded-2xl shadow-2xl backdrop-blur-sm border transition-all duration-300 section-bg slide-in-right">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <line x1="8" y1="6" x2="21" y2="6"/>
+                        <line x1="8" y1="12" x2="21" y2="12"/>
+                        <line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-bold text-primary">Listagens</h2>
+            </div>
+            
+            <button id="generateListPDF" class="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white transform hover:scale-105 transition-all duration-300 px-4 py-2 rounded-lg font-medium text-sm sm:text-base">
+                <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10,9 9,9 8,9"/>
+                </svg>
+                Gerar PDF
+            </button>
+        </div>
+        
+        <div class="w-full">
+            <div class="grid w-full grid-cols-2 bg-gray-100 dark:bg-slate-700 rounded-lg mb-6">
+                <!-- REMOVED initial dark: classes from here -->
+                <button id="activeTab" class="font-semibold px-4 py-2 rounded-lg transition-all duration-300 text-sm sm:text-base">Ativos (0)</button>
+                <button id="inactiveTab" class="font-semibold px-4 py-2 rounded-lg transition-all duration-300 text-sm sm:text-base">Kitados (0)</button>
+            </div>
+            
+            <div id="activeContent" class="tab-content">
+                <div id="activeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <!-- Active records will be populated here -->
+                </div>
+                <div id="activeEmpty" class="hidden text-center py-12 text-secondary">
+                    <p class="text-lg">Nenhum registro ativo encontrado</p>
+                </div>
+            </div>
+
+            <div id="inactiveContent" class="tab-content hidden">
+                <div class="mb-6">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input id="inactiveSearch" type="text" placeholder="Pesquisar por ID, nome, idade, número, Instagram ou email..." class="pl-10 bg-input border text-primary placeholder:text-secondary focus:bg-white dark:focus:bg-slate-700 transition-all duration-300 w-full rounded-lg px-4 py-2 text-sm sm:text-base">
+                    </div>
+                    <p id="searchCount" class="text-sm mt-2 text-secondary hidden"></p>
+                </div>
+
+                <div id="inactiveGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <!-- Inactive records will be populated here -->
+                </div>
+                <div id="inactiveEmpty" class="hidden text-center py-12 text-secondary">
+                    <p class="text-lg">Nenhum registro kitado encontrado</p>
+                </div>
+                <div id="noSearchResults" class="hidden text-center py-12 text-secondary">
+                    <p class="text-lg">Nenhum registro encontrado para "<span id="searchTerm"></span>"</p>
+                    <button onclick="document.getElementById('inactiveSearch').value = ''; filterInactiveData();" class="mt-2 text-blue-500 hover:text-blue-600 underline">
+                        Limpar pesquisa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+
+<!-- Create Modal -->
+<div id="createModal" class="modal-overlay hidden">
+<div class="modal-content">
+    <div class="flex items-center mb-6">
+        <svg class="w-6 h-6 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="22" y1="11" x2="16" y2="11"/>
+        </svg>
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Criar Novo Registro</h2>
+    </div>
+    
+    <div class="space-y-4">
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input id="createNome" type="text" placeholder="Nome" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <input id="createIdade" type="text" placeholder="Idade" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <input id="createNumero" type="text" placeholder="Número" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.5" y1="6.5" y2="6.5"/>
+            </svg>
+            <input id="createInstagram" type="text" placeholder="Instagram" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input id="createEmail" type="email" placeholder="Email" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="4" y1="9" x2="20" y2="9"/>
+                <line x1="4" y1="15" x2="20" y2="15"/>
+                <line x1="10" y1="3" x2="8" y2="21"/>
+                <line x1="16" y1="3" x2="14" y2="21"/>
+            </svg>
+            <select id="createId" class="pl-10 w-full rounded-lg px-4 py-2 appearance-none modal-input">
+                <option value="">Selecionar ID</option>
+            </select>
+        </div>
+        
+        <button id="createButton" class="w-full font-semibold shadow-lg transform hover:-translate-y-1 transition-all duration-300 px-4 py-2 rounded-lg modal-action-button">
+            <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
+            Criar Registro
         </button>
     </div>
     
-    <!-- Barra de Carregamento -->
-    <div id="loading-container" style="display: none; width: 100%; height: 5px; background-color: #ddd; border-radius: 5px; margin-top: 20px;">
-        <div id="loading-bar" style="width: 0%; height: 100%; background-color: #9b59b6; border-radius: 5px;"></div>
+    <button onclick="closeCreateModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+    </button>
+</div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal-overlay hidden">
+<div class="modal-content">
+    <div class="flex items-center mb-6">
+        <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Editar Registro</h2>
     </div>
     
-    <div id="loading-text" style="font-size: 16px; color: #9b59b6; display: none;">Pesquisando<span id="dots">...</span></div>
+    <div class="space-y-4">
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="4" y1="9" x2="20" y2="9"/>
+                <line x1="4" y1="15" x2="20" y2="15"/>
+                <line x1="10" y1="3" x2="8" y2="21"/>
+                <line x1="16" y1="3" x2="14" y2="21"/>
+            </svg>
+            <input id="editId" type="text" placeholder="ID" readonly class="pl-10 w-full rounded-lg px-4 py-2 bg-gray-100 dark:bg-slate-800 text-black dark:text-white cursor-not-allowed border border-gray-300 dark:border-slate-600">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input id="editNome" type="text" placeholder="Nome" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <input id="editIdade" type="text" placeholder="Idade" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <input id="editNumero" type="text" placeholder="Número" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.5" y1="6.5" y2="6.5"/>
+            </svg>
+            <input id="editInstagram" type="text" placeholder="Instagram" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <div class="relative">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input id="editEmail" type="email" placeholder="Email" class="pl-10 w-full rounded-lg px-4 py-2 modal-input">
+        </div>
+        
+        <button id="editButton" class="w-full font-semibold shadow-lg transform hover:-translate-y-1 transition-all duration-300 px-4 py-2 rounded-lg modal-action-button">
+            <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
+            Salvar Alterações
+        </button>
+    </div>
     
-    <!-- Resultados da pesquisa -->
-    <div id="search-results" style="margin-top: 20px; font-size: 18px; color: #333;"></div>
+    <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+    </button>
+</div>
 </div>
 
 <script>
-    function searchUsers() {
-        // Exibe a barra de carregamento
-        document.getElementById("loading-container").style.display = "block";
-        document.getElementById("loading-text").style.display = "inline"; 
-        
-        // Simulação de carregamento da barra
-        let progressBar = document.getElementById("loading-bar");
-        let width = 0;
-        let interval = setInterval(function() {
-            if (width >= 100) {
-                clearInterval(interval);
-            } else {
-                width++;
-                progressBar.style.width = width + "%";
-            }
-        }, 20); // A barra de carregamento vai preenchendo a cada 20ms
-        
-        // Simulação de uma pesquisa mais rápida
-        setTimeout(function() {
-            clearInterval(interval); // Para a animação de barra
-            document.getElementById("loading-text").style.display = "none"; // Esconde a mensagem
-            document.getElementById("loading-container").style.display = "none"; // Esconde a barra de carregamento
-            
-            // Exibe os resultados imediatamente após a "pesquisa"
-            let resultsDiv = document.getElementById("search-results");
-            resultsDiv.innerHTML = "Resultado encontrado: ID 123, Nome de exemplo";
-        }, 2000); // Pesquisa simulada com duração de 2 segundos
-    }
-</script>
-<!-- Botão de Verificar Lista Negra -->
-<!-- Botão de Verificar Lista Negra -->
-<button onclick="openPopup()" style="background: linear-gradient(to right, #ff4d4d, #ff0000); color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 5px; display: block; margin: 0 auto; font-size: 16px; font-weight: bold; display: flex; align-items: center;">
-  <img src="svg/button2.svg" alt="Ícone Navbar" width="20" height="20" style="margin-right: 10px;">
-  Verificar Lista Negra
-</button>
+// API Configuration
+const API = 'https://script.google.com/macros/s/AKfycbz5-kUngJzyYSBmdu6HDSD1b5lRuOsm-Sh35OIKTbn8lCTM04MZtRMthebO9bHaA0suuw/exec';
 
-<!-- Botão de Cadastro com Ícone -->
-<button id="registerButton" style="background: linear-gradient(to right, #ff007f, #8a2be2); color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 5px; display: block; margin: 20px auto; font-size: 16px; font-weight: bold; display: flex; align-items: center;">
-    <!-- Ícone do Cadastro -->
-    <img src="svg/Button.svg" alt="Ícone de Cadastro" style="width: 25px; height: 25px; margin-right: 10px;">
-    Cadastrar Novo Adm
-</button>
+// Global state
+let isDarkMode = false; // Initialize to false, will be set by setInitialTheme
+let stats = {};
+let activeData = [];
+let inactiveData = [];
+let availableIds = [];
+let currentEditData = null;
+let currentActiveTab = 'active';
 
-    
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+// Demo data for offline mode
+const demoActiveData = [
+{ id: '001', nome: 'João Silva', idade: '25', numero: '11999999999', Instagram: '@joao_silva', email: 'joao@email.com' },
+{ id: '002', nome: 'Maria Santos', idade: '30', numero: '11888888888', Instagram: '@maria_santos', email: 'maria@email.com' },
+{ id: '003', nome: 'Pedro Costa', idade: '22', numero: '11777777777', Instagram: '@pedro_costa', email: 'pedro@email.com' }
+];
 
-<script>
-  // Função para abrir o popup
-  function openPopup() {
-    document.getElementById('popup').style.display = 'flex';
-  }
+const demoInactiveData = [
+{ id: '004', nome: 'Ana Lima', idade: '28', numero: '11666666666', Instagram: '@ana_lima', email: 'ana@email.com', data_desativacao: '2024-01-15T10:30:00' }
+];
 
-  // Função para fechar o popup
-  function closePopup() {
-    document.getElementById('popup').style.display = 'none';
-  }
+const demoAvailableIds = ['005', '006', '007', '008', '009', '010'];
 
-  // Função para verificar se o número está na lista negra
-  async function checkNumber() {
-    const number = document.getElementById('searchInput').value.trim();
-    
-    // Verifica se o número digitado está vazio
-    if (number === "") {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atenção',
-        text: 'Digite um número para pesquisa!',
-      });
-      return;
-    }
+// Utility functions
+function showToast(message, type = 'success') {
+const toast = document.createElement('div');
+toast.className = `toast ${type}`;
+toast.textContent = message;
+document.body.appendChild(toast);
 
-    try {
-      // Fazendo a requisição à API com o número digitado
-      const response = await fetch(`https://script.google.com/macros/s/AKfycbxIG53Hskr69iwx5OREGTqEHYkBCIQYwZr820x2gU7AJ2Fvd2b82iOszZMU0nQ5hQ/exec`);
-
-      // Verificando se a resposta da API é válida
-      if (!response.ok) {
-        throw new Error('Erro ao carregar os números.');
-      }
-
-      // Obtendo a resposta como texto, pois não é um JSON
-      const data = await response.text();
-
-      // Expressão regular para encontrar todos os números
-      const regex = /\d{11,}/g;  // Captura números com 11 ou mais dígitos
-      const numbers = data.match(regex);
-
-      if (numbers && numbers.includes(number)) {
-        // Número encontrado na lista
-        Swal.fire({
-          icon: 'success',
-          title: 'Número Encontrado',
-          text: `O número ${number} está na lista negra!`,
-        });
-      } else {
-        // Número não encontrado na lista
-        Swal.fire({
-          icon: 'error',
-          title: 'Número Não Encontrado',
-          text: `O número ${number} não foi encontrado na lista negra.`,
-        });
-      }
-    } catch (error) {
-      // Exibindo mensagem de erro em caso de falha
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro',
-        text: error.message,
-      });
-    }
-  }
-</script>
-
-
-
-<!-- Popup -->
-<div id="popup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
-  <div style="background: #fff; padding: 20px; border-radius: 5px; text-align: center; width: 80%; max-height: 80%; overflow-y: auto;">
-    <h3>Verificar Número na Lista Negra</h3>
-    <input type="text" id="searchInput" placeholder="Digite o número" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
-    
-    <!-- Botão para verificar o número -->
-    <button onclick="checkNumber()" style="padding: 10px 20px; margin-top: 10px;">Verificar</button>
-    
-    <button onclick="closePopup()" style="margin-top: 10px;">Fechar</button>
-  </div>
-</div>
-    <div id="users-cards"></div>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbwjfKdDwrR5UnubVGXjcFPnpWpxCaU3OhkcosYjPvI7_nZOzLFHWJLTRXeiP_0J9hNTGQ/exec';
-
-// Função para carregar os usuários
-// Função de pesquisa
-function searchUsers() {
-    const searchQuery = document.getElementById('search-input').value.toLowerCase();  // Pega o texto da pesquisa e converte para minúsculas
-    fetch(`${API_URL}?action=read`)
-        .then(response => response.text())
-        .then(data => {
-            const cardsContainer = document.getElementById("users-cards");
-            cardsContainer.innerHTML = "";  // Limpa os cards antes de exibir os resultados da pesquisa
-
-            if (data.trim().length > 0) {
-                // Se houver dados, divida e filtre com base no texto de pesquisa
-                const filteredData = data.trim().split("\n").slice(1).filter(line => {
-                    const user = line.split(",");
-                    // Verifica se qualquer campo contém o texto da pesquisa
-                    return user.some(field => field.toLowerCase().includes(searchQuery));
-                });
-
-                if (filteredData.length > 0) {
-                    // Se houver usuários que atendem ao critério, exibe os cards
-                    filteredData.forEach(line => {
-                        const user = line.split(",");
-                        const card = document.createElement("div");
-                        card.classList.add("user-card");
-                        card.innerHTML = `
-                            <h3><i class="fas fa-user"></i> ${user[1]}</h3>
-                            <p><strong><i class="fas fa-birthday-cake"></i> Idade:</strong> ${user[2]}</p>
-                            <p><strong><i class="fas fa-phone-alt"></i> Número:</strong> ${user[3]}</p>
-                            <p><strong><i class="fab fa-instagram"></i> Instagram:</strong> ${user[4]}</p>
-                            <p><strong><i class="fas fa-envelope"></i> E-mail:</strong> ${user[5]}</p>
-                            <p><strong><i class="fas fa-id-badge"></i> ID:</strong> ${user[0]}</p>
-                            <div class="actions">
-                                <button onclick="editUser('${user[0]}', '${user[1]}', ${user[2]}, '${user[3]}', '${user[4]}', '${user[5]}')" 
-                                        style="background-color: #4CAF50; color: white; padding: 8px 12px; margin-right: 5px; border: none; cursor: pointer;">
-                                    <i class="fas fa-edit"></i> Editar
-                                </button>
-                                <button onclick="deleteUser('${user[0]}')" 
-                                        style="background-color: #f44336; color: white; padding: 8px 12px; border: none; cursor: pointer;">
-                                    <i class="fas fa-trash-alt"></i> Excluir
-                                </button>
-                            </div>
-                        `;
-                        cardsContainer.appendChild(card);
-                    });
-                } else {
-                    cardsContainer.innerHTML = "<p>Nenhum usuário encontrado com essa pesquisa.</p>";
-                }
-            } else {
-                cardsContainer.innerHTML = "<p>Nenhum usuário encontrado.</p>";
-            }
-        })
-        .catch(error => {
-            console.error("Erro ao carregar dados:", error);
-            const cardsContainer = document.getElementById("users-cards");
-            cardsContainer.innerHTML = "<p>Erro ao carregar os usuários. Tente novamente mais tarde.</p>";
-        });
+setTimeout(() => {
+toast.remove();
+}, 3000);
 }
 
-// Função de carregar usuários
-function loadUsers() {
-    fetch(`${API_URL}?action=read`)
-        .then(response => response.text())
-        .then(data => {
-            const cardsContainer = document.getElementById("users-cards");
-            cardsContainer.innerHTML = "";
-            if (data.trim().length > 0) {
-                data.trim().split("\n").slice(1).forEach(line => {
-                    const user = line.split(",");
-                    const card = document.createElement("div");
-                    card.classList.add("user-card");
-                    card.innerHTML = `
-                        <h3><i class="fas fa-user"></i> ${user[1]}</h3>
-                        <p><strong><i class="fas fa-birthday-cake"></i> Idade:</strong> ${user[2]}</p>
-                        <p><strong><i class="fas fa-phone-alt"></i> Número:</strong> ${user[3]}</p>
-                        <p><strong><i class="fab fa-instagram"></i> Instagram:</strong> ${user[4]}</p>
-                        <p><strong><i class="fas fa-envelope"></i> E-mail:</strong> ${user[5]}</p>
-                        <p><strong><i class="fas fa-id-badge"></i> ID:</strong> ${user[0]}</p>
-                        <div class="actions">
-                            <button onclick="editUser('${user[0]}', '${user[1]}', ${user[2]}, '${user[3]}', '${user[4]}', '${user[5]}')" 
-                                    style="background-color: #4CAF50; color: white; padding: 8px 12px; margin-right: 5px; border: none; cursor: pointer;">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button onclick="deleteUser('${user[0]}')" 
-                                    style="background-color: #f44336; color: white; padding: 8px 12px; border: none; cursor: pointer;">
-                                <i class="fas fa-trash-alt"></i> Excluir
-                            </button>
-                        </div>
-                    `;
-                    cardsContainer.appendChild(card);
-                });
-            } else {
-                cardsContainer.innerHTML = "<p>Nenhum usuário encontrado.</p>";
-            }
-        })
-        .catch(error => {
-            console.error("Erro ao carregar dados:", error);
-            const cardsContainer = document.getElementById("users-cards");
-            cardsContainer.innerHTML = "<p>Erro ao carregar os usuários. Tente novamente mais tarde.</p>";
-        });
+function classificarPorIdade(idade) {
+if (!idade) return 'Não informada';
+const idadeNum = parseInt(idade);
+if (idadeNum < 13) return 'Criança';
+if (idadeNum < 18) return 'Adolescente';
+if (idadeNum < 60) return 'Adulto';
+return 'Idoso';
 }
 
-// Vincular a pesquisa ao evento de digitação
-document.getElementById('search-input').addEventListener('input', searchUsers);
+function formatDate(dateString) {
+if (!dateString) return '';
+const date = new Date(dateString);
+return date.toLocaleString('pt-BR', {
+day: '2-digit',
+month: '2-digit',
+year: 'numeric',
+hour: '2-digit',
+minute: '2-digit'
+});
+}
 
-// Carregar os usuários inicialmente
-loadUsers();
+function getNumero(data) {
+return data.numero || data["número"] || '-';
+}
 
-        // Função para gerar ID sugerido
-        function getSuggestedID() {
-            fetch(`${API_URL}?action=read`)
-                .then(response => response.text())
-                .then(data => {
-                    const lines = data.trim().split("\n");
-                    const lastUser = lines[lines.length - 1];
-                    const lastID = lastUser.split(",")[0];
-                    const newID = parseInt(lastID) + 1;
-                    document.getElementById('swal-id').value = newID;
-                    document.getElementById('id-suggestion').innerText = `ID Disponível: ${newID}`;
-                })
-                .catch(error => console.error('Erro ao gerar ID sugerido:', error));
-        }
+// Theme functions
+function setInitialTheme() {
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        isDarkMode = true;
+    } else {
+        isDarkMode = false;
+    }
+    updateTheme(); // Apply theme based on the determined isDarkMode
+}
 
-        // Exibir popup para cadastrar novo usuário
-document.getElementById("registerButton").addEventListener("click", function() {
-    Swal.fire({
-        title: 'Cadastrar Novo Adm',
-        html: `
-            <label for="swal-name"><i class="fas fa-id-badge"></i> Nome</label>
-            <input id="swal-name" class="swal2-input" placeholder="Nome">
-            
-            <label for="swal-age"><i class="fas fa-birthday-cake"></i> Idade</label>
-            <input id="swal-age" type="number" class="swal2-input" placeholder="Idade">
-            
-            <label for="swal-number"><i class="fas fa-phone-alt"></i> Número</label>
-            <input id="swal-number" class="swal2-input" placeholder="Número">
-            
-            <label for="swal-instagram"><i class="fab fa-instagram"></i> Instagram</label>
-            <input id="swal-instagram" class="swal2-input" placeholder="Instagram">
-            
-            <label for="swal-email"><i class="fas fa-envelope"></i> E-mail</label>
-            <input id="swal-email" type="email" class="swal2-input" placeholder="E-mail">
-            
-            <p id="id-suggestion">Aguarde, ID Disponível ...</p>
-            
-            <label for="swal-id"><i class="fas fa-hashtag"></i> ID</label>
-            <input id="swal-id" type="text" class="swal2-input" placeholder="ID" disabled>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Cadastrar',
-        preConfirm: () => {
-            const name = document.getElementById('swal-name').value;
-            const age = document.getElementById('swal-age').value;
-            const number = document.getElementById('swal-number').value;
-            const instagram = document.getElementById('swal-instagram').value;
-            const email = document.getElementById('swal-email').value;
-            const id = document.getElementById('swal-id').value;
-            
-            // Altera o botão para mostrar as bolinhas enquanto carrega
-            Swal.showLoading();
+function updateTheme() {
+    const html = document.documentElement;
+    const body = document.body;
+    const navbar = document.getElementById('navbar');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeToggleKnob = document.getElementById('themeToggleKnob');
+    // Get icons here, as they might not be available globally if not fetched on DOMContentLoaded
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
-            // Enviar dados para a API
-            return fetch(API_URL, {
-                method: 'POST',
-                body: new URLSearchParams({
-                    action: 'create',
-                    name, age, number, instagram, email, id
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Sempre exibe sucesso, sem verificar erro
-                Swal.fire({
-                    title: 'Sucesso!',
-                    text: 'Administrador cadastrado com sucesso!',
-                    icon: 'success',
-                    confirmButtonText: 'Fechar'
-                }).then(() => {
-                    loadUsers(); // Carregar usuários, se necessário
-                });
-            })
-            .catch(error => {
-                console.error(error);
-                // Exibe a mensagem de sucesso, mesmo se ocorrer erro
-                Swal.fire({
-                    title: 'Sucesso!',
-                    text: 'Administrador cadastrado com sucesso!',
-                    icon: 'success',
-                    confirmButtonText: 'Fechar'
-                });
-            });
-        },
-        customClass: {
-            popup: 'custom-popup'
-        },
-        didOpen: () => {
-            // Impede o movimento da página durante o preenchimento do formulário
-            document.querySelector('.swal2-popup').style.overflow = 'hidden';
-        }
-    });
+    if (isDarkMode) {
+        html.classList.add('dark');
+        html.classList.remove('light');
+        body.classList.add('dark');
+        body.classList.remove('light');
 
-    // Obter o ID sugerido
-    getSuggestedID();
+        // Navbar
+        navbar.className = 'sticky top-0 z-50 transition-all duration-300 backdrop-blur-md bg-slate-900/80 border-b border-slate-700/50';
+
+        // Theme toggle
+        themeToggle.className = 'relative w-12 h-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-inner group bg-indigo-600';
+        themeToggleKnob.className = 'absolute w-4 h-4 bg-white rounded-full shadow-md transform transition-all duration-300 top-1 group-hover:scale-110 translate-x-7';
+        
+        // Icon visibility
+        if (themeToggleLightIcon) themeToggleLightIcon.classList.remove('hidden');
+        if (themeToggleDarkIcon) themeToggleDarkIcon.classList.add('hidden');
+
+    } else {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        body.classList.remove('dark');
+        body.classList.add('light');
+
+        // Navbar
+        navbar.className = 'sticky top-0 z-50 transition-all duration-300 backdrop-blur-md bg-white/90 border-b border-gray-200/50';
+
+        // Theme toggle
+        themeToggle.className = 'relative w-12 h-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-inner group bg-gray-200';
+        themeToggleKnob.className = 'absolute w-4 h-4 bg-white rounded-full shadow-md transform transition-all duration-300 top-1 group-hover:scale-110 translate-x-1';
+
+        // Icon visibility
+        if (themeToggleLightIcon) themeToggleLightIcon.classList.add('hidden');
+        if (themeToggleDarkIcon) themeToggleDarkIcon.classList.remove('hidden');
+    }
+    // Re-apply tab styles after theme change
+    switchTab(currentActiveTab);
+}
+
+// API functions
+async function fetchStats() {
+console.log('fetchStats: Iniciando carregamento de dados...');
+try {
+showToast('Carregando dados...', 'loading');
+
+// Try to fetch from API with timeout
+const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+const [activeRes, inactiveRes, availableRes] = await Promise.all([
+    fetch(`${API}?action=get`, { signal: controller.signal }).then(r => r.json()).catch(() => ({ data: demoActiveData })),
+    fetch(`${API}?action=get&list=inactive`, { signal: controller.signal }).then(r => r.json()).catch(() => ({ data: demoInactiveData })),
+    fetch(`${API}?action=get&available=true`, { signal: controller.signal }).then(r => r.json()).catch(() => ({ availableIds: demoAvailableIds }))
+]);
+
+clearTimeout(timeoutId);
+
+activeData = activeRes.data || demoActiveData;
+inactiveData = inactiveRes.data || demoInactiveData;
+availableIds = availableRes.availableIds || demoAvailableIds;
+
+// Sort data numerically by ID
+activeData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+inactiveData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+availableIds.sort((a, b) => parseInt(a) - parseInt(b));
+
+// Calculate age groups
+const faixasEtarias = {
+    'Criança': 0,
+    'Adolescente': 0,
+    'Adulto': 0,
+    'Idoso': 0,
+    'Não informada': 0
+};
+
+activeData.forEach(item => {
+    const faixa = classificarPorIdade(item.idade);
+    faixasEtarias[faixa]++;
 });
 
-        // Funções para editar e excluir usuários
-function editUser(id, name, age, number, instagram, email) {
-    Swal.fire({
-        title: 'Editar Usuário',
-        html: `
-            <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
-                <i class="fas fa-user" style="margin-right: 5px; font-size: 20px;"></i>
-                <label for="swal-name" style="font-size: 14px; margin-right: 10px; width: 25%;">Nome</label>
-                <input id="swal-name" class="swal2-input" value="${name}" style="flex-grow: 1; font-size: 14px; padding: 8px; width: 60%;">
-            </div>
-            <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
-                <i class="fas fa-birthday-cake" style="margin-right: 5px; font-size: 20px;"></i>
-                <label for="swal-age" style="font-size: 14px; margin-right: 10px; width: 25%;">Idade</label>
-                <input id="swal-age" type="number" class="swal2-input" value="${age}" style="flex-grow: 1; font-size: 14px; padding: 8px; width: 60%;">
-            </div>
-            <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
-                <i class="fas fa-phone" style="margin-right: 5px; font-size: 20px;"></i>
-                <label for="swal-number" style="font-size: 14px; margin-right: 10px; width: 25%;">Número</label>
-                <input id="swal-number" class="swal2-input" value="${number}" style="flex-grow: 1; font-size: 14px; padding: 8px; width: 60%;">
-            </div>
-            <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
-                <i class="fab fa-instagram" style="margin-right: 5px; font-size: 20px;"></i>
-                <label for="swal-instagram" style="font-size: 14px; margin-right: 10px; width: 25%;">Instagram</label>
-                <input id="swal-instagram" class="swal2-input" value="${instagram}" style="flex-grow: 1; font-size: 14px; padding: 8px; width: 60%;">
-            </div>
-            <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
-                <i class="fas fa-envelope" style="margin-right: 5px; font-size: 20px;"></i>
-                <label for="swal-email" style="font-size: 14px; margin-right: 10px; width: 25%;">E-mail</label>
-                <input id="swal-email" type="email" class="swal2-input" value="${email}" style="flex-grow: 1; font-size: 14px; padding: 8px; width: 60%;">
-            </div>
-        `,
-        width: '100%',  // Ajustando a largura para 100% da tela
-        padding: '20px',
-        showCancelButton: true,
-        confirmButtonText: 'Salvar',
-        preConfirm: () => {
-            const updatedData = {
-                id,
-                name: document.getElementById('swal-name').value,
-                age: document.getElementById('swal-age').value,
-                number: document.getElementById('swal-number').value,
-                instagram: document.getElementById('swal-instagram').value,
-                email: document.getElementById('swal-email').value,
-                action: "update"
-            };
+stats = {
+    active: activeData.length,
+    inactive: inactiveData.length,
+    available: availableIds.length,
+    total: activeData.length + inactiveData.length,
+    idRange: {
+        min: activeData.length > 0 ? activeData[0].id : 'N/A',
+        max: activeData.length > 0 ? activeData[activeData.length - 1].id : 'N/A'
+    },
+    faixasEtarias
+};
 
-            return fetch(API_URL, {
-                method: 'POST',
-                body: new URLSearchParams(updatedData)
-            });
-        },
-        customClass: {
-            popup: 'swal2-popup-custom',  // Customização extra, se necessário
-        },
-        didOpen: () => {
-            const popup = document.querySelector('.swal2-popup');
-            // Impede rolagem horizontal
-            popup.style.overflowX = 'hidden';
-            popup.style.whiteSpace = 'normal';  // Impede quebras de linha inadequadas
-        },
-        onBeforeOpen: () => {
-            const popup = document.querySelector('.swal2-popup');
-            // Impede qualquer rolagem horizontal
-            popup.style.overflowX = 'hidden';
-            popup.style.whiteSpace = 'normal';
-        }
-    }).then(() => loadUsers());
+updateUI();
+showToast('Dados carregados com sucesso!');
+console.log('fetchStats: Dados carregados e UI atualizada.');
+
+} catch (error) {
+console.error('fetchStats: Erro ao carregar dados:', error);
+
+// Use demo data as fallback
+activeData = demoActiveData;
+inactiveData = demoInactiveData;
+availableIds = demoAvailableIds;
+
+const faixasEtarias = {
+    'Criança': 0,
+    'Adolescente': 0,
+    'Adulto': 0,
+    'Idoso': 0,
+    'Não informada': 0
+};
+
+activeData.forEach(item => {
+    const faixa = classificarPorIdade(item.idade);
+    faixasEtarias[faixa]++;
+});
+
+stats = {
+    active: activeData.length,
+    inactive: inactiveData.length,
+    available: availableIds.length,
+    total: activeData.length + inactiveData.length,
+    idRange: {
+        min: activeData.length > 0 ? activeData[0].id : 'N/A',
+        max: activeData.length > 0 ? activeData[activeData.length - 1].id : 'N/A'
+    },
+    faixasEtarias
+};
+
+updateUI();
+showToast('Modo offline - usando dados de demonstração', 'loading');
+console.log('fetchStats: Usando dados de demonstração e UI atualizada.');
+} finally {
+// Hide loading screen immediately after data is processed (or fallback)
+document.getElementById('loadingScreen').classList.add('hidden');
+document.getElementById('mainApp').classList.remove('hidden');
+console.log('fetchStats: Tela de carregamento oculta, aplicativo principal visível.');
+}
 }
 
-        function deleteUser(id) {
-            Swal.fire({
-                title: 'Tem certeza?',
-                text: 'Você não poderá reverter isso!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sim, excluir',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(API_URL, {
-                        method: 'POST',
-                        body: new URLSearchParams({ id, action: "delete" })
-                    })
-                    .then(() => {
-                        Swal.fire('Usuário excluído!', '', 'success');
-                        loadUsers();
-                    })
-                    .catch(() => Swal.fire('Erro ao excluir o usuário.', '', 'error'));
-                }
-            });
-        }
+async function searchById(id) {
+if (!id) {
+showToast('Informe o ID para buscar', 'error');
+return null;
+}
 
-        
-    </script>
+try {
+// First try API
+const response = await fetch(`${API}?action=get&id=${id}`, { 
+    signal: AbortSignal.timeout(5000) 
+});
+const result = await response.json();
+
+if (result.status === 'error') {
+    showToast(result.message, 'error');
+    return null;
+}
+
+return result.data;
+} catch (error) {
+console.error('API error, searching in local data:', error);
+
+// Fallback to local search
+const allData = [...activeData, ...inactiveData];
+const found = allData.find(item => item.id === id);
+
+if (!found) {
+    showToast('ID não encontrado', 'error');
+    return null;
+}
+
+return found;
+}
+}
+
+async function createRecord(data) {
+try {
+const params = new URLSearchParams({
+    action: "create",
+    id: data.id,
+    nome: data.nome || '',
+    idade: data.idade || '',
+    numero: data.numero || '',
+    Instagram: data.Instagram || '',
+    email: data.email || ''
+});
+
+const response = await fetch(`${API}?${params}`, {
+    signal: AbortSignal.timeout(10000)
+});
+const result = await response.json();
+
+if (result.status === 'success') {
+    showToast(result.message);
+    await fetchStats();
+} else {
+    showToast(result.message, 'error');
+}
+} catch (error) {
+console.error('Error creating record:', error);
+
+// Fallback: add to local data
+const newRecord = {
+    id: data.id,
+    nome: data.nome || '',
+    idade: data.idade || '',
+    numero: data.numero || '',
+    Instagram: data.Instagram || '',
+    email: data.email || ''
+};
+
+activeData.push(newRecord);
+availableIds = availableIds.filter(id => id !== data.id);
+updateUI();
+showToast('Registro criado localmente (modo offline)', 'loading');
+}
+}
+
+async function updateRecord(data) {
+try {
+const response = await fetch(`${API}?action=update`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    signal: AbortSignal.timeout(10000)
+});
+const result = await response.json();
+
+if (result.status === 'success') {
+    showToast(result.message);
+    await fetchStats();
+} else {
+    showToast(result.message, 'error');
+}
+} catch (error) {
+console.error('Error updating record:', error);
+
+// Fallback: update local data
+const index = activeData.findIndex(item => item.id === data.id);
+if (index !== -1) {
+    activeData[index] = { ...activeData[index], ...data };
+    updateUI();
+    showToast('Registro atualizado localmente (modo offline)', 'loading');
+} else {
+    showToast('Erro ao atualizar registro', 'error');
+}
+}
+}
+
+async function handleDeactivate(id) {
+Swal.fire({
+    title: 'Tem certeza?',
+    text: `Você realmente deseja desativar o registro com ID ${id}? Esta ação não pode ser desfeita!`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sim, desativar!',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+        popup: isDarkMode ? 'swal2-dark-mode' : '', // Adiciona classe para tema escuro
+        confirmButton: 'swal2-confirm-button',
+        cancelButton: 'swal2-cancel-button'
+    }
+}).then(async (result) => {
+    if (result.isConfirmed) {
+        await deactivateRecord(id);
+        // Clear search result if it was the deactivated record
+        const searchResult = document.getElementById('searchResult');
+        searchResult.classList.add('hidden');
+    }
+});
+}
+
+async function deactivateRecord(id) {
+try {
+const response = await fetch(`${API}?action=deactivate&id=${id}`, {
+    signal: AbortSignal.timeout(10000)
+});
+const result = await response.json();
+
+if (result.status === 'success') {
+    showToast(result.message);
+    showToast('Registro desativado com sucesso!');
+    await fetchStats();
+} else {
+    showToast(result.message, 'error');
+}
+} catch (error) {
+console.error('Error deactivating record:', error);
+
+// Fallback: move to inactive locally
+const index = activeData.findIndex(item => item.id === id);
+if (index !== -1) {
+    const record = activeData.splice(index, 1)[0];
+    record.data_desativacao = new Date().toISOString();
+    inactiveData.push(record);
+    updateUI();
+    showToast('Registro desativado localmente (modo offline)', 'loading');
+} else {
+    showToast('Erro ao desativar registro', 'error');
+}
+}
+}
+
+// UI Update functions
+function updateUI() {
+updateStatsGrid();
+updateAvailableIds();
+updateListings();
+updateTabCounts();
+}
+
+function updateStatsGrid() {
+const statsGrid = document.getElementById('statsGrid');
+const statCards = [
+{ title: 'Adms Ativos', value: stats.active, gradient: 'from-green-500 to-emerald-600', icon: 'check-circle' },
+{ title: 'Adms Kitados', value: stats.inactive, gradient: 'from-red-500 to-rose-600', icon: 'x-circle' },
+{ title: 'Disponíveis', value: stats.available, gradient: 'from-blue-500 to-cyan-600', icon: 'circle' },
+{ title: 'Total de Adms', value: stats.total, gradient: 'from-purple-500 to-violet-600', icon: 'database' },
+{ title: 'Faixa de ID', value: `${stats.idRange.min} - ${stats.idRange.max}`, gradient: 'from-indigo-500 to-blue-500', icon: 'credit-card' },
+{ title: 'Sistema Automático', value: 'Ativo Online', gradient: 'from-emerald-500 to-green-500', icon: 'zap' },
+{ title: 'Crianças', value: stats.faixasEtarias['Criança'], gradient: 'from-pink-500 to-rose-600', icon: 'users' },
+{ title: 'Adolescentes', value: stats.faixasEtarias['Adolescente'], gradient: 'from-indigo-500 to-blue-600', icon: 'graduation-cap' },
+{ title: 'Adultos', value: stats.faixasEtarias['Adulto'], gradient: 'from-cyan-500 to-teal-600', icon: 'briefcase' },
+{ title: 'Idosos', value: stats.faixasEtarias['Idoso'], gradient: 'from-slate-500 to-gray-600', icon: 'user-check' }
+];
+
+statsGrid.innerHTML = statCards.map((card, index) => `
+<div class="group relative overflow-hidden rounded-xl bg-gradient-to-br ${card.gradient} p-3 sm:p-4 text-white shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer hover:shadow-xl min-w-0" style="animation-delay: ${index * 50}ms; animation: fadeInUp 0.6s ease-out forwards">
+    <div class="absolute top-0 right-0 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/10 -translate-y-4 sm:-translate-y-6 translate-x-4 sm:translate-x-6"></div>
+    <div class="flex justify-center mb-2">
+        <div class="p-1.5 sm:p-2 rounded-full bg-white/20 backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+            ${getIconSVG(card.icon)}
+        </div>
+    </div>
+    <h3 class="text-xs sm:text-sm font-semibold text-center mb-1 sm:mb-2 text-white/90 truncate">${card.title}</h3>
+    <div class="text-center">
+        <div class="text-sm sm:text-xl font-bold text-white group-hover:scale-105 transition-transform duration-300 truncate">${card.value}</div>
+    </div>
+    <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+</div>
+`).join('');
+}
+
+function getIconSVG(iconName) {
+const icons = {
+'check-circle': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+'x-circle': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+'circle': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
+'database': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+'credit-card': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+'zap': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/></svg>',
+'users': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87m-4-12a4 4 0 0 1 0 7.75"/></svg>',
+'graduation-cap': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+'briefcase': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+'user-check': '<svg class="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17,11 19,13 23,9"/></svg>'
+};
+return icons[iconName] || '';
+}
+
+function updateAvailableIds() {
+const createIdSelect = document.getElementById('createId');
+createIdSelect.innerHTML = '<option value="">Selecionar ID</option>' + 
+availableIds.map(id => `<option value="${id}">${id}</option>`).join('');
+}
+
+function updateListings() {
+updateActiveGrid();
+updateInactiveGrid();
+}
+
+function updateActiveGrid() {
+const activeGrid = document.getElementById('activeGrid');
+const activeEmpty = document.getElementById('activeEmpty');
+
+if (activeData.length === 0) {
+activeGrid.innerHTML = '';
+activeEmpty.classList.remove('hidden');
+} else {
+activeEmpty.classList.add('hidden');
+activeGrid.innerHTML = activeData.map(item => createRecordCard(item, true)).join('');
+}
+}
+
+function updateInactiveGrid() {
+filterInactiveData();
+}
+
+function filterInactiveData() {
+const searchTerm = document.getElementById('inactiveSearch').value.toLowerCase();
+console.log('filterInactiveData: searchTerm =', searchTerm); // Debugging
+const inactiveGrid = document.getElementById('inactiveGrid');
+const inactiveEmpty = document.getElementById('inactiveEmpty');
+const noSearchResults = document.getElementById('noSearchResults');
+const searchCount = document.getElementById('searchCount');
+const searchTermSpan = document.getElementById('searchTerm');
+
+let filteredData = inactiveData;
+console.log('filterInactiveData: inactiveData.length before filter =', inactiveData.length); // Debugging
+
+if (searchTerm) {
+filteredData = inactiveData.filter(item => {
+    const nome = (item.nome || '').toLowerCase();
+    const idade = (item.idade || '').toLowerCase();
+    const numero = getNumero(item).toString().toLowerCase();
+    const instagram = (item.Instagram || '').toLowerCase();
+    const email = (item.email || '').toLowerCase();
+    const id = item.id.toLowerCase();
     
-<!-- Rodapé -->
-<footer>
-    <p>&copy; NEEXT LTDA.</p>
-</footer>
+    const match = nome.includes(searchTerm) || idade.includes(searchTerm) ||
+                  numero.includes(searchTerm) || instagram.includes(searchTerm) ||
+                  email.includes(searchTerm) || id.includes(searchTerm);
+    // console.log(`Checking item ID ${item.id}: match = ${match}`); // Too verbose, enable if needed
+    return match;
+});
 
+searchCount.textContent = `Mostrando ${filteredData.length} de ${inactiveData.length} registros kitados`;
+searchCount.classList.remove('hidden');
+searchTermSpan.textContent = searchTerm;
+} else {
+searchCount.classList.add('hidden');
+}
+
+console.log('filterInactiveData: filteredData.length after filter =', filteredData.length); // Debugging
+
+if (filteredData.length === 0) {
+inactiveGrid.innerHTML = '';
+if (searchTerm && inactiveData.length > 0) {
+    noSearchResults.classList.remove('hidden');
+    inactiveEmpty.classList.add('hidden');
+} else {
+    noSearchResults.classList.add('hidden');
+    inactiveEmpty.classList.remove('hidden');
+}
+} else {
+noSearchResults.classList.add('hidden');
+inactiveEmpty.classList.add('hidden');
+inactiveGrid.innerHTML = filteredData.map(item => createRecordCard(item, false)).join('');
+}
+}
+
+function createRecordCard(item, isActive) {
+return `
+<div class="group p-4 sm:p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-all duration-300 cursor-pointer border user-card hover:shadow-2xl">
+    <div class="flex items-center space-x-3 mb-4 pb-3 border-b border-purple-200/30 dark:border-purple-700/30">
+        <div class="p-2 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="4" y1="9" x2="20" y2="9"/>
+                <line x1="4" y1="15" x2="20" y2="15"/>
+                <line x1="10" y1="3" x2="8" y2="21"/>
+                <line x1="16" y1="3" x2="14" y2="21"/>
+            </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-bold text-purple-600">ID: ${item.id}</h3>
+    </div>
+    
+    <div class="space-y-3 sm:space-y-4">
+        ${createInfoRow('Nome', item.nome || '-', 'user', 'blue')}
+        ${createInfoRow('Idade', `${item.idade || '-'}${item.idade ? ` (${classificarPorIdade(item.idade)})` : ''}`, 'calendar', 'green')}
+        ${createInfoRow('Número', getNumero(item), 'phone', 'orange')}
+        ${createInfoRow('Instagram', item.Instagram || '-', 'instagram', 'pink')}
+        ${createInfoRow('Email', item.email || '-', 'mail', 'cyan')}
+        ${item.data_desativacao ? createInfoRow('Desativado em', formatDate(item.data_desativacao), 'calendar', 'red', true) : ''}
+    </div>
+    
+    ${isActive ? `
+        <div class="flex gap-2 mt-4 sm:mt-6 pt-4 border-t border-gray-200/30 dark:border-slate-600/30">
+            <button onclick="openEditModal('${item.id}')" class="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white transform hover:scale-105 transition-all duration-300 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium">
+                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Editar
+            </button>
+            <button onclick="handleDeactivate('${item.id}')" class="flex-1 bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white transform hover:scale-105 transition-all duration-300 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium">
+                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+                Desativar
+            </button>
+        </div>
+    ` : `
+        <div class="mt-4 sm:mt-6 pt-4 border-t border-gray-200/30 dark:border-slate-600/30">
+            <div class="text-center py-2 px-4 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+                <span class="text-xs sm:text-sm font-medium">Registro Desativado</span>
+            </div>
+        </div>
+    `}
+</div>
+`;
+}
+
+function createInfoRow(label, value, iconType, color, isDeactivation = false) {
+const icons = {
+'user': '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+'calendar': '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+'phone': '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+'instagram': '<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.5" y1="6.5" y2="6.5"/>',
+'mail': '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>'
+};
+
+const wrapperClass = isDeactivation ? 'pt-2 border-t border-red-200/30 dark:border-red-700/30' : '';
+const bgClass = isDeactivation ? 'bg-red-100 dark:bg-red-900/30' : 'info-row-bg';
+const iconColorClass = isDeactivation ? 'text-red-600 dark:text-red-400' : `text-${color}-600`;
+const labelColorClass = isDeactivation ? 'text-red-500 dark:text-red-400' : 'info-label';
+const valueColorClass = isDeactivation ? 'text-red-600 dark:text-red-400' : 'info-value';
+
+return `
+<div class="flex items-center space-x-2 sm:space-x-3 ${wrapperClass}">
+    <div class="p-1.5 sm:p-2 rounded-lg ${bgClass}">
+        <svg class="w-3 h-3 sm:w-4 sm:h-4 ${iconColorClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            ${icons[iconType]}
+        </svg>
+    </div>
+    <div class="flex-1 min-w-0">
+        <span class="text-xs sm:text-sm font-medium ${labelColorClass}">${label}</span>
+        <p class="font-semibold ${valueColorClass} ${iconType === 'mail' ? 'break-all' : 'truncate'} text-sm sm:text-base">${value}</p>
+    </div>
+</div>
+`;
+}
+
+function updateTabCounts() {
+document.getElementById('activeTab').textContent = `Ativos (${activeData.length})`;
+document.getElementById('inactiveTab').textContent = `Kitados (${inactiveData.length})`;
+}
+
+// Modal functions
+function openCreateModal() {
+document.getElementById('createModal').classList.remove('hidden');
+}
+
+function closeCreateModal() {
+document.getElementById('createModal').classList.add('hidden');
+// Clear form
+document.getElementById('createNome').value = '';
+document.getElementById('createIdade').value = '';
+document.getElementById('createNumero').value = '';
+document.getElementById('createInstagram').value = '';
+document.getElementById('createEmail').value = '';
+document.getElementById('createId').value = '';
+}
+
+async function openEditModal(id) {
+const data = activeData.find(item => item.id == id);
+if (!data) return;
+
+currentEditData = data;
+
+document.getElementById('editId').value = data.id;
+document.getElementById('editNome').value = data.nome || '';
+document.getElementById('editIdade').value = data.idade || '';
+document.getElementById('editNumero').value = getNumero(data);
+document.getElementById('editInstagram').value = data.Instagram || '';
+document.getElementById('editEmail').value = data.email || '';
+
+document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+document.getElementById('editModal').classList.add('hidden');
+currentEditData = null;
+}
+
+// Event handlers
+async function handleSearch() {
+const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
+const searchResult = document.getElementById('searchResult');
+
+const id = searchInput.value.trim();
+if (!id) return;
+
+searchButton.textContent = 'Buscando...';
+searchButton.disabled = true;
+
+const result = await searchById(id);
+
+searchButton.textContent = 'Buscar';
+searchButton.disabled = false;
+
+if (result) {
+searchResult.innerHTML = `
+    <div class="p-4 sm:p-6 rounded-xl shadow-lg border-l-4 border-emerald-500 transition-all duration-300 search-result-card">
+        <h3 class="text-lg sm:text-xl font-bold text-emerald-600 mb-4">ID: ${result.id}</h3>
+        <div class="space-y-3 text-sm">
+            ${createInfoRow('Nome', result.nome || '-', 'user', 'blue')}
+            ${createInfoRow('Idade', `${result.idade || '-'}${result.idade ? ` (${classificarPorIdade(result.idade)})` : ''}`, 'calendar', 'green')}
+            ${createInfoRow('Número', getNumero(result), 'phone', 'orange')}
+            ${createInfoRow('Instagram', result.Instagram || '-', 'instagram', 'pink')}
+            ${createInfoRow('Email', result.email || '-', 'mail', 'cyan')}
+            ${result.data_desativacao ? createInfoRow('Desativado em', formatDate(result.data_desativacao), 'calendar', 'red', true) : ''}
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-2 mt-4">
+            <button onclick="openEditModal('${result.id}')" class="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white transform hover:scale-105 transition-all duration-300 px-3 py-2 rounded-lg text-sm font-medium">
+                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Editar
+            </button>
+            ${!result.data_desativacao ? `
+                <button onclick="handleDeactivate('${result.id}')" class="flex-1 bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white transform hover:scale-105 transition-all duration-300 px-3 py-2 rounded-lg text-sm font-medium">
+                    <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    Desativar
+                </button>
+            ` : ''}
+        </div>
+    </div>
+`;
+searchResult.classList.remove('hidden');
+} else {
+searchResult.classList.add('hidden');
+}
+}
+
+async function handleCreate() {
+const formData = {
+nome: document.getElementById('createNome').value,
+idade: document.getElementById('createIdade').value,
+numero: document.getElementById('createNumero').value,
+Instagram: document.getElementById('createInstagram').value,
+email: document.getElementById('createEmail').value,
+id: document.getElementById('createId').value
+};
+
+if (!formData.nome || !formData.id) {
+showToast('Preencha o nome e selecione um ID', 'error');
+return;
+}
+
+document.getElementById('createButton').textContent = 'Criando...';
+document.getElementById('createButton').disabled = true;
+
+await createRecord(formData);
+
+document.getElementById('createButton').textContent = 'Criar Registro';
+document.getElementById('createButton').disabled = false;
+closeCreateModal();
+}
+
+async function handleEdit() {
+if (!currentEditData) return;
+
+const formData = {
+id: document.getElementById('editId').value,
+nome: document.getElementById('editNome').value,
+idade: document.getElementById('editIdade').value,
+numero: document.getElementById('editNumero').value,
+Instagram: document.getElementById('editInstagram').value,
+email: document.getElementById('editEmail').value
+};
+
+if (!formData.nome) {
+showToast('O nome é obrigatório', 'error');
+return;
+}
+
+document.getElementById('editButton').textContent = 'Salvando...';
+document.getElementById('editButton').disabled = true;
+
+await updateRecord(formData);
+
+document.getElementById('editButton').textContent = 'Salvar Alterações';
+document.getElementById('editButton').disabled = false;
+closeEditModal();
+}
+
+async function handleDeactivate(id) {
+Swal.fire({
+    title: 'Tem certeza?',
+    text: `Você realmente deseja desativar o registro com ID ${id}? Esta ação não pode ser desfeita!`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sim, desativar!',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+        popup: isDarkMode ? 'swal2-dark-mode' : '', // Adiciona classe para tema escuro
+        confirmButton: 'swal2-confirm-button',
+        cancelButton: 'swal2-cancel-button'
+    }
+}).then(async (result) => {
+    if (result.isConfirmed) {
+        await deactivateRecord(id);
+        // Clear search result if it was the deactivated record
+        const searchResult = document.getElementById('searchResult');
+        searchResult.classList.add('hidden');
+    }
+});
+}
+
+function switchTab(tab) {
+    currentActiveTab = tab;
+    const activeTabBtn = document.getElementById('activeTab');
+    const inactiveTabBtn = document.getElementById('inactiveTab');
+    const activeContent = document.getElementById('activeContent');
+    const inactiveContent = document.getElementById('inactiveContent');
+
+    // Define todas as classes de fundo e texto que podem ser aplicadas aos botões
+    const allPossibleClasses = [
+        'bg-white', 'text-black',
+        'bg-gray-100', 'text-gray-700',
+        'dark:bg-slate-600', 'dark:text-white',
+        'dark:bg-slate-700', 'dark:text-white'
+    ];
+
+    // Remove todas as classes de fundo e texto de ambos os botões para garantir um estado limpo
+    activeTabBtn.classList.remove(...allPossibleClasses);
+    inactiveTabBtn.classList.remove(...allPossibleClasses);
+
+    if (tab === 'active') {
+        // Aplica as classes para a aba ATIVA
+        if (isDarkMode) {
+            activeTabBtn.classList.add('dark:bg-slate-600', 'dark:text-white');
+        } else {
+            activeTabBtn.classList.add('bg-white', 'text-black');
+        }
+        // Aplica as classes para a aba INATIVA
+        if (isDarkMode) {
+            inactiveTabBtn.classList.add('dark:bg-slate-700', 'dark:text-white');
+        } else {
+            inactiveTabBtn.classList.add('bg-gray-100', 'text-gray-700');
+        }
+        activeContent.classList.remove('hidden');
+        inactiveContent.classList.add('hidden');
+    } else { // tab === 'inactive'
+        // Aplica as classes para a aba ATIVA
+        if (isDarkMode) {
+            inactiveTabBtn.classList.add('dark:bg-slate-600', 'dark:text-white');
+        } else {
+            inactiveTabBtn.classList.add('bg-white', 'text-black');
+        }
+        // Aplica as classes para a aba INATIVA
+        if (isDarkMode) {
+            activeTabBtn.classList.add('dark:bg-slate-700', 'dark:text-white');
+        } else {
+            activeTabBtn.classList.add('bg-gray-100', 'text-gray-700');
+        }
+        inactiveContent.classList.remove('hidden');
+        activeContent.classList.add('hidden');
+    }
+}
+
+function downloadVCF() {
+if (activeData.length === 0) {
+showToast('Nenhum contato ativo para download', 'error');
+return;
+}
+
+let vcfContent = '';
+
+activeData.forEach((contact, index) => {
+const contactNumber = index + 1;
+const name = `neext ${contactNumber}`;
+const phone = String(getNumero(contact));
+const email = String(contact.email || '');
+const instagram = String(contact.Instagram || '');
+
+vcfContent += `BEGIN:VCARD
+`;
+vcfContent += `VERSION:3.0
+`;
+vcfContent += `FN:${name}
+`;
+vcfContent += `N:${name};;;;
+`;
+
+if (phone && phone !== '-') {
+    vcfContent += `TEL:${phone}
+`;
+}
+
+if (email) {
+    vcfContent += `EMAIL:${email}
+`;
+}
+
+if (instagram) {
+    const instagramHandle = instagram.toString().replace('@', '');
+    vcfContent += `URL:https://instagram.com/${instagramHandle}
+`;
+}
+
+vcfContent += `END:VCARD
+`;
+});
+
+try {
+const blob = new Blob([vcfContent], { type: 'text/vcard;charset=utf-8' });
+const url = window.URL.createObjectURL(blob);
+const link = document.createElement('a');
+link.href = url;
+link.download = 'contatos_neext.vcf';
+link.style.display = 'none';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+window.URL.revokeObjectURL(url);
+showToast('Arquivo VCF baixado com sucesso!');
+} catch (error) {
+console.error('Erro ao baixar VCF:', error);
+showToast('Erro ao baixar VCF', 'error');
+}
+}
+
+async function generateStatsReport() {
+showToast('Gerando relatório...', 'loading');
+
+try {
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+if (!ctx) {
+    throw new Error('Canvas context not available');
+}
+
+canvas.width = 1200;
+canvas.height = 800;
+
+ctx.fillStyle = '#ffffff';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+ctx.fillStyle = '#1f2937';
+ctx.font = 'bold 32px Arial';
+ctx.textAlign = 'center';
+
+ctx.fillText('Relatório de Estatísticas', canvas.width / 2, 60);
+
+ctx.font = '16px Arial';
+const currentDate = new Date().toLocaleString('pt-BR');
+ctx.fillText(`Gerado em: ${currentDate}`, canvas.width / 2, 90);
+
+const statsData = [
+    { label: 'Total de Registros', value: stats.total },
+    { label: 'Adms Ativos', value: stats.active },
+    { label: 'Adms Kitados', value: stats.inactive },
+    { label: 'IDs Disponíveis', value: stats.available },
+    { label: 'Faixa de ID', value: `${stats.idRange.min} - ${stats.idRange.max}` }
+];
+
+ctx.font = 'bold 20px Arial';
+ctx.textAlign = 'left';
+ctx.fillText('Estatísticas Gerais', 50, 150);
+
+ctx.font = '16px Arial';
+let yPos = 180;
+statsData.forEach(stat => {
+    ctx.fillText(`${stat.label}: ${stat.value}`, 50, yPos);
+    yPos += 30;
+});
+
+ctx.font = 'bold 20px Arial';
+ctx.fillText('Distribuição por Faixa Etária', 50, yPos + 30);
+
+ctx.font = '16px Arial';
+yPos += 60;
+Object.entries(stats.faixasEtarias).forEach(([faixa, count]) => {
+    if (count > 0) {
+        ctx.fillText(`${faixa}: ${count}`, 50, yPos);
+        yPos += 30;
+    }
+});
+
+ctx.font = 'bold 20px Arial';
+ctx.fillText('Análises', 50, yPos + 30);
+
+ctx.font = '16px Arial';
+yPos += 60;
+const taxaAtivacao = stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0;
+ctx.fillText(`Taxa de Ativação: ${taxaAtivacao}%`, 50, yPos);
+
+const imageUrl = canvas.toDataURL('image/png', 1.0);
+
+const link = document.createElement('a');
+link.download = `relatorio-estatisticas-${new Date().toISOString().split('T')[0]}.png`;
+link.href = imageUrl;
+link.click();
+
+showToast('Relatório baixado com sucesso!');
+
+} catch (error) {
+console.error('Erro ao gerar relatório:', error);
+showToast('Erro ao gerar relatório', 'error');
+}
+}
+
+async function generateStatsPDF() {
+showToast('Gerando PDF...', 'loading');
+
+try {
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF('p', 'mm', 'a4');
+const currentDate = new Date().toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+});
+
+pdf.setFontSize(20);
+pdf.setFont('helvetica', 'bold');
+pdf.text('Relatório de Estatísticas', 105, 20, { align: 'center' });
+
+pdf.setFontSize(12);
+pdf.setFont('helvetica', 'normal');
+pdf.text(`Gerado em: ${currentDate}`, 105, 30, { align: 'center' });
+
+let yPos = 50;
+pdf.setFontSize(16);
+pdf.setFont('helvetica', 'bold');
+pdf.text('Estatísticas Gerais', 20, yPos);
+
+yPos += 15;
+pdf.setFontSize(12);
+pdf.setFont('helvetica', 'normal');
+
+const mainStats = [
+    { label: 'Total de Registros', value: stats.total },
+    { label: 'Adms Ativos', value: stats.active },
+    { label: 'Adms Kitados', value: stats.inactive },
+    { label: 'IDs Disponíveis', value: stats.available },
+    { label: 'Faixa de ID', value: `${stats.idRange.min} - ${stats.idRange.max}` }
+];
+
+mainStats.forEach(stat => {
+    pdf.text(`${stat.label}: ${stat.value}`, 20, yPos);
+    yPos += 8;
+});
+
+yPos += 10;
+pdf.setFontSize(16);
+pdf.setFont('helvetica', 'bold');
+pdf.text('Distribuição por Faixa Etária', 20, yPos);
+
+yPos += 15;
+pdf.setFontSize(12);
+pdf.setFont('helvetica', 'normal');
+
+Object.entries(stats.faixasEtarias).forEach(([faixa, count]) => {
+    if (count > 0) {
+        pdf.text(`${faixa}: ${count}`, 20, yPos);
+        yPos += 8;
+    }
+});
+
+yPos += 10;
+pdf.setFontSize(16);
+pdf.setFont('helvetica', 'bold');
+pdf.text('Análises', 20, yPos);
+
+yPos += 15;
+pdf.setFontSize(12);
+pdf.setFont('helvetica', 'normal');
+
+const taxaAtivacao = stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0;
+pdf.text(`Taxa de Ativação: ${taxaAtivacao}%`, 20, yPos);
+
+pdf.save(`relatorio-estatisticas-${new Date().toISOString().split('T')[0]}.pdf`);
+
+showToast('PDF gerado com sucesso!');
+
+} catch (error) {
+console.error('Erro ao gerar PDF:', error);
+showToast('Erro ao gerar PDF', 'error');
+}
+}
+
+function generateListPDF() {
+showToast('Gerando relatório PDF...', 'loading');
+
+try {
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+const currentData = currentActiveTab === 'active' ? activeData : inactiveData;
+const title = currentActiveTab === 'active' ? 'Relatório de Adms Ativos' : 'Relatório de Adms Kitados';
+
+doc.setFontSize(20);
+doc.text(title, 20, 20);
+
+doc.setFontSize(12);
+const currentDate = new Date().toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+});
+doc.text(`Gerado em: ${currentDate}`, 20, 30);
+
+doc.text(`Total de registros: ${currentData.length}`, 20, 40);
+
+let yPosition = 55;
+
+currentData.forEach((item, index) => {
+    if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 20;
+    }
+    
+    doc.setFontSize(14);
+    doc.text(`${index + 1}. ID: ${item.id}`, 20, yPosition);
+    yPosition += 7;
+    
+    doc.setFontSize(10);
+    doc.text(`Nome: ${item.nome || 'Não informado'}`, 25, yPosition);
+    yPosition += 5;
+    
+    doc.text(`Idade: ${item.idade || 'Não informada'}${item.idade ? ` (${classificarPorIdade(item.idade)})` : ''}`, 25, yPosition);
+    yPosition += 5;
+    
+    doc.text(`Número: ${getNumero(item)}`, 25, yPosition);
+    yPosition += 5;
+    
+    doc.text(`Instagram: ${item.Instagram || 'Não informado'}`, 25, yPosition);
+    yPosition += 5;
+    
+    doc.text(`Email: ${item.email || 'Não informado'}`, 25, yPosition);
+    yPosition += 5;
+    
+    if (item.data_desativacao) {
+        doc.text(`Desativado em: ${formatDate(item.data_desativacao)}`, 25, yPosition);
+        yPosition += 5;
+    }
+    
+    yPosition += 5;
+});
+
+const fileName = `relatorio-${currentActiveTab === 'active' ? 'ativos' : 'kitados'}-${new Date().toISOString().split('T')[0]}.pdf`;
+doc.save(fileName);
+
+showToast('Relatório PDF gerado com sucesso!');
+
+} catch (error) {
+console.error('Erro ao gerar PDF:', error);
+showToast('Erro ao gerar relatório PDF', 'error');
+}
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+console.log('DOMContentLoaded: DOM completamente carregado.');
+// Initialize theme
+setInitialTheme(); // Call setInitialTheme to determine and apply initial theme and tab styles
+
+// Theme toggle
+document.getElementById('themeToggle').addEventListener('click', function() {
+    isDarkMode = !isDarkMode; // Toggle the global state
+    localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light'); // Update localStorage
+    updateTheme(); // Apply all theme-related styles
+});
+
+// Search
+document.getElementById('searchButton').addEventListener('click', handleSearch);
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') handleSearch();
+});
+
+// Management
+document.getElementById('openCreateModal').addEventListener('click', openCreateModal);
+document.getElementById('downloadVCF').addEventListener('click', downloadVCF);
+
+// Stats
+document.getElementById('downloadReport').addEventListener('click', generateStatsReport);
+document.getElementById('generatePDF').addEventListener('click', generateStatsPDF);
+
+// Listing
+document.getElementById('generateListPDF').addEventListener('click', generateListPDF);
+document.getElementById('activeTab').addEventListener('click', () => switchTab('active'));
+document.getElementById('inactiveTab').addEventListener('click', () => switchTab('inactive'));
+document.getElementById('inactiveSearch').addEventListener('input', filterInactiveData);
+
+// Modals
+document.getElementById('createButton').addEventListener('click', handleCreate);
+document.getElementById('editButton').addEventListener('click', handleEdit);
+
+// Close modals on background click
+document.getElementById('createModal').addEventListener('click', function(e) {
+if (e.target === this) closeCreateModal();
+});
+document.getElementById('editModal').addEventListener('click', function(e) {
+if (e.target === this) closeEditModal();
+});
+
+// Initialize with timeout fallback
+fetchStats();
+
+// Safety timeout to ensure loading screen is hidden
+setTimeout(() => {
+if (!document.getElementById('loadingScreen').classList.contains('hidden')) {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    showToast('Sistema carregado em modo offline (fallback)', 'loading');
+    console.log('DOMContentLoaded: Safety timeout ativado. Tela de carregamento forçada a ocultar.');
+}
+}, 5000);
+});
+</script>
 </body>
 </html>
