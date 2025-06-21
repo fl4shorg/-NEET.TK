@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema NEEXT - Criação de ID Profissional</title>
+    <meta name="description" content="Sistema profissional da NEEXT para criação de identificação única">
+    <meta name="author" content="Sistema NEEXT">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: 'hsl(214.3 31.8% 91.4%)',
+                        input: 'hsl(214.3 31.8% 91.4%)',
+                        ring: 'hsl(222.2 84% 4.9%)',
+                        background: 'hsl(0 0% 100%)',
+                        foreground: 'hsl(222.2 84% 4.9%)',
+                        primary: {
+                            DEFAULT: 'hsl(222.2 47.4% 11.2%)',
+                            foreground: 'hsl(210 40% 98%)'
+                        },
+                        secondary: {
+                            DEFAULT: 'hsl(210 40% 96.1%)',
+                            foreground: 'hsl(222.2 47.4% 11.2%)'
+                        },
+                        destructive: {
+                            DEFAULT: 'hsl(0 84.2% 60.2%)',
+                            foreground: 'hsl(210 40% 98%)'
+                        },
+                        muted: {
+                            DEFAULT: 'hsl(210 40% 96.1%)',
+                            foreground: 'hsl(215.4 16.3% 46.9%)'
+                        },
+                        accent: {
+                            DEFAULT: 'hsl(210 40% 96.1%)',
+                            foreground: 'hsl(222.2 47.4% 11.2%)'
+                        },
+                        card: {
+                            DEFAULT: 'hsl(0 0% 100%)',
+                            foreground: 'hsl(222.2 84% 4.9%)'
+                        }
+                    },
+                    animation: {
+                        'bounce': 'bounce 1s infinite',
+                        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin': 'spin 1s linear infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* Custom styles */
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            transition: all 0.3s ease;
+        }
+        
+        body.dark {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+        }
+        
+        /* Toast styles */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.error {
+            border-color: #f87171;
+            background: #fef2f2;
+        }
+        
+        .toast.success {
+            border-color: #34d399;
+            background: #f0fdf4;
+        }
+        
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: linear-gradient(to bottom right, #1e293b, #7c2d92);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 90vw;
+            width: 100%;
+            max-width: 600px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 2px solid #f3f4f6;
+            border-top: 2px solid #7c3aed;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Custom scrollbar */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen transition-colors duration-300">
+    
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content text-white">
+            <div class="text-center space-y-6">
+                <!-- Success Icon -->
+                <div class="flex justify-center">
+                    <div class="relative">
+                        <div class="w-24 h-24 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center animate-bounce">
+                            <i data-lucide="check-circle" class="w-12 h-12 text-white"></i>
+                        </div>
+                        <div class="absolute -top-2 -right-2">
+                            <i data-lucide="sparkles" class="w-8 h-8 text-yellow-400 animate-pulse"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Title -->
+                <div class="space-y-2">
+                    <h2 class="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                        PARABÉNS!
+                    </h2>
+                    <p class="text-xl text-gray-300">Seu novo ID foi criado com sucesso</p>
+                </div>
+                
+                <!-- ID Display -->
+                <div class="bg-black/30 backdrop-blur-lg rounded-2xl p-8 border border-purple-500/30">
+                    <p class="text-gray-300 mb-4 text-lg">Seu novo ID é:</p>
+                    <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-xl">
+                        <code id="modalGeneratedId" class="text-3xl font-mono font-bold text-white tracking-wider break-all"></code>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="copyIdBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i data-lucide="copy" class="w-5 h-5 mr-2 inline"></i>
+                        <span>Copiar ID</span>
+                    </button>
+                    
+                    <button id="generateImageBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i data-lucide="image" class="w-5 h-5 mr-2 inline"></i>
+                        Gerar Imagem
+                    </button>
+                </div>
+                
+                <!-- System Info -->
+                <div class="pt-6 border-t border-purple-500/30">
+                    <p class="text-sm text-gray-400 mb-2">
+                        <strong>Sistema da NEEXT</strong> - Criação de ID
+                    </p>
+                    <p class="text-xs text-gray-500" id="creationTime"></p>
+                </div>
+                
+                <!-- Close Button -->
+                <button id="closeModalBtn" class="mt-4 border border-purple-500/50 text-purple-300 hover:bg-purple-500/20 px-6 py-2 rounded-lg transition-colors">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="relative w-full border-b shadow-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <div class="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg">
+                            <img 
+                                src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Joestar_Birthmark.svg" 
+                                alt="Joestar Birthmark" 
+                                class="w-6 h-6 brightness-0 invert"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+                            HERMIT PURPLE
+                        </h1>
+                        <p class="text-xs text-purple-600 dark:text-purple-400 font-medium uppercase tracking-wide">
+                            Stand Generator
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="sun" class="w-4 h-4 text-yellow-500"></i>
+                        <button id="themeToggle" class="relative inline-flex h-6 w-11 items-center rounded-full bg-yellow-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:bg-slate-700">
+                            <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform dark:translate-x-6"></span>
+                        </button>
+                        <i data-lucide="moon" class="w-4 h-4 text-slate-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ID Counter -->
+        <div class="w-full mb-6 sm:mb-8">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="relative group">
+                    <!-- Background glow -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                    
+                    <!-- Main container -->
+                    <div class="relative bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6 sm:p-8 shadow-2xl">
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                            <!-- Icon -->
+                            <div class="flex-shrink-0">
+                                <div class="p-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full shadow-lg">
+                                    <i data-lucide="hash" class="w-8 h-8 text-white"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="text-center sm:text-left">
+                                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">
+                                    IDs Disponíveis
+                                </h2>
+                                <div class="flex items-center justify-center sm:justify-start gap-3">
+                                    <div id="idCounterContent">
+                                        <div class="flex items-center gap-2 text-gray-300">
+                                            <div class="spinner"></div>
+                                            <span class="text-lg">Carregando...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Registro da <span class="bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">NEEXT</span>
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">Sistema da NEEXT</p>
+            <div class="flex items-center justify-center gap-2 text-purple-600 dark:text-purple-400">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                <span class="text-sm">Tecnologia Avançada de Identificação</span>
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+        </div>
+        
+        <!-- Registration Form -->
+        <div class="max-w-2xl mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border border-gray-200 dark:border-gray-800 shadow-xl rounded-lg mb-8">
+            <div class="text-center p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-3xl text-gray-900 dark:text-white flex items-center justify-center gap-3">
+                    <div class="p-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full">
+                        <i data-lucide="user" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <span>Registrar na NEEXT</span>
+                </h3>
+            </div>
+            
+            <div class="space-y-6 p-8">
+                <form id="registrationForm" class="grid gap-6">
+                    <!-- Nome -->
+                    <div class="space-y-2">
+                        <label for="nome" class="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                            Nome *
+                        </label>
+                        <input
+                            id="nome"
+                            type="text"
+                            placeholder="Digite seu nome"
+                            class="h-12 w-full text-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            required
+                        />
+                    </div>
+                    
+                    <!-- Idade e Número -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="idade" class="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
+                                <i data-lucide="hash" class="w-4 h-4"></i>
+                                Idade
+                            </label>
+                            <input
+                                id="idade"
+                                type="text"
+                                placeholder="Idade"
+                                class="h-12 w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="numero" class="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
+                                <i data-lucide="phone" class="w-4 h-4"></i>
+                                Número
+                            </label>
+                            <input
+                                id="numero"
+                                type="text"
+                                placeholder="Telefone"
+                                class="h-12 w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                        </div>
+                    </div>
+                    
+                    <!-- Instagram -->
+                    <div class="space-y-2">
+                        <label for="instagram" class="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                            Instagram
+                        </label>
+                        <input
+                            id="instagram"
+                            type="text"
+                            placeholder="@seu_instagram"
+                            class="h-12 w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        />
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="space-y-2">
+                        <label for="email" class="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="seu@email.com"
+                            class="h-12 w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        />
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button
+                        type="submit"
+                        id="submitBtn"
+                        class="w-full h-14 text-lg font-semibold bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <div id="submitBtnContent" class="flex items-center justify-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                            Registrar na NEEXT
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Available IDs -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg rounded-xl p-6 border border-gray-200 dark:border-gray-800 shadow-lg">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="list" class="w-5 h-5 text-purple-600 dark:text-purple-400"></i>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">IDs Disponíveis</h3>
+                </div>
+                
+                <div id="availableIdsContent">
+                    <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                        <div class="spinner"></div>
+                        Carregando lista de IDs...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let availableIds = [];
+        let isLoading = false;
+        let isDarkMode = false;
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxNUqFiXxGT0o3-cov29V0nVPk8dq6DeheUda38iGqTy8ullrUqgu6GRNEhToPRT6pT/exec';
+        
+        // Toast function
+        function showToast(title, message, type = 'success') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            toast.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                        ${type === 'success' ? 
+                            '<i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>' : 
+                            '<i data-lucide="alert-circle" class="w-5 h-5 text-red-600"></i>'
+                        }
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">${title}</div>
+                        <div class="text-sm text-gray-600">${message}</div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="flex-shrink-0 text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            lucide.createIcons();
+            
+            // Show toast
+            setTimeout(() => toast.classList.add('show'), 100);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+        
+        // Theme toggle functionality
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark', isDarkMode);
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            const toggle = document.getElementById('themeToggle');
+            const span = toggle.querySelector('span');
+            if (isDarkMode) {
+                toggle.classList.add('dark:bg-slate-700');
+                toggle.classList.remove('bg-yellow-400');
+                span.classList.add('dark:translate-x-6');
+            } else {
+                toggle.classList.remove('dark:bg-slate-700');
+                toggle.classList.add('bg-yellow-400');
+                span.classList.remove('dark:translate-x-6');
+            }
+        }
+        
+        // Load theme from localStorage
+        function loadTheme() {
+            isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark');
+                const toggle = document.getElementById('themeToggle');
+                const span = toggle.querySelector('span');
+                toggle.classList.add('dark:bg-slate-700');
+                toggle.classList.remove('bg-yellow-400');
+                span.classList.add('dark:translate-x-6');
+            }
+        }
+        
+        // Load available IDs
+        async function loadAvailableIds() {
+            try {
+                const response = await fetch(`${API_URL}?action=get&available=true`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    availableIds = result.availableIds || [];
+                } else {
+                    console.error('Erro ao carregar IDs:', result.message);
+                    availableIds = [];
+                }
+            } catch (error) {
+                console.error('Erro na comunicação:', error);
+                availableIds = [];
+            }
+            
+            updateIdCounter();
+            updateAvailableIdsList();
+        }
+        
+        // Update ID counter
+        function updateIdCounter() {
+            const content = document.getElementById('idCounterContent');
+            content.innerHTML = `
+                <span class="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                    ${availableIds.length.toLocaleString()}
+                </span>
+                <div class="flex items-center gap-1 text-green-300">
+                    <i data-lucide="trending-up" class="w-5 h-5"></i>
+                    <span class="text-sm font-medium">Livres</span>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+        
+        // Update available IDs list
+        function updateAvailableIdsList() {
+            const content = document.getElementById('availableIdsContent');
+            content.innerHTML = `
+                <div class="space-y-2">
+                    <div class="text-gray-700 dark:text-gray-300">
+                        <strong>Total: ${availableIds.length} IDs</strong>
+                        <div class="mt-3 p-4 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-gray-700 max-h-32 overflow-y-auto custom-scroll">
+                            ${availableIds.length > 0 ? 
+                                `<span class="text-sm text-gray-700 dark:text-gray-300 break-all leading-relaxed">${availableIds.join(', ')}</span>` :
+                                `<span class="text-gray-500 dark:text-gray-400 text-sm">Nenhum ID disponível</span>`
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Create registration
+        async function createRegistration(formData) {
+            if (!formData.nome.trim()) {
+                showToast('Atenção', 'O campo nome é obrigatório.', 'error');
+                return;
+            }
+            
+            setLoading(true);
+            
+            try {
+                const params = new URLSearchParams({
+                    action: "create",
+                    nome: formData.nome,
+                    idade: formData.idade,
+                    numero: formData.numero,
+                    Instagram: formData.instagram,
+                    email: formData.email
+                });
+                
+                const response = await fetch(`${API_URL}?${params}`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showSuccessModal(result.id.toString());
+                    clearForm();
+                    loadAvailableIds();
+                } else {
+                    showToast('Erro', result.message || 'Erro ao criar registro', 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Erro', 'Erro na comunicação com o servidor.', 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        // Set loading state
+        function setLoading(loading) {
+            isLoading = loading;
+            const submitBtn = document.getElementById('submitBtn');
+            const submitBtnContent = document.getElementById('submitBtnContent');
+            
+            if (loading) {
+                submitBtn.disabled = true;
+                submitBtnContent.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <div class="spinner"></div>
+                        Registrando...
+                    </div>
+                `;
+            } else {
+                submitBtn.disabled = false;
+                submitBtnContent.innerHTML = `
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    Registrar na NEEXT
+                `;
+                lucide.createIcons();
+            }
+        }
+        
+        // Clear form
+        function clearForm() {
+            document.getElementById('registrationForm').reset();
+        }
+        
+        // Show success modal
+        function showSuccessModal(generatedId) {
+            const modal = document.getElementById('successModal');
+            const modalIdElement = document.getElementById('modalGeneratedId');
+            const creationTimeElement = document.getElementById('creationTime');
+            
+            modalIdElement.textContent = generatedId;
+            creationTimeElement.textContent = `ID gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`;
+            
+            modal.classList.add('show');
+            
+            // Store generated ID for modal functions
+            modal.generatedId = generatedId;
+        }
+        
+        // Copy ID to clipboard
+        async function copyIdToClipboard(id) {
+            try {
+                await navigator.clipboard.writeText(id);
+                const copyBtn = document.getElementById('copyIdBtn');
+                const originalContent = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i data-lucide="check" class="w-5 h-5 mr-2 inline"></i>Copiado!';
+                lucide.createIcons();
+                
+                showToast('ID Copiado!', 'O ID foi copiado para sua área de transferência.');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalContent;
+                    lucide.createIcons();
+                }, 3000);
+            } catch (error) {
+                showToast('Erro', 'Não foi possível copiar o ID.', 'error');
+            }
+        }
+        
+        // Generate image
+        function generateImage(id) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            if (!ctx) return;
+            
+            canvas.width = 800;
+            canvas.height = 400;
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#7C3AED');
+            gradient.addColorStop(1, '#EC4899');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // ID Card Design
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.fillRect(50, 50, canvas.width - 100, canvas.height - 100);
+            
+            // Title
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('SISTEMA NEEXT', canvas.width / 2, 120);
+            
+            ctx.font = '18px Arial';
+            ctx.fillText('ID DE IDENTIFICAÇÃO', canvas.width / 2, 150);
+            
+            // ID
+            ctx.font = 'bold 48px monospace';
+            ctx.fillText(id, canvas.width / 2, 220);
+            
+            // Footer
+            ctx.font = '16px Arial';
+            ctx.fillText('Criação de ID Profissional', canvas.width / 2, 280);
+            
+            ctx.font = '12px Arial';
+            ctx.fillText('© 2024 Sistema NEEXT', canvas.width / 2, 320);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = `ID_${id}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            
+            showToast('Imagem Gerada!', 'A imagem do seu ID foi baixada com sucesso.');
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            // Load theme
+            loadTheme();
+            
+            // Load available IDs
+            loadAvailableIds();
+            
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Form submission
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    nome: document.getElementById('nome').value,
+                    idade: document.getElementById('idade').value,
+                    numero: document.getElementById('numero').value,
+                    instagram: document.getElementById('instagram').value,
+                    email: document.getElementById('email').value
+                };
+                
+                createRegistration(formData);
+            });
+            
+            // Modal event listeners
+            document.getElementById('closeModalBtn').addEventListener('click', function() {
+                document.getElementById('successModal').classList.remove('show');
+            });
+            
+            document.getElementById('copyIdBtn').addEventListener('click', function() {
+                const modal = document.getElementById('successModal');
+                copyIdToClipboard(modal.generatedId);
+            });
+            
+            document.getElementById('generateImageBtn').addEventListener('click', function() {
+                const modal = document.getElementById('successModal');
+                generateImage(modal.generatedId);
+            });
+            
+            // Close modal on outside click
+            document.getElementById('successModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
