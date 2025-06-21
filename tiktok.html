@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloader TikTok Sem Marca D'água</title>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        input, button {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin: 5px;
+        }
+        input {
+            width: 80%;
+            max-width: 500px;
+        }
+        button {
+            background-color: #00f2ea;
+            color: black;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00c8c3;
+        }
+        video {
+            margin-top: 20px;
+            max-width: 90%;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Baixar TikTok Sem Marca D'água</h1>
+    <p>Cole o link do vídeo TikTok abaixo:</p>
+    <input type="text" id="url" placeholder="https://www.tiktok.com/..." />
+    <br>
+    <button onclick="baixar()">Baixar Vídeo</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function baixar() {
+            const url = document.getElementById('url').value.trim();
+            if (!url) {
+                alert('Por favor, cole o link do TikTok.');
+                return;
+            }
+
+            const api = 'https://script.google.com/macros/s/AKfycbypaUCJ8e13wCFWiMSJmaU_NnNZKAh9KSwW9U4kjx6hgs6ZuFMrWBRpIrvM-QDbkwU3Gg/exec';
+
+            document.getElementById('resultado').innerHTML = `<p>Buscando vídeo...</p>`;
+
+            try {
+                const response = await fetch(`${api}?url=${encodeURIComponent(url)}`);
+                const json = await response.json();
+
+                if (json.status === 'error' || !json.data || !json.data.play) {
+                    document.getElementById('resultado').innerHTML = `<p>Erro ao buscar o vídeo. Verifique o link ou tente novamente.</p>`;
+                    return;
+                }
+
+                const videoUrl = json.data.play;
+
+                document.getElementById('resultado').innerHTML = `
+                    <h2>Vídeo sem marca d'água:</h2>
+                    <video controls src="${videoUrl}"></video>
+                    <br><br>
+                    <a href="${videoUrl}" download="tiktok.mp4">
+                        <button>Baixar Arquivo</button>
+                    </a>
+                `;
+            } catch (e) {
+                document.getElementById('resultado').innerHTML = `<p>Ocorreu um erro: ${e.message}</p>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
